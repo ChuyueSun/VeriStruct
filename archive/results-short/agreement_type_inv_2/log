@@ -1,0 +1,14 @@
+error: postcondition not satisfied
+   --> result.rs:119:13
+    |
+112 | /     pub proof fn lemma_agreement(
+113 | |         tracked self: &mut AgreementResource<T>,
+114 | |         tracked other: &AgreementResource<T>,
+115 | |     )
+    | |_____- at the end of the function body
+...
+119 |               self@ == other@,
+    |               ^^^^^^^^^^^^^^^ failed this postcondition
+
+error: aborting due to 1 previous error
+

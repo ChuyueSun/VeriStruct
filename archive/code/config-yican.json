@@ -1,0 +1,18 @@
+{
+    "aoai_api_base": [
+        "https://verus.openai.azure.com/"
+    ],
+    "aoai_api_version": "2024-12-01-preview",
+    "aoai_api_key": [
+        "FlfDVS2zc77wZlWWrYbpufTlyd9jwb9IuRPA8J5FsvhQ2Pkjq2QuJQQJ99BCACYeBjFXJ3w3AAABACOGkXoB"
+    ],
+    "aoai_max_retries": 5,
+    "max_token": 8192,
+    "aoai_generation_model": "verus-o1",
+    "aoai_debug_model": "verus-o1",
+    "verus_path": "/Users/syc/Desktop/verus/verus",
+    "example_path": "/Users/syc/Desktop/-verusyth/code/examples",
+    "lemma_path": "/Users/syc/Desktop/-verusyth/code/lemmas",
+    "util_path": "/Users/syc/Desktop/-verusyth/utils",
+    "platform": "azure"
+}

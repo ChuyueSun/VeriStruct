@@ -1,0 +1,199 @@
+Failed assertion
+```
+        assert(r1.frac() == 1);
+```
+
+Code
+```
+use builtin::*;
+use vstd::pcm::*;
+use vstd::prelude::*;
+
+// This implements a resource for fractional ownership of a ghost variable.
+// The fractions are represented as some number out of a compile-time const
+// Total value; you can have any fractions from 1 up to Total, and if you
+// have Total, you can update the ghost variable.
+
+verus! {
+
+#[verifier::loop_isolation(false)]
+    pub enum Fractional<T, const Total: u64> {
+        Value { v: T, n: int },
+        Empty,
+        Invalid,
+    }
+
+    impl<T, const Total: u64> Fractional<T, Total> {
+        pub open spec fn new(v: T) -> Self {
+            Fractional::Value { v: v, n: Total as int }
+        }
+    }
+
+    impl<T, const Total: u64> PCM for Fractional<T, Total> {
+        open spec fn valid(self) -> bool {
+            match self {
+                Fractional::Value { n, .. } => 0 <= n && n <= Total as int,
+                Fractional::Empty => true,
+                Fractional::Invalid => false,
+            }
+        }
+
+        open spec fn op(self, other: Self) -> Self {
+            match (self, other) {
+                (Fractional::Value { v, n }, Fractional::Value { v: w, n: m })
+                    => if v == w { Fractional::Value { v, n: n + m } } else { Fractional::Invalid },
+                (Fractional::Empty, x) => x,
+                (x, Fractional::Empty) => x,
+                _ => Fractional::Invalid,
+            }
+        }
+
+        open spec fn unit() -> Self {
+            Fractional::Empty
+        }
+
+        proof fn closed_under_incl(a: Self, b: Self) {
+        }
+
+        proof fn commutative(a: Self, b: Self) {
+        }
+
+        proof fn associative(a: Self, b: Self, c: Self) {
+        }
+
+        proof fn op_unit(a: Self) {
+        }
+
+        proof fn unit_valid() {
+        }
+    }
+
+    pub struct FractionalResource<T, const Total: u64> {
+        r: Resource<Fractional<T, Total>>,
+    }
+
+    impl<T, const Total: u64> FractionalResource<T, Total> {
+        pub closed spec fn inv(self) -> bool
+        {
+            self.r.value().valid()
+        }
+
+        pub closed spec fn val(self) -> T
+        {
+            match self.r.value() {
+                Fractional::Value { v, .. } => v,
+                _ => arbitrary(),
+            }
+        }
+
+        pub closed spec fn frac(self) -> int
+        {
+            match self.r.value() {
+                Fractional::Value { n, .. } => n,
+                _ => 0,
+            }
+        }
+
+        pub proof fn alloc(v: T) -> (tracked res: FractionalResource<T, Total>)
+            requires
+                true,
+            ensures
+                res.inv(),
+                res.val() == v,
+                res.frac() == Total as int,
+        {
+            let f = Fractional::<T, Total>::new(v);
+            let tracked r = Resource::alloc(f);
+            FractionalResource { r }
+        }
+
+        pub proof fn agree(tracked self: &mut FractionalResource<T, Total>, tracked other: &FractionalResource<T, Total>)
+            requires
+                old(self).inv(),
+                other.inv(),
+            ensures
+                self.inv(),
+                other.inv(),
+        {
+            self.r.validate_2(&other.r)
+        }
+
+        pub proof fn split(tracked self, n: int) ->
+            (tracked res: (FractionalResource<T, Total>, FractionalResource<T, Total>))
+            requires
+                self.inv(),
+                0 <= n <= self.frac(),
+            ensures
+                res.0.inv(),
+                res.1.inv(),
+                res.0.val() == self.val(),
+                res.1.val() == self.val(),
+                res.0.frac() + res.1.frac() == self.frac(),
+        {
+            let tracked (r1, r2) = self.r.split(
+                Fractional::Value { v: self.r.value()->v, n: self.r.value()->n - n },
+                Fractional::Value { v: self.r.value()->v, n: n }
+            );
+            (FractionalResource { r: r1 }, FractionalResource { r: r2 })
+        }
+
+        pub proof fn combine(tracked self, tracked other: FractionalResource<T, Total>) -> (tracked res: FractionalResource<T, Total>)
+            requires
+                self.inv(),
+                other.inv(),
+                self.val() == other.val(),
+            ensures
+                res.inv(),
+                res.frac() == self.frac() + other.frac(),
+                res.val() == self.val(),
+        {
+            let tracked mut mself = self;
+            mself.r.validate_2(&other.r);
+            let tracked r = mself.r.join(other.r);
+            FractionalResource { r: r }
+        }
+
+        pub proof fn update(tracked self, v: T) -> (tracked res: FractionalResource<T, Total>)
+            requires
+                self.inv(),
+                self.frac() == Total as int,
+            ensures
+                res.inv(),
+                res.val() == v,
+                res.frac() == Total as int,
+        {
+            let f = Fractional::<T, Total>::Value { v: v, n: Total as int };
+            let tracked r = self.r.update(f);
+            FractionalResource { r: r }
+        }
+    }
+
+    impl<T, const Total: u64> View for FractionalResource<T, Total> {
+        type V = (bool, T, int);
+
+        closed spec fn view(&self) -> Self::V {
+            match self.r.value() {
+                Fractional::Value { v, n } => (true, v, n),
+                Fractional::Empty => (true, arbitrary(), 0),
+                Fractional::Invalid => (false, arbitrary(), 0),
+            }
+        }
+    }
+
+    fn main()
+    {
+        let tracked r = FractionalResource::<u64, 3>::alloc(123);
+        assert(r.val() == 123);
+        assert(r.frac() == 3);
+        let tracked (r1, r2) = r.split(2);
+        assert(r1.val() == 123);
+        assert(r2.val() == 123);
+        assert(r1.frac() == 1);
+        assert(r2.frac() == 2);
+        let tracked r3 = r1.combine(r2);
+        let tracked r4 = r3.update(456);
+        assert(r4.val() == 456);
+        assert(r4.frac() == 3);
+        ()
+    }
+}```

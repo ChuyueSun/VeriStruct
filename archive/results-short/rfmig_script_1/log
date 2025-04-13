@@ -1,0 +1,28 @@
+error: postcondition not satisfied
+  --> result.rs:54:9
+   |
+54 |         perm.opt_value() === MemContents::Init(6),
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+62 |     ()
+   |     -- at the end of the function body
+
+error: precondition not satisfied
+   --> result.rs:58:5
+    |
+58  |     counter.put(Tracked(&mut perm), 5);
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: /Users/syc/Desktop/verus/vstd/simple_pptr.rs:443:13
+    |
+443 |             old(perm).mem_contents() == MemContents::Uninit::<V>,
+    |             ---------------------------------------------------- failed precondition
+
+error: assertion failed
+  --> result.rs:61:12
+   |
+61 |     assert(perm.opt_value() === MemContents::Init(6));
+   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: aborting due to 3 previous errors
+

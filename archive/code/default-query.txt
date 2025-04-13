@@ -1,0 +1,430 @@
+Your mission is to fix the error for the following code. Basically, you should add/modify/delete the proof blocks, assertions and loop invariants related to the error.
+
+Response with the Rust code only, do not include any explanation.
+
+
+
+Here is the usage for Seq in Verus you can refer:
+```
+## `Seq` Usage
+
+1. Basic Structure and Properties:
+    - Seq<A> has a length (len) and values at each index (index or [] operator).
+    - The structure uses marker::PhantomData<A> to hold the type without storing actual data.
+
+2. Construction Methods:
+    - Empty Sequence: Seq::empty creates an empty sequence.
+    - New Sequence: Seq::new(len, f) creates a sequence of specified length initialized with a function mapping indices to values, where f is a function mapping each index (of type int) to a value.
+    - Macro: seq! macro allows creating small sequences similar to std::vec!.
+
+3. Manipulation Methods:
+    - Push: Seq::push appends a value to the end of the sequence.
+    - Update: Seq::update replaces the value at a specified index, leaving others unchanged.
+    - Add (`+`): Seq::add concatenates two sequences.
+    - Subrange: Seq::subrange creates a subsequence from a specified range.
+        Important: Inputs to subrange must be int. If you have a numeric variable, cast to int.
+    - Take: Seq::take returns the first n elements of the sequence.
+    - Skip: Seq::skip returns the sequence excluding the first n elements.
+
+4. Access Methods:
+    - Length: Seq::len returns the length of the sequence.
+    - Index(`[]`): Seq::index returns the value at a given index, with a requirement to be within bounds.
+    - First Element: Seq::first returns the first element.
+    - Last Element: Seq::last returns the last element.
+
+5. Equality and Comparison:
+    - Extensional Equality: The operator =~= is used to prove two sequences are equal.
+    - Deep Equality: The operator =~~= is for deep equality checks.
+
+## Example Usage
+
+1. Basic Structure and Properties:
+```use vstd::seq::*;
+use vstd::seq_lib::*;
+
+proof fn test_seq() {
+    let s1 = Seq::new(5, |i: int| 10 * i);
+    assert(s1.len() == 5);
+    assert(s1[3] == 30);
+    let s2 = Seq::<int>::empty().push(0).push(10).push(20).push(30).push(40);
+    assert(s1 =~= s2);
+    assert(s1 === s2);
+    let s_sub = s1.subrange(1 as int, 3 as int); // cast to `int` if needed
+
+}
+```
+2. Construction Methods:
+    - Empty Sequence:
+        ```
+        let empty_seq = Seq::<int>::empty();
+        assert(empty_seq.len() == 0);
+        ```
+    - New Sequence:
+        ```
+        let s1 = Seq::new(5, |i: int| 10 * i);
+        assert(s1.len() == 5);
+        assert(s1.index(3) == 30);
+        ```
+    - Macro:
+        ```
+        let seq_macro = seq![10, 20, 30, 40];
+        assert(seq_macro.len() == 4);
+        assert(seq_macro.index(2) == 30);
+        ```
+3. Manipulation Methods:
+    - Push:
+        ```
+        let mut seq_push = Seq::<int>::empty();
+        seq_push = seq_push.push(10);
+        seq_push = seq_push.push(20);
+        assert(seq_push.len() == 2);
+        assert(seq_push.index(1) == 20);
+        ```
+    - Update:
+        ```
+        let mut seq_update = Seq::new(3, |i: int| 10 * i);
+        seq_update = seq_update.update(1, 25);
+        assert(seq_update.index(1) == 25);
+        ```
+    - Add:
+        ```
+        let seq1 = Seq::new(3, |i: int| 10 * i);
+        let seq2 = Seq::new(2, |i: int| 20 * i);
+        let seq_add = seq1 + seq2;  // same as seq1.add(seq2)
+        assert(seq_add.len() == 5);
+        assert(seq_add.index(3) == 0); // Value from seq2
+        // Incorrect (and won't compile):
+        // seq1.add(4);     
+        ```
+    - Subrange:
+    Important: There is no syntactic sugar for subrange (so self.ring@[start..end] is invalid). You must explicitly call .subrange(start, end):
+        ```
+        let s_full = Seq::new(5, |i: int| 10 * i);
+        // Correct:
+        let s_sub = s1.subrange(1 as int, 3 as int); // cast to `int` if needed
+        assert(s_sub.len() == 2);
+        assert(s_sub.index(0) == 10);
+        assert(s_sub.index(1) == 20);
+        // Incorrect (and won't compile):
+        // self.ring@[self.head..self.ring@.len()]        
+        ```
+    - Take:
+        ```
+        let seq_take = Seq::new(5, |i: int| 10 * i).take(3);
+        assert(seq_take.len() == 3);
+        assert(seq_take.index(2) == 20);
+        ```
+    - Skip:
+        ```
+        let seq_skip = Seq::new(5, |i: int| 10 * i).skip(2);
+        assert(seq_skip.len() == 3);
+        assert(seq_skip.index(0) == 20);
+        ```
+4. Access Methods:
+    - Length:
+        ```
+        let seq_len = Seq::new(4, |i: int| 5 * i);
+        assert(seq_len.len() == 4);
+        ```
+    - Index:
+        ```
+        let seq_index = Seq::new(4, |i: int| 5 * i);
+        assert(seq_index.index(2) == 10);
+        assert(seq_index[0] == 0);
+        ```
+    - First Element:
+        ```
+        let seq_first = Seq::new(4, |i: int| 5 * i);
+        assert(seq_first.first() == 0);
+        ```
+    - Last Element:
+        ```
+        let seq_last = Seq::new(4, |i: int| 5 * i);
+        assert(seq_last.last() == 15);
+        ```
+5. Equality and Comparison:
+    - Extensional Equality:
+        ```
+        let s1 = Seq::new(5, |i: int| 10 * i);
+        let s2 = Seq::<int>::empty().push(0).push(10).push(20).push(30).push(40);
+        assert(s1 =~= s2);
+        ```
+    - Deep Equality:
+        ```
+        let s1 = Seq::new(5, |i: int| 10 * i);
+        let s2 = Seq::<int>::empty().push(0).push(10).push(20).push(30).push(40);
+        assert(s1 === s2);
+        ```
+Remember: other than the [] operator for indexing and + for concatenation, all sequence operations require explicit method calls such as .subrange(start, end), .skip(n), .update(i, v), etc.
+```
+
+in 'ensures' clause of public function, cannot refer to private function
+```
+Line 155-155:
+            ret.inv(),
+  None: ret.inv()
+```
+
+Code
+```
+use vstd::prelude::*;
+
+pub fn main() {}
+
+verus! {
+    pub open spec fn ex_saturating_sub_spec(a: int, b: int) -> (ret: nat)
+    {
+        if (a > b) {
+            (a - b) as nat
+        } else {
+            0
+        }
+    }
+
+    #[verifier::external_fn_specification]
+    pub fn ex_saturating_sub(a: usize, b: usize) -> (ret: usize)
+    ensures
+        ex_saturating_sub_spec(a as int, b as int) == ret as int
+    {
+        a.saturating_sub(b)
+    }
+
+    pub struct RingBuffer<T: Copy> {
+        ring: Vec<T>,
+        head: usize,
+        tail: usize,
+    }
+
+    impl<T: Copy> View for RingBuffer<T> {
+        type V = (Seq<T>, nat);
+
+        closed spec fn view(&self) -> Self::V {
+            let ring_seq = self.ring@;
+            let capacity = ring_seq.len();
+            let content =
+                if self.tail >= self.head {
+                    ring_seq.subrange(self.head as int, self.tail as int)
+                } else {
+                    ring_seq.subrange(self.head as int, ( capacity ) as int)
+                        + ring_seq.subrange(0, self.tail as int)
+                };
+            (content, capacity)
+        }
+    }
+
+    pub open spec fn mod_auto_plus(n: int) -> bool
+        recommends
+            n > 0,
+    {
+        forall|x: int, y: int|
+            {
+                let z = (x % n) + (y % n);
+                ((0 <= z < n && #[trigger] ((x + y) % n) == z)
+                    || (n <= z < n + n && ((x + y) % n) == z - n))
+            }
+    }
+
+    pub open spec fn mod_auto_minus(n: int) -> bool
+        recommends
+            n > 0,
+    {
+        forall|x: int, y: int|
+            {
+                let z = (x % n) - (y % n);
+                ((0 <= z < n && #[trigger] ((x - y) % n) == z)
+                    || (-n <= z < 0 && ((x - y) % n) == z + n))
+            }
+    }
+
+    pub open spec fn mod_auto(n: int) -> bool
+        recommends
+            n > 0,
+    {
+        &&& (n % n == 0 && (-n) % n == 0)
+        &&& (forall|x: int| #[trigger] ((x % n) % n) == x % n)
+        &&& (forall|x: int| 0 <= x < n <==> #[trigger] (x % n) == x)
+        &&& mod_auto_plus(n)
+        &&& mod_auto_minus(n)
+    }
+
+    pub proof fn lemma_mod_auto(n: int)
+        requires
+            n > 0,
+        ensures
+            mod_auto(n),
+    {
+        admit()
+    }
+
+
+    #[verifier::external_body]
+    fn my_set<T: Copy>(vec: &mut Vec<T>, i: usize, value: T)
+        requires
+            i < old(vec).len(),
+        ensures
+            vec@ == old(vec)@.update(i as int, value),
+            vec@.len() == old(vec).len()
+            no_unwind
+    {
+        vec[i] = value;
+    }
+
+
+    impl<T: Copy> RingBuffer<T> {
+        #[verifier::type_invariant]
+        closed spec fn inv(&self) -> bool {
+            if self.ring@.len() == 0 {
+                self.head == 0 && self.tail == 0
+            } else {
+                self.head < self.ring@.len()
+                && self.tail < self.ring@.len()
+            }
+        }
+
+        pub fn len(&self) -> (ret: usize)
+        ensures
+            ret == self@.0.len(),
+        {
+            proof {
+                use_type_invariant(&self);
+                lemma_mod_auto(self@.1 as int);
+            }
+            if self.tail > self.head {
+                self.tail - self.head
+            } else if self.tail < self.head {
+                (self.ring.len() - self.head) + self.tail
+            } else {
+                0
+            }
+        }
+
+        pub fn has_elements(&self) -> (ret: bool)
+        ensures
+            ret == (self@.0.len() > 0),
+        {
+            proof {
+                use_type_invariant(&self);
+            }
+            self.head != self.tail
+        }
+
+        pub fn is_full(&self) -> (ret: bool)
+        ensures
+            ret == (self@.0.len() == self@.1 - 1),
+        {
+            proof {
+                use_type_invariant(&self);
+                lemma_mod_auto(self@.1 as int);
+            }
+            self.head == ((self.tail + 1) % self.ring.len())
+        }
+
+        pub fn new(ring: Vec<T>) -> (ret: RingBuffer<T>)
+        ensures
+            ret.inv(),
+            ret@.0.len() == 0,
+            ret@.1 == ring@.len(),
+        {
+            RingBuffer {
+                head: 0,
+                tail: 0,
+                ring,
+            }
+        }
+
+        pub fn enqueue(&mut self, val: T) -> (succ: bool)
+        ensures
+            (old(self)@.0.len() == old(self)@.1 - 1) ==> (!succ && self@.0.len() == old(self)@.0.len()),
+            (old(self)@.0.len() < old(self)@.1 - 1) ==> (succ && self@.0.len() == old(self)@.0.len() + 1),
+        {
+            if self.is_full() {
+                false
+            } else {
+                proof {
+                    use_type_invariant(&*self);
+                    lemma_mod_auto(self@.1 as int);
+                }
+                my_set(&mut self.ring, self.tail, val);
+                self.tail = (self.tail + 1) % self.ring.len();
+                true
+            }
+        }
+
+        pub fn dequeue(&mut self) -> (ret: Option<T>)
+        ensures
+            (old(self)@.0.len() > 0) ==> (ret.is_Some() && self@.0.len() == old(self)@.0.len() - 1),
+            (old(self)@.0.len() == 0) ==> (ret.is_None() && self@.0.len() == old(self)@.0.len()),
+        {
+            proof {
+                use_type_invariant(&*self);
+                lemma_mod_auto(self@.1 as int);
+            }
+
+            if self.has_elements() {
+                let val = self.ring[self.head];
+                self.head = (self.head + 1) % self.ring.len();
+                Some(val)
+            } else {
+                None
+            }
+        }
+
+        pub fn available_len(&self) -> (ret: usize)
+        ensures
+            ret == ((self@.1 - 1) - self@.0.len()),
+        {
+            proof {
+                use_type_invariant(&self);
+            }
+            self.ring.len().saturating_sub(1 + self.len())
+        }
+    }
+
+    #[verifier::loop_isolation(false)]
+    fn test_enqueue_dequeue_generic(len: usize, value: i32, iterations: usize)
+        requires
+            len < usize::MAX - 1,
+            iterations * 2 < usize::MAX,
+    {
+        let mut ring: Vec<i32> = Vec::new();
+
+        if len == 0 {
+            return;
+        }
+
+        for i in 0..(len + 1)
+            invariant
+                ring.len() == i,
+        {
+            ring.push(0);
+        }
+
+        assert(ring.len() > 1);
+        let mut buf = RingBuffer::new(ring);
+        assert(buf@.1 > 1);
+
+        for _ in 0..2 * iterations
+            invariant
+                buf@.0.len() == 0,
+                buf@.1 > 1
+        {
+            let enqueue_res = buf.enqueue(value);
+            assert(enqueue_res);
+
+            let buf_len = buf.len();
+            assert(buf_len == 1);
+
+            let has_elements = buf.has_elements();
+            assert(has_elements);
+
+            let dequeue_res = buf.dequeue();
+            assert(dequeue_res =~= Some(value));
+
+            let buf_len = buf.len();
+            assert(buf_len == 0);
+
+            let has_elements = buf.has_elements();
+            assert(!has_elements);
+        }
+    }
+}```

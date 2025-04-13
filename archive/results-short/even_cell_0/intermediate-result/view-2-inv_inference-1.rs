@@ -1,0 +1,7 @@
+Could you clarify what you would like me to do with this code snippet?
+// Compilation Error: True, Verified: -1, Errors: 999, Verus Errors: 1
+// VerusErrorType.Other: expected one of `!` or `::`, found `you`
+// {"$message_type":"diagnostic","message":"expected one of `!` or `::`, found `you`","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpqygjcp4z","byte_start":6,"byte_end":9,"line_start":1,"line_end":1,"column_start":7,"column_end":10,"is_primary":true,"text":[{"text":"Could you clarify what you would like me to do with this code snippet?","highlight_start":7,"highlight_end":10}],"label":"expected one of `!` or `::`","suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: expected one of `!` or `::`, found `you`\n --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpqygjcp4z:1:7\n  |\n1 | Could you clarify what you would like me to do with this code snippet?\n  |       ^^^ expected one of `!` or `::`\n\n"}
+// {"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}
+// 
+// 

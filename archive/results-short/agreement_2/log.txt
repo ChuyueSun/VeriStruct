@@ -1,0 +1,2577 @@
+2025-04-07 00:10:39 INFO: Phase 1 examples: ['3', '6', '7']
+2025-04-07 00:10:39 INFO: View examples: ['8', '9']
+2025-04-07 00:10:39 INFO: Generating View
+2025-04-07 00:10:39 INFO: Repair steps: 10
+2025-04-07 00:10:40 INFO: Immutable functions: []
+2025-04-07 00:10:40 INFO: Generation initialized with phase1_examples: ['3', '6', '7']
+2025-04-07 00:10:40 INFO: Generation initialized with view_examples: ['8', '9']
+2025-04-07 00:10:40 INFO: Generation initialized with repair_uniform: False
+2025-04-07 00:10:40 INFO: Generating proof code
+2025-04-07 00:10:40 INFO: Temperature: 1.0
+2025-04-07 00:10:40 INFO: Generate with view mode
+2025-04-07 00:10:40 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:10:40 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:10:52 INFO: Infer time: 11.68s
+2025-04-07 00:10:52 INFO: Iteration 0: Selected refinement functions: view_inference, view_refinement, inv_inference, requires_inference
+2025-04-07 00:10:52 INFO: View Inference ...
+2025-04-07 00:10:52 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:10:52 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:10:52 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:10:52 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:10:52 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:10:52 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:10:52 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:10:52 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:10:52 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:10:52 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:11:35 INFO: Infer time: 43.77s
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:11:36 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:11:37 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:11:37 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:11:37 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:11:37 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:11:37 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:11:37 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:11:37 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:11:37 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:11:37 INFO: View Refinement ...
+2025-04-07 00:11:37 ERROR: Example path /Users/syc/Desktop/-verusyth/code/examples/input-view-refine does not exist.
+2025-04-07 00:11:37 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:11:37 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:11:37 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:11:37 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:11:37 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:11:37 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:11:37 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:11:37 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:11:37 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:11:37 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:12:41 INFO: Infer time: 64.35s
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:12:42 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:12:42 INFO: Inv Inference ...
+2025-04-07 00:12:42 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:12:42 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:12:42 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:12:42 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:12:42 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:12:42 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:12:42 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:12:42 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:12:42 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:12:42 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:13:09 INFO: Infer time: 26.71s
+2025-04-07 00:13:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:13:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:13:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:13:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:13:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:13:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:13:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:13:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:13:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:13:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:13:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:13:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:13:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:13:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:13:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:13:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:13:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:13:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:13:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:13:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:13:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:13:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:13:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:13:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:13:10 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:13:10 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:13:10 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:13:10 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:13:10 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:13:10 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:13:10 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:13:10 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:13:10 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:13:10 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:13:10 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:13:10 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:13:10 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:13:10 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:13:10 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:13:10 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:13:10 INFO: Requires Inference ...
+2025-04-07 00:13:10 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:13:10 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:13:10 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:13:10 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:13:10 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:13:10 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:13:10 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:13:10 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:13:10 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:13:10 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:13:41 INFO: Infer time: 31.70s
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:13:42 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:13:42 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:13:42 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:13:55 INFO: Infer time: 12.09s
+2025-04-07 00:13:55 INFO: Iteration 1: Selected refinement functions: view_inference, view_refinement, inv_inference, requires_inference
+2025-04-07 00:13:55 INFO: View Inference ...
+2025-04-07 00:13:55 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:13:55 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:13:55 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:13:55 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:13:55 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:13:55 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:13:55 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:13:55 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:13:55 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:13:55 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:14:46 INFO: Infer time: 51.57s
+2025-04-07 00:14:46 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:14:46 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:14:46 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:14:46 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:14:46 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:14:46 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:14:46 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:14:46 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:14:46 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:14:46 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:14:46 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:14:46 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:14:46 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:14:46 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:14:46 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:14:46 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:14:47 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:14:47 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:14:47 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:14:47 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:14:47 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:14:47 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:14:47 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:14:47 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:14:47 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:14:47 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:14:47 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:14:47 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:14:47 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:14:47 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:14:47 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:14:47 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:14:47 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:14:47 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:14:47 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:14:47 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:14:47 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:14:47 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:14:47 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:14:47 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:14:47 INFO: View Refinement ...
+2025-04-07 00:14:47 ERROR: Example path /Users/syc/Desktop/-verusyth/code/examples/input-view-refine does not exist.
+2025-04-07 00:14:47 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:14:47 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:14:47 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:14:47 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:14:47 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:14:47 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:14:47 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:14:47 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:14:47 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:14:47 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:15:50 INFO: Infer time: 62.78s
+2025-04-07 00:15:50 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:15:50 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:15:50 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:15:50 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:15:50 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:15:50 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:15:50 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:15:50 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:15:50 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:15:50 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:15:50 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:15:50 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:15:50 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:15:50 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:15:50 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:15:50 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:15:51 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:15:51 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:15:51 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:15:51 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:15:51 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:15:51 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:15:51 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:15:51 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:15:51 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:15:51 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:15:51 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:15:51 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:15:51 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:15:51 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:15:51 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:15:51 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:15:51 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:15:51 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:15:51 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:15:51 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:15:51 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:15:51 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:15:51 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:15:51 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:15:51 INFO: Inv Inference ...
+2025-04-07 00:15:51 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:15:51 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:15:51 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:15:51 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:15:51 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:15:51 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:15:51 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:15:51 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:15:51 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:15:51 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:16:27 INFO: Infer time: 36.51s
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:16:28 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:16:28 INFO: Requires Inference ...
+2025-04-07 00:16:28 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:16:28 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:16:28 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:16:28 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:16:28 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:16:28 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:16:28 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:16:28 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:16:28 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:16:28 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:17:08 INFO: Infer time: 39.81s
+2025-04-07 00:17:08 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:17:08 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:17:08 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:17:08 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:17:08 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:17:08 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:17:08 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:17:08 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:17:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:17:09 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:17:09 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:17:31 INFO: Infer time: 21.82s
+2025-04-07 00:17:31 INFO: Iteration 2: Selected refinement functions: view_inference, view_refinement, inv_inference, requires_inference
+2025-04-07 00:17:31 INFO: View Inference ...
+2025-04-07 00:17:31 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:17:31 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:17:31 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:17:31 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:17:31 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:17:31 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:17:31 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:17:31 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:17:31 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:17:31 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:18:27 INFO: Infer time: 56.13s
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:18:28 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:18:28 INFO: View Refinement ...
+2025-04-07 00:18:28 ERROR: Example path /Users/syc/Desktop/-verusyth/code/examples/input-view-refine does not exist.
+2025-04-07 00:18:28 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:18:28 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:18:28 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:18:28 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:18:28 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:18:28 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:18:28 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:18:28 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:18:28 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:18:28 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:19:43 INFO: Infer time: 74.57s
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:19:43 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:19:43 INFO: Inv Inference ...
+2025-04-07 00:19:43 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:19:43 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:19:43 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:19:43 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:19:43 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:19:43 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:19:43 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:19:43 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:19:43 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:19:43 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:20:21 INFO: Infer time: 38.15s
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:20:22 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:20:22 INFO: Requires Inference ...
+2025-04-07 00:20:22 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:20:22 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:20:22 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:20:22 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:20:22 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:20:22 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:20:22 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:20:22 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:20:22 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:20:22 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:21:09 INFO: Infer time: 46.81s
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:21:09 INFO: Attempting final repair on best code found...
+2025-04-07 00:21:09 INFO: Start full repair
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:21:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:21:09 INFO: Step 1: unsupported error 'expected square brackets' with candidate count=3.
+2025-04-07 00:21:09 INFO: Current score: Compilation Error: True, Verified: -1, Errors: 999, Verus Errors: 1
+2025-04-07 00:21:09 INFO: Attempting to repair with repair_default
+2025-04-07 00:21:09 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:21:09 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:21:09 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:21:09 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:21:09 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:21:09 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:21:40 INFO: Infer time: 30.39s
+2025-04-07 00:21:40 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:21:40 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:21:40 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:21:40 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:21:40 INFO: Candidate failed compilation due to: VerusErrorType.Other.
+2025-04-07 00:21:40 WARNING: Warning: a non type error is passed to debug_type_error: VerusErrorType.Other
+2025-04-07 00:21:40 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:21:40 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:21:40 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:21:40 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:21:40 INFO: Dumped candidate to ../results/agreement_2/intermediate-result/repair/repair-1-0-Other.rs
+2025-04-07 00:21:40 WARNING: Debug mode is on, skip code change checking
+2025-04-07 00:21:40 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:21:40 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:21:40 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:21:40 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:21:40 INFO: Candidate failed compilation due to: VerusErrorType.MismatchedType.
+Fatal error: err_trace does not have a label#![allow(unused_imports)]
+use builtin::*;
+use builtin_macros::*;
+use std::result::*;
+use vstd::pcm::*;
+use vstd::pcm_lib::*;
+use vstd::prelude::*;
+
+/// This file implements agreement on a constant value using a custom
+/// resource algebra.
+///
+/// An agreement resource constitutes knowledge of a constant value.
+/// To create an instance of a constant value of type `T`, use
+/// `AgreementResource::<T>::alloc()` as in the following example:
+///
+/// 
+/// let tracked r1 = AgreementResource::<int>::alloc(72);
+/// assert(r1@ == 72);
+/// 
+///
+/// Knowledge of a constant value can be duplicated with `duplicate`,
+/// which creates another agreement resource with the same constant
+/// value and the same ID. Here's an example:
+///
+/// 
+/// let tracked r2 = r1.duplicate();
+/// assert(r2.id() == r1.id());
+/// assert(r2@ == r1@);
+/// 
+///
+/// Any two agreement resources with the same `id()` are guaranteed to
+/// have equal values. You can establish this by calling
+/// `lemma_agreement`, as in the following example:
+///
+/// 
+/// assert(r2.id() == r1.id());
+/// proof { r1.lemma_agreement(&mut r2); }
+/// assert(r2@ == r1@);
+/// 
+
+verus! {
+
+#[verifier::loop_isolation(false)]
+
+pub enum AgreementResourceValue<T> {
+    Empty,
+    Chosen { c: T },
+    Invalid,
+}
+
+impl<T> AgreementResourceValue<T> {
+    pub open spec fn new(c: T) -> Self {
+        AgreementResourceValue::Chosen { c }
+        /* TODO: part of view */
+    }
+}
+
+impl<T> PCM for AgreementResourceValue<T> {
+    open spec fn valid(self) -> bool {
+        match self {
+            AgreementResourceValue::Invalid => false,
+            _ => true,
+        }
+        /* TODO: part of view */
+    }
+
+    open spec fn op(self, other: Self) -> Self {
+        match self {
+            AgreementResourceValue::Invalid => AgreementResourceValue::Invalid,
+            AgreementResourceValue::Chosen { c } => match other {
+                AgreementResourceValue::Invalid => AgreementResourceValue::Invalid,
+                AgreementResourceValue::Chosen { c: c2 } => if c == c2 {
+                    AgreementResourceValue::Chosen { c }
+                } else {
+                    AgreementResourceValue::Invalid
+                },
+                AgreementResourceValue::Empty => AgreementResourceValue::Chosen { c },
+            },
+            AgreementResourceValue::Empty => other,
+        }
+        /* TODO: part of view */
+    }
+
+    open spec fn unit() -> Self {
+        AgreementResourceValue::Empty
+        /* TODO: part of view */
+    }
+
+    proof fn closed_under_incl(a: Self, b: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn commutative(a: Self, b: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn associative(a: Self, b: Self, c: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn op_unit(a: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn unit_valid() {
+        /* TODO: part of view */
+    }
+}
+
+pub struct AgreementResource<T> {
+    r: Resource<AgreementResourceValue<T>>,
+}
+
+impl<T> AgreementResource<T> {
+    pub closed spec fn inv(self) -> bool {
+        self.r@.valid()
+        /* TODO: part of view */
+    }
+
+    pub closed spec fn id(self) -> Loc {
+        self.r.id()
+        /* TODO: part of view */
+    }
+
+    pub closed spec fn view(self) -> T
+        recommends
+            self.inv(),
+    {
+        match self.r@ {
+            AgreementResourceValue::Chosen { c } => c,
+            _ => arbitrary(),
+        }
+        /* TODO: part of view */
+    }
+
+    pub proof fn alloc(c: T) -> (tracked result: AgreementResource<T>)
+        requires
+            true,
+        ensures
+            result.inv(),
+            result@ == c,
+    {
+        let r_value = AgreementResourceValue::<T>::new(c);
+        let tracked r = Resource::<AgreementResourceValue::<T>>::alloc(r_value);
+        AgreementResource::<T> { r }
+    }
+
+    pub proof fn duplicate(tracked self: &mut AgreementResource<T>) -> (tracked result: AgreementResource<T>)
+        requires
+            old(self).inv(),
+        ensures
+            self.inv(),
+            result.inv(),
+            self.id() == old(self).id(),
+            result.id() == old(self).id(),
+            self@ == old(self)@,
+            result@ == old(self)@,
+    {
+        let tracked r = duplicate(&self.r);
+        AgreementResource::<T> { r }
+    }
+
+    pub proof fn lemma_agreement(
+        tracked self: &mut AgreementResource<T>,
+        tracked other: &AgreementResource<T>,
+    )
+        requires
+            old(self).inv(),
+            old(other).inv(),
+        ensures
+            self.inv(),
+            other.inv(),
+            self@ == old(self)@,
+            other@ == old(other)@,
+            if self.id() == other.id() { self@ == other@ } else { true },
+    {
+        self.r.validate_2(&other.r);
+    }
+}
+
+impl<T> View for AgreementResource<T> {
+    type V = (Loc, Option<T>);
+
+    closed spec fn view(&self) -> Self::V {
+        let val = match self.r@ {
+            AgreementResourceValue::Chosen { c } => Some(c),
+            _ => None,
+        };
+        (self.id(), val)
+    }
+}
+
+pub fn main() {
+    let tracked r1 = AgreementResource::<int>::alloc(72);
+    assert(r1@ == 72);
+    let tracked r2 = r1.duplicate();
+    assert(r2@ == r1@);
+    proof {
+        r1.lemma_agreement(&mut r2);
+    }
+}
+
+} // verus!2025-04-07 00:21:40 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:21:40 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:21:40 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:21:40 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:21:40 INFO: Dumped candidate to ../results/agreement_2/intermediate-result/repair/repair-1-1-Other.rs
+2025-04-07 00:21:40 WARNING: Debug mode is on, skip code change checking
+2025-04-07 00:21:40 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:21:40 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:21:40 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:21:40 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:21:40 INFO: Candidate failed compilation due to: VerusErrorType.MismatchedType.
+Fatal error: err_trace does not have a label#![allow(unused_imports)]
+use builtin::*;
+use builtin_macros::*;
+use std::result::*;
+use vstd::pcm::*;
+use vstd::pcm_lib::*;
+use vstd::prelude::*;
+
+verus! {
+
+#[verifier::loop_isolation(false)]
+
+pub enum AgreementResourceValue<T> {
+    Empty,
+    Chosen { c: T },
+    Invalid,
+}
+
+impl<T> AgreementResourceValue<T> {
+    pub open spec fn new(c: T) -> Self {
+        AgreementResourceValue::Chosen { c }
+    }
+}
+
+impl<T> PCM for AgreementResourceValue<T> {
+    open spec fn valid(self) -> bool {
+        match self {
+            AgreementResourceValue::Invalid => false,
+            _ => true,
+        }
+    }
+
+    open spec fn op(self, other: Self) -> Self {
+        match self {
+            AgreementResourceValue::Invalid => AgreementResourceValue::Invalid,
+            AgreementResourceValue::Chosen { c } => match other {
+                AgreementResourceValue::Invalid => AgreementResourceValue::Invalid,
+                AgreementResourceValue::Chosen { c: c2 } => if c == c2 {
+                    AgreementResourceValue::Chosen { c }
+                } else {
+                    AgreementResourceValue::Invalid
+                },
+                AgreementResourceValue::Empty => AgreementResourceValue::Chosen { c },
+            },
+            AgreementResourceValue::Empty => other,
+        }
+    }
+
+    open spec fn unit() -> Self {
+        AgreementResourceValue::Empty
+    }
+
+    proof fn closed_under_incl(a: Self, b: Self) {
+    }
+
+    proof fn commutative(a: Self, b: Self) {
+    }
+
+    proof fn associative(a: Self, b: Self, c: Self) {
+    }
+
+    proof fn op_unit(a: Self) {
+    }
+
+    proof fn unit_valid() {
+    }
+}
+
+pub struct AgreementResource<T> {
+    r: Resource<AgreementResourceValue<T>>,
+}
+
+impl<T> AgreementResource<T> {
+    pub closed spec fn inv(self) -> bool {
+        self.r@.valid()
+    }
+
+    pub closed spec fn id(self) -> Loc {
+        self.r.id()
+    }
+
+    pub closed spec fn view(self) -> T
+        recommends
+            self.inv(),
+    {
+        match self.r@ {
+            AgreementResourceValue::Chosen { c } => c,
+            _ => arbitrary(),
+        }
+    }
+
+    pub proof fn alloc(c: T) -> (tracked result: AgreementResource<T>)
+        requires
+            true,
+        ensures
+            result.inv(),
+            result@ == c,
+    {
+        let r_value = AgreementResourceValue::<T>::new(c);
+        let tracked r = Resource::<AgreementResourceValue::<T>>::alloc(r_value);
+        AgreementResource::<T> { r }
+    }
+
+    pub proof fn duplicate(tracked self: &mut AgreementResource<T>) -> (tracked result: AgreementResource<T>)
+        requires
+            old(self).inv(),
+        ensures
+            self.inv(),
+            result.inv(),
+            self.id() == old(self).id(),
+            result.id() == old(self).id(),
+            self@ == old(self)@,
+            result@ == old(self)@,
+    {
+        let tracked r = duplicate(&self.r);
+        AgreementResource::<T> { r }
+    }
+
+    pub proof fn lemma_agreement(
+        tracked self: &mut AgreementResource<T>,
+        tracked other: &AgreementResource<T>,
+    )
+        requires
+            old(self).inv(),
+            old(other).inv(),
+        ensures
+            self.inv(),
+            other.inv(),
+            self@ == old(self)@,
+            other@ == old(other)@,
+            if self.id() == other.id() { self@ == other@ } else { true },
+    {
+        self.r.validate_2(&other.r);
+    }
+}
+
+impl<T> View for AgreementResource<T> {
+    type V = (Loc, Option<T>);
+
+    closed spec fn view(&self) -> Self::V {
+        let val = match self.r@ {
+            AgreementResourceValue::Chosen { c } => Some(c),
+            _ => None,
+        };
+        (self.id(), val)
+    }
+}
+
+pub fn main() {
+    let tracked r1 = AgreementResource::<int>::alloc(72);
+    assert(r1@ == 72);
+    let tracked r2 = r1.duplicate();
+    assert(r2@ == r1@);
+    proof {
+        r1.lemma_agreement(&mut r2);
+    }
+}
+
+} // verus!2025-04-07 00:21:41 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:21:41 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:21:41 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:21:41 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:21:41 INFO: Dumped candidate to ../results/agreement_2/intermediate-result/repair/repair-1-2-Other.rs
+2025-04-07 00:21:41 WARNING: Debug mode is on, skip code change checking
+2025-04-07 00:21:41 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:21:41 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:21:41 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:21:41 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:21:41 INFO: Step 2: unsupported error 'expected square brackets' with candidate count=5.
+2025-04-07 00:21:41 INFO: Current score: Compilation Error: True, Verified: -1, Errors: 999, Verus Errors: 1
+2025-04-07 00:21:41 INFO: Attempting to repair with repair_default
+2025-04-07 00:21:41 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:21:41 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:21:41 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:21:41 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:21:41 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:21:41 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:21:41 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:21:41 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:21:41 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:21:41 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:22:17 INFO: Infer time: 35.83s
+2025-04-07 00:22:17 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:22:17 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:22:17 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:22:17 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:22:17 INFO: Candidate failed compilation due to: VerusErrorType.MismatchedType.
+Fatal error: err_trace does not have a label#![allow(unused_imports)]
+use builtin::*;
+use builtin_macros::*;
+use std::result::*;
+use vstd::pcm::*;
+use vstd::pcm_lib::*;
+use vstd::prelude::*;
+
+#[doc = r#"
+This file implements agreement on a constant value using a custom
+resource algebra.
+
+An agreement resource constitutes knowledge of a constant value.
+To create an instance of a constant value of type `T`, use
+`AgreementResource::<T>::alloc()` as in the following example:
+
+let tracked r1 = AgreementResource::<int>::alloc(72);
+assert(r1@ == 72);
+
+Knowledge of a constant value can be duplicated with `duplicate`,
+which creates another agreement resource with the same constant
+value and the same ID. Here's an example:
+
+let tracked r2 = r1.duplicate();
+assert(r2.id() == r1.id());
+assert(r2@ == r1@);
+
+Any two agreement resources with the same `id()` are guaranteed to
+have equal values. You can establish this by calling
+`lemma_agreement`, as in the following example:
+
+assert(r2.id() == r1.id());
+proof { r1.lemma_agreement(&mut r2); }
+assert(r2@ == r1@);
+"#]
+
+verus! {
+
+#[verifier::loop_isolation(false)]
+pub enum AgreementResourceValue<T> {
+    Empty,
+    Chosen { c: T },
+    Invalid,
+}
+
+impl<T> AgreementResourceValue<T> {
+    pub open spec fn new(c: T) -> Self {
+        AgreementResourceValue::Chosen { c }
+        /* TODO: part of view */
+    }
+}
+
+impl<T> PCM for AgreementResourceValue<T> {
+    open spec fn valid(self) -> bool {
+        match self {
+            AgreementResourceValue::Invalid => false,
+            _ => true,
+        }
+        /* TODO: part of view */
+    }
+
+    open spec fn op(self, other: Self) -> Self {
+        match self {
+            AgreementResourceValue::Invalid => AgreementResourceValue::Invalid,
+            AgreementResourceValue::Chosen { c } => match other {
+                AgreementResourceValue::Invalid => AgreementResourceValue::Invalid,
+                AgreementResourceValue::Chosen { c: c2 } => if c == c2 {
+                    AgreementResourceValue::Chosen { c }
+                } else {
+                    AgreementResourceValue::Invalid
+                },
+                AgreementResourceValue::Empty => AgreementResourceValue::Chosen { c },
+            },
+            AgreementResourceValue::Empty => other,
+        }
+        /* TODO: part of view */
+    }
+
+    open spec fn unit() -> Self {
+        AgreementResourceValue::Empty
+        /* TODO: part of view */
+    }
+
+    proof fn closed_under_incl(a: Self, b: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn commutative(a: Self, b: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn associative(a: Self, b: Self, c: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn op_unit(a: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn unit_valid() {
+        /* TODO: part of view */
+    }
+}
+
+pub struct AgreementResource<T> {
+    r: Resource<AgreementResourceValue<T>>,
+}
+
+impl<T> AgreementResource<T> {
+    pub closed spec fn inv(self) -> bool {
+        self.r@.valid()
+        /* TODO: part of view */
+    }
+
+    pub closed spec fn id(self) -> Loc {
+        self.r.id()
+        /* TODO: part of view */
+    }
+
+    pub closed spec fn view(self) -> T
+        recommends
+            self.inv(),
+    {
+        match self.r@ {
+            AgreementResourceValue::Chosen { c } => c,
+            _ => arbitrary(),
+        }
+        /* TODO: part of view */
+    }
+
+    pub proof fn alloc(c: T) -> (tracked result: AgreementResource<T>)
+        requires
+            true,
+        ensures
+            result.inv(),
+            result@ == c,
+    {
+        let r_value = AgreementResourceValue::<T>::new(c);
+        let tracked r = Resource::<AgreementResourceValue::<T>>::alloc(r_value);
+        AgreementResource::<T> { r }
+    }
+
+    pub proof fn duplicate(tracked self: &mut AgreementResource<T>) -> (tracked result: AgreementResource<T>)
+        requires
+            old(self).inv(),
+        ensures
+            self.inv(),
+            result.inv(),
+            self.id() == old(self).id(),
+            result.id() == old(self).id(),
+            self@ == old(self)@,
+            result@ == old(self)@,
+    {
+        let tracked r = duplicate(&self.r);
+        AgreementResource::<T> { r }
+    }
+
+    pub proof fn lemma_agreement(
+        tracked self: &mut AgreementResource<T>,
+        tracked other: &AgreementResource<T>,
+    )
+        requires
+            old(self).inv(),
+            old(other).inv(),
+        ensures
+            self.inv(),
+            other.inv(),
+            self@ == old(self)@,
+            other@ == old(other)@,
+            if self.id() == other.id() { self@ == other@ } else { true },
+    {
+        self.r.validate_2(&other.r);
+    }
+}
+
+impl<T> View for AgreementResource<T> {
+    type V = (Loc, Option<T>);
+
+    closed spec fn view(&self) -> Self::V {
+        let val = match self.r@ {
+            AgreementResourceValue::Chosen { c } => Some(c),
+            _ => None,
+        };
+        (self.id(), val)
+    }
+}
+
+pub fn main() {
+    let tracked r1 = AgreementResource::<int>::alloc(72);
+    assert(r1@ == 72);
+    let tracked r2 = r1.duplicate();
+    assert(r2@ == r1@);
+    proof {
+        r1.lemma_agreement(&mut r2);
+    }
+}
+
+} // verus!2025-04-07 00:22:17 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:22:17 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:22:17 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:22:17 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:22:17 INFO: Dumped candidate to ../results/agreement_2/intermediate-result/repair/repair-2-0-Other.rs
+2025-04-07 00:22:17 WARNING: Debug mode is on, skip code change checking
+2025-04-07 00:22:17 INFO: Step 2: Error expected square brackets fixed on finer check; candidate 0.
+2025-04-07 00:22:17 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:22:17 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:22:17 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:22:17 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:22:17 INFO: Step 3: partial-match 'mismatched types' with candidate count=3.
+2025-04-07 00:22:17 INFO: Current score: Compilation Error: True, Verified: -1, Errors: 999, Verus Errors: 8
+2025-04-07 00:22:17 INFO: Attempting to repair with repair_mismatched_type
+Fatal error: err_trace does not have a label#![allow(unused_imports)]
+use builtin::*;
+use builtin_macros::*;
+use std::result::*;
+use vstd::pcm::*;
+use vstd::pcm_lib::*;
+use vstd::prelude::*;
+
+#[doc = r#"
+This file implements agreement on a constant value using a custom
+resource algebra.
+
+An agreement resource constitutes knowledge of a constant value.
+To create an instance of a constant value of type `T`, use
+`AgreementResource::<T>::alloc()` as in the following example:
+
+let tracked r1 = AgreementResource::<int>::alloc(72);
+assert(r1@ == 72);
+
+Knowledge of a constant value can be duplicated with `duplicate`,
+which creates another agreement resource with the same constant
+value and the same ID. Here's an example:
+
+let tracked r2 = r1.duplicate();
+assert(r2.id() == r1.id());
+assert(r2@ == r1@);
+
+Any two agreement resources with the same `id()` are guaranteed to
+have equal values. You can establish this by calling
+`lemma_agreement`, as in the following example:
+
+assert(r2.id() == r1.id());
+proof { r1.lemma_agreement(&mut r2); }
+assert(r2@ == r1@);
+"#]
+
+verus! {
+
+#[verifier::loop_isolation(false)]
+pub enum AgreementResourceValue<T> {
+    Empty,
+    Chosen { c: T },
+    Invalid,
+}
+
+impl<T> AgreementResourceValue<T> {
+    pub open spec fn new(c: T) -> Self {
+        AgreementResourceValue::Chosen { c }
+        /* TODO: part of view */
+    }
+}
+
+impl<T> PCM for AgreementResourceValue<T> {
+    open spec fn valid(self) -> bool {
+        match self {
+            AgreementResourceValue::Invalid => false,
+            _ => true,
+        }
+        /* TODO: part of view */
+    }
+
+    open spec fn op(self, other: Self) -> Self {
+        match self {
+            AgreementResourceValue::Invalid => AgreementResourceValue::Invalid,
+            AgreementResourceValue::Chosen { c } => match other {
+                AgreementResourceValue::Invalid => AgreementResourceValue::Invalid,
+                AgreementResourceValue::Chosen { c: c2 } => if c == c2 {
+                    AgreementResourceValue::Chosen { c }
+                } else {
+                    AgreementResourceValue::Invalid
+                },
+                AgreementResourceValue::Empty => AgreementResourceValue::Chosen { c },
+            },
+            AgreementResourceValue::Empty => other,
+        }
+        /* TODO: part of view */
+    }
+
+    open spec fn unit() -> Self {
+        AgreementResourceValue::Empty
+        /* TODO: part of view */
+    }
+
+    proof fn closed_under_incl(a: Self, b: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn commutative(a: Self, b: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn associative(a: Self, b: Self, c: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn op_unit(a: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn unit_valid() {
+        /* TODO: part of view */
+    }
+}
+
+pub struct AgreementResource<T> {
+    r: Resource<AgreementResourceValue<T>>,
+}
+
+impl<T> AgreementResource<T> {
+    pub closed spec fn inv(self) -> bool {
+        self.r@.valid()
+        /* TODO: part of view */
+    }
+
+    pub closed spec fn id(self) -> Loc {
+        self.r.id()
+        /* TODO: part of view */
+    }
+
+    pub closed spec fn view(self) -> T
+        recommends
+            self.inv(),
+    {
+        match self.r@ {
+            AgreementResourceValue::Chosen { c } => c,
+            _ => arbitrary(),
+        }
+        /* TODO: part of view */
+    }
+
+    pub proof fn alloc(c: T) -> (tracked result: AgreementResource<T>)
+        requires
+            true,
+        ensures
+            result.inv(),
+            result@ == c,
+    {
+        let r_value = AgreementResourceValue::<T>::new(c);
+        let tracked r = Resource::<AgreementResourceValue::<T>>::alloc(r_value);
+        AgreementResource::<T> { r }
+    }
+
+    pub proof fn duplicate(tracked self: &mut AgreementResource<T>) -> (tracked result: AgreementResource<T>)
+        requires
+            old(self).inv(),
+        ensures
+            self.inv(),
+            result.inv(),
+            self.id() == old(self).id(),
+            result.id() == old(self).id(),
+            self@ == old(self)@,
+            result@ == old(self)@,
+    {
+        let tracked r = duplicate(&self.r);
+        AgreementResource::<T> { r }
+    }
+
+    pub proof fn lemma_agreement(
+        tracked self: &mut AgreementResource<T>,
+        tracked other: &AgreementResource<T>,
+    )
+        requires
+            old(self).inv(),
+            old(other).inv(),
+        ensures
+            self.inv(),
+            other.inv(),
+            self@ == old(self)@,
+            other@ == old(other)@,
+            if self.id() == other.id() { self@ == other@ } else { true },
+    {
+        self.r.validate_2(&other.r);
+    }
+}
+
+impl<T> View for AgreementResource<T> {
+    type V = (Loc, Option<T>);
+
+    closed spec fn view(&self) -> Self::V {
+        let val = match self.r@ {
+            AgreementResourceValue::Chosen { c } => Some(c),
+            _ => None,
+        };
+        (self.id(), val)
+    }
+}
+
+pub fn main() {
+    let tracked r1 = AgreementResource::<int>::alloc(72);
+    assert(r1@ == 72);
+    let tracked r2 = r1.duplicate();
+    assert(r2@ == r1@);
+    proof {
+        r1.lemma_agreement(&mut r2);
+    }
+}
+
+} // verus!2025-04-07 00:22:18 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:22:18 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:22:18 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:22:18 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:22:18 INFO: Candidate failed compilation due to: VerusErrorType.MismatchedType.
+Fatal error: err_trace does not have a label#![allow(unused_imports)]
+use builtin::*;
+use builtin_macros::*;
+use std::result::*;
+use vstd::pcm::*;
+use vstd::pcm_lib::*;
+use vstd::prelude::*;
+
+#[doc = r#"
+This file implements agreement on a constant value using a custom
+resource algebra.
+
+An agreement resource constitutes knowledge of a constant value.
+To create an instance of a constant value of type `T`, use
+`AgreementResource::<T>::alloc()` as in the following example:
+
+let tracked r1 = AgreementResource::<int>::alloc(72);
+assert(r1@ == 72);
+
+Knowledge of a constant value can be duplicated with `duplicate`,
+which creates another agreement resource with the same constant
+value and the same ID. Here's an example:
+
+let tracked r2 = r1.duplicate();
+assert(r2.id() == r1.id());
+assert(r2@ == r1@);
+
+Any two agreement resources with the same `id()` are guaranteed to
+have equal values. You can establish this by calling
+`lemma_agreement`, as in the following example:
+
+assert(r2.id() == r1.id());
+proof { r1.lemma_agreement(&mut r2); }
+assert(r2@ == r1@);
+"#]
+
+verus! {
+
+#[verifier::loop_isolation(false)]
+pub enum AgreementResourceValue<T> {
+    Empty,
+    Chosen { c: T },
+    Invalid,
+}
+
+impl<T> AgreementResourceValue<T> {
+    pub open spec fn new(c: T) -> Self {
+        AgreementResourceValue::Chosen { c }
+        /* TODO: part of view */
+    }
+}
+
+impl<T> PCM for AgreementResourceValue<T> {
+    open spec fn valid(self) -> bool {
+        match self {
+            AgreementResourceValue::Invalid => false,
+            _ => true,
+        }
+        /* TODO: part of view */
+    }
+
+    open spec fn op(self, other: Self) -> Self {
+        match self {
+            AgreementResourceValue::Invalid => AgreementResourceValue::Invalid,
+            AgreementResourceValue::Chosen { c } => match other {
+                AgreementResourceValue::Invalid => AgreementResourceValue::Invalid,
+                AgreementResourceValue::Chosen { c: c2 } => if c == c2 {
+                    AgreementResourceValue::Chosen { c }
+                } else {
+                    AgreementResourceValue::Invalid
+                },
+                AgreementResourceValue::Empty => AgreementResourceValue::Chosen { c },
+            },
+            AgreementResourceValue::Empty => other,
+        }
+        /* TODO: part of view */
+    }
+
+    open spec fn unit() -> Self {
+        AgreementResourceValue::Empty
+        /* TODO: part of view */
+    }
+
+    proof fn closed_under_incl(a: Self, b: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn commutative(a: Self, b: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn associative(a: Self, b: Self, c: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn op_unit(a: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn unit_valid() {
+        /* TODO: part of view */
+    }
+}
+
+pub struct AgreementResource<T> {
+    r: Resource<AgreementResourceValue<T>>,
+}
+
+impl<T> AgreementResource<T> {
+    pub closed spec fn inv(self) -> bool {
+        self.r@.valid()
+        /* TODO: part of view */
+    }
+
+    pub closed spec fn id(self) -> Loc {
+        self.r.id()
+        /* TODO: part of view */
+    }
+
+    pub closed spec fn view(self) -> T
+        recommends
+            self.inv(),
+    {
+        match self.r@ {
+            AgreementResourceValue::Chosen { c } => c,
+            _ => arbitrary(),
+        }
+        /* TODO: part of view */
+    }
+
+    pub proof fn alloc(c: T) -> (tracked result: AgreementResource<T>)
+        requires
+            true,
+        ensures
+            result.inv(),
+            result@ == c,
+    {
+        let r_value = AgreementResourceValue::<T>::new(c);
+        let tracked r = Resource::<AgreementResourceValue::<T>>::alloc(r_value);
+        AgreementResource::<T> { r }
+    }
+
+    pub proof fn duplicate(tracked self: &mut AgreementResource<T>) -> (tracked result: AgreementResource<T>)
+        requires
+            old(self).inv(),
+        ensures
+            self.inv(),
+            result.inv(),
+            self.id() == old(self).id(),
+            result.id() == old(self).id(),
+            self@ == old(self)@,
+            result@ == old(self)@,
+    {
+        let tracked r = duplicate(&self.r);
+        AgreementResource::<T> { r }
+    }
+
+    pub proof fn lemma_agreement(
+        tracked self: &mut AgreementResource<T>,
+        tracked other: &AgreementResource<T>,
+    )
+        requires
+            old(self).inv(),
+            old(other).inv(),
+        ensures
+            self.inv(),
+            other.inv(),
+            self@ == old(self)@,
+            other@ == old(other)@,
+            if self.id() == other.id() { self@ == other@ } else { true },
+    {
+        self.r.validate_2(&other.r);
+    }
+}
+
+impl<T> View for AgreementResource<T> {
+    type V = (Loc, Option<T>);
+
+    closed spec fn view(&self) -> Self::V {
+        let val = match self.r@ {
+            AgreementResourceValue::Chosen { c } => Some(c),
+            _ => None,
+        };
+        (self.id(), val)
+    }
+}
+
+pub fn main() {
+    let tracked r1 = AgreementResource::<int>::alloc(72);
+    assert(r1@ == 72);
+    let tracked r2 = r1.duplicate();
+    assert(r2@ == r1@);
+    proof {
+        r1.lemma_agreement(&mut r2);
+    }
+}
+
+} // verus!2025-04-07 00:22:18 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:22:18 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:22:18 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:22:18 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:22:18 INFO: Dumped candidate to ../results/agreement_2/intermediate-result/repair/repair-3-0-MismatchedType.rs
+2025-04-07 00:22:18 WARNING: Debug mode is on, skip code change checking
+2025-04-07 00:22:18 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:22:18 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:22:18 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:22:18 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:22:18 INFO: Step 4: partial-match 'mismatched types' with candidate count=5.
+2025-04-07 00:22:18 INFO: Current score: Compilation Error: True, Verified: -1, Errors: 999, Verus Errors: 8
+2025-04-07 00:22:18 INFO: Attempting to repair with repair_mismatched_type
+Fatal error: err_trace does not have a label#![allow(unused_imports)]
+use builtin::*;
+use builtin_macros::*;
+use std::result::*;
+use vstd::pcm::*;
+use vstd::pcm_lib::*;
+use vstd::prelude::*;
+
+#[doc = r#"
+This file implements agreement on a constant value using a custom
+resource algebra.
+
+An agreement resource constitutes knowledge of a constant value.
+To create an instance of a constant value of type `T`, use
+`AgreementResource::<T>::alloc()` as in the following example:
+
+let tracked r1 = AgreementResource::<int>::alloc(72);
+assert(r1@ == 72);
+
+Knowledge of a constant value can be duplicated with `duplicate`,
+which creates another agreement resource with the same constant
+value and the same ID. Here's an example:
+
+let tracked r2 = r1.duplicate();
+assert(r2.id() == r1.id());
+assert(r2@ == r1@);
+
+Any two agreement resources with the same `id()` are guaranteed to
+have equal values. You can establish this by calling
+`lemma_agreement`, as in the following example:
+
+assert(r2.id() == r1.id());
+proof { r1.lemma_agreement(&mut r2); }
+assert(r2@ == r1@);
+"#]
+
+verus! {
+
+#[verifier::loop_isolation(false)]
+pub enum AgreementResourceValue<T> {
+    Empty,
+    Chosen { c: T },
+    Invalid,
+}
+
+impl<T> AgreementResourceValue<T> {
+    pub open spec fn new(c: T) -> Self {
+        AgreementResourceValue::Chosen { c }
+        /* TODO: part of view */
+    }
+}
+
+impl<T> PCM for AgreementResourceValue<T> {
+    open spec fn valid(self) -> bool {
+        match self {
+            AgreementResourceValue::Invalid => false,
+            _ => true,
+        }
+        /* TODO: part of view */
+    }
+
+    open spec fn op(self, other: Self) -> Self {
+        match self {
+            AgreementResourceValue::Invalid => AgreementResourceValue::Invalid,
+            AgreementResourceValue::Chosen { c } => match other {
+                AgreementResourceValue::Invalid => AgreementResourceValue::Invalid,
+                AgreementResourceValue::Chosen { c: c2 } => if c == c2 {
+                    AgreementResourceValue::Chosen { c }
+                } else {
+                    AgreementResourceValue::Invalid
+                },
+                AgreementResourceValue::Empty => AgreementResourceValue::Chosen { c },
+            },
+            AgreementResourceValue::Empty => other,
+        }
+        /* TODO: part of view */
+    }
+
+    open spec fn unit() -> Self {
+        AgreementResourceValue::Empty
+        /* TODO: part of view */
+    }
+
+    proof fn closed_under_incl(a: Self, b: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn commutative(a: Self, b: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn associative(a: Self, b: Self, c: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn op_unit(a: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn unit_valid() {
+        /* TODO: part of view */
+    }
+}
+
+pub struct AgreementResource<T> {
+    r: Resource<AgreementResourceValue<T>>,
+}
+
+impl<T> AgreementResource<T> {
+    pub closed spec fn inv(self) -> bool {
+        self.r@.valid()
+        /* TODO: part of view */
+    }
+
+    pub closed spec fn id(self) -> Loc {
+        self.r.id()
+        /* TODO: part of view */
+    }
+
+    pub closed spec fn view(self) -> T
+        recommends
+            self.inv(),
+    {
+        match self.r@ {
+            AgreementResourceValue::Chosen { c } => c,
+            _ => arbitrary(),
+        }
+        /* TODO: part of view */
+    }
+
+    pub proof fn alloc(c: T) -> (tracked result: AgreementResource<T>)
+        requires
+            true,
+        ensures
+            result.inv(),
+            result@ == c,
+    {
+        let r_value = AgreementResourceValue::<T>::new(c);
+        let tracked r = Resource::<AgreementResourceValue::<T>>::alloc(r_value);
+        AgreementResource::<T> { r }
+    }
+
+    pub proof fn duplicate(tracked self: &mut AgreementResource<T>) -> (tracked result: AgreementResource<T>)
+        requires
+            old(self).inv(),
+        ensures
+            self.inv(),
+            result.inv(),
+            self.id() == old(self).id(),
+            result.id() == old(self).id(),
+            self@ == old(self)@,
+            result@ == old(self)@,
+    {
+        let tracked r = duplicate(&self.r);
+        AgreementResource::<T> { r }
+    }
+
+    pub proof fn lemma_agreement(
+        tracked self: &mut AgreementResource<T>,
+        tracked other: &AgreementResource<T>,
+    )
+        requires
+            old(self).inv(),
+            old(other).inv(),
+        ensures
+            self.inv(),
+            other.inv(),
+            self@ == old(self)@,
+            other@ == old(other)@,
+            if self.id() == other.id() { self@ == other@ } else { true },
+    {
+        self.r.validate_2(&other.r);
+    }
+}
+
+impl<T> View for AgreementResource<T> {
+    type V = (Loc, Option<T>);
+
+    closed spec fn view(&self) -> Self::V {
+        let val = match self.r@ {
+            AgreementResourceValue::Chosen { c } => Some(c),
+            _ => None,
+        };
+        (self.id(), val)
+    }
+}
+
+pub fn main() {
+    let tracked r1 = AgreementResource::<int>::alloc(72);
+    assert(r1@ == 72);
+    let tracked r2 = r1.duplicate();
+    assert(r2@ == r1@);
+    proof {
+        r1.lemma_agreement(&mut r2);
+    }
+}
+
+} // verus!2025-04-07 00:22:18 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:22:18 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:22:18 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:22:18 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:22:18 INFO: Candidate failed compilation due to: VerusErrorType.MismatchedType.
+Fatal error: err_trace does not have a label#![allow(unused_imports)]
+use builtin::*;
+use builtin_macros::*;
+use std::result::*;
+use vstd::pcm::*;
+use vstd::pcm_lib::*;
+use vstd::prelude::*;
+
+#[doc = r#"
+This file implements agreement on a constant value using a custom
+resource algebra.
+
+An agreement resource constitutes knowledge of a constant value.
+To create an instance of a constant value of type `T`, use
+`AgreementResource::<T>::alloc()` as in the following example:
+
+let tracked r1 = AgreementResource::<int>::alloc(72);
+assert(r1@ == 72);
+
+Knowledge of a constant value can be duplicated with `duplicate`,
+which creates another agreement resource with the same constant
+value and the same ID. Here's an example:
+
+let tracked r2 = r1.duplicate();
+assert(r2.id() == r1.id());
+assert(r2@ == r1@);
+
+Any two agreement resources with the same `id()` are guaranteed to
+have equal values. You can establish this by calling
+`lemma_agreement`, as in the following example:
+
+assert(r2.id() == r1.id());
+proof { r1.lemma_agreement(&mut r2); }
+assert(r2@ == r1@);
+"#]
+
+verus! {
+
+#[verifier::loop_isolation(false)]
+pub enum AgreementResourceValue<T> {
+    Empty,
+    Chosen { c: T },
+    Invalid,
+}
+
+impl<T> AgreementResourceValue<T> {
+    pub open spec fn new(c: T) -> Self {
+        AgreementResourceValue::Chosen { c }
+        /* TODO: part of view */
+    }
+}
+
+impl<T> PCM for AgreementResourceValue<T> {
+    open spec fn valid(self) -> bool {
+        match self {
+            AgreementResourceValue::Invalid => false,
+            _ => true,
+        }
+        /* TODO: part of view */
+    }
+
+    open spec fn op(self, other: Self) -> Self {
+        match self {
+            AgreementResourceValue::Invalid => AgreementResourceValue::Invalid,
+            AgreementResourceValue::Chosen { c } => match other {
+                AgreementResourceValue::Invalid => AgreementResourceValue::Invalid,
+                AgreementResourceValue::Chosen { c: c2 } => if c == c2 {
+                    AgreementResourceValue::Chosen { c }
+                } else {
+                    AgreementResourceValue::Invalid
+                },
+                AgreementResourceValue::Empty => AgreementResourceValue::Chosen { c },
+            },
+            AgreementResourceValue::Empty => other,
+        }
+        /* TODO: part of view */
+    }
+
+    open spec fn unit() -> Self {
+        AgreementResourceValue::Empty
+        /* TODO: part of view */
+    }
+
+    proof fn closed_under_incl(a: Self, b: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn commutative(a: Self, b: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn associative(a: Self, b: Self, c: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn op_unit(a: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn unit_valid() {
+        /* TODO: part of view */
+    }
+}
+
+pub struct AgreementResource<T> {
+    r: Resource<AgreementResourceValue<T>>,
+}
+
+impl<T> AgreementResource<T> {
+    pub closed spec fn inv(self) -> bool {
+        self.r@.valid()
+        /* TODO: part of view */
+    }
+
+    pub closed spec fn id(self) -> Loc {
+        self.r.id()
+        /* TODO: part of view */
+    }
+
+    pub closed spec fn view(self) -> T
+        recommends
+            self.inv(),
+    {
+        match self.r@ {
+            AgreementResourceValue::Chosen { c } => c,
+            _ => arbitrary(),
+        }
+        /* TODO: part of view */
+    }
+
+    pub proof fn alloc(c: T) -> (tracked result: AgreementResource<T>)
+        requires
+            true,
+        ensures
+            result.inv(),
+            result@ == c,
+    {
+        let r_value = AgreementResourceValue::<T>::new(c);
+        let tracked r = Resource::<AgreementResourceValue::<T>>::alloc(r_value);
+        AgreementResource::<T> { r }
+    }
+
+    pub proof fn duplicate(tracked self: &mut AgreementResource<T>) -> (tracked result: AgreementResource<T>)
+        requires
+            old(self).inv(),
+        ensures
+            self.inv(),
+            result.inv(),
+            self.id() == old(self).id(),
+            result.id() == old(self).id(),
+            self@ == old(self)@,
+            result@ == old(self)@,
+    {
+        let tracked r = duplicate(&self.r);
+        AgreementResource::<T> { r }
+    }
+
+    pub proof fn lemma_agreement(
+        tracked self: &mut AgreementResource<T>,
+        tracked other: &AgreementResource<T>,
+    )
+        requires
+            old(self).inv(),
+            old(other).inv(),
+        ensures
+            self.inv(),
+            other.inv(),
+            self@ == old(self)@,
+            other@ == old(other)@,
+            if self.id() == other.id() { self@ == other@ } else { true },
+    {
+        self.r.validate_2(&other.r);
+    }
+}
+
+impl<T> View for AgreementResource<T> {
+    type V = (Loc, Option<T>);
+
+    closed spec fn view(&self) -> Self::V {
+        let val = match self.r@ {
+            AgreementResourceValue::Chosen { c } => Some(c),
+            _ => None,
+        };
+        (self.id(), val)
+    }
+}
+
+pub fn main() {
+    let tracked r1 = AgreementResource::<int>::alloc(72);
+    assert(r1@ == 72);
+    let tracked r2 = r1.duplicate();
+    assert(r2@ == r1@);
+    proof {
+        r1.lemma_agreement(&mut r2);
+    }
+}
+
+} // verus!2025-04-07 00:22:18 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:22:18 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:22:18 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:22:18 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:22:18 INFO: Dumped candidate to ../results/agreement_2/intermediate-result/repair/repair-4-0-MismatchedType.rs
+2025-04-07 00:22:18 WARNING: Debug mode is on, skip code change checking
+2025-04-07 00:22:18 INFO: Step 4: Error mismatched types fixed on finer check; candidate 0.
+2025-04-07 00:22:18 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:22:18 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:22:18 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:22:18 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:22:18 INFO: Step 5: partial-match 'mismatched types' with candidate count=3.
+2025-04-07 00:22:18 INFO: Current score: Compilation Error: True, Verified: -1, Errors: 999, Verus Errors: 8
+2025-04-07 00:22:18 INFO: Attempting to repair with repair_mismatched_type
+Fatal error: err_trace does not have a label#![allow(unused_imports)]
+use builtin::*;
+use builtin_macros::*;
+use std::result::*;
+use vstd::pcm::*;
+use vstd::pcm_lib::*;
+use vstd::prelude::*;
+
+#[doc = r#"
+This file implements agreement on a constant value using a custom
+resource algebra.
+
+An agreement resource constitutes knowledge of a constant value.
+To create an instance of a constant value of type `T`, use
+`AgreementResource::<T>::alloc()` as in the following example:
+
+let tracked r1 = AgreementResource::<int>::alloc(72);
+assert(r1@ == 72);
+
+Knowledge of a constant value can be duplicated with `duplicate`,
+which creates another agreement resource with the same constant
+value and the same ID. Here's an example:
+
+let tracked r2 = r1.duplicate();
+assert(r2.id() == r1.id());
+assert(r2@ == r1@);
+
+Any two agreement resources with the same `id()` are guaranteed to
+have equal values. You can establish this by calling
+`lemma_agreement`, as in the following example:
+
+assert(r2.id() == r1.id());
+proof { r1.lemma_agreement(&mut r2); }
+assert(r2@ == r1@);
+"#]
+
+verus! {
+
+#[verifier::loop_isolation(false)]
+pub enum AgreementResourceValue<T> {
+    Empty,
+    Chosen { c: T },
+    Invalid,
+}
+
+impl<T> AgreementResourceValue<T> {
+    pub open spec fn new(c: T) -> Self {
+        AgreementResourceValue::Chosen { c }
+        /* TODO: part of view */
+    }
+}
+
+impl<T> PCM for AgreementResourceValue<T> {
+    open spec fn valid(self) -> bool {
+        match self {
+            AgreementResourceValue::Invalid => false,
+            _ => true,
+        }
+        /* TODO: part of view */
+    }
+
+    open spec fn op(self, other: Self) -> Self {
+        match self {
+            AgreementResourceValue::Invalid => AgreementResourceValue::Invalid,
+            AgreementResourceValue::Chosen { c } => match other {
+                AgreementResourceValue::Invalid => AgreementResourceValue::Invalid,
+                AgreementResourceValue::Chosen { c: c2 } => if c == c2 {
+                    AgreementResourceValue::Chosen { c }
+                } else {
+                    AgreementResourceValue::Invalid
+                },
+                AgreementResourceValue::Empty => AgreementResourceValue::Chosen { c },
+            },
+            AgreementResourceValue::Empty => other,
+        }
+        /* TODO: part of view */
+    }
+
+    open spec fn unit() -> Self {
+        AgreementResourceValue::Empty
+        /* TODO: part of view */
+    }
+
+    proof fn closed_under_incl(a: Self, b: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn commutative(a: Self, b: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn associative(a: Self, b: Self, c: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn op_unit(a: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn unit_valid() {
+        /* TODO: part of view */
+    }
+}
+
+pub struct AgreementResource<T> {
+    r: Resource<AgreementResourceValue<T>>,
+}
+
+impl<T> AgreementResource<T> {
+    pub closed spec fn inv(self) -> bool {
+        self.r@.valid()
+        /* TODO: part of view */
+    }
+
+    pub closed spec fn id(self) -> Loc {
+        self.r.id()
+        /* TODO: part of view */
+    }
+
+    pub closed spec fn view(self) -> T
+        recommends
+            self.inv(),
+    {
+        match self.r@ {
+            AgreementResourceValue::Chosen { c } => c,
+            _ => arbitrary(),
+        }
+        /* TODO: part of view */
+    }
+
+    pub proof fn alloc(c: T) -> (tracked result: AgreementResource<T>)
+        requires
+            true,
+        ensures
+            result.inv(),
+            result@ == c,
+    {
+        let r_value = AgreementResourceValue::<T>::new(c);
+        let tracked r = Resource::<AgreementResourceValue::<T>>::alloc(r_value);
+        AgreementResource::<T> { r }
+    }
+
+    pub proof fn duplicate(tracked self: &mut AgreementResource<T>) -> (tracked result: AgreementResource<T>)
+        requires
+            old(self).inv(),
+        ensures
+            self.inv(),
+            result.inv(),
+            self.id() == old(self).id(),
+            result.id() == old(self).id(),
+            self@ == old(self)@,
+            result@ == old(self)@,
+    {
+        let tracked r = duplicate(&self.r);
+        AgreementResource::<T> { r }
+    }
+
+    pub proof fn lemma_agreement(
+        tracked self: &mut AgreementResource<T>,
+        tracked other: &AgreementResource<T>,
+    )
+        requires
+            old(self).inv(),
+            old(other).inv(),
+        ensures
+            self.inv(),
+            other.inv(),
+            self@ == old(self)@,
+            other@ == old(other)@,
+            if self.id() == other.id() { self@ == other@ } else { true },
+    {
+        self.r.validate_2(&other.r);
+    }
+}
+
+impl<T> View for AgreementResource<T> {
+    type V = (Loc, Option<T>);
+
+    closed spec fn view(&self) -> Self::V {
+        let val = match self.r@ {
+            AgreementResourceValue::Chosen { c } => Some(c),
+            _ => None,
+        };
+        (self.id(), val)
+    }
+}
+
+pub fn main() {
+    let tracked r1 = AgreementResource::<int>::alloc(72);
+    assert(r1@ == 72);
+    let tracked r2 = r1.duplicate();
+    assert(r2@ == r1@);
+    proof {
+        r1.lemma_agreement(&mut r2);
+    }
+}
+
+} // verus!2025-04-07 00:22:19 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:22:19 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:22:19 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:22:19 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:22:19 INFO: Candidate failed compilation due to: VerusErrorType.MismatchedType.
+Fatal error: err_trace does not have a label#![allow(unused_imports)]
+use builtin::*;
+use builtin_macros::*;
+use std::result::*;
+use vstd::pcm::*;
+use vstd::pcm_lib::*;
+use vstd::prelude::*;
+
+#[doc = r#"
+This file implements agreement on a constant value using a custom
+resource algebra.
+
+An agreement resource constitutes knowledge of a constant value.
+To create an instance of a constant value of type `T`, use
+`AgreementResource::<T>::alloc()` as in the following example:
+
+let tracked r1 = AgreementResource::<int>::alloc(72);
+assert(r1@ == 72);
+
+Knowledge of a constant value can be duplicated with `duplicate`,
+which creates another agreement resource with the same constant
+value and the same ID. Here's an example:
+
+let tracked r2 = r1.duplicate();
+assert(r2.id() == r1.id());
+assert(r2@ == r1@);
+
+Any two agreement resources with the same `id()` are guaranteed to
+have equal values. You can establish this by calling
+`lemma_agreement`, as in the following example:
+
+assert(r2.id() == r1.id());
+proof { r1.lemma_agreement(&mut r2); }
+assert(r2@ == r1@);
+"#]
+
+verus! {
+
+#[verifier::loop_isolation(false)]
+pub enum AgreementResourceValue<T> {
+    Empty,
+    Chosen { c: T },
+    Invalid,
+}
+
+impl<T> AgreementResourceValue<T> {
+    pub open spec fn new(c: T) -> Self {
+        AgreementResourceValue::Chosen { c }
+        /* TODO: part of view */
+    }
+}
+
+impl<T> PCM for AgreementResourceValue<T> {
+    open spec fn valid(self) -> bool {
+        match self {
+            AgreementResourceValue::Invalid => false,
+            _ => true,
+        }
+        /* TODO: part of view */
+    }
+
+    open spec fn op(self, other: Self) -> Self {
+        match self {
+            AgreementResourceValue::Invalid => AgreementResourceValue::Invalid,
+            AgreementResourceValue::Chosen { c } => match other {
+                AgreementResourceValue::Invalid => AgreementResourceValue::Invalid,
+                AgreementResourceValue::Chosen { c: c2 } => if c == c2 {
+                    AgreementResourceValue::Chosen { c }
+                } else {
+                    AgreementResourceValue::Invalid
+                },
+                AgreementResourceValue::Empty => AgreementResourceValue::Chosen { c },
+            },
+            AgreementResourceValue::Empty => other,
+        }
+        /* TODO: part of view */
+    }
+
+    open spec fn unit() -> Self {
+        AgreementResourceValue::Empty
+        /* TODO: part of view */
+    }
+
+    proof fn closed_under_incl(a: Self, b: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn commutative(a: Self, b: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn associative(a: Self, b: Self, c: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn op_unit(a: Self) {
+        /* TODO: part of view */
+    }
+
+    proof fn unit_valid() {
+        /* TODO: part of view */
+    }
+}
+
+pub struct AgreementResource<T> {
+    r: Resource<AgreementResourceValue<T>>,
+}
+
+impl<T> AgreementResource<T> {
+    pub closed spec fn inv(self) -> bool {
+        self.r@.valid()
+        /* TODO: part of view */
+    }
+
+    pub closed spec fn id(self) -> Loc {
+        self.r.id()
+        /* TODO: part of view */
+    }
+
+    pub closed spec fn view(self) -> T
+        recommends
+            self.inv(),
+    {
+        match self.r@ {
+            AgreementResourceValue::Chosen { c } => c,
+            _ => arbitrary(),
+        }
+        /* TODO: part of view */
+    }
+
+    pub proof fn alloc(c: T) -> (tracked result: AgreementResource<T>)
+        requires
+            true,
+        ensures
+            result.inv(),
+            result@ == c,
+    {
+        let r_value = AgreementResourceValue::<T>::new(c);
+        let tracked r = Resource::<AgreementResourceValue::<T>>::alloc(r_value);
+        AgreementResource::<T> { r }
+    }
+
+    pub proof fn duplicate(tracked self: &mut AgreementResource<T>) -> (tracked result: AgreementResource<T>)
+        requires
+            old(self).inv(),
+        ensures
+            self.inv(),
+            result.inv(),
+            self.id() == old(self).id(),
+            result.id() == old(self).id(),
+            self@ == old(self)@,
+            result@ == old(self)@,
+    {
+        let tracked r = duplicate(&self.r);
+        AgreementResource::<T> { r }
+    }
+
+    pub proof fn lemma_agreement(
+        tracked self: &mut AgreementResource<T>,
+        tracked other: &AgreementResource<T>,
+    )
+        requires
+            old(self).inv(),
+            old(other).inv(),
+        ensures
+            self.inv(),
+            other.inv(),
+            self@ == old(self)@,
+            other@ == old(other)@,
+            if self.id() == other.id() { self@ == other@ } else { true },
+    {
+        self.r.validate_2(&other.r);
+    }
+}
+
+impl<T> View for AgreementResource<T> {
+    type V = (Loc, Option<T>);
+
+    closed spec fn view(&self) -> Self::V {
+        let val = match self.r@ {
+            AgreementResourceValue::Chosen { c } => Some(c),
+            _ => None,
+        };
+        (self.id(), val)
+    }
+}
+
+pub fn main() {
+    let tracked r1 = AgreementResource::<int>::alloc(72);
+    assert(r1@ == 72);
+    let tracked r2 = r1.duplicate();
+    assert(r2@ == r1@);
+    proof {
+        r1.lemma_agreement(&mut r2);
+    }
+}
+
+} // verus!2025-04-07 00:22:19 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:22:19 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:22:19 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:22:19 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:22:19 INFO: Dumped candidate to ../results/agreement_2/intermediate-result/repair/repair-5-0-MismatchedType.rs
+2025-04-07 00:22:19 WARNING: Debug mode is on, skip code change checking
+2025-04-07 00:22:19 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:22:19 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:22:19 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:22:19 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:22:19 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:22:19 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:22:19 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:22:19 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:22:19 INFO: finished!

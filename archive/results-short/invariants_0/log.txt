@@ -1,0 +1,99 @@
+2025-04-07 00:47:23 INFO: Phase 1 examples: ['3', '6', '7']
+2025-04-07 00:47:23 INFO: View examples: ['8', '9']
+2025-04-07 00:47:23 INFO: Generating View
+2025-04-07 00:47:23 INFO: Repair steps: 10
+2025-04-07 00:47:24 INFO: Immutable functions: []
+2025-04-07 00:47:24 INFO: Generation initialized with phase1_examples: ['3', '6', '7']
+2025-04-07 00:47:24 INFO: Generation initialized with view_examples: ['8', '9']
+2025-04-07 00:47:24 INFO: Generation initialized with repair_uniform: False
+2025-04-07 00:47:24 INFO: Generating proof code
+2025-04-07 00:47:24 INFO: Temperature: 1.0
+2025-04-07 00:47:24 INFO: Generate with view mode
+2025-04-07 00:47:24 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:47:24 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:48:01 INFO: Infer time: 36.92s
+2025-04-07 00:48:01 INFO: Iteration 0: Selected refinement functions: view_inference, view_refinement, inv_inference, requires_inference
+2025-04-07 00:48:01 INFO: View Inference ...
+2025-04-07 00:48:01 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:48:01 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:48:01 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:48:01 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:48:01 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:48:01 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:48:01 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:48:01 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:48:01 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:48:01 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:48:34 INFO: Infer time: 33.12s
+2025-04-07 00:48:35 INFO: Verus has succeeded.
+2025-04-07 00:48:35 INFO: Found a correct proof!
+2025-04-07 00:48:35 INFO: View Refinement ...
+2025-04-07 00:48:35 ERROR: Example path /Users/syc/Desktop/-verusyth/code/examples/input-view-refine does not exist.
+2025-04-07 00:48:35 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:48:35 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:48:35 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:48:35 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:48:35 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:48:35 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:48:35 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:48:35 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:48:35 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:48:35 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:49:48 INFO: Infer time: 73.39s
+2025-04-07 00:49:49 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:49:49 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:49:49 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:49:49 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:49:49 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:49:49 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:49:49 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:49:49 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:49:49 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:49:49 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:49:49 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:49:49 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:49:49 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:49:49 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:49:49 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:49:49 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:49:49 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:49:49 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:49:49 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:49:49 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:49:49 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 00:49:49 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 00:49:49 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 00:49:49 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 00:49:49 INFO: Verus has succeeded.
+2025-04-07 00:49:49 INFO: Found a correct proof!
+2025-04-07 00:49:49 INFO: Inv Inference ...
+2025-04-07 00:49:49 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:49:49 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:49:49 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:49:49 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:49:49 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:49:49 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:49:49 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:49:49 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:49:49 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:49:49 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:50:14 INFO: Infer time: 24.46s
+2025-04-07 00:50:14 INFO: Verus has succeeded.
+2025-04-07 00:50:15 INFO: Found a correct proof!
+2025-04-07 00:50:15 INFO: Requires Inference ...
+2025-04-07 00:50:15 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:50:15 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:50:15 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:50:15 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:50:15 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:50:15 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:50:15 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:50:15 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:50:15 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:50:15 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 00:50:29 INFO: Infer time: 14.30s
+2025-04-07 00:50:29 INFO: Verus has succeeded.
+2025-04-07 00:50:29 INFO: Found a correct proof!
+2025-04-07 00:50:29 INFO: Verus has succeeded.
+2025-04-07 00:50:30 INFO: Successfully verified candidate code!
+2025-04-07 00:50:30 INFO: finished!

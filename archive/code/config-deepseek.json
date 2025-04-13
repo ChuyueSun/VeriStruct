@@ -1,0 +1,18 @@
+{
+    "aoai_api_base": [
+        "https://api.deepseek.com/"
+    ],
+    "aoai_api_version": "2023-12-01-preview",
+    "aoai_api_key": [
+	    "sk-f41569824c8746fb9369d9dcd89f2e61"
+    ],
+    "aoai_max_retries": 5,
+    "max_token": 8192,
+    "aoai_generation_model": "deepseek-reasoner",
+    "aoai_debug_model": "deepseek-reasoner",
+    "verus_path": "/home/chuyue/verus/source/target-verus/release/verus",
+    "example_path": "/home/chuyue/-verusyth/code/examples",
+    "lemma_path": "/home/chuyue/-verusyth/code/lemmas",
+    "util_path": "/home/chuyue/-verusyth/utils",
+    "platform": "openai"
+}

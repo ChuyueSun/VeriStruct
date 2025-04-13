@@ -1,0 +1,441 @@
+2025-04-07 15:50:34 INFO: Phase 1 examples: ['3', '6', '7']
+2025-04-07 15:50:34 INFO: View examples: ['8', '9']
+2025-04-07 15:50:34 INFO: Generating View
+2025-04-07 15:50:34 INFO: Repair steps: 10
+2025-04-07 15:50:35 INFO: Immutable functions: []
+2025-04-07 15:50:35 INFO: Generation initialized with phase1_examples: ['3', '6', '7']
+2025-04-07 15:50:35 INFO: Generation initialized with view_examples: ['8', '9']
+2025-04-07 15:50:35 INFO: Generation initialized with repair_uniform: False
+2025-04-07 15:50:35 INFO: Generating proof code
+2025-04-07 15:50:35 INFO: Temperature: 1.0
+2025-04-07 15:50:35 INFO: Generate with view mode
+2025-04-07 15:50:35 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:50:35 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:50:46 INFO: Infer time: 10.58s
+2025-04-07 15:50:46 INFO: Iteration 0: Selected refinement functions: view_inference, view_refinement, inv_inference, requires_inference
+2025-04-07 15:50:46 INFO: View Inference ...
+2025-04-07 15:50:46 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:50:46 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:50:46 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:50:46 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:50:46 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:50:46 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:50:46 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:50:46 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:50:46 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:50:46 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:51:18 INFO: Infer time: 32.17s
+2025-04-07 15:51:19 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 15:51:19 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 15:51:19 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 15:51:19 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 15:51:19 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 15:51:19 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 15:51:19 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 15:51:19 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 15:51:20 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 15:51:20 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 15:51:20 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 15:51:20 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 15:51:20 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 15:51:20 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 15:51:20 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 15:51:20 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 15:51:20 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 15:51:20 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 15:51:20 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 15:51:20 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 15:51:20 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 15:51:20 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 15:51:20 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 15:51:20 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 15:51:20 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 15:51:20 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 15:51:20 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 15:51:20 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 15:51:20 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 15:51:20 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 15:51:20 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 15:51:20 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 15:51:22 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 15:51:22 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 15:51:22 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 15:51:22 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 15:51:22 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 15:51:22 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 15:51:22 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 15:51:22 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 15:51:22 INFO: View Refinement ...
+2025-04-07 15:51:22 ERROR: Example path /Users/syc/Desktop/-verusyth/code/examples/input-view-refine does not exist.
+2025-04-07 15:51:22 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:51:22 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:51:22 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:51:22 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:51:22 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:51:22 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:51:22 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:51:22 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:51:22 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:51:22 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:52:21 INFO: Infer time: 59.32s
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 15:52:21 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 15:52:21 INFO: Inv Inference ...
+2025-04-07 15:52:21 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:52:21 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:52:21 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:52:21 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:52:21 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:52:21 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:52:21 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:52:21 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:52:21 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:52:21 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:53:37 INFO: Infer time: 76.16s
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 15:53:38 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 15:53:38 INFO: Requires Inference ...
+2025-04-07 15:53:38 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:53:38 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:53:38 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:53:38 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:53:38 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:53:38 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:53:38 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:53:38 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:53:38 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 15:53:38 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:03:39 INFO: Retrying request to /chat/completions in 0.452445 seconds
+2025-04-07 16:04:32 INFO: Infer time: 653.96s
+2025-04-07 16:04:32 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:04:32 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:04:32 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:04:32 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:04:32 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:04:32 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:04:32 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:04:32 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:04:33 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:04:33 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:04:33 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:04:42 INFO: Infer time: 8.78s
+2025-04-07 16:04:42 INFO: Iteration 1: Selected refinement functions: view_inference, view_refinement, inv_inference, requires_inference
+2025-04-07 16:04:42 INFO: View Inference ...
+2025-04-07 16:04:42 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:04:42 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:04:42 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:04:42 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:04:42 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:04:42 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:04:42 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:04:42 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:04:42 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:04:42 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:05:59 INFO: Infer time: 77.45s
+2025-04-07 16:06:00 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:06:00 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:06:00 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:06:00 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:06:00 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:06:00 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:06:00 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:06:00 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:06:01 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:06:01 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:06:01 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:06:01 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:06:01 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:06:01 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:06:01 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:06:01 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:06:02 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:06:02 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:06:02 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:06:02 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:06:02 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:06:02 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:06:02 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:06:02 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:06:02 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:06:02 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:06:02 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:06:02 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:06:02 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:06:02 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:06:02 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:06:02 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:06:03 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:06:03 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:06:03 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:06:03 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:06:03 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:06:03 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:06:03 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:06:03 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:06:03 INFO: View Refinement ...
+2025-04-07 16:06:03 ERROR: Example path /Users/syc/Desktop/-verusyth/code/examples/input-view-refine does not exist.
+2025-04-07 16:06:03 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:06:03 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:06:03 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:06:03 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:06:03 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:06:03 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:06:03 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:06:03 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:06:03 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:06:03 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:07:31 INFO: Infer time: 87.84s
+2025-04-07 16:07:31 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:07:31 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:07:31 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:07:31 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:07:31 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:07:31 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:07:31 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:07:31 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:07:31 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:07:31 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:07:31 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:07:31 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:07:31 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:07:31 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:07:31 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:07:31 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:07:32 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:07:32 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:07:32 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:07:32 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:07:32 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:07:32 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:07:32 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:07:32 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:07:32 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:07:32 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:07:32 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:07:32 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:07:32 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:07:32 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:07:32 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:07:32 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:07:32 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:07:32 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:07:32 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:07:32 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:07:32 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 16:07:32 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 16:07:32 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 16:07:32 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 16:07:32 INFO: Inv Inference ...
+2025-04-07 16:07:32 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:07:32 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:07:32 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:07:32 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:07:32 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:07:32 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:07:32 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:07:32 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:07:32 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:07:32 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 16:07:32 ERROR: OpenAI Error: Error code: 401 - {'error': {'code': '401', 'message': 'Access denied due to invalid subscription key or wrong API endpoint. Make sure to provide a valid key for an active subscription and use a correct regional API endpoint for your resource.'}}. Waiting 5 seconds...
+2025-04-07 16:07:32 ERROR: OpenAI Error: Error code: 401 - {'error': {'code': '401', 'message': 'Access denied due to invalid subscription key or wrong API endpoint. Make sure to provide a valid key for an active subscription and use a correct regional API endpoint for your resource.'}}. Waiting 5 seconds...
+2025-04-07 16:07:33 ERROR: OpenAI Error: Error code: 401 - {'error': {'code': '401', 'message': 'Access denied due to invalid subscription key or wrong API endpoint. Make sure to provide a valid key for an active subscription and use a correct regional API endpoint for your resource.'}}. Waiting 5 seconds...
+2025-04-07 16:07:33 ERROR: OpenAI Error: Error code: 401 - {'error': {'code': '401', 'message': 'Access denied due to invalid subscription key or wrong API endpoint. Make sure to provide a valid key for an active subscription and use a correct regional API endpoint for your resource.'}}. Waiting 5 seconds...
+2025-04-07 16:07:33 ERROR: OpenAI Error: Error code: 401 - {'error': {'code': '401', 'message': 'Access denied due to invalid subscription key or wrong API endpoint. Make sure to provide a valid key for an active subscription and use a correct regional API endpoint for your resource.'}}. Waiting 5 seconds...
+2025-04-07 16:07:37 ERROR: OpenAI Error: Error code: 401 - {'error': {'code': '401', 'message': 'Access denied due to invalid subscription key or wrong API endpoint. Make sure to provide a valid key for an active subscription and use a correct regional API endpoint for your resource.'}}. Waiting 5 seconds...
+2025-04-07 16:07:37 ERROR: OpenAI Error: Error code: 401 - {'error': {'code': '401', 'message': 'Access denied due to invalid subscription key or wrong API endpoint. Make sure to provide a valid key for an active subscription and use a correct regional API endpoint for your resource.'}}. Waiting 5 seconds...
+2025-04-07 16:07:38 ERROR: OpenAI Error: Error code: 401 - {'error': {'code': '401', 'message': 'Access denied due to invalid subscription key or wrong API endpoint. Make sure to provide a valid key for an active subscription and use a correct regional API endpoint for your resource.'}}. Waiting 5 seconds...
+2025-04-07 16:07:38 ERROR: OpenAI Error: Error code: 401 - {'error': {'code': '401', 'message': 'Access denied due to invalid subscription key or wrong API endpoint. Make sure to provide a valid key for an active subscription and use a correct regional API endpoint for your resource.'}}. Waiting 5 seconds...
+2025-04-07 16:07:38 ERROR: OpenAI Error: Error code: 401 - {'error': {'code': '401', 'message': 'Access denied due to invalid subscription key or wrong API endpoint. Make sure to provide a valid key for an active subscription and use a correct regional API endpoint for your resource.'}}. Waiting 5 seconds...
+2025-04-07 16:07:42 ERROR: OpenAI Error: Error code: 401 - {'error': {'code': '401', 'message': 'Access denied due to invalid subscription key or wrong API endpoint. Make sure to provide a valid key for an active subscription and use a correct regional API endpoint for your resource.'}}. Waiting 5 seconds...
+2025-04-07 16:07:42 ERROR: OpenAI Error: Error code: 401 - {'error': {'code': '401', 'message': 'Access denied due to invalid subscription key or wrong API endpoint. Make sure to provide a valid key for an active subscription and use a correct regional API endpoint for your resource.'}}. Waiting 5 seconds...
+2025-04-07 16:07:43 ERROR: OpenAI Error: Error code: 401 - {'error': {'code': '401', 'message': 'Access denied due to invalid subscription key or wrong API endpoint. Make sure to provide a valid key for an active subscription and use a correct regional API endpoint for your resource.'}}. Waiting 5 seconds...
+2025-04-07 16:07:43 ERROR: OpenAI Error: Error code: 401 - {'error': {'code': '401', 'message': 'Access denied due to invalid subscription key or wrong API endpoint. Make sure to provide a valid key for an active subscription and use a correct regional API endpoint for your resource.'}}. Waiting 5 seconds...
+2025-04-07 16:07:43 ERROR: OpenAI Error: Error code: 401 - {'error': {'code': '401', 'message': 'Access denied due to invalid subscription key or wrong API endpoint. Make sure to provide a valid key for an active subscription and use a correct regional API endpoint for your resource.'}}. Waiting 5 seconds...
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/sglang/lang/interpreter.py:409: UserWarning: Error in stream_executor: Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/sglang/lang/interpreter.py", line 407, in _thread_worker_func
+    self._execute(expr)
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/sglang/lang/interpreter.py", line 450, in _execute
+    self._execute(x)
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/sglang/lang/interpreter.py", line 445, in _execute
+    self._execute_gen(other)
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/sglang/lang/interpreter.py", line 571, in _execute_gen
+    comp, meta_info = self.backend.generate(
+                      ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/sglang/lang/backend/openai.py", line 171, in generate
+    comp = openai_completion(
+           ^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/sglang/lang/backend/openai.py", line 417, in openai_completion
+    raise e
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/sglang/lang/backend/openai.py", line 396, in openai_completion
+    ret = client.chat.completions.create(messages=prompt, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/openai/_utils/_utils.py", line 279, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/openai/resources/chat/completions/completions.py", line 914, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/openai/_base_client.py", line 1242, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/openai/_base_client.py", line 919, in request
+    return self._request(
+           ^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/openai/_base_client.py", line 1023, in _request
+    raise self._make_status_error_from_response(err.response) from None
+openai.AuthenticationError: Error code: 401 - {'error': {'code': '401', 'message': 'Access denied due to invalid subscription key or wrong API endpoint. Make sure to provide a valid key for an active subscription and use a correct regional API endpoint for your resource.'}}
+
+  warnings.warn(f"Error in stream_executor: {get_exception_traceback()}")
+Traceback (most recent call last):
+  File "/Users/syc/Desktop/-verusyth/code/main.py", line 153, in <module>
+    main()
+  File "/Users/syc/Desktop/-verusyth/code/main.py", line 149, in main
+    runner.run(args.input, args.output, args=dict(args._get_kwargs()))
+  File "/Users/syc/Desktop/-verusyth/code/generation.py", line 1538, in run
+    code = self.generate_view(content, temp_dir=temp_dir, answer_num=3)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/syc/Desktop/-verusyth/code/generation.py", line 135, in generate_view
+    cand_code, iteration_best_code, iteration_best_score = self.run_dynamic_refinement(
+                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/syc/Desktop/-verusyth/code/generation.py", line 224, in run_dynamic_refinement
+    candidates = func(cand_code, temp=1.0, answer_num=ANSWER_NUM)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/syc/Desktop/-verusyth/code/generation.py", line 479, in inv_inference
+    return self.llm.infer_llm(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/syc/Desktop/-verusyth/code/infer.py", line 160, in infer_llm
+    final_answers = state["final_answer"]
+                    ~~~~~^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/sglang/lang/interpreter.py", line 953, in __getitem__
+    return self.get_var(name)
+           ^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/sglang/lang/interpreter.py", line 938, in get_var
+    return self.stream_executor.get_var(name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/sglang/lang/interpreter.py", line 332, in get_var
+    return self.variables[name]
+           ~~~~~~~~~~~~~~^^^^^^
+KeyError: 'final_answer'

@@ -1,0 +1,18 @@
+{
+    "aoai_api_base": [
+        "https://api.openai.com/v1/"
+    ],
+    "aoai_api_version": "2023-12-01-preview",
+    "aoai_api_key": [
+	    "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"
+    ],
+    "aoai_max_retries": 5,
+    "max_token": 8192,
+    "aoai_generation_model": "gpt-4o",
+    "aoai_debug_model": "o1",
+    "verus_path": "/home/chuyue/verus/source/target-verus/release/verus",
+    "example_path": "/home/chuyue/-verusyth/code/examples",
+    "lemma_path": "/home/chuyue/-verusyth/code/lemmas",
+    "util_path": "/home/chuyue/-verusyth/utils",
+    "platform": "openai"
+}

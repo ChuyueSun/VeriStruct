@@ -1,0 +1,745 @@
+2025-04-07 01:26:06 INFO: Phase 1 examples: ['3', '6', '7']
+2025-04-07 01:26:06 INFO: View examples: ['8', '9']
+2025-04-07 01:26:06 INFO: Generating View
+2025-04-07 01:26:06 INFO: Repair steps: 10
+2025-04-07 01:26:07 INFO: Immutable functions: []
+2025-04-07 01:26:07 INFO: Generation initialized with phase1_examples: ['3', '6', '7']
+2025-04-07 01:26:07 INFO: Generation initialized with view_examples: ['8', '9']
+2025-04-07 01:26:07 INFO: Generation initialized with repair_uniform: False
+2025-04-07 01:26:07 INFO: Generating proof code
+2025-04-07 01:26:07 INFO: Temperature: 1.0
+2025-04-07 01:26:07 INFO: Generate with view mode
+2025-04-07 01:26:07 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:26:07 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:26:21 INFO: Infer time: 14.17s
+2025-04-07 01:26:21 INFO: Iteration 0: Selected refinement functions: requires_inference
+2025-04-07 01:26:21 INFO: Requires Inference ...
+2025-04-07 01:26:21 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:26:21 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:26:21 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:26:21 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:26:21 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:26:21 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:26:21 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:26:21 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:26:21 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:26:21 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:27:25 INFO: Infer time: 63.84s
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:27:26 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:27:26 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:27:26 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:27:38 INFO: Infer time: 11.14s
+2025-04-07 01:27:38 INFO: Iteration 1: Selected refinement functions: view_inference, view_refinement, inv_inference, requires_inference
+2025-04-07 01:27:38 INFO: View Inference ...
+2025-04-07 01:27:38 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:27:38 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:27:38 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:27:38 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:27:38 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:27:38 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:27:38 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:27:38 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:27:38 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:27:38 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:28:07 INFO: Infer time: 29.79s
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:28:08 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:28:08 INFO: View Refinement ...
+2025-04-07 01:28:08 ERROR: Example path /Users/syc/Desktop/-verusyth/code/examples/input-view-refine does not exist.
+2025-04-07 01:28:08 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:28:08 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:28:08 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:28:08 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:28:08 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:28:08 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:28:08 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:28:08 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:28:08 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:28:08 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:28:50 INFO: Infer time: 42.32s
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:28:51 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:28:51 INFO: Inv Inference ...
+2025-04-07 01:28:51 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:28:51 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:28:51 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:28:51 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:28:51 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:28:51 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:28:51 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:28:51 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:28:51 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:28:51 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:29:18 INFO: Infer time: 27.04s
+2025-04-07 01:29:18 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:29:18 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:29:18 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:29:18 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:29:18 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:29:18 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:29:18 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:29:18 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:29:18 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:29:18 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:29:18 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:29:18 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:29:18 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:29:18 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:29:18 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:29:18 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:29:18 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:29:18 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:29:18 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:29:18 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:29:18 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:29:18 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:29:18 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:29:18 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:29:19 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:29:19 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:29:19 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:29:19 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:29:19 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:29:19 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:29:19 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:29:19 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:29:19 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:29:19 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:29:19 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:29:19 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:29:19 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:29:19 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:29:19 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:29:19 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:29:19 INFO: Requires Inference ...
+2025-04-07 01:29:19 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:29:19 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:29:19 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:29:19 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:29:19 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:29:19 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:29:19 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:29:19 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:29:19 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:29:19 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:29:58 INFO: Infer time: 39.00s
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:29:58 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:29:58 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:29:58 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:30:13 INFO: Infer time: 15.23s
+2025-04-07 01:30:13 INFO: Iteration 2: Selected refinement functions: view_inference, view_refinement, inv_inference, requires_inference
+2025-04-07 01:30:13 INFO: View Inference ...
+2025-04-07 01:30:13 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:30:13 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:30:13 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:30:13 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:30:13 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:30:13 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:30:13 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:30:13 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:30:13 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:30:13 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:30:46 INFO: Infer time: 32.76s
+2025-04-07 01:30:46 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:30:46 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:30:46 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:30:46 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:30:46 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:30:46 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:30:46 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:30:46 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:30:47 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:30:47 INFO: View Refinement ...
+2025-04-07 01:30:47 ERROR: Example path /Users/syc/Desktop/-verusyth/code/examples/input-view-refine does not exist.
+2025-04-07 01:30:47 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:30:47 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:30:47 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:30:47 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:30:47 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:30:47 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:30:47 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:30:47 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:30:47 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:30:47 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:40:47 INFO: Retrying request to /chat/completions in 0.462677 seconds
+2025-04-07 01:41:30 INFO: Infer time: 643.27s
+2025-04-07 01:41:30 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:41:30 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:41:30 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:41:30 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:41:30 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:41:30 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:41:30 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:41:30 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:41:30 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:41:30 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:41:30 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:41:30 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:41:30 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:41:30 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:41:30 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:41:30 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:41:30 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:41:30 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:41:30 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:41:30 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:41:30 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:41:30 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:41:30 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:41:30 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:41:31 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:41:31 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:41:31 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:41:31 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:41:31 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:41:31 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:41:31 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:41:31 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:41:31 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:41:31 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:41:31 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:41:31 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:41:31 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:41:31 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:41:31 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:41:31 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:41:31 INFO: Inv Inference ...
+2025-04-07 01:41:31 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:41:31 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:41:31 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:41:31 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:41:31 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:41:31 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:41:31 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:41:31 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:41:31 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:41:31 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:41:58 INFO: Infer time: 27.39s
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:41:58 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:41:58 INFO: Requires Inference ...
+2025-04-07 01:41:58 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:41:58 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:41:58 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:41:58 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:41:58 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:41:58 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:41:58 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:41:58 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:41:58 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:41:58 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:42:19 INFO: Infer time: 20.41s
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:42:19 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:42:19 INFO: Attempting final repair on best code found...
+2025-04-07 01:42:19 INFO: Start full repair
+2025-04-07 01:42:20 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:42:20 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:42:20 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:42:20 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:42:20 INFO: Step 1: unsupported error 'the return value must be named in a function with an ensures clause' with candidate count=3.
+2025-04-07 01:42:20 INFO: Current score: Compilation Error: True, Verified: -1, Errors: 999, Verus Errors: 1
+2025-04-07 01:42:20 INFO: Attempting to repair with repair_default
+2025-04-07 01:42:20 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:42:20 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:42:20 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:42:20 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:42:20 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:42:20 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:42:39 INFO: Infer time: 19.09s
+2025-04-07 01:42:39 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:42:39 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:42:39 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:42:39 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:42:39 INFO: Candidate failed compilation due to: VerusErrorType.Other.
+2025-04-07 01:42:39 WARNING: Warning: a non type error is passed to debug_type_error: VerusErrorType.Other
+2025-04-07 01:42:39 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:42:39 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:42:39 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:42:39 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:42:39 INFO: Dumped candidate to ../results/rfmig_script_1/intermediate-result/repair/repair-1-0-Other.rs
+2025-04-07 01:42:39 WARNING: Debug mode is on, skip code change checking
+2025-04-07 01:42:39 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:42:39 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:42:39 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:42:39 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:42:39 INFO: Candidate failed compilation due to: VerusErrorType.Other.
+2025-04-07 01:42:39 WARNING: Warning: a non type error is passed to debug_type_error: VerusErrorType.Other
+2025-04-07 01:42:39 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:42:39 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:42:39 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:42:39 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:42:39 INFO: Dumped candidate to ../results/rfmig_script_1/intermediate-result/repair/repair-1-1-Other.rs
+2025-04-07 01:42:39 WARNING: Debug mode is on, skip code change checking
+2025-04-07 01:42:40 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:42:40 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:42:40 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:42:40 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:42:40 INFO: Candidate failed compilation due to: VerusErrorType.Other.
+2025-04-07 01:42:40 WARNING: Warning: a non type error is passed to debug_type_error: VerusErrorType.Other
+2025-04-07 01:42:40 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:42:40 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:42:40 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:42:40 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:42:40 INFO: Dumped candidate to ../results/rfmig_script_1/intermediate-result/repair/repair-1-2-Other.rs
+2025-04-07 01:42:40 WARNING: Debug mode is on, skip code change checking
+2025-04-07 01:42:40 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:42:40 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:42:40 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:42:40 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:42:40 INFO: Step 2: unsupported error 'the return value must be named in a function with an ensures clause' with candidate count=5.
+2025-04-07 01:42:40 INFO: Current score: Compilation Error: True, Verified: -1, Errors: 999, Verus Errors: 1
+2025-04-07 01:42:40 INFO: Attempting to repair with repair_default
+2025-04-07 01:42:40 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:42:40 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:42:40 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:42:40 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:42:40 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:42:40 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:42:40 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:42:40 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:42:40 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:42:40 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:43:09 INFO: Infer time: 29.37s
+2025-04-07 01:43:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:43:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:43:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:43:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:43:09 INFO: Candidate failed compilation due to: VerusErrorType.Other.
+2025-04-07 01:43:09 WARNING: Warning: a non type error is passed to debug_type_error: VerusErrorType.Other
+2025-04-07 01:43:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:43:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:43:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:43:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:43:09 INFO: Dumped candidate to ../results/rfmig_script_1/intermediate-result/repair/repair-2-0-Other.rs
+2025-04-07 01:43:09 WARNING: Debug mode is on, skip code change checking
+2025-04-07 01:43:09 INFO: Step 2: Error the return value must be named in a function with an ensures clause fixed on finer check; candidate 0.
+2025-04-07 01:43:09 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:43:09 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:43:09 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:43:09 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:43:09 INFO: Step 3: unsupported error 'the return value must be named in a function with an ensures clause' with candidate count=3.
+2025-04-07 01:43:09 INFO: Current score: Compilation Error: True, Verified: -1, Errors: 999, Verus Errors: 1
+2025-04-07 01:43:09 INFO: Attempting to repair with repair_default
+2025-04-07 01:43:09 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:43:09 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:43:09 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:43:09 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:43:09 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:43:09 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:43:42 INFO: Infer time: 32.09s
+2025-04-07 01:43:42 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:43:42 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:43:42 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:43:42 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:43:42 INFO: Candidate failed compilation due to: VerusErrorType.Other.
+2025-04-07 01:43:42 WARNING: Warning: a non type error is passed to debug_type_error: VerusErrorType.Other
+2025-04-07 01:43:42 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:43:42 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:43:42 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:43:42 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:43:42 INFO: Dumped candidate to ../results/rfmig_script_1/intermediate-result/repair/repair-3-0-Other.rs
+2025-04-07 01:43:42 WARNING: Debug mode is on, skip code change checking
+2025-04-07 01:43:42 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:43:42 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:43:42 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:43:42 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:43:42 INFO: Candidate failed compilation due to: VerusErrorType.Other.
+2025-04-07 01:43:42 WARNING: Warning: a non type error is passed to debug_type_error: VerusErrorType.Other
+2025-04-07 01:43:42 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:43:42 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:43:42 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:43:42 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:43:42 INFO: Dumped candidate to ../results/rfmig_script_1/intermediate-result/repair/repair-3-1-Other.rs
+2025-04-07 01:43:42 WARNING: Debug mode is on, skip code change checking
+2025-04-07 01:43:42 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:43:42 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:43:42 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:43:42 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:43:42 INFO: Candidate failed compilation due to: VerusErrorType.Other.
+2025-04-07 01:43:42 WARNING: Warning: a non type error is passed to debug_type_error: VerusErrorType.Other
+2025-04-07 01:43:42 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:43:42 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:43:42 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:43:42 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:43:42 INFO: Dumped candidate to ../results/rfmig_script_1/intermediate-result/repair/repair-3-2-Other.rs
+2025-04-07 01:43:42 WARNING: Debug mode is on, skip code change checking
+2025-04-07 01:43:43 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:43:43 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:43:43 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:43:43 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:43:43 INFO: Step 4: unsupported error 'the return value must be named in a function with an ensures clause' with candidate count=5.
+2025-04-07 01:43:43 INFO: Current score: Compilation Error: True, Verified: -1, Errors: 999, Verus Errors: 1
+2025-04-07 01:43:43 INFO: Attempting to repair with repair_default
+2025-04-07 01:43:43 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:43:43 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:43:43 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:43:43 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:43:43 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:43:43 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:43:43 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:43:43 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:43:43 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:43:43 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:44:05 INFO: Infer time: 22.81s
+2025-04-07 01:44:05 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:44:05 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:44:05 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:44:05 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:44:05 INFO: Candidate failed compilation due to: VerusErrorType.Other.
+2025-04-07 01:44:05 WARNING: Warning: a non type error is passed to debug_type_error: VerusErrorType.Other
+2025-04-07 01:44:06 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:44:06 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:44:06 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:44:06 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:44:06 INFO: Dumped candidate to ../results/rfmig_script_1/intermediate-result/repair/repair-4-0-Other.rs
+2025-04-07 01:44:06 WARNING: Debug mode is on, skip code change checking
+2025-04-07 01:44:06 INFO: Step 4: Error the return value must be named in a function with an ensures clause fixed on finer check; candidate 0.
+2025-04-07 01:44:06 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:44:06 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:44:06 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:44:06 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:44:06 INFO: Step 5: unsupported error 'in requires, use `old(perm)` to refer to the pre-state of an &mut variable' with candidate count=3.
+2025-04-07 01:44:06 INFO: Current score: Compilation Error: True, Verified: -1, Errors: 999, Verus Errors: 1
+2025-04-07 01:44:06 INFO: Attempting to repair with repair_default
+2025-04-07 01:44:06 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:44:06 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:44:06 INFO: args ={'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:44:06 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:44:06 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:44:06 INFO: {'model': 'verus-o1', 'max_completion_tokens': 8192, 'n': 1, 'stop': None, 'temperature': 1.0, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0}
+2025-04-07 01:44:26 INFO: Infer time: 20.13s
+2025-04-07 01:44:26 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:44:26 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:44:26 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:44:26 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:44:26 INFO: Candidate failed compilation due to: VerusErrorType.MismatchedType.
+2025-04-07 01:44:26 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:44:26 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:44:26 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:44:26 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:44:26 INFO: Dumped candidate to ../results/rfmig_script_1/intermediate-result/repair/repair-5-0-Other.rs
+2025-04-07 01:44:26 WARNING: Debug mode is on, skip code change checking
+2025-04-07 01:44:26 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:44:26 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:44:26 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:44:26 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:44:26 INFO: Candidate failed compilation due to: VerusErrorType.CannotCallFunc.
+2025-04-07 01:44:26 WARNING: Warning: a non type error is passed to debug_type_error: VerusErrorType.CannotCallFunc
+2025-04-07 01:44:26 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:44:26 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:44:26 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:44:26 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:44:26 INFO: Dumped candidate to ../results/rfmig_script_1/intermediate-result/repair/repair-5-1-Other.rs
+2025-04-07 01:44:26 WARNING: Debug mode is on, skip code change checking
+2025-04-07 01:44:27 INFO: Step 5: Error in requires, use `old(perm)` to refer to the pre-state of an &mut variable fixed; candidate 1 reduced failure count.
+2025-04-07 01:44:27 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:44:27 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:44:27 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:44:27 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:44:27 ERROR: Failure in VEval.get_verified. Rust Syntax error.
+2025-04-07 01:44:27 ERROR: Failure in VEval.get_verified. Verus Compilation error.
+2025-04-07 01:44:27 ERROR: Failure in VEval.get_errors. Rust Syntax error.
+2025-04-07 01:44:27 ERROR: Failure in VEval.get_errors. Verus Compilation error.
+2025-04-07 01:44:27 INFO: finished!

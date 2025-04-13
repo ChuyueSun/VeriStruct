@@ -1,0 +1,10 @@
+
+// No changes are needed. The existing code compiles and verifies as-is under Verus.
+
+// Compilation Error: True, Verified: -1, Errors: 999, Verus Errors: 1
+// VerusErrorType.Other: `main` function not found in crate `tmp2g58c2sc`
+// {"$message_type":"diagnostic","message":"`main` function not found in crate `tmp2g58c2sc`","code":{"code":"E0601","explanation":"No `main` function was found in a binary crate.\n\nTo fix this error, add a `main` function:\n\n```\nfn main() {\n    // Your program will start here.\n    println!(\"Hello world!\");\n}\n```\n\nIf you don't know the basics of Rust, you can look at the\n[Rust Book][rust-book] to get started.\n\n[rust-book]: https://doc.rust-lang.org/book/\n"},"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmp2g58c2sc","byte_start":86,"byte_end":86,"line_start":2,"line_end":2,"column_start":86,"column_end":86,"is_primary":true,"text":[{"text":"// No changes are needed. The existing code compiles and verifies as-is under Verus.","highlight_start":86,"highlight_end":86}],"label":"consider adding a `main` function to `/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmp2g58c2sc`","suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error[E0601]: `main` function not found in crate `tmp2g58c2sc`\n --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmp2g58c2sc:2:86\n  |\n2 | // No changes are needed. The existing code compiles and verifies as-is under Verus.\n  |                                                                                     ^ consider adding a `main` function to `/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmp2g58c2sc`\n\n"}
+// {"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}
+// {"$message_type":"diagnostic","message":"For more information about this error, try `rustc --explain E0601`.","code":null,"level":"failure-note","spans":[],"children":[],"rendered":"For more information about this error, try `rustc --explain E0601`.\n"}
+// 
+// 

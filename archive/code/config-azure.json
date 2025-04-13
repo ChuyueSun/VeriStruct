@@ -1,0 +1,18 @@
+{
+    "aoai_api_base": [
+        "https://ai-chuyue997439ai270460324416.cognitiveservices.azure.com/"
+    ],
+    "aoai_api_version": "2024-12-01-preview",
+    "aoai_api_key": [
+        "6mKL6q3U9UDbRZuJksQFcbW7EuJZ42qhxQWEHhLfQvvSUkOWDMMsJQQJ99BDACHYHv6XJ3w3AAAAACOGzX5o"
+    ],
+    "aoai_max_retries": 5,
+    "max_token": 8192,
+    "aoai_generation_model": "o1",
+    "aoai_debug_model": "o1",
+    "verus_path": "/home/chuyue/verus/source/target-verus/release/verus",
+    "example_path": "/home/chuyue/-verusyth/code/examples",
+    "lemma_path": "/home/chuyue/-verusyth/code/lemmas",
+    "util_path": "/home/chuyue/-verusyth/utils",
+    "platform": "azure"
+}
