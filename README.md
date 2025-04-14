@@ -52,6 +52,7 @@ Algorithm Flow
 ```text
 archive # the original -verusyth stuffs
 src
+- __init__.py # in case you do not want long import name, edit this file
 - configs # configs here
   - config-*.json
 - main.py # implement the algorithm workflow
@@ -62,5 +63,8 @@ src
   - markdown files used my each module
 - modules
   - base.py # implement base module
+  - lynette.py
+  - houdini.py
+  - veval.py # 3 utils that the module may rely on
   - each module corresponds to a file # implement each module
 ```
