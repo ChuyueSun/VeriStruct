@@ -1,0 +1,21 @@
+{
+    "aoai_api_base": [
+        "https://api.openai.com/v1/"
+    ],
+    "aoai_api_version": "2023-12-01-preview",
+    "aoai_api_key": [
+	    "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"
+    ],
+    "aoai_max_retries": 5,
+    "max_token": 8192,
+    "aoai_generation_model": "gpt-4o",
+    "aoai_debug_model": "o1",
+    "verus_path": "/Users/kaienyang/verus/verus",
+    "example_path": "/Users/kaienyang/-verusyth/code/examples",
+    "lemma_path": "/Users/kaienyang/-verusyth/code/lemmas",
+    "util_path": "/Users/kaienyang/-verusyth/utils",
+
+    "anthropic_generation_model": "claude-3-5-haiku-20241022",
+    "anthropic_api_key": ["ANTHROPIC_API_KEY"],
+    "platform": "anthropic"
+}
