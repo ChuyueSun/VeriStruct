@@ -51,6 +51,9 @@ Algorithm Flow
 
 ```text
 archive # the original -verusyth stuffs
+examples # rb example here
+benchmarks # all vstd benchmarks here
+utils # lynette rust implementation
 src
 - __init__.py # in case you do not want long import name, edit this file
 - configs # configs here
