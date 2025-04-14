@@ -2,27 +2,31 @@
 
 ## Class Info
 
+```python
 class Trial:
     verus_code
     veval_result
 
 class Context:
-    cur_trial: Trial
-    prev_trials: List[Trial]
+    cur_trial: Trial # Current trial
+    prev_trials: List[Trial] # Previous failing Trials
     knowledgebase: Dict[str(e.g., LocalInvariant, PCM), str(code in vstd)]
+    # The knowledge LLM has been queried so far
 
 class BaseModule:
-    hdn
-    example
-    default_system
+    hdn # houdini algorithm
+    example # examples here
+    default_system # default system prompt
+    ... # Something that you might want oto add
 
-
+# Including generate/fix/inference tools, and doc reader 
 class Module1(BaseModule):
     system (markdown follows some tempalte)
     instruction (markdown follows some template)
     important note
-    knowledgebase
-    context info
+    
+    def exec(context: Context) -> str # Execute the module
+```
 
 ## Algorithm Flow
 
@@ -46,10 +50,14 @@ Algorithm Flow
 ## File Tree
 
 ```text
-code
+archive # the original -verusyth stuffs
+src
+- configs # configs here
+  - config-*.json
 - main.py # implement the algorithm workflow
 - context.py # implement trial and context
 - planner.py # implement planner
+- infer.py # LLM inference infrastructure
 - prompts
   - markdown files used my each module
 - modules
