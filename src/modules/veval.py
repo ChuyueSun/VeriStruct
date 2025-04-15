@@ -305,7 +305,7 @@ class EvalScore:
 
 
 class VEval:
-    def __init__(self, code, logger=None):
+    def __init__(self, code: str, logger=None):
         self.logger = logger
         self.code = code
         # JSON reported by verus, does not include detailed erros(which is reported from rustc)
