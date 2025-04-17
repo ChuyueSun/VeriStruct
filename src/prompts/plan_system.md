@@ -16,7 +16,7 @@ ${task_desc}${_blank}
 
 ## Output Format
 
-Your output should follow the markdown tempalte below.
+Your output should follow the markdown template below.
 
 ### Step 1: Analyze the task
 
@@ -24,13 +24,21 @@ In this part, you analyze in detail, the Verus specification synthesis task in n
 
 - understand the current progress;
 - understand what is missing;
-- make the decision based on the analysis
+- make the decision based on the analysis.
+
+**Hints:** During the analysis procedure:
+
+- Please refer to Section `Knowledge` to get a comprehensive understanding of the Verus code.
+- Please refer to Section `Failures` in the description of verus synthesis task to avoid the same failure again.
 
 ### Step 2: Choose the Module
 
-In this part, output the module you choose as the next step. ONLY output the name of the module.
+In this part, based on your analysis above, output the module you choose as the next step. Output in the following format:
+
+**Module:** `Module_name`,
+**Explanation:** `Your explanation here`.
 
 ## Important Note
 
 - Think over to guarantee a comprehensive result.
-- ONLY output the module name in Step 2.
+- Follow the output format above to organize your output.

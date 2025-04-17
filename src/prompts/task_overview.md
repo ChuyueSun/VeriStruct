@@ -1,6 +1,10 @@
-# Verus Specification Code Synthesis Task
+### Verus Specification Synthesis Task
 
-This file describes a verus Specification Code Synthesis task, which consists of the following four separate parts.
+Below, we introduce the verus specification synthesis task.
+
+#### Input
+
+The input of this task consists of five parts:
 
 1. **Verus Code:** The verus code that is not fully verified.
 2. **Compilation Error:** The compiler error reported from the verus code above.
@@ -9,18 +13,6 @@ This file describes a verus Specification Code Synthesis task, which consists of
    - the verus code and,
    - the compilation error.
 
-## Verus Code
+#### Output
 
-${verus_code}${_blank}
-
-## Compilation Error
-
-${rustc_out}${_blank}
-
-## Knowledge
-
-${knowledge}${_blank}
-
-## Failures
-
-${failures}${_blank}
+The output of this task consists of a verus code that can be fully verified.

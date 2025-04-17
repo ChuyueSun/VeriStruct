@@ -1,18 +1,22 @@
 {
     "aoai_api_base": [
-        "https://verus.openai.azure.com/"
+        "https://ai-chuyue997439ai270460324416.cognitiveservices.azure.com/"
     ],
     "aoai_api_version": "2024-12-01-preview",
     "aoai_api_key": [
-        "FlfDVS2zc77wZlWWrYbpufTlyd9jwb9IuRPA8J5FsvhQ2Pkjq2QuJQQJ99BCACYeBjFXJ3w3AAABACOGkXoB"
+        "6mKL6q3U9UDbRZuJksQFcbW7EuJZ42qhxQWEHhLfQvvSUkOWDMMsJQQJ99BDACHYHv6XJ3w3AAAAACOGzX5o"
     ],
     "aoai_max_retries": 5,
     "max_token": 8192,
-    "aoai_generation_model": "verus-o1",
-    "aoai_debug_model": "verus-o1",
+    "aoai_generation_model": "o1",
+    "aoai_debug_model": "o1",
     "verus_path": "/Users/syc/Desktop/verus/verus",
-    "example_path": "/Users/syc/Desktop/-verusyth/code/examples",
-    "lemma_path": "/Users/syc/Desktop/-verusyth/code/lemmas",
+    "project_dir": "/Users/syc/Desktop/-verusyth",
+    "example_path": "/Users/syc/Desktop/-verusyth/examples",
+    "lemma_path": "/Users/syc/Desktop/-verusyth/lemmas",
+    "benchmark_path": "/Users/syc/Desktop/-verusyth/benchmarks",
     "util_path": "/Users/syc/Desktop/-verusyth/utils",
+    "tmp_path": "/Users/syc/Desktop/-verusyth/tmp",
+    "log_path": "/Users/syc/Desktop/-verusyth/logs",
     "platform": "azure"
 }
