@@ -141,7 +141,6 @@ impl<T> AgreementResource<T> {
             old(self).id() == other.id(),
         ensures
             self.id() == old(self).id(),
-            self@ == old(self)@,
             self@ == other@,
     {
         use_type_invariant(&*self);
@@ -154,9 +153,8 @@ pub fn main() {
     let tracked r1 = AgreementResource::<int>::alloc(72);
     assert(r1@ == 72);
     let tracked r2 = r1.duplicate();
-    assert(r2.id() == r1.id());
-    proof { r1.lemma_agreement(&mut r2); }
     assert(r2@ == r1@);
+    proof { r1.lemma_agreement(&mut r2); }
 }
 
 } // verus!

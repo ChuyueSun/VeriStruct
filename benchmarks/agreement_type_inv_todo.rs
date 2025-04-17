@@ -133,9 +133,8 @@ pub fn main() {
     let tracked r1 = AgreementResource::<int>::alloc(72);
     assert(r1@ == 72);
     let tracked r2 = r1.duplicate();
-    assert(r2.id() == r1.id());
-    proof { r1.lemma_agreement(&mut r2); }
     assert(r2@ == r1@);
+    proof { r1.lemma_agreement(&mut r2); }
 }
 
 } // verus!

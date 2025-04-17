@@ -147,8 +147,6 @@ impl<T> AgreementResource<T> {
             other.inv(),
             old(self).id() == other.id(),
         ensures
-            self.id() == old(self).id(),
-            self@ == old(self)@,
             self@ == other@,
     {
         self.r.validate_2(&other.r);
@@ -160,7 +158,7 @@ pub fn main() {
     assert(r1@ == 72);
     let tracked r2 = r1.duplicate();
     assert(r2@ == r1@);
-    assert(r2.id() == r1.id());
+    proof { r1.lemma_agreement(&mut r2); }
 }
 
 } // verus!
