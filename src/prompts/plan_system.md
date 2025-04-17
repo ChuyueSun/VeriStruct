@@ -12,7 +12,7 @@ ${modules}${_blank}
 
 The input consists of a verus synthesis task, which follows the description below.
 
-${task_desc}${_blank}
+${task_overview}${_blank}
 
 ## Output Format
 

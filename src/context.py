@@ -5,6 +5,7 @@ from configs.sconfig import config
 from prompts.template import fill_template
 import os, subprocess
 from dataclasses import dataclass
+from infer import LLM
 
 class Trial:
     def __init__(self, trial_id: int, eval: VEval,
@@ -67,6 +68,7 @@ class Context:
         self.logger = logger
         self.raw_code = raw_code
         self.params = params
+        self.llm = LLM(config, logger)
 
         raw_code_loc = os.path.join(config['tmp_dir'], 'raw.rs')
         self.raw_code_loc = raw_code_loc
