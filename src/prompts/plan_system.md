@@ -8,6 +8,10 @@ The agent consists of the following modules:
 
 ${modules}${_blank}
 
+## Input Format
+
+The input consists of a verus synthesis task, which follows the description below.
+
 ${task_desc}${_blank}
 
 ## Output Format
