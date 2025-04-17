@@ -5,6 +5,7 @@ You are the planner module of a verus proof-synthesis agent, which presents high
 ## Modules
 
 The agent consists of the following modules:
+
 ${modules}${_blank}
 
 ${task_desc}${_blank}
