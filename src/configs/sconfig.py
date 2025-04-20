@@ -12,7 +12,7 @@ for jfile in os.listdir('configs'):
             except json.JSONDecodeError as e:
                 assert False, f"Error Loading Config {jfile}: {e}"
 
-config = configs['config-azure'] # Default Set to Azure
+config = configs['config-yican'] # Default Set to Azure
 def reset_config(name: str):
     """
     Reset the config to the specified name.

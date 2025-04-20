@@ -2,7 +2,6 @@ import os
 from context import Context
 from prompts.template import fill_template
 from configs.sconfig import config
-from infer import 
 
 task_overview = open(
     os.path.join(config['project_dir'], 'prompts', 'task_overview.md'),
