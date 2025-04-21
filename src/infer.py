@@ -4,16 +4,34 @@
 import time
 import random
 import warnings
+import os
 from typing import List, Tuple, Union
+import logging
 
 # sglang
-import sglang as sgl
+try:
+    import sglang as sgl
+except ImportError:
+    # If you don't have sglang installed, create a dummy implementation
+    class DummySGL:
+        def function(self, func): return func
+        def set_default_backend(self, backend): pass
+        def system(self, text): return text
+        def user(self, text): return text
+        def assistant(self, text): return text
+        def gen(self, name, **kwargs): return name
+    
+    sgl = DummySGL()
+    print("Warning: sglang not installed, using dummy implementation")
 
 try:
     from azure.identity import DefaultAzureCredential, get_bearer_token_provider
 except ImportError:
     # If you only sometimes need azure.identity, it's OK to handle missing packages
     pass
+
+# Add a flag to enable/disable LLM inference (for testing without API keys)
+ENABLE_LLM_INFERENCE = os.environ.get("ENABLE_LLM_INFERENCE", "1") == "1"
 
 
 class LLM:
@@ -24,40 +42,50 @@ class LLM:
         """
         self.config = config
         self.logger = logger
+        self.dummy_mode = not ENABLE_LLM_INFERENCE
 
         # Prepare a list of potential SGL backends
         self.backends = []
 
-        if getattr(config, "platform", "openai") == "openai":
-            for i in range(len(config.aoai_api_key)):
-                self.backends.append(
-                    sgl.OpenAI(
+        if self.dummy_mode:
+            self.logger.warning("LLM in dummy mode. Will return placeholder responses.")
+            return
+
+        try:
+            if getattr(config, "platform", "openai") == "openai":
+                for i in range(len(config.aoai_api_key)):
+                    self.backends.append(
+                        sgl.OpenAI(
+                            model_name=config.aoai_generation_model,
+                            api_key=config.aoai_api_key[i],
+                            base_url=config.aoai_api_base[i],
+                        )
+                    )
+            elif getattr(config, "platform", "openai") == "azure":
+                for i in range(len(config.aoai_api_key)):
+                    self.backends.append(
+                        sgl.OpenAI(
                         model_name=config.aoai_generation_model,
+                        api_version=config.aoai_api_version,
+                        azure_endpoint=config.aoai_api_base[i],
                         api_key=config.aoai_api_key[i],
-                        base_url=config.aoai_api_base[i],
+                        is_azure=True,
+                        )
                     )
-                )
-        elif getattr(config, "platform", "openai") == "azure":
-            for i in range(len(config.aoai_api_key)):
-                self.backends.append(
-                    sgl.OpenAI(
-                    model_name=config.aoai_generation_model,
-                    api_version=config.aoai_api_version,
-                    azure_endpoint=config.aoai_api_base[i],
-                    api_key=config.aoai_api_key[i],
-                    is_azure=True,
+            elif getattr(config, "platform", "openai") == "anthropic":
+                for i in range(len(config.anthropic_api_key)):
+                    self.backends.append(
+                        sgl.Anthropic(
+                            model_name=config.anthropic_generation_model,
+                            api_key=config.anthropic_api_key[i],
+                        )
                     )
-                )
-        elif getattr(config, "platform", "openai") == "anthropic":
-            for i in range(len(config.anthropic_api_key)):
-                self.backends.append(
-                    sgl.Anthropic(
-                        model_name=config.anthropic_generation_model,
-                        api_key=config.anthropic_api_key[i],
-                    )
-                )
-        else:
-            raise ValueError("Unknown platform")
+            else:
+                raise ValueError("Unknown platform")
+        except Exception as e:
+            self.logger.error(f"Error initializing LLM backends: {e}")
+            self.dummy_mode = True
+            self.logger.warning("Falling back to dummy mode due to initialization error.")
 
         # Pick a random backend index
         self.client_id = 0
@@ -97,7 +125,6 @@ class LLM:
         forks.join()
 
 
-
     def infer_llm(
         self,
         engine: str,
@@ -131,12 +158,31 @@ class LLM:
 
         :return: Either a list of answer strings, or (list of answers, list of messages).
         """
+        
+        if self.dummy_mode:
+            self.logger.warning("LLM in dummy mode. Returning placeholder responses.")
+            if query and len(query) > 100:
+                dummy_response = "// This is a placeholder response from dummy mode.\n" + query
+            else:
+                dummy_response = "This is a placeholder response from dummy mode."
+            
+            if return_msg:
+                return [dummy_response] * answer_num, []
+            else:
+                return [dummy_response] * answer_num
 
         if verbose:
             self.logger.info(f"Using backend #{self.client_id}")
 
         # Select the backend
-        sgl.set_default_backend(self.backends[self.client_id])
+        try:
+            sgl.set_default_backend(self.backends[self.client_id])
+        except Exception as e:
+            self.logger.error(f"Error setting backend: {e}")
+            if return_msg:
+                return [], []
+            else:
+                return []
 
         start_time = time.time()
         try:

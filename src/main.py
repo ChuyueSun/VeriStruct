@@ -1,9 +1,11 @@
 import loguru
+import os
+from pathlib import Path
 from context import Trial, Context, HyperParams
 from modules.view_inference import ViewInferenceModule
 from modules.view_refinement import ViewRefinementModule
 from modules.inv_inference import InvInferenceModule
-from configs.sconfig import config
+from configs.sconfig import config, reset_config
 
 logger = loguru.logger
 
@@ -13,57 +15,25 @@ def main():
     """
     logger.info("Starting VerusAgent")
     
-    # Sample Verus code for testing
-    sample_code = """
-#[allow(unused_imports)]
-use vstd::prelude::*;
-
-verus! {
-    struct RingBuffer<T> {
-        buffer: Vec<T>,
-        start: usize,
-        size: usize,
-    }
-
-    impl<T: Copy> RingBuffer<T> {
-        pub fn new() -> Self {
-            RingBuffer {
-                buffer: Vec::new(),
-                start: 0,
-                size: 0,
-            }
-        }
-
-        pub fn push(&mut self, value: T) {
-            if self.size == 0 {
-                self.buffer.push(value);
-                self.size = 1;
-                return;
-            }
-
-            if self.size < self.buffer.len() {
-                let end = (self.start + self.size) % self.buffer.len();
-                self.buffer.set(end, value);
-                self.size += 1;
-            } else {
-                self.buffer.push(value);
-                self.size += 1;
-            }
-        }
-
-        pub fn pop(&mut self) -> Option<T> {
-            if self.size == 0 {
-                return None;
-            }
-
-            let value = self.buffer[self.start];
-            self.start = (self.start + 1) % self.buffer.len();
-            self.size -= 1;
-            Some(value)
-        }
-    }
-}
-    """
+    # Use our custom config
+    try:
+        reset_config("config-verusagent")
+        logger.info("Using config-verusagent configuration")
+    except:
+        logger.warning("Could not load config-verusagent, using default configuration")
+    
+    # Load the RingBuffer example from tests/rb_type_invariant_todo.rs
+    test_file_path = Path("tests/rb_type_invariant_todo.rs")
+    if not test_file_path.exists():
+        logger.error(f"Test file {test_file_path} not found!")
+        return
+    
+    sample_code = test_file_path.read_text()
+    logger.info(f"Loaded test file: {test_file_path}")
+    
+    # Create output directory if it doesn't exist
+    output_dir = Path("output")
+    output_dir.mkdir(exist_ok=True)
     
     # Initialize context with sample code
     params = HyperParams()
@@ -80,20 +50,34 @@ verus! {
     
     logger.info(f"Registered modules: {list(context.modules.keys())}")
     
-    # Example workflow (commented out to prevent actual execution)
+    # Run the entire workflow
+    
     # Step 1: Generate View function
-    # result = view_inference.exec(context)
-    # logger.info(f"View inference completed with result length: {len(result)}")
+    logger.info("Step 1: Generating View function...")
+    view_result = view_inference.exec(context)
+    logger.info(f"View inference completed with result length: {len(view_result)}")
+    # Save the intermediate result
+    (output_dir / "01_view_inference.rs").write_text(view_result)
     
     # Step 2: Refine View function
-    # refined_result = view_refinement.exec(context)
-    # logger.info(f"View refinement completed with result length: {len(refined_result)}")
+    logger.info("Step 2: Refining View function...")
+    refined_view_result = view_refinement.exec(context)
+    logger.info(f"View refinement completed with result length: {len(refined_view_result)}")
+    # Save the intermediate result
+    (output_dir / "02_view_refinement.rs").write_text(refined_view_result)
     
     # Step 3: Generate Inv function
-    # inv_result = inv_inference.exec(context)
-    # logger.info(f"Inv inference completed with result length: {len(inv_result)}")
+    logger.info("Step 3: Generating Inv function...")
+    inv_result = inv_inference.exec(context)
+    logger.info(f"Inv inference completed with result length: {len(inv_result)}")
+    # Save the final result
+    (output_dir / "03_inv_inference.rs").write_text(inv_result)
     
-    logger.info("VerusAgent completed")
+    # Save the final result
+    final_result = context.trials[-1].code
+    (output_dir / "final_result.rs").write_text(final_result)
+    
+    logger.info(f"VerusAgent completed! Results saved to {output_dir.absolute()}")
 
 if __name__ == "__main__":
     main()

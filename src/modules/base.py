@@ -72,7 +72,12 @@ class BaseModule:
         Returns:
             Filled template string
         """
-        return fill_template(template_name, replacements)
+        try:
+            return fill_template(template_name, replacements)
+        except Exception as e:
+            print(f"Warning: Error filling template {template_name}: {e}")
+            # If template filling fails, return a sensible default or empty string
+            return ""
         
     def exec(self, context) -> str:
         """

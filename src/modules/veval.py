@@ -8,6 +8,9 @@ import tempfile
 import json
 from enum import Enum
 import re
+from pathlib import Path
+from dataclasses import dataclass
+from typing import List, Optional, Set
 
 
 class VerusErrorType(Enum):
@@ -304,6 +307,9 @@ class EvalScore:
         )
 
 
+# Add a flag to enable/disable veval (for testing without Verus installed)
+DUMMY_MODE = os.environ.get("ENABLE_LLM_INFERENCE", "1") != "1"
+
 class VEval:
     def __init__(self, code: str, logger=None):
         self.logger = logger
@@ -319,6 +325,11 @@ class VEval:
         self.compilation_error = False
         self.rustc_out = ""
         self.verus_out = ""
+        
+        # In dummy mode, we'll pretend to have basic compilation issues
+        self.dummy_mode = DUMMY_MODE
+        if self.dummy_mode and self.logger:
+            self.logger.warning("VEval in dummy mode. Will return placeholder results.")
 
     def eval_and_get_score(
         self, max_errs=5, json_mode=True, func_name=None
@@ -335,6 +346,16 @@ class VEval:
 
     # Run verus on the code and parse the output.
     def eval(self, max_errs=5, json_mode=True, func_name=None, no_verify=False, log_dir=None, expand_errors=False) -> None:
+        if self.dummy_mode:
+            if self.logger:
+                self.logger.warning("VEval in dummy mode. Generating placeholder results.")
+            
+            # Simulate a basic evaluation result
+            self.verus_errors = ["Dummy error: TODO placeholder not implemented"]
+            self.verus_out = "Dummy output: This is a simulation of Verus output"
+            self.rustc_out = "error[E0999]: TODO placeholders need to be implemented"
+            return
+            
         with tempfile.NamedTemporaryFile(mode="w", delete=False) as f:
             f.write(self.code)
             code_path = f.name

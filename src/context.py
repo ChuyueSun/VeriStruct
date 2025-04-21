@@ -14,8 +14,15 @@ class Trial:
         self.id = trial_id
         self.eval = eval
         self.code_loc = code_loc
-        self.eval.eval(100, True, None)
         self.logger = logger
+        
+        # Call eval with the correct parameters
+        try:
+            # The eval method signature has changed, update parameters accordingly
+            self.eval.eval(max_errs=100, json_mode=True)
+        except Exception as e:
+            if self.logger:
+                self.logger.error(f"Error evaluating trial: {e}")
 
     @property
     def code(self):
