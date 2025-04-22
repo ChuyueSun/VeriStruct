@@ -6,6 +6,7 @@ from modules.view_inference import ViewInferenceModule
 from modules.view_refinement import ViewRefinementModule
 from modules.inv_inference import InvInferenceModule
 from configs.sconfig import config, reset_config
+from modules.veval import verus
 
 logger = loguru.logger
 
@@ -19,8 +20,16 @@ def main():
     try:
         reset_config("config-azure")
         logger.info("Using config-azure configuration")
-    except:
-        logger.warning("Could not load config-azure, using default configuration")
+        
+        # Set the verus path from the configuration
+        if "verus_path" in config:
+            verus.set_verus_path(config["verus_path"])
+            logger.info(f"Verus path set to: {verus.verus_path}")
+        else:
+            logger.warning("verus_path not found in configuration")
+    except Exception as e:
+        logger.warning(f"Could not load config-azure or initialize verus path: {e}")
+        logger.warning("Using default configuration")
     
     # Load the RingBuffer example from tests/rb_type_invariant_todo.rs
     test_file_path = Path("tests/rb_type_invariant_todo.rs")

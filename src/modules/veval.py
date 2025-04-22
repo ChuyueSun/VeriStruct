@@ -11,6 +11,7 @@ import re
 from pathlib import Path
 from dataclasses import dataclass
 from typing import List, Optional, Set
+from configs.sconfig import config, reset_config
 
 
 class VerusErrorType(Enum):
@@ -537,6 +538,11 @@ if __name__ == "__main__":
     config = json.load(open(args.config))
     config = AttrDict(config)
     verus.set_verus_path(config.verus_path)
+
+    # In your main() function after resetting the config:
+    reset_config("config-azure")
+    # Add this line to set the verus path from the config:
+    verus.set_verus_path(config.get("verus_path"))
 
     code = open(args.input).read()
     v = VEval(code, logger)
