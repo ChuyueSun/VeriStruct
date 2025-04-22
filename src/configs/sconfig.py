@@ -35,8 +35,8 @@ except FileNotFoundError:
     }
 
 # Default Set to our verusagent config or fallback to any config
-if 'config-verusagent' in configs:
-    config = configs['config-verusagent']
+if 'config-azure' in configs:
+    config = configs['config-azure']
 else:
     # Use the first config found or the default
     config = next(iter(configs.values())) if configs else configs.get('config-default', {})

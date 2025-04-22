@@ -328,7 +328,13 @@ class VEval:
         
         # In dummy mode, we'll pretend to have basic compilation issues
         self.dummy_mode = DUMMY_MODE
-        if self.dummy_mode and self.logger:
+        
+        # Also set dummy mode if verus_path is None 
+        if self.verus_path is None:
+            self.dummy_mode = True
+            if self.logger:
+                self.logger.warning("VEval in dummy mode (no verus_path). Will return placeholder results.")
+        elif self.dummy_mode and self.logger:
             self.logger.warning("VEval in dummy mode. Will return placeholder results.")
 
     def eval_and_get_score(

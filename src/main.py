@@ -17,10 +17,10 @@ def main():
     
     # Use our custom config
     try:
-        reset_config("config-verusagent")
-        logger.info("Using config-verusagent configuration")
+        reset_config("config-azure")
+        logger.info("Using config-azure configuration")
     except:
-        logger.warning("Could not load config-verusagent, using default configuration")
+        logger.warning("Could not load config-azure, using default configuration")
     
     # Load the RingBuffer example from tests/rb_type_invariant_todo.rs
     test_file_path = Path("tests/rb_type_invariant_todo.rs")

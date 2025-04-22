@@ -10,6 +10,7 @@
     "max_token": 8192,
     "aoai_generation_model": "o1",
     "aoai_debug_model": "o1",
+    "aoai_refinement_model": "o3-mini",
     "verus_path": "/home/chuyue/verus/source/target-verus/release/verus",
     "example_path": "/home/chuyue/-verusyth/code/examples",
     "lemma_path": "/home/chuyue/-verusyth/code/lemmas",

@@ -1,5 +1,3 @@
-// This is a placeholder response from dummy mode.
-// This is a placeholder response from dummy mode.
 use vstd::prelude::*;
 
 pub fn main() {}
@@ -29,7 +27,18 @@ verus! {
     }
 
     impl<T: Copy> View for RingBuffer<T> {
-        // TODO: implement this.
+        type V = (Seq<T>, nat);
+
+        closed spec fn view(&self) -> Self::V {
+            let capacity = self.ring@.len();
+            (
+                Seq::new(
+                    (((self.tail as int) + capacity) - (self.head as int)) % capacity,
+                    |i: int| self.ring@[((self.head as int) + i) % capacity]
+                ),
+                capacity
+            )
+        }
     }
 
     /// This function says that for any `x` and `y`, there are two
@@ -90,170 +99,168 @@ verus! {
     }
 
 
-#[verifier::external_body]
-fn my_set<T: Copy>(vec: &mut Vec<T>, i: usize, value: T)
-    requires
-        i < old(vec).len(),
-    ensures
-        vec@ == old(vec)@.update(i as int, value),
-        vec@.len() == old(vec).len()
+    #[verifier::external_body]
+    fn my_set<T: Copy>(vec: &mut Vec<T>, i: usize, value: T)
+        requires
+            i < old(vec).len(),
+        ensures
+            vec@ == old(vec)@.update(i as int, value),
+            vec@.len() == old(vec).len()
         no_unwind
-{
-    vec[i] = value;
-}
-
-
-impl<T: Copy> RingBuffer<T> {
-    /// Invariant for the ring buffer.
-    #[verifier::type_invariant]
-    closed spec fn inv(&self) -> bool {
-        // TODO: implement this.
+    {
+        vec[i] = value;
     }
 
 
-    /// Returns how many elements are in the buffer.
-    pub fn len(&self) -> (ret: usize)
-    // TODO: implement this.
-    {
-        proof {
-            use_type_invariant(&*self);
-            lemma_mod_auto(self@.1 as int);
-        }
-        if self.tail > self.head {
-            self.tail - self.head
-        } else if self.tail < self.head {
-            (self.ring.len() - self.head) + self.tail
-        } else {
-            0
-        }
-    }
-
-    /// Returns true if there are any items in the buffer, false otherwise.
-    pub fn has_elements(&self) -> (ret: bool)
-    // TODO: implement this.
-    {
-        proof {
-            use_type_invariant(&*self);
-        }
-        self.head != self.tail
-    }
-
-    /// Returns true if the buffer is full, false otherwise.
-    pub fn is_full(&self) -> (ret: bool)
-    // TODO: implement this.
-    {
-        proof {
-            use_type_invariant(&*self);
-            lemma_mod_auto(self@.1 as int);
-        }
-        self.head == ((self.tail + 1) % self.ring.len())
-    }
-
-    /// Creates a new RingBuffer with the given backing `ring` storage.
-    pub fn new(ring: Vec<T>) -> (ret: RingBuffer<T>)
-    // TODO: implement this.
-    {
-        RingBuffer {
-            head: 0,
-            tail: 0,
-            ring,
-        }
-    }
-
-    
-    /// If the buffer isn't full, adds a new element to the back.
-    /// Returns whether the element was added.
-    pub fn enqueue(&mut self, val: T) -> (succ: bool)
-    // TODO: implement this.
-    {
-        proof {
-            use_type_invariant(&*self);
-            lemma_mod_auto(self@.1 as int);
-        }
-        if self.is_full() {
-            false
-        } else {
-            my_set(&mut self.ring, self.tail, val);
-            self.tail = (self.tail + 1) % self.ring.len();
+    impl<T: Copy> RingBuffer<T> {
+        /// Invariant for the ring buffer.
+        #[verifier::type_invariant]
+        closed spec fn inv(&self) -> bool {
+            // TODO: implement this.
             true
         }
-    }
 
-    /// Removes and returns the front element, if any.
-    pub fn dequeue(&mut self) -> (ret: Option<T>)
-    // TODO: implement this.
-    {
-        proof {
-            use_type_invariant(&*self);
-            lemma_mod_auto(self@.1 as int);
+        /// Returns how many elements are in the buffer.
+        pub fn len(&self) -> (ret: usize)
+        // TODO: implement this.
+        {
+            proof {
+                use_type_invariant(&*self);
+                lemma_mod_auto(self@.1 as int);
+            }
+            if self.tail > self.head {
+                self.tail - self.head
+            } else if self.tail < self.head {
+                (self.ring.len() - self.head) + self.tail
+            } else {
+                0
+            }
         }
-        if self.has_elements() {
-            let val = self.ring[self.head];
-            self.head = (self.head + 1) % self.ring.len();
-            Some(val)
-        } else {
-            None
+
+        /// Returns true if there are any items in the buffer, false otherwise.
+        pub fn has_elements(&self) -> (ret: bool)
+        // TODO: implement this.
+        {
+            proof {
+                use_type_invariant(&*self);
+            }
+            self.head != self.tail
+        }
+
+        /// Returns true if the buffer is full, false otherwise.
+        pub fn is_full(&self) -> (ret: bool)
+        // TODO: implement this.
+        {
+            proof {
+                use_type_invariant(&*self);
+                lemma_mod_auto(self@.1 as int);
+            }
+            self.head == ((self.tail + 1) % self.ring.len())
+        }
+
+        /// Creates a new RingBuffer with the given backing `ring` storage.
+        pub fn new(ring: Vec<T>) -> (ret: RingBuffer<T>)
+        // TODO: implement this.
+        {
+            RingBuffer {
+                head: 0,
+                tail: 0,
+                ring,
+            }
+        }
+
+        
+        /// If the buffer isn't full, adds a new element to the back.
+        /// Returns whether the element was added.
+        pub fn enqueue(&mut self, val: T) -> (succ: bool)
+        // TODO: implement this.
+        {
+            proof {
+                use_type_invariant(&*self);
+                lemma_mod_auto(self@.1 as int);
+            }
+            if self.is_full() {
+                false
+            } else {
+                my_set(&mut self.ring, self.tail, val);
+                self.tail = (self.tail + 1) % self.ring.len();
+                true
+            }
+        }
+
+        /// Removes and returns the front element, if any.
+        pub fn dequeue(&mut self) -> (ret: Option<T>)
+        // TODO: implement this.
+        {
+            proof {
+                use_type_invariant(&*self);
+                lemma_mod_auto(self@.1 as int);
+            }
+            if self.has_elements() {
+                let val = self.ring[self.head];
+                self.head = (self.head + 1) % self.ring.len();
+                Some(val)
+            } else {
+                None
+            }
+        }
+        
+        /// Returns the number of elements that can still be enqueued until it is full.
+        pub fn available_len(&self) -> (ret: usize)
+        // TODO: implement this.
+        {
+            proof {
+                use_type_invariant(&self);
+            }
+            self.ring.len().saturating_sub(1 + self.len())
         }
     }
-    
 
-
-    /// Returns the number of elements that can still be enqueued until it is full.
-    pub fn available_len(&self) -> (ret: usize)
-    // TODO: implement this.
+    #[verifier::loop_isolation(false)]
+    fn test_enqueue_dequeue_generic(len: usize, value: i32, iterations: usize)
+        requires
+            len < usize::MAX - 1,
+            iterations * 2 < usize::MAX,
     {
-        proof {
-            use_type_invariant(&self);
+        let mut ring: Vec<i32> = Vec::new();
+
+        if len == 0 {
+            return;
         }
-        self.ring.len().saturating_sub(1 + self.len())
+
+        for i in 0..(len + 1)
+            invariant
+                ring.len() == i,
+        {
+            ring.push(0);
+        }
+
+        assert(ring.len() > 1);
+        let mut buf = RingBuffer::new(ring);
+        assert(buf@.1 > 1);
+
+        for _ in 0..2 * iterations
+            invariant
+                buf@.0.len() == 0,
+                buf@.1 > 1
+        {
+            let enqueue_res = buf.enqueue(value);
+            assert(enqueue_res);
+
+            let buf_len = buf.len();
+            assert(buf_len == 1);
+
+            let has_elements = buf.has_elements();
+            assert(has_elements);
+
+            let dequeue_res = buf.dequeue();
+            assert(dequeue_res =~= Some(value));
+
+            let buf_len = buf.len();
+            assert(buf_len == 0);
+
+            let has_elements = buf.has_elements();
+            assert(!has_elements);
+        }
     }
-}
-
-#[verifier::loop_isolation(false)]
-fn test_enqueue_dequeue_generic(len: usize, value: i32, iterations: usize)
-    requires
-        len < usize::MAX - 1,
-        iterations * 2 < usize::MAX,
-{
-    let mut ring: Vec<i32> = Vec::new();
-
-    if len == 0 {
-        return;
-    }
-
-    for i in 0..(len + 1)
-        invariant
-            ring.len() == i,
-    {
-        ring.push(0);
-    }
-
-    assert(ring.len() > 1);
-    let mut buf = RingBuffer::new(ring);
-    assert(buf@.1 > 1);
-
-    for _ in 0..2 * iterations
-        invariant
-            buf@.0.len() == 0,
-            buf@.1 > 1
-    {
-        let enqueue_res = buf.enqueue(value);
-        assert(enqueue_res);
-
-        let buf_len = buf.len();
-        assert(buf_len == 1);
-
-        let has_elements = buf.has_elements();
-        assert(has_elements);
-
-        let dequeue_res = buf.dequeue();
-        assert(dequeue_res =~= Some(value));
-
-        let buf_len = buf.len();
-        assert(buf_len == 0);
-
-        let has_elements = buf.has_elements();
-        assert(!has_elements);
-    }
-}
 }

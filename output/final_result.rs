@@ -1,6 +1,3 @@
-// This is a placeholder response from dummy mode.
-// This is a placeholder response from dummy mode.
-// This is a placeholder response from dummy mode.
 use vstd::prelude::*;
 
 pub fn main() {}

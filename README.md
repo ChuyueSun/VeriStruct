@@ -71,3 +71,48 @@ src
   - veval.py # 3 utils that the module may rely on
   - each module corresponds to a file # implement each module
 ```
+
+VerusAgent 
+  --> pass --> Clover
+  --> fail --> repair --> Clover
+
+  formal spec: assertions written in logical language
+  ?testing: too many to try (infinite input space), mathematically proven for all inputs
+
+## LLM Caching
+
+VerusAgent now includes LLM caching functionality to improve performance and reduce API costs. The cache stores LLM responses based on the query parameters and can be used for subsequent identical requests.
+
+### Configuration
+
+LLM caching is controlled by the following environment variables:
+
+- `LLM_CACHE_ENABLED`: Set to `1` to enable caching (default is enabled)
+- `LLM_CACHE_DIR`: Directory to store cache files (default is `llm_cache` in the project root)
+- `LLM_CACHE_MAX_AGE_DAYS`: Maximum age of cache entries in days (default is 7 days)
+
+These variables are set in the `run.sh` script.
+
+### Testing Cache Functionality
+
+To test the LLM cache with Azure configuration:
+
+```bash
+# Run with a unique query (will trigger an API call)
+fish test_azure_cache.fish
+
+# Run with a fixed query to see caching in action
+fish test_azure_cache.fish --fixed-query
+
+# Run the fixed query test again to see cache hits on both calls
+fish test_azure_cache.fish --fixed-query
+```
+
+The first run with a fixed query will cache the response, and subsequent runs will retrieve from cache without making API calls.
+
+### Cache Files
+
+Cache files are stored as JSON in the specified cache directory and include:
+- Original query parameters
+- Response from the LLM
+- Timestamp for cache expiration

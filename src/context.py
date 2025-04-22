@@ -77,8 +77,14 @@ class Context:
         self.params = params
         self.llm = LLM(config, logger)
 
-        raw_code_loc = os.path.join(config['tmp_dir'], 'raw.rs')
+        # Use a default tmp directory if not specified in config
+        tmp_dir = config.get('tmp_dir', 'tmp')
+        raw_code_loc = os.path.join(tmp_dir, 'raw.rs')
         self.raw_code_loc = raw_code_loc
+        
+        # Ensure tmp directory exists
+        os.makedirs(tmp_dir, exist_ok=True)
+        
         with open(raw_code_loc, 'w') as f:
             f.write(raw_code)
 
@@ -89,8 +95,10 @@ class Context:
         Add a result generate by LLM to the context.
         """
         trial_id = len(self.trials)
-        path = os.path.join(config['tmp_dir'], f'trial_{trial_id}.rs')
-        with open(path , 'w') as f: f.write(code)
+        # Use the same tmp directory as in __init__
+        tmp_dir = config.get('tmp_dir', 'tmp') 
+        path = os.path.join(tmp_dir, f'trial_{trial_id}.rs')
+        with open(path, 'w') as f: f.write(code)
         eval = VEval(code, self.logger)
         self.trials.append(Trial(trial_id, eval, path, self.logger))
 

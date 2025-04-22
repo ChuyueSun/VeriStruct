@@ -1,4 +1,3 @@
-// This is a placeholder response from dummy mode.
 use vstd::prelude::*;
 
 pub fn main() {}
@@ -28,7 +27,11 @@ verus! {
     }
 
     impl<T: Copy> View for RingBuffer<T> {
-        // TODO: implement this.
+        type V = (Seq<T>, nat, nat);
+
+        closed spec fn view(&self) -> Self::V {
+            (self.ring@, self.head as nat, self.tail as nat)
+        }
     }
 
     /// This function says that for any `x` and `y`, there are two
@@ -107,6 +110,7 @@ impl<T: Copy> RingBuffer<T> {
     #[verifier::type_invariant]
     closed spec fn inv(&self) -> bool {
         // TODO: implement this.
+        true
     }
 
 
