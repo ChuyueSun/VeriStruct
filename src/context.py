@@ -1,6 +1,6 @@
 from typing import List, Dict, Optional
 from modules.base import BaseModule
-from modules.veval import VEval
+from modules.veval import VEval, EvalScore
 from configs.sconfig import config
 from prompts.template import fill_template
 import os, subprocess
@@ -14,8 +14,15 @@ class Trial:
         self.id = trial_id
         self.eval = eval
         self.code_loc = code_loc
-        self.eval.eval(100, True, None)
         self.logger = logger
+        
+        # Call eval with the correct parameters
+        try:
+            # The eval method signature has changed, update parameters accordingly
+            self.eval.eval(max_errs=100, json_mode=True)
+        except Exception as e:
+            if self.logger:
+                self.logger.error(f"Error evaluating trial: {e}")
 
     @property
     def code(self):
@@ -70,8 +77,18 @@ class Context:
         self.params = params
         self.llm = LLM(config, logger)
 
-        raw_code_loc = os.path.join(config['tmp_dir'], 'raw.rs')
+        # Global best tracking
+        self.best_code = None
+        self.best_score = None
+
+        # Use a default tmp directory if not specified in config
+        tmp_dir = config.get('tmp_dir', 'tmp')
+        raw_code_loc = os.path.join(tmp_dir, 'raw.rs')
         self.raw_code_loc = raw_code_loc
+        
+        # Ensure tmp directory exists
+        os.makedirs(tmp_dir, exist_ok=True)
+        
         with open(raw_code_loc, 'w') as f:
             f.write(raw_code)
 
@@ -82,12 +99,30 @@ class Context:
         Add a result generate by LLM to the context.
         """
         trial_id = len(self.trials)
-        path = os.path.join(config['tmp_dir'], f'trial_{trial_id}.rs')
-        with open(path , 'w') as f: f.write(code)
+        # Use the same tmp directory as in __init__
+        tmp_dir = config.get('tmp_dir', 'tmp') 
+        path = os.path.join(tmp_dir, f'trial_{trial_id}.rs')
+        with open(path, 'w') as f: f.write(code)
         eval = VEval(code, self.logger)
         self.trials.append(Trial(trial_id, eval, path, self.logger))
 
     def get_trial(self, id: int): return self.trials[id]
+
+    def get_best_code(self) -> Optional[str]:
+        """Get the global best code tracked by this context."""
+        return self.best_code
+    
+    def get_best_score(self) -> Optional[EvalScore]:
+        """Get the global best score tracked by this context."""
+        return self.best_score
+    
+    def set_best_code(self, code: str) -> None:
+        """Set the global best code."""
+        self.best_code = code
+    
+    def set_best_score(self, score: EvalScore) -> None:
+        """Set the global best score."""
+        self.best_score = score
 
     def register_modoule(self, name: str, module: BaseModule) -> None:
         """

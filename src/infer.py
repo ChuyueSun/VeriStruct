@@ -4,16 +4,37 @@
 import time
 import random
 import warnings
+import os
 from typing import List, Tuple, Union
+import logging
+
+# Import our new cache
+from src.llm_cache import LLMCache
 
 # sglang
-import sglang as sgl
+try:
+    import sglang as sgl
+except ImportError:
+    # If you don't have sglang installed, create a dummy implementation
+    class DummySGL:
+        def function(self, func): return func
+        def set_default_backend(self, backend): pass
+        def system(self, text): return text
+        def user(self, text): return text
+        def assistant(self, text): return text
+        def gen(self, name, **kwargs): return name
+    
+    sgl = DummySGL()
+    print("Warning: sglang not installed, using dummy implementation")
 
 try:
     from azure.identity import DefaultAzureCredential, get_bearer_token_provider
 except ImportError:
     # If you only sometimes need azure.identity, it's OK to handle missing packages
     pass
+
+# Add a flag to enable/disable LLM inference (for testing without API keys)
+ENABLE_LLM_INFERENCE = os.environ.get("ENABLE_LLM_INFERENCE", "1") == "1"
 
 
 class LLM:
@@ -24,40 +45,67 @@ class LLM:
         """
         self.config = config
         self.logger = logger
+        
+        # Check if LLM inference is enabled through environment variable
+        enable_llm = os.environ.get("ENABLE_LLM_INFERENCE", "1")
+        self.dummy_mode = (enable_llm != "1")
+        
+        # Initialize the cache
+        use_cache = self.config.get("use_cache", True)
+        cache_dir = self.config.get("cache_dir", "llm_cache")
+        cache_max_age = self.config.get("cache_max_age_days", 7)
+        self.cache = LLMCache(
+            cache_dir=cache_dir,
+            enabled=use_cache,
+            max_age_days=cache_max_age,
+            logger=self.logger
+        )
+        
+        # Log config for debugging
+        self.logger.info(f"Config: {self.config.get('aoai_api_base')}")
 
         # Prepare a list of potential SGL backends
         self.backends = []
 
-        if getattr(config, "platform", "openai") == "openai":
-            for i in range(len(config.aoai_api_key)):
-                self.backends.append(
-                    sgl.OpenAI(
-                        model_name=config.aoai_generation_model,
-                        api_key=config.aoai_api_key[i],
-                        base_url=config.aoai_api_base[i],
+        if self.dummy_mode:
+            self.logger.warning("LLM in dummy mode. Will return placeholder responses.")
+            return
+
+        try:
+            if self.config.get("platform", "openai") == "openai":
+                for i in range(len(self.config["aoai_api_key"])):
+                    self.backends.append(
+                        sgl.OpenAI(
+                            model_name=self.config["aoai_generation_model"],
+                            api_key=self.config["aoai_api_key"][i],
+                            base_url=self.config["aoai_api_base"][i],
+                        )
                     )
-                )
-        elif getattr(config, "platform", "openai") == "azure":
-            for i in range(len(config.aoai_api_key)):
-                self.backends.append(
-                    sgl.OpenAI(
-                    model_name=config.aoai_generation_model,
-                    api_version=config.aoai_api_version,
-                    azure_endpoint=config.aoai_api_base[i],
-                    api_key=config.aoai_api_key[i],
-                    is_azure=True,
+            elif self.config.get("platform", "openai") == "azure":
+                for i in range(len(self.config["aoai_api_key"])):
+                    self.backends.append(
+                        sgl.OpenAI(
+                        model_name=self.config["aoai_generation_model"],
+                        api_version=self.config["aoai_api_version"],
+                        azure_endpoint=self.config["aoai_api_base"][i],
+                        api_key=self.config["aoai_api_key"][i],
+                        is_azure=True,
+                        )
                     )
-                )
-        elif getattr(config, "platform", "openai") == "anthropic":
-            for i in range(len(config.anthropic_api_key)):
-                self.backends.append(
-                    sgl.Anthropic(
-                        model_name=config.anthropic_generation_model,
-                        api_key=config.anthropic_api_key[i],
+            elif self.config.get("platform", "openai") == "anthropic":
+                for i in range(len(self.config["anthropic_api_key"])):
+                    self.backends.append(
+                        sgl.Anthropic(
+                            model_name=self.config["anthropic_generation_model"],
+                            api_key=self.config["anthropic_api_key"][i],
+                        )
                     )
-                )
-        else:
-            raise ValueError("Unknown platform")
+            else:
+                raise ValueError("Unknown platform")
+        except Exception as e:
+            self.logger.error(f"Error initializing LLM backends: {e}")
+            self.dummy_mode = True
+            self.logger.warning("Falling back to dummy mode due to initialization error.")
 
         # Pick a random backend index
         self.client_id = 0
@@ -87,14 +135,13 @@ class LLM:
 
         # We'll store the final response in a variable named "final_answer".
         # Now using max_completion_tokens=8192 by default.
-        forks = s.fork(answer_num)
-        forks += sgl.assistant(
+        s += sgl.assistant(
                 sgl.gen(
                     f"final_answer",
                     max_tokens=max_tokens, 
+                    n=answer_num,
                 )
             )
-        forks.join()
 
 
 
@@ -111,6 +158,7 @@ class LLM:
         json: bool = False,
         return_msg: bool = False,
         verbose: bool = False,
+        use_cache: bool = True,  # New parameter to control caching per call
     ) -> Union[List[str], Tuple[List[str], List[dict]]]:
         """
         Calls SGL to build and run an LLM prompt. Returns a list of strings 
@@ -128,15 +176,64 @@ class LLM:
         :param json: Whether to parse the output as JSON (not fully shown).
         :param return_msg: If True, also return the entire conversation messages.
         :param verbose: If True, log debug info.
+        :param use_cache: Whether to use cache for this specific call.
 
         :return: Either a list of answer strings, or (list of answers, list of messages).
         """
+        
+        if self.dummy_mode:
+            self.logger.warning("LLM in dummy mode. Returning placeholder responses.")
+            if query and len(query) > 100:
+                dummy_response = "// This is a placeholder response from dummy mode.\n" + query
+            else:
+                dummy_response = "This is a placeholder response from dummy mode."
+            
+            if return_msg:
+                return [dummy_response] * answer_num, []
+            else:
+                return [dummy_response] * answer_num
+
+        # Check cache if enabled
+        if use_cache and self.cache.enabled:
+            cached_responses = self.cache.get(
+                engine, instruction, query, max_tokens, 
+                exemplars, system_info
+            )
+            
+            if cached_responses:
+                self.logger.info(f"Using cached response (hit rate: {self.cache.get_stats()['hit_rate']:.2f})")
+                
+                # Return the requested number of responses (up to what's available)
+                available_responses = min(len(cached_responses), answer_num)
+                result = cached_responses[:available_responses]
+                
+                # If we don't have enough cached responses, add duplicates to meet the requested number
+                if available_responses < answer_num:
+                    result.extend([result[0]] * (answer_num - available_responses))
+                    
+                if return_msg:
+                    # Create a dummy message list when using cache
+                    dummy_messages = [
+                        {"role": "system", "content": system_info or "You are a helpful assistant"},
+                        {"role": "user", "content": query},
+                        {"role": "assistant", "content": result[0]}
+                    ]
+                    return result, dummy_messages
+                else:
+                    return result
 
         if verbose:
             self.logger.info(f"Using backend #{self.client_id}")
 
         # Select the backend
-        sgl.set_default_backend(self.backends[self.client_id])
+        try:
+            sgl.set_default_backend(self.backends[self.client_id])
+        except Exception as e:
+            self.logger.error(f"Error setting backend: {e}")
+            if return_msg:
+                return [], []
+            else:
+                return []
 
         start_time = time.time()
         try:
@@ -172,6 +269,14 @@ class LLM:
                 ans if isinstance(ans, str) else str(ans)
                 for ans in final_answers
             ]
+
+        # Cache the result if caching is enabled
+        if use_cache and self.cache.enabled:
+            self.cache.save(
+                engine, instruction, query, max_tokens, 
+                final_answers, exemplars, system_info
+            )
+            self.logger.debug(f"Saved response to cache (time: {infer_time:.2f}s)")
 
         if return_msg:
             # state.messages() presumably returns a list of conversation messages

@@ -11,6 +11,18 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Ignore cache
+llm_cache/
+
+# Ignore tmp
+tmp/
+
+# Ignore output directory
+output/
+
+# Ignore Cursor files
+.cursor/
+
 # Ignore environment variable files
 .env
 .env.local
