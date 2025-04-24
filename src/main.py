@@ -5,8 +5,11 @@ from context import Trial, Context, HyperParams
 from modules.view_inference import ViewInferenceModule
 from modules.view_refinement import ViewRefinementModule
 from modules.inv_inference import InvInferenceModule
+from modules.repair_assertion import RepairAssertionModule
+from modules.repair_precond import RepairPrecondModule
+from modules.repair_postcond import RepairPostcondModule
 from configs.sconfig import config, reset_config
-from modules.veval import verus
+from modules.veval import verus, VEval, VerusErrorType
 
 logger = loguru.logger
 # Set the logging level to DEBUG to see more detailed information
@@ -56,18 +59,24 @@ def main():
     params = HyperParams()
     context = Context(sample_code, params, logger)
     
-    # Register modules
+    # Register modules (inference, refinement, and repair)
     view_inference = ViewInferenceModule(config, logger)
     view_refinement = ViewRefinementModule(config, logger)
     inv_inference = InvInferenceModule(config, logger)
+    repair_assertion = RepairAssertionModule(config, logger)
+    repair_precond = RepairPrecondModule(config, logger)
+    repair_postcond = RepairPostcondModule(config, logger)
     
     context.register_modoule("view_inference", view_inference)
     context.register_modoule("view_refinement", view_refinement)
     context.register_modoule("inv_inference", inv_inference)
+    context.register_modoule("repair_assertion", repair_assertion)
+    context.register_modoule("repair_precond", repair_precond)
+    context.register_modoule("repair_postcond", repair_postcond)
     
     logger.info(f"Registered modules: {list(context.modules.keys())}")
     
-    # Run the entire workflow
+    # Run the entire workflow (Sequential for now, Planner integration is TODO)
     
     # Step 1: Generate View function
     logger.info("Step 1: Generating View function...")
@@ -90,7 +99,30 @@ def main():
     # Save the final result
     (output_dir / "03_inv_inference.rs").write_text(inv_result)
     
-    # Save the final result
+    # Step 4: Attempt repairs if needed (Example: try fixing assertion error)
+    last_trial = context.trials[-1]
+    failures = last_trial.eval.get_failures()
+    if failures:
+        logger.info(f"Last trial has failures. Attempting repairs...")
+        
+        # Create a mapping from error types to repair modules and output filenames
+        repair_mapping = {
+            VerusErrorType.AssertFail: (repair_assertion, "04_repair_assertion.rs"),
+            VerusErrorType.PreCondFail: (repair_precond, "05_repair_precond.rs"),
+            VerusErrorType.PostCondFail: (repair_postcond, "06_repair_postcond.rs"),
+        }
+        
+        # Process each error type in the mapping
+        for error_type, (repair_module, output_filename) in repair_mapping.items():
+            # Find failures of this type
+            type_failures = [f for f in failures if f.error == error_type]
+            if type_failures:
+                logger.info(f"Attempting {error_type.name} repair...")
+                repair_result = repair_module.exec(context, type_failures[0])
+                (output_dir / output_filename).write_text(repair_result)
+                logger.info(f"{error_type.name} repair completed.")
+
+    # Save the final result (potentially after repairs)
     final_result = context.trials[-1].code
     (output_dir / "final_result.rs").write_text(final_result)
     

@@ -20,6 +20,9 @@ tmp/
 # Ignore output directory
 output/
 
+# Ignore Cursor files
+.cursor/
+
 # Ignore environment variable files
 .env
 .env.local

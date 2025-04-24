@@ -11,6 +11,9 @@ import os
 import logging
 import re
 import sys
+import json
+import tempfile
+import subprocess
 
 from modules.veval import VEval, EvalScore
 
@@ -453,4 +456,457 @@ def debug_type_error(code: str, verus_error=None, num=1, logger=None) -> tuple:
             logger.info(cur_failure.trace[0].get_text())
             return "", len(failures)
 
-    return code, len(failures) 
+    return code, len(failures)
+
+def remove_comment(code):
+    """
+    remove single-line comments in code
+    """
+    new_code = ""
+    for line in code.split("\n"):
+        if line.strip().startswith("//"):
+            continue
+        new_code += line + "\n"
+    return new_code
+
+def remove_rust_comments(code: str) -> str:
+    """
+    Removes comment lines and inline comments from Rust code.
+    
+    Full-line comments (lines that, after stripping leading whitespace, 
+    start with '//') are completely removed.
+    
+    Inline comments (everything after a '//' on a line) are stripped away.
+    
+    Note: This simple implementation does not handle the case where '//' 
+    might appear inside a string literal.
+    """
+    lines = code.splitlines()
+    new_lines = []
+    for line in lines:
+        # Skip lines that are entirely comments.
+        if re.match(r'^\s*//', line):
+            continue
+        # Remove any inline comment (everything after the first occurrence of '//')
+        # and also strip trailing whitespace.
+        new_line = re.split(r'//', line)[0].rstrip()
+        new_lines.append(new_line)
+    return "\n".join(new_lines)
+
+# Ported from archive/code/utils.py
+class AttrDict(dict):
+    def __getattr__(self, name):
+        return self[name]
+
+def get_nonlinear_lines(code, logger):
+    """
+    Get all lines that contain nonlinear arithmetic operations
+    """
+    try:
+        code_f = tempfile.NamedTemporaryFile(
+            mode="w", delete=False, prefix="veurs_nonlinear_", suffix=".rs"
+        )
+        code_f.write(code)
+        code_f.close()
+
+        m = lynette.code_detect_nonlinear(code_f.name)
+        os.unlink(code_f.name)
+
+        if m.returncode == 0:
+            try:
+                nl_lines = eval(m.stdout)
+                output_lines = []
+                code_lines = code.splitlines()
+                for ex_type, (st, ed) in nl_lines:
+                    text = "\n".join(code_lines[st - 1 : ed])
+                    if ex_type == "assert" and "nonlinear_arith" not in text:
+                        output_lines.append((st, ed, text))
+                    elif ex_type == "invariant":
+                        output_lines.append((st, ed, text))
+                return output_lines
+            except Exception as e: # Changed from JSONDecodeError to broader Exception
+                if logger:
+                    logger.error(f"Error in decoding nonlinear arithmetic operations: {m.stdout} ({e})")
+                return []
+        else:
+            if logger:
+                logger.warning(f"Lynette code_detect_nonlinear failed with return code {m.returncode}")
+            return []
+    except Exception as e:
+        if logger:
+            logger.error(f"Error running lynette for nonlinear detection: {e}")
+        return []
+
+def code_change_is_safe(
+    origin_code,
+    changed_code,
+    verus_path,
+    logger,
+    target_mode=True,
+    util_path="../utils",
+    inter=False,
+    debug=True,
+    immutable_funcs=[],
+):
+    # Debug mode override (from original code)
+    if debug and os.environ.get('DEBUG_SAFE_CODE_CHANGE', '0') == '1':
+        logger.warning("DEBUG_SAFE_CODE_CHANGE is set, skipping safe code change checking")
+        return True
+
+    for func_name in immutable_funcs:
+        # Get function bodies safely, handling potential errors
+        origin_body = get_func_body(origin_code, func_name, util_path, logger)
+        changed_body = get_func_body(changed_code, func_name, util_path, logger)
+        
+        if origin_body is None or changed_body is None:
+            logger.warning(f"Could not compare immutable function '{func_name}'. Assuming unsafe.")
+            return False
+
+        origin = remove_rust_comments(origin_body)
+        changed = remove_rust_comments(changed_body)
+        
+        if origin != changed:
+            logger.error(f"Immutable function '{func_name}' was changed")
+            return False
+
+    try:
+        orig_f = tempfile.NamedTemporaryFile(
+            mode="w", delete=False, prefix="llm4v_orig", suffix=".rs"
+        )
+        orig_f.write(origin_code)
+        orig_f.close()
+
+        changed_f = tempfile.NamedTemporaryFile(
+            mode="w", delete=False, prefix="llm4v_changed", suffix=".rs"
+        )
+        changed_f.write(changed_code)
+        changed_f.close()
+
+        cargopath = os.path.join(util_path, "lynette/source/Cargo.toml")
+        if not os.path.exists(cargopath):
+             # Attempt relative path from src/modules/utils.py if absolute fails
+            cargopath = Path(__file__).parent.parent.parent / "utils" / "lynette" / "source" / "Cargo.toml"
+            if not cargopath.exists():
+                logger.error(f"Could not find lynette Cargo.toml at {cargopath}")
+                return False # Assume unsafe if we can't compare
+            cargopath = str(cargopath.resolve())
+
+        opts = []
+        if inter:
+            opts = ["--asserts-anno"]
+        elif target_mode:
+            opts = ["-t"]
+
+        verus_compare_cmd = (
+            ["cargo", "run", "--manifest-path", cargopath, "--", "compare"]
+            + opts
+            + [orig_f.name, changed_f.name]
+        )
+
+        m = subprocess.run(verus_compare_cmd, capture_output=True, text=True)
+
+        if m.returncode == 0:
+            return True
+        elif m.returncode == 1:
+            err_m = m.stdout.strip()
+            if err_m == "Files are different":
+                return False
+            else:
+                logger.error(f"Error in comparing code changes: {err_m}")
+                return False
+        else:
+            err_m = m.stderr.strip()
+            logger.error(f"Error running cargo compare: {err_m}")
+            return False # Assume unsafe on compare tool error
+            
+    except Exception as e:
+        logger.error(f"Exception during code comparison: {e}")
+        return False # Assume unsafe on any exception
+    finally:
+        if 'orig_f' in locals() and os.path.exists(orig_f.name):
+            os.unlink(orig_f.name)
+        if 'changed_f' in locals() and os.path.exists(changed_f.name):
+            os.unlink(changed_f.name)
+
+def get_func_body(code, fname, util_path=None, logger=None):
+    try:
+        orig_f = tempfile.NamedTemporaryFile(
+            mode="w", delete=False, prefix="veurs_copilot_", suffix=".rs"
+        )
+        orig_f.write(code)
+        orig_f.close()
+
+        # If util_path is not provided, use the default path relative to the code directory
+        if util_path is None:
+            util_path = Path(__file__).parent.parent.parent / "utils"
+            util_path = str(util_path.resolve())
+        
+        # Construct absolute path to Cargo.toml
+        cargopath = Path(util_path) / "lynette" / "source" / "Cargo.toml"
+        
+        if not cargopath.exists():
+            if logger:
+                logger.error(f"Error: Cargo.toml not found at {cargopath}")
+            return None
+        
+        cargopath = str(cargopath.resolve())
+
+        lynette_extract_cmd = [
+            "cargo",
+            "run",
+            "--manifest-path",
+            cargopath,
+            "--",
+            "func",
+            "extract",
+            "-b",
+            "-f",
+            fname,
+            orig_f.name,
+        ]
+
+        m = subprocess.run(lynette_extract_cmd, capture_output=True, text=True)
+        
+        # Handle error cases
+        if m.returncode != 0:
+            if logger:
+                if m.stderr:
+                    logger.error(f"Error extracting function '{fname}': {m.stderr}")
+                else:
+                    logger.error(f"Error extracting function '{fname}' (no stderr output). Return code: {m.returncode}")
+                    if m.stdout:
+                        logger.error(f"stdout: {m.stdout}")
+            return None
+            
+        if m.returncode == 0:
+            return m.stdout.strip()
+        return None
+        
+    except Exception as e:
+        if logger:
+            logger.error(f"Exception during get_func_body: {e}")
+        return None
+    finally:
+        if 'orig_f' in locals() and os.path.exists(orig_f.name):
+            os.unlink(orig_f.name)
+
+def evaluate(code, verus_path, func_name=None):
+    """Simple Verus evaluation, returns score tuple and subprocess result."""
+    fn = tempfile.NamedTemporaryFile(
+        mode="w", delete=False, prefix="llm4v_eval", suffix=".rs"
+    )
+    fn.write(code)
+    fn.close()
+
+    commands = [verus_path, fn.name]
+    if func_name:
+        commands += ["--verify-function", func_name, "--verify-root"]
+    m = subprocess.run(commands, capture_output=True, text=True)
+    os.unlink(fn.name)
+    
+    temp = 0
+    chunks = m.stderr.split("\n\n")
+    for ch in chunks:
+        if ch.startswith("error") and "aborting due to" not in ch:
+            temp += 1
+    try:
+        score = re.findall(r"(\d+) verified, (\d+) errors", m.stdout)[0]
+    except IndexError as e:
+        score = (0, max(1, temp))
+    if score[0] == "0" and score[1] == "0":
+        score = (0, temp)
+    score = (int(score[0]), max(int(score[1]), temp))
+    return score, m
+
+def compress_nl_assertion(code):
+    """Compresses nonlinear assertions into a single line."""
+    lines = code.split("\n")
+    inside = False
+    tmp_line = ""
+    new_code = ""
+    for line in lines:
+        if not inside:
+            if (
+                line.strip().startswith("assert")
+                and "by" in line
+                and "nonlinear_arith" in line
+            ):
+                inside = True
+                tmp_line += line
+            else:
+                new_code += line + "\n"
+        else:
+            if "{}" in line:
+                tmp_line += " " + line.strip() + "\n"
+                inside = False
+                new_code += tmp_line
+                tmp_line = ""
+            else:
+                tmp_line += " " + line.strip()
+    return new_code
+
+def remove_redundant_loopinv(code):
+    """
+    remove redundant loop invariants in code
+    """
+    new_code = ""
+    invariants = False
+    invariantlist = []
+    for line in code.split("\n"):
+        remove = False
+        if invariants:
+            if line.strip().startswith("{"):
+                invariants = False
+            else:
+                thisinv = re.sub(r"//.*", "", line).strip()
+                for inv in invariantlist:
+                    if thisinv == inv:
+                        remove = True
+                if not remove:
+                    invariantlist.append(thisinv)
+        else:
+            if line.strip().startswith("invariant"):
+                invariantlist = []
+                invariants = True
+        if not remove:
+            new_code += line + "\n"
+    return new_code
+
+def same_code_verus(code1, code2, verus_path):
+    """
+    Check if two code snippets return the same Verus err results
+    """
+    _, msg1 = evaluate(code1, verus_path)
+    _, msg2 = evaluate(code2, verus_path)
+    err1 = msg1.stderr + msg1.stdout
+    err2 = msg2.stderr + msg2.stdout
+    return err1 == err2
+
+def insert_loop_isolation(code):
+    """Insert #[verifier::loop_isolation(false)]"""
+    lines = code.splitlines()
+    verus_line = -1
+    for i, line in enumerate(lines):
+        if "verus!" in line:
+            verus_line = i
+            break
+    if verus_line == -1:
+        print("No verus! found in the code.")
+        return code
+    insert_line = "\n#[verifier::loop_isolation(false)]"
+    new_code = "\n".join(
+        lines[: verus_line + 1] + [insert_line] + lines[verus_line + 1 :]
+    )
+    return new_code
+
+def insert_lemma_func(code, lemma_names, lemma_path):
+    """Insert existing already-proved lemmas"""
+    for lemma_name in lemma_names:
+        name = lemma_name
+        if not name.endswith(".rs"):
+            name = name + ".rs"
+        input_file = os.path.join(lemma_path, name)
+        lemma_code = open(input_file).read()
+        lemma_func_dict = {lemma_name: lemma_code}
+        code = insert_proof_func(code, lemma_func_dict)
+    return code
+
+def insert_proof_func(code, proof_func_dict):
+    """Insert the proof functions into the code."""
+    lines = code.splitlines()
+    verus_line = -1
+    for i, line in enumerate(lines):
+        if "verus!" in line:
+            verus_line = i
+            break
+    if verus_line == -1:
+        return code
+    proof_func_code = "\n\n".join(proof_func_dict.values())
+    new_code = "\n".join(
+        lines[: verus_line + 1] + [proof_func_code] + lines[verus_line + 1 :]
+    )
+    return new_code
+
+def get_examples(config: Dict[str, Any], example_dir_name: str, logger: logging.Logger) -> List[Dict[str, str]]:
+    """
+    Gathers example input/output pairs from two directories (input-<example_dir_name> 
+    and output-<example_dir_name>), and returns a list of dictionaries 
+    with 'query' and 'answer' keys.
+
+    Args:
+        config: Configuration dictionary containing example_path
+        example_dir_name: The suffix for the input/output directories
+        logger: Logger instance
+        
+    Returns:
+        A list of example dictionaries, or an empty list if errors occur.
+    """
+    examples = []
+    try:
+        examples_dir = Path(config.get("example_path", "examples"))
+        input_dir = examples_dir / f"input-{example_dir_name}"
+        output_dir = examples_dir / f"output-{example_dir_name}"
+
+        # Ensure the required directories exist
+        if not input_dir.is_dir():
+            logger.warning(f"Input directory '{input_dir}' does not exist.")
+            return [] # Return empty list if input dir missing
+        if not output_dir.is_dir():
+            logger.warning(f"Output directory '{output_dir}' does not exist.")
+            # Proceed but output files might be missing
+
+        # Collect input/output pairs
+        for input_file in sorted(input_dir.iterdir()):
+            # Only consider *.rs files that start with "ex"
+            if input_file.suffix == ".rs" and input_file.name.startswith("ex"):
+                output_file = output_dir / input_file.name
+
+                if not output_file.is_file():
+                    logger.warning(f"No matching output file for '{input_file}'. Using empty answer.")
+                    output_content = "" # Use empty string if output is missing
+                else:
+                    try:
+                        output_content = output_file.read_text(encoding="utf-8")
+                    except OSError as e:
+                        logger.error(f"Failed to read output file '{output_file}': {e}")
+                        output_content = "" # Use empty string on read error
+
+                # Safely read the input file
+                try:
+                    input_content = input_file.read_text(encoding="utf-8")
+                except OSError as e:
+                    logger.error(f"Failed to read input file '{input_file}': {e}")
+                    continue # Skip this example if input fails
+
+                examples.append({
+                    "query": input_content,
+                    "answer": output_content
+                })
+
+        # Warn if no valid examples were found
+        if not examples:
+            logger.warning(f"No valid examples found in {input_dir}")
+
+    except Exception as e:
+        logger.error(f"Error loading examples from {example_dir_name}: {e}")
+
+    return examples
+
+def clean_code(code):
+    """Remove markdown code blocks and potentially other unwanted characters."""
+    might_code = re.findall(r"```rust(.*)```|```verus(.*)```", code, flags=re.DOTALL)
+    if might_code:
+        code = might_code[0][0] if might_code[0][0] else might_code[0][1]
+
+    lines = []
+    for line in code.split("\n"):
+        if line.strip() == "```":
+            continue
+
+        # this is ad-hoc, but somehow GPT often generates ```use ... on first line
+        if line.startswith("```"):
+            line = line[3:]
+
+        lines.append(line)
+    code = "\n".join(lines)
+    return code 

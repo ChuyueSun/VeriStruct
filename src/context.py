@@ -76,7 +76,7 @@ class Context:
         self.raw_code = raw_code
         self.params = params
         self.llm = LLM(config, logger)
-        
+
         # Global best tracking
         self.best_code = None
         self.best_score = None
