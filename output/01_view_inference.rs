@@ -27,10 +27,19 @@ verus! {
     }
 
     impl<T: Copy> View for RingBuffer<T> {
-        type V = (Seq<T>, nat, nat);
+        type V = (Seq<T>, nat);
 
         closed spec fn view(&self) -> Self::V {
-            (self.ring@, self.head as nat, self.tail as nat)
+            let ring_len = self.ring.len() as int;
+            let head_i = self.head as int;
+            let tail_i = self.tail as int;
+            let count = if tail_i >= head_i {
+                tail_i - head_i
+            } else {
+                ring_len - (head_i - tail_i)
+            };
+            let content = Seq::new(( count ) as nat, |i: int| self.ring@[((head_i + i) % ring_len) as int]);
+            (content, ring_len as nat)
         }
     }
 

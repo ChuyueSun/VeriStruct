@@ -6,7 +6,7 @@ import re
 from modules.base import BaseModule
 from infer import LLM
 from modules.veval import VEval
-from modules.utils import evaluate_samples, save_selection_info, write_candidate_code, update_global_best
+from modules.utils import evaluate_samples, save_selection_info, write_candidate_code, update_global_best, debug_type_error
 
 class InvInferenceModule(BaseModule):
     """
@@ -190,7 +190,12 @@ When combining multiple conditions, avoid excessive &&&. Fewer (or well-structur
         processed_responses = []
         for response in responses:
             processed = self.replace_at_len_in_type_invariant(response)
-            processed_responses.append(processed)
+            # Apply debug_type_error to fix any type errors
+            fixed_processed, _ = debug_type_error(processed, logger=self.logger)
+            if fixed_processed:  # Only use the fixed version if it's not empty
+                processed_responses.append(fixed_processed)
+            else:
+                processed_responses.append(processed)
             
         # Evaluate processed samples and get the best one
         best_code, best_score, _ = evaluate_samples(

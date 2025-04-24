@@ -20,6 +20,7 @@ echo "Python path: $PYTHONPATH"
 echo "LLM inference enabled: $ENABLE_LLM_INFERENCE"
 echo "LLM caching enabled: $LLM_CACHE_ENABLED"
 echo "LLM cache directory: $LLM_CACHE_DIR"
+echo "LLM cache max age: $LLM_CACHE_MAX_AGE_DAYS days"
 
 # Change to configs directory to ensure we can find the config
 cd "$SCRIPT_DIR/src/configs"
@@ -42,6 +43,7 @@ python src/main.py
 if test $status -eq 0
     echo "✅ VerusAgent completed successfully!"
     echo "Check the '$SCRIPT_DIR/output' directory for results (using Azure LLM API with caching)"
+    echo "Cache statistics: Hit rate can be checked in the logs"
 else
     echo "❌ VerusAgent failed to run. Please check the error messages above."
 end 

@@ -9,6 +9,8 @@ from typing import List, Dict, Any, Optional, Tuple, Callable
 from pathlib import Path
 import os
 import logging
+import re
+import sys
 
 from modules.veval import VEval, EvalScore
 
@@ -231,8 +233,13 @@ def evaluate_candidates(candidates: List[str], prefix: str,
     best_code = last_best_code
     
     for j, cand in enumerate(candidates):
+        # Use our new debug_type_error function if no external one is provided
         if debug_type_error_fn:
             cand, _ = debug_type_error_fn(cand)
+        else:
+            cand_fixed, _ = debug_type_error(cand, logger=logger)
+            if cand_fixed:  # Only use the fixed version if it's not empty
+                cand = cand_fixed
 
         veval = VEval(cand, logger)
         score = veval.eval_and_get_score()
@@ -259,4 +266,191 @@ def evaluate_candidates(candidates: List[str], prefix: str,
     if best_score.is_good_code_next_phase(last_best_score):
         return best_code, best_code, best_score
     else:
-        return last_best_code, last_best_code, last_best_score 
+        return last_best_code, last_best_code, last_best_score
+
+def fix_one_type_error(oldline, cstart, cend, newtype):
+    """
+    Fix a type error in a line by inserting an appropriate cast.
+    
+    Args:
+        oldline: The line containing the type error
+        cstart: The starting index of the problematic expression
+        cend: The ending index of the problematic expression
+        newtype: The new type to cast to
+        
+    Returns:
+        The fixed line
+    """
+    # cstart: the starting index of the problematic expression
+    # cend: the ending index of the problematic expression
+
+    prefix = oldline[:cstart]
+    mid = oldline[cstart : cend + 1]
+    suffix = oldline[cend + 1 :]
+
+    oldtype_pos = mid.rfind(" as ")
+
+    if oldtype_pos > -1:
+        if " " in mid[oldtype_pos + 4 :].strip():
+            # there was not a cast type for the whole expression
+            # instead it is something like x as int - 1
+            oldtype_pos = -1
+
+    if oldtype_pos == -1:
+        # the old expression does not have "as oldtype"
+        if re.match(r"^\(*\)$", mid.strip()):
+            # already in parentheses
+            newmid = mid + " as " + newtype
+        else:
+            newmid = "( " + mid + " ) as " + newtype
+    else:
+        # replace the old as type
+        newmid = mid[:oldtype_pos] + " as " + newtype
+
+    return prefix + newmid + suffix
+
+def fix_one_type_error_in_code(code, err_trace, verbose=True):
+    """
+    Fix a type error in the code based on the error trace.
+    
+    Args:
+        code: The Verus code
+        err_trace: The error trace from VEval
+        verbose: Whether to output verbose debugging information
+        
+    Returns:
+        The fixed code, or an empty string if the error could not be fixed
+    """
+    # note that linenum, cstart, cend indices all start from 0
+    err_label = err_trace.strlabel
+    if err_label is None or not "`" in err_label:
+        sys.stderr.write("Fatal error: err_trace does not have a label")
+        sys.stderr.write(code)
+        return code
+    newtype = err_label.split("`")[1]
+
+    err_lnum = err_trace.get_lines()[0]
+    linenum = err_lnum - 1
+
+    line = err_trace.get_text()
+    cstart = err_trace.text[0].hl_start - 1
+    cend = err_trace.text[0].hl_end - 2
+    err_exp = line[cstart : cend + 1]
+
+    newlines = []
+    for i, line in enumerate(code.split("\n")):
+        if i != linenum:
+            newlines.append(line)
+        else:
+            if not err_exp in line:
+                sys.stderr.write(
+                    "Fatal error: `" + err_exp + "' does not exist in " + line
+                )
+                return ""
+            if err_exp != line[cstart : cend + 1]:
+                sys.stderr.write(
+                    "Fatal error. Expected expression is `"
+                    + err_exp
+                    + "'; Get expression `"
+                    + line[cstart : cend + 1]
+                )
+                return ""
+
+            newline = fix_one_type_error(line, cstart, cend, newtype)
+
+            # Sometimes, we may encounter non-fixable type error
+            # for example if one expects ..i or [i] to be int, ..i as int or [i] as int will return the same type error
+            # so, we return "" to warn the caller
+            # otherwise, the caller may hang
+            if line == newline:
+                return ""
+
+            if verbose == True:
+                sys.stderr.write(
+                    "[fix_one_type_error_in_code] changed the type of `"
+                    + line[cstart : cend + 1]
+                    + "'"
+                    + "as `"
+                    + newline.strip()
+                    + "'"
+                )
+            newlines.append(newline)
+
+    return "\n".join(newlines) + "\n"
+
+def debug_type_error(code: str, verus_error=None, num=1, logger=None) -> tuple:
+    """
+    Debug and fix type errors in the Verus code.
+    
+    Args:
+        code: The Verus code to fix
+        verus_error: A specific error to fix (optional)
+        num: Maximum number of errors to fix
+        logger: Logger instance
+        
+    Returns:
+        A tuple of (fixed_code, remaining_errors)
+    """
+    del num
+    
+    if logger is None:
+        logger = logging.getLogger('debug_type_error')
+        logger.setLevel(logging.INFO)
+    
+    rnd = 0
+    max_rnd = 10
+    
+    # Import the needed class here to avoid circular imports
+    from modules.veval import VEval, VerusErrorType
+
+    if verus_error:
+        # fix the reported one
+        if verus_error.error != VerusErrorType.MismatchedType:
+            logger.warning(f"Warning: a non type error is passed to debug_type_error: {verus_error.error}")
+        else:
+            newcode = fix_one_type_error_in_code(
+                code, verus_error.trace[0], verbose=False
+            )
+            if newcode:
+                code = newcode
+
+    # check if there is any type errors in the code; if so, fix
+    while rnd < max_rnd:
+        rnd = rnd + 1
+
+        veval = VEval(code, logger)
+        veval.eval()
+        failures = veval.get_failures()
+        if len(failures) == 0:
+            logger.info(f"Verus has succeeded.")
+            return code, 0
+
+        has_typeerr = False
+        fixed_typeerr = False
+        for cur_failure in failures:
+            if cur_failure.error == VerusErrorType.MismatchedType:
+                has_typeerr = True
+                newcode = fix_one_type_error_in_code(
+                    code, cur_failure.trace[0], verbose=False
+                )
+                # when newcode is "", the above function failed to fix any type error
+                if newcode:
+                    fixed_typeerr = True
+                    code = newcode
+                    break
+                else:
+                    # this type error is unfixable, let's move on to next error
+                    continue
+            if not fixed_typeerr:
+                # not able to fix any type error in this program, no need to try again
+                break
+
+        if not has_typeerr:
+            return code, 0
+
+        if not fixed_typeerr:
+            logger.info("Remaining type errors are unfixable.")
+            logger.info(cur_failure.trace[0].get_text())
+            return "", len(failures)
+
+    return code, len(failures) 

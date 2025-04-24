@@ -5,7 +5,7 @@ import os
 from modules.base import BaseModule
 from infer import LLM
 from modules.veval import VEval
-from modules.utils import evaluate_samples, save_selection_info, update_global_best
+from modules.utils import evaluate_samples, save_selection_info, update_global_best, debug_type_error
 
 class ViewInferenceModule(BaseModule):
     """
@@ -287,7 +287,7 @@ verus! {
         # Run inference
         try:
             responses = self.llm.infer_llm(
-                self.config.get("aoai_generation_model", "o1"),
+                self.config.get("aoai_generation_model", "gpt-4"),
                 instruction,
                 examples,
                 code,
@@ -301,6 +301,16 @@ verus! {
             # Return a placeholder response in case of error
             return code
         
+        # Process responses to fix any type errors
+        processed_responses = []
+        for response in responses:
+            # Apply debug_type_error to fix any type errors
+            fixed_response, _ = debug_type_error(response, logger=self.logger)
+            if fixed_response:  # Only use the fixed version if it's not empty
+                processed_responses.append(fixed_response)
+            else:
+                processed_responses.append(response)
+        
         # Save all generated samples
         output_dir = Path("output/samples")
         output_dir.mkdir(exist_ok=True, parents=True)
@@ -309,9 +319,9 @@ verus! {
         global_dir = Path("output/best")
         global_dir.mkdir(exist_ok=True, parents=True)
         
-        # Evaluate samples and get the best one
+        # Evaluate processed samples and get the best one
         best_code, best_score, _ = evaluate_samples(
-            samples=responses if responses else [code], 
+            samples=processed_responses if processed_responses else [code], 
             output_dir=output_dir, 
             prefix="01_view_inference", 
             logger=self.logger
