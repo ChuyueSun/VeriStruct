@@ -57,9 +57,20 @@ class RepairRegistry:
         from modules.repair_decrease import RepairDecreaseModule
         from modules.repair_missing import RepairMissingModule
         from modules.repair_mode import RepairModeModule
+        from modules.repair_syntax import RepairSyntaxModule
         
         # Create registry instance
         registry = cls(config, logger, immutable_funcs)
+        
+        # Initialize and register syntax repair module (general purpose)
+        # This module handles both general syntax errors and Seq-specific syntax errors
+        syntax_repair = RepairSyntaxModule(config, logger, immutable_funcs)
+        registry.register_module(
+            "repair_syntax", 
+            syntax_repair, 
+            [],  # No specific VerusErrorType for syntax errors
+            "03_repair_syntax.rs"
+        )
         
         # Initialize and register assertion repair module
         assertion_repair = RepairAssertionModule(config, logger, immutable_funcs)
@@ -323,6 +334,25 @@ class RepairRegistry:
         """
         result_map = {}
         
+        # If there's a compilation error, try to fix it first
+        if context.trials[-1].eval.compilation_error:
+            self.logger.info("Compilation error detected. Attempting to repair...")
+            compilation_result = self.repair_compilation_error(context, output_dir)
+            if compilation_result:
+                self.logger.info("Compilation error repair was successful.")
+                # Since we've potentially fixed the compilation error, we should re-evaluate
+                # and see if there are any remaining errors
+                context.add_trial(compilation_result)
+                last_trial = context.trials[-1]
+                if not last_trial.eval.compilation_error:
+                    # If compilation succeeded, update failures list
+                    failures = last_trial.eval.get_failures()
+                    if not failures:
+                        self.logger.info("All errors fixed after compilation repair.")
+                        # Use a special key for compilation errors
+                        result_map["compilation"] = compilation_result
+                        return result_map
+        
         # Prioritize failures
         prioritized_failures = self.prioritize_failures(failures)
         
@@ -353,7 +383,7 @@ class RepairRegistry:
             else:
                 self.logger.warning(f"No repair module registered for error type: {error_type.name}")
         
-        return result_map 
+        return result_map
     
     def get_registry_info(self) -> str:
         """
@@ -384,3 +414,39 @@ class RepairRegistry:
                 info.append(f"    - {error_type.name}")
         
         return "\n".join(info) 
+    
+    def repair_compilation_error(self, context, output_dir: Optional[Path] = None) -> Optional[str]:
+        """
+        Handle compilation errors that may not have a specific VerusErrorType.
+        This includes syntax errors and other compilation issues.
+        
+        Args:
+            context: The execution context
+            output_dir: Optional directory to save the repair result
+            
+        Returns:
+            The repaired code if successful, None otherwise
+        """
+        last_trial = context.trials[-1]
+        
+        if not last_trial.eval.compilation_error:
+            self.logger.info("No compilation error detected.")
+            return None
+            
+        # Check for modules registered to handle syntax errors
+        syntax_modules = [m for m in self.repair_modules.values() if m.name == "repair_syntax"]
+        
+        if syntax_modules:
+            syntax_module = syntax_modules[0]
+            self.logger.info(f"Attempting compilation error repair with {syntax_module.name}...")
+            result = syntax_module.exec(context)
+            
+            if output_dir and result:
+                output_file = output_dir / "03_repair_syntax.rs"
+                output_file.write_text(result)
+                self.logger.info(f"Saved syntax repair result to {output_file}")
+                
+            return result
+            
+        self.logger.warning("No repair module found for compilation errors.")
+        return None 

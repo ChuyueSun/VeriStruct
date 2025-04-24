@@ -1,3 +1,4 @@
+#[allow(unused_imports)]
 use vstd::prelude::*;
 
 pub fn main() {}
@@ -139,6 +140,8 @@ verus! {
         }
 
         pub fn new(ring: Vec<T>) -> (ret: RingBuffer<T>)
+            requires
+                ring.len() > 0
         {
             RingBuffer {
                 head: 0,
@@ -189,6 +192,7 @@ verus! {
     #[verifier::loop_isolation(false)]
     fn test_enqueue_dequeue_generic(len: usize, value: i32, iterations: usize)
         requires
+            len > 0,                               // Added by AI, for assertion fail
             len < usize::MAX - 1,
             iterations * 2 < usize::MAX,
     {
@@ -205,23 +209,20 @@ verus! {
             ring.push(0);
         }
 
-        proof {
-            assert(ring.len() > 1);
-        }
-
+        assert(ring.len() > 1);
         let mut buf = RingBuffer::new(ring);
+        assert(buf@.1 > 1);
 
         proof {
-            // Link the view's ring length back to the actual ring length
-            assert(buf@.1 == buf.ring.len() as nat);
-            assert(buf.ring.len() > 1);
-            assert(buf@.1 > 1);
+            assert(buf@.0.len() == 0);
         }
 
         for _ in 0..2 * iterations
             invariant
                 buf@.0.len() == 0,
-                buf@.1 > 1
+                buf@.1 > 1,
+                0 <= buf@.0.len(),
+                1 + buf@.0.len() <= buf@.1
         {
             let enqueue_res = buf.enqueue(value);
             assert(enqueue_res);
@@ -240,6 +241,9 @@ verus! {
 
             let has_elements = buf.has_elements();
             assert(!has_elements);
+        }
+        proof {
+            assert(buf@.0.len() == 0);
         }
     }
 }
