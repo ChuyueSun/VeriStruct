@@ -10,7 +10,17 @@ class Lynette:
     meta_command = [
         "cargo",
         "run",
-        "--manifest-path=" + os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "utils", "lynette", "source", "Cargo.toml")),
+        "--manifest-path="
+        + os.path.abspath(
+            os.path.join(
+                os.path.dirname(__file__),
+                "..",
+                "utils",
+                "lynette",
+                "source",
+                "Cargo.toml",
+            )
+        ),
         "--",
     ]
     env = os.environ.copy()
@@ -46,7 +56,7 @@ class Lynette:
 
     def code_detect_nonlinear(self, file):
         return self.run(["code", "detect-nl", file])
-    
+
     def func_code_extract(self, file, func):
         return self.run(["func", "extract", "--function", func, file])
 

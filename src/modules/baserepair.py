@@ -2,26 +2,31 @@
 Base class for Repair modules in VerusAgent.
 """
 
-from typing import Dict, List, Optional, Any
 import logging
+from typing import Any, Dict, List, Optional
 
-from modules.base import BaseModule
-from modules.veval import VEval, VerusError, VerusErrorType
 from infer import LLM
+from modules.base import BaseModule
+from modules.veval import VerusError, VerusErrorType, VEval
+
 
 class BaseRepairModule(BaseModule):
     """
     Base class for all repair modules.
     Repair modules focus on fixing specific types of Verus errors.
     """
-    
-    def __init__(self, name: str, desc: str, 
-                 config: Dict[str, Any], 
-                 logger: logging.Logger, 
-                 immutable_funcs: Optional[List[str]] = None):
+
+    def __init__(
+        self,
+        name: str,
+        desc: str,
+        config: Dict[str, Any],
+        logger: logging.Logger,
+        immutable_funcs: Optional[List[str]] = None,
+    ):
         """
         Initialize the BaseRepairModule.
-        
+
         Args:
             name: Name of the repair module
             desc: Description of the repair module
@@ -34,7 +39,7 @@ class BaseRepairModule(BaseModule):
         self.logger = logger
         self.llm = LLM(config, logger)
         self.immutable_funcs = immutable_funcs if immutable_funcs is not None else []
-        
+
         # Common knowledge strings can be initialized here if needed
         self.proof_block_info = """The proof block looks like this:
 ```
@@ -93,7 +98,7 @@ You can use forall or exists for properties over sequences."""
             VerusErrorType.PostCondFail,
             VerusErrorType.InvFailEnd,
             VerusErrorType.InvFailFront,
-            VerusErrorType.AssertFail
+            VerusErrorType.AssertFail,
         ]
         for err_type in priority:
             for failure in failures:
@@ -108,12 +113,14 @@ You can use forall or exists for properties over sequences."""
         """
         Execute the repair module.
         Subclasses must implement the specific repair logic.
-        
+
         Args:
             context: The current execution context
             failure_to_fix: The specific VerusError to attempt to fix (optional)
-            
+
         Returns:
             The potentially repaired code string.
         """
-        raise NotImplementedError("Repair module subclasses must implement exec() method") 
+        raise NotImplementedError(
+            "Repair module subclasses must implement exec() method"
+        )

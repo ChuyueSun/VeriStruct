@@ -1,7 +1,8 @@
 import os
-from string import Template
-from configs.sconfig import config
 from pathlib import Path
+from string import Template
+
+from configs.sconfig import config
 
 """
 Automatically collects all templates in the prompts directory.
@@ -38,6 +39,6 @@ def fill_template(name: str, keys: dict):
     if name not in templates:
         print(f"Warning: Template {name} not found. Using empty template.")
         return ""
-    keys['_blank'] = ''
-    keys['_blanks'] = ''
+    keys["_blank"] = ""
+    keys["_blanks"] = ""
     return templates[name].substitute(keys)

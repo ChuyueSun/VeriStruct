@@ -1,44 +1,50 @@
-from typing import List, Dict, Optional, Any
-from pathlib import Path
 import os
+from pathlib import Path
+from typing import Any, Dict, List, Optional
 
-from modules.base import BaseModule
 from infer import LLM
+from modules.base import BaseModule
+from modules.utils import (
+    debug_type_error,
+    evaluate_samples,
+    save_selection_info,
+    update_global_best,
+)
 from modules.veval import VEval
-from modules.utils import evaluate_samples, save_selection_info, update_global_best, debug_type_error
+
 
 class ViewInferenceModule(BaseModule):
     """
     Module for View function inference in Verus code.
-    
+
     This module generates a View function that provides a mathematical abstraction
     for the given data structure, which is used in Verus specifications.
     """
-    
+
     def __init__(self, config, logger):
         """
         Initialize the ViewInferenceModule.
-        
+
         Args:
             config: Configuration object
             logger: Logger object
         """
         super().__init__(
             name="view_inference",
-            desc="Generate a View function for the data structure's mathematical abstraction"
+            desc="Generate a View function for the data structure's mathematical abstraction",
         )
         self.config = config
         self.logger = logger
         self.llm = LLM(config, logger)
-        
+
     def add_seq_knowledge(self, code: str, instruction: str) -> str:
         """
         Add knowledge about Seq operations if needed for the given code.
-        
+
         Args:
             code: The Verus code
             instruction: The current instruction
-            
+
         Returns:
             Updated instruction with sequence knowledge if needed
         """
@@ -56,22 +62,22 @@ Seq<T> is a mathematical sequence type used in specifications:
 You can use forall or exists for properties over sequences."""
             instruction += "\n\n" + seq_knowledge
         return instruction
-    
+
     def exec(self, context) -> str:
         """
         Execute the view inference module with the given context.
-        
+
         Args:
             context: Context object containing trial information
-            
+
         Returns:
             Generated code with View function
         """
         self.logger.info("View Inference ...")
-        
+
         # Get the latest trial code
         code = context.trials[-1].code
-        
+
         # Basic instruction
         instruction = """
 You are an expert in Verus (verifier for rust). Your task is to generate a View function for the given module. View is the mathematical abstraction for the given data structure. It contains the minimal information to completely represent it. View is used strictly in Verus spec.
@@ -109,7 +115,7 @@ impl<T: Copy> View for RingBuffer<T> {
 - Don't change "unwind" to `(unwind) as bool`!
 - Return the complete modified Rust code in your response without explanations."""
         instruction += "\n\n" + important_note
-        
+
         # Add spec knowledge
         spec_knowledge = """**Spec Functions**:
 1. No Direct Method Calls:
@@ -120,21 +126,24 @@ To invoke methods on a variable within a spec, first convert it to its specifica
 4. Simplify Boolean Conjunctions:
 When combining multiple conditions, avoid excessive &&&. Fewer (or well-structured) conjunctions make the spec code easier to read and debug."""
         instruction += "\n\n" + spec_knowledge
-        
+
         # Add sequence knowledge if needed
         instruction = self.add_seq_knowledge(code, instruction)
-        
+
         # Load examples
         examples = []
         try:
-            example_path = Path(self.config.get("example_path", "examples")) / "input-view"
+            example_path = (
+                Path(self.config.get("example_path", "examples")) / "input-view"
+            )
             if not example_path.exists():
                 self.logger.error(f"Example path {example_path} does not exist.")
-                
+
                 # Create a fallback example
                 self.logger.warning("Creating a simple built-in example")
-                examples.append({
-                    "query": """use vstd::prelude::*;
+                examples.append(
+                    {
+                        "query": """use vstd::prelude::*;
 
 verus! {
     struct RingBuffer<T> {
@@ -148,7 +157,7 @@ verus! {
         {
             let mut buffer = Vec::new();
             buffer.reserve(cap);
-            
+
             RingBuffer {
                 buffer,
                 head: 0,
@@ -161,13 +170,13 @@ verus! {
             if self.is_full() {
                 return false;
             }
-            
+
             if self.buffer.len() < self.buffer.capacity() {
                 self.buffer.push(value);
             } else {
                 self.buffer.set(self.tail, value);
             }
-            
+
             self.tail = (self.tail + 1) % self.buffer.capacity();
             true
         }
@@ -177,10 +186,10 @@ verus! {
             if self.is_empty() {
                 return None;
             }
-            
+
             let value = self.buffer[self.head];
             self.head = (self.head + 1) % self.buffer.capacity();
-            
+
             Some(value)
         }
 
@@ -195,7 +204,7 @@ verus! {
         }
     }
 }""",
-                    "answer": """use vstd::prelude::*;
+                        "answer": """use vstd::prelude::*;
 use vstd::seq::Seq;
 
 verus! {
@@ -223,7 +232,7 @@ verus! {
         {
             let mut buffer = Vec::new();
             buffer.reserve(cap);
-            
+
             RingBuffer {
                 buffer,
                 head: 0,
@@ -236,13 +245,13 @@ verus! {
             if self.is_full() {
                 return false;
             }
-            
+
             if self.buffer.len() < self.buffer.capacity() {
                 self.buffer.push(value);
             } else {
                 self.buffer.set(self.tail, value);
             }
-            
+
             self.tail = (self.tail + 1) % self.buffer.capacity();
             true
         }
@@ -252,10 +261,10 @@ verus! {
             if self.is_empty() {
                 return None;
             }
-            
+
             let value = self.buffer[self.head];
             self.head = (self.head + 1) % self.buffer.capacity();
-            
+
             Some(value)
         }
 
@@ -269,13 +278,18 @@ verus! {
             self.head == ((self.tail + 1) % self.buffer.capacity())
         }
     }
-}"""
-                })
+}""",
+                    }
+                )
             else:
                 for f in sorted(example_path.iterdir()):
                     if f.suffix == ".rs":
                         input_content = f.read_text()
-                        answer_path = Path(self.config.get("example_path", "examples")) / "output-view" / f.name
+                        answer_path = (
+                            Path(self.config.get("example_path", "examples"))
+                            / "output-view"
+                            / f.name
+                        )
                         answer = answer_path.read_text() if answer_path.exists() else ""
                         examples.append({"query": input_content, "answer": answer})
         except Exception as e:
@@ -283,7 +297,7 @@ verus! {
             # If we failed to create examples, at least create an empty one
             if not examples:
                 examples.append({"query": "", "answer": ""})
-        
+
         # Run inference
         try:
             responses = self.llm.infer_llm(
@@ -300,7 +314,7 @@ verus! {
             self.logger.error(f"Error during LLM inference: {e}")
             # Return a placeholder response in case of error
             return code
-        
+
         # Process responses to fix any type errors
         processed_responses = []
         for response in responses:
@@ -310,34 +324,44 @@ verus! {
                 processed_responses.append(fixed_response)
             else:
                 processed_responses.append(response)
-        
+
         # Save all generated samples
         output_dir = Path("output/samples")
         output_dir.mkdir(exist_ok=True, parents=True)
-        
+
         # Create a directory for tracking global best samples
         global_dir = Path("output/best")
         global_dir.mkdir(exist_ok=True, parents=True)
-        
+
         # Evaluate processed samples and get the best one
         best_code, best_score, _ = evaluate_samples(
-            samples=processed_responses if processed_responses else [code], 
-            output_dir=output_dir, 
-            prefix="01_view_inference", 
-            logger=self.logger
+            samples=processed_responses if processed_responses else [code],
+            output_dir=output_dir,
+            prefix="01_view_inference",
+            logger=self.logger,
         )
-        
+
         # Initialize and update global best
-        global_best_score = context.get_best_score() if hasattr(context, 'get_best_score') else None
-        global_best_code = context.get_best_code() if hasattr(context, 'get_best_code') else None
-        
-        self.logger.debug(f"ViewInference - Initial global_best_score: {global_best_score}")
-        self.logger.debug(f"ViewInference - Initial global_best_code is None: {global_best_code is None}")
+        global_best_score = (
+            context.get_best_score() if hasattr(context, "get_best_score") else None
+        )
+        global_best_code = (
+            context.get_best_code() if hasattr(context, "get_best_code") else None
+        )
+
+        self.logger.debug(
+            f"ViewInference - Initial global_best_score: {global_best_score}"
+        )
+        self.logger.debug(
+            f"ViewInference - Initial global_best_code is None: {global_best_code is None}"
+        )
         self.logger.debug(f"ViewInference - Current best_score: {best_score}")
-        
+
         if global_best_score is None:
             # If no global best exists yet, use the current best
-            self.logger.info("ViewInference - Initializing global best with current best")
+            self.logger.info(
+                "ViewInference - Initializing global best with current best"
+            )
             global_best_score = best_score
             global_best_code = best_code
         else:
@@ -346,25 +370,31 @@ verus! {
             global_best_score, global_best_code = update_global_best(
                 best_code, global_best_score, global_best_code, global_dir, self.logger
             )
-        
+
         # Store the global best in context if context supports it
-        if hasattr(context, 'set_best_score') and hasattr(context, 'set_best_code'):
+        if hasattr(context, "set_best_score") and hasattr(context, "set_best_code"):
             context.set_best_score(global_best_score)
             context.set_best_code(global_best_code)
-            self.logger.debug(f"ViewInference - Stored global best in context with score: {global_best_score}")
+            self.logger.debug(
+                f"ViewInference - Stored global best in context with score: {global_best_score}"
+            )
         else:
-            self.logger.warning("ViewInference - Context does not support global best tracking")
-        
+            self.logger.warning(
+                "ViewInference - Context does not support global best tracking"
+            )
+
         # Also write to a view-specific best file
         view_best_path = output_dir / "01_view_inference_global_best.rs"
         try:
-            sample_with_score = f"{global_best_code}\n\n// VEval Score: {global_best_score}"
+            sample_with_score = (
+                f"{global_best_code}\n\n// VEval Score: {global_best_score}"
+            )
             view_best_path.write_text(sample_with_score)
             self.logger.info(f"Saved global best view inference to {view_best_path}")
         except Exception as e:
             self.logger.error(f"Error saving global best: {e}")
-        
+
         # Add the best result to context
         context.add_trial(best_code)
-        
-        return best_code 
+
+        return best_code
