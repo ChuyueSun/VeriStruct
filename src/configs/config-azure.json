@@ -11,6 +11,6 @@
     "aoai_generation_model": "o1",
     "aoai_debug_model": "o1",
     "aoai_refinement_model": "o3-mini",
-    "verus_path": "/home/chenyuan/verus-latest/source/target-verus/release/verus",
+    "verus_path": "/home/chuyue/verus/source/target-verus/release/verus",
     "platform": "azure"
 }
