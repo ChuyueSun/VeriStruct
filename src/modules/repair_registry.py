@@ -54,6 +54,9 @@ class RepairRegistry:
         from modules.repair_invariant import RepairInvariantModule
         from modules.repair_arithmetic import RepairArithmeticModule
         from modules.repair_type import RepairTypeModule
+        from modules.repair_decrease import RepairDecreaseModule
+        from modules.repair_missing import RepairMissingModule
+        from modules.repair_mode import RepairModeModule
         
         # Create registry instance
         registry = cls(config, logger, immutable_funcs)
@@ -133,13 +136,43 @@ class RepairRegistry:
             "09_repair_type.rs"
         )
         
+        # Initialize and register decrease repair module
+        decrease_repair = RepairDecreaseModule(config, logger, immutable_funcs)
+        registry.register_module(
+            "repair_decrease", 
+            decrease_repair, 
+            [
+                VerusErrorType.DecFailEnd,
+                VerusErrorType.DecFailCont
+            ],
+            "10_repair_decrease.rs"
+        )
+        
+        # Initialize and register missing element repair module
+        missing_repair = RepairMissingModule(config, logger, immutable_funcs)
+        registry.register_module(
+            "repair_missing", 
+            missing_repair, 
+            [
+                VerusErrorType.MissingImport,
+                VerusErrorType.MissImpl
+            ],
+            "11_repair_missing.rs"
+        )
+        
+        # Initialize and register mode repair module
+        mode_repair = RepairModeModule(config, logger, immutable_funcs)
+        registry.register_module(
+            "repair_mode", 
+            mode_repair, 
+            [
+                VerusErrorType.CannotCallFunc
+            ],
+            "12_repair_mode.rs"
+        )
+        
         # TODO: Add more specialized repair modules for other error types:
-        # - DecFailEnd
-        # - DecFailCont
         # - RecommendNotMet
-        # - MissImpl
-        # - MissingImport
-        # - CannotCallFunc (mode errors)
         
         return registry
         
@@ -224,14 +257,20 @@ class RepairRegistry:
             VerusErrorType.InvFailEnd: 5,           # Fix invariants not satisfied at end of loop
             VerusErrorType.ConstructorFailTypeInvariant: 6,  # Fix constructor type invariant errors
             VerusErrorType.TypeAnnotation: 7,       # Fix type annotation errors
-            VerusErrorType.AssertFail: 8,           # Fix assertion failures
-            VerusErrorType.SplitAssertFail: 9,      # Fix split assertion failures
-            VerusErrorType.PreCondFail: 10,         # Fix precondition failures
-            VerusErrorType.SplitPreFail: 11,        # Fix split precondition failures
-            VerusErrorType.PostCondFail: 12,        # Fix postcondition failures
-            VerusErrorType.SplitPostFail: 13,       # Fix split postcondition failures
-            VerusErrorType.ensure_private: 14,      # Fix private field access in ensures
-            VerusErrorType.require_private: 15,     # Fix private function access in requires
+            VerusErrorType.DecFailEnd: 8,           # Fix decreases not satisfied at end of loop
+            VerusErrorType.DecFailCont: 9,          # Fix decreases not satisfied at continue
+            VerusErrorType.MissingImport: 10,       # Fix missing imports
+            VerusErrorType.MissImpl: 11,            # Fix missing implementations
+            VerusErrorType.CannotCallFunc: 12,      # Fix mode errors
+            VerusErrorType.AssertFail: 13,          # Fix assertion failures
+            VerusErrorType.SplitAssertFail: 14,     # Fix split assertion failures
+            VerusErrorType.PreCondFail: 15,         # Fix precondition failures
+            VerusErrorType.SplitPreFail: 16,        # Fix split precondition failures
+            VerusErrorType.PostCondFail: 17,        # Fix postcondition failures
+            VerusErrorType.SplitPostFail: 18,       # Fix split postcondition failures
+            VerusErrorType.ensure_private: 19,      # Fix private field access in ensures
+            VerusErrorType.require_private: 20,     # Fix private function access in requires
+            VerusErrorType.RecommendNotMet: 21,     # Fix recommendation not met errors
             # Add more error types with their priorities here
         }
         
