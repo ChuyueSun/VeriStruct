@@ -120,7 +120,7 @@ def main():
         logger.info(f"Last trial has failures. Attempting repairs...")
         
         # Multiple rounds of repair
-        max_repair_rounds = 3  # Maximum number of repair rounds to attempt
+        max_repair_rounds = 7  # Maximum number of repair rounds to attempt
         current_round = 1
         previous_failure_count = len(failures)
         previous_verified_count = last_trial.eval.get_verified_count()

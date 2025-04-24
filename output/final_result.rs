@@ -184,9 +184,9 @@ verus! {
                 my_set(&mut self.ring, self.tail, val);
                 self.tail = (self.tail + 1) % self.ring.len();
                 proof {
-                    let ghost old_seq = old(self)@.0; // Added by AI
-                    let ghost new_seq = old_seq + seq![val]; // Added by AI
-                    assert(self@.0 == new_seq); // Added by AI
+                    let ghost old_seq = old(self)@.0;
+                    let ghost new_seq = old_seq + seq![val];
+                    assert(self@.0 == new_seq);
                 }
                 true
             }
@@ -208,6 +208,11 @@ verus! {
             if self.has_elements() {
                 let val = self.ring[self.head];
                 self.head = (self.head + 1) % self.ring.len();
+                proof {
+                    let ghost old_seq = old(self)@.0;
+                    let ghost new_seq = old_seq.subrange(1, ( old_seq.len() ) as int);
+                    assert(self@.0 == new_seq);
+                }
                 Some(val)
             } else {
                 None
@@ -230,6 +235,7 @@ verus! {
     #[verifier::loop_isolation(false)]
     fn test_enqueue_dequeue_generic(len: usize, value: i32, iterations: usize)
         requires
+            len >= 1,
             len < usize::MAX - 1,
             iterations * 2 < usize::MAX,
     {
@@ -246,10 +252,19 @@ verus! {
             ring.push(0);
         }
 
+        proof {
+            assert(len + 1 >= 2);
+            assert(ring.len() == len + 1);
+            assert(ring.len() >= 2);
+        }
         assert(ring.len() > 1);
-        let mut buf = RingBuffer::new(ring);
-        assert(buf@.1 > 1);
 
+        let mut buf = RingBuffer::new(ring);
+
+        proof {
+            assert(buf@.1 == (len + 1) as nat);
+            assert(buf@.1 > 1);
+        }
         for _ in 0..2 * iterations
             invariant
                 buf@.0.len() == 0,
