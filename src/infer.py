@@ -9,7 +9,7 @@ from typing import List, Tuple, Union
 import logging
 
 # Import our new cache
-from src.llm_cache import LLMCache
+from llm_cache import LLMCache
 
 # sglang
 try:
