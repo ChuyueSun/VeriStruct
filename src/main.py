@@ -44,6 +44,11 @@ def main():
     output_dir = Path("output")
     output_dir.mkdir(exist_ok=True)
     
+    # Create samples directory for intermediate results
+    samples_dir = output_dir / "samples"
+    samples_dir.mkdir(exist_ok=True)
+    logger.info(f"Created directory for samples at {samples_dir.absolute()}")
+    
     # Initialize context with sample code
     params = HyperParams()
     context = Context(sample_code, params, logger)

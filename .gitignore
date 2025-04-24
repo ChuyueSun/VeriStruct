@@ -17,6 +17,9 @@ llm_cache/
 # Ignore tmp
 tmp/
 
+# Ignore output directory
+output/
+
 # Ignore environment variable files
 .env
 .env.local

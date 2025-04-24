@@ -6,6 +6,7 @@ import re
 from modules.base import BaseModule
 from infer import LLM
 from modules.veval import VEval
+from modules.utils import evaluate_samples, save_selection_info, write_candidate_code
 
 class InvInferenceModule(BaseModule):
     """
@@ -169,22 +170,33 @@ When combining multiple conditions, avoid excessive &&&. Fewer (or well-structur
             # Return a placeholder response in case of error
             return code
         
+        # Save all generated samples (raw responses before processing)
+        output_dir = Path("output/samples")
+        output_dir.mkdir(exist_ok=True, parents=True)
+        
+        for i, sample in enumerate(responses):
+            sample_path = output_dir / f"03_inv_inference_raw_sample_{i+1}.rs"
+            try:
+                sample_path.write_text(sample)
+                self.logger.info(f"Saved inv inference raw sample {i+1} to {sample_path}")
+            except Exception as e:
+                self.logger.error(f"Error saving raw sample {i+1}: {e}")
+        
         # Process each response to replace @.len() with .len() in type invariants
         processed_responses = []
         for response in responses:
             processed = self.replace_at_len_in_type_invariant(response)
             processed_responses.append(processed)
             
-        # Return the best response
-        if processed_responses:
-            # TODO: More sophisticated selection could be implemented here
-            # For now, just return the first response
-            new_code = processed_responses[0]
-            
-            # Add the result to context
-            context.add_trial(new_code)
-            
-            return new_code
-        else:
-            self.logger.error("Inv inference failed to generate any responses")
-            return code 
+        # Evaluate processed samples and get the best one
+        best_code, _, _ = evaluate_samples(
+            samples=processed_responses if processed_responses else [code],
+            output_dir=output_dir,
+            prefix="03_inv_inference_processed",
+            logger=self.logger
+        )
+        
+        # Add the best result to context
+        context.add_trial(best_code)
+        
+        return best_code 

@@ -5,6 +5,7 @@ import os
 from modules.base import BaseModule
 from infer import LLM
 from modules.veval import VEval
+from modules.utils import evaluate_samples, save_selection_info
 
 class ViewRefinementModule(BaseModule):
     """
@@ -98,16 +99,19 @@ Please provide only the complete Rust code of the refined file with no additiona
             # Return a placeholder response in case of error
             return code
         
-        # Return the best response
-        if responses:
-            # TODO: More sophisticated selection could be implemented here
-            # For now, just return the first response
-            new_code = responses[0]
-            
-            # Add the result to context
-            context.add_trial(new_code)
-            
-            return new_code
-        else:
-            self.logger.error("View refinement failed to generate any responses")
-            return code 
+        # Save all generated samples
+        output_dir = Path("output/samples")
+        output_dir.mkdir(exist_ok=True, parents=True)
+        
+        # Evaluate samples and get the best one
+        best_code, _, _ = evaluate_samples(
+            samples=responses if responses else [code], 
+            output_dir=output_dir, 
+            prefix="02_view_refinement", 
+            logger=self.logger
+        )
+        
+        # Add the best result to context
+        context.add_trial(best_code)
+        
+        return best_code 
