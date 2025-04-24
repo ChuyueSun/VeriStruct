@@ -5,6 +5,7 @@ from context import Trial, Context, HyperParams
 from modules.view_inference import ViewInferenceModule
 from modules.view_refinement import ViewRefinementModule
 from modules.inv_inference import InvInferenceModule
+from modules.spec_inference import SpecInferenceModule
 from modules.repair_assertion import RepairAssertionModule
 from modules.repair_precond import RepairPrecondModule
 from modules.repair_postcond import RepairPostcondModule
@@ -70,10 +71,12 @@ def main():
     view_inference = ViewInferenceModule(config, logger)
     view_refinement = ViewRefinementModule(config, logger)
     inv_inference = InvInferenceModule(config, logger)
+    spec_inference = SpecInferenceModule(config, logger)
     
     context.register_modoule("view_inference", view_inference)
     context.register_modoule("view_refinement", view_refinement)
     context.register_modoule("inv_inference", inv_inference)
+    context.register_modoule("spec_inference", spec_inference)
     
     # Register all repair modules with the context
     repair_registry.register_with_context(context)
@@ -100,10 +103,17 @@ def main():
     logger.info("Step 3: Generating Inv function...")
     inv_result = inv_inference.exec(context)
     logger.info(f"Inv inference completed with result length: {len(inv_result)}")
-    # Save the final result
+    # Save the intermediate result
     (output_dir / "03_inv_inference.rs").write_text(inv_result)
     
-    # Step 4: Attempt repairs if needed using the repair registry
+    # Step 4: Generate Requires/Ensures specifications
+    logger.info("Step 4: Generating Requires/Ensures specifications...")
+    spec_result = spec_inference.exec(context)
+    logger.info(f"Spec inference completed with result length: {len(spec_result)}")
+    # Save the intermediate result
+    (output_dir / "04_spec_inference.rs").write_text(spec_result)
+    
+    # Step 5: Attempt repairs if needed using the repair registry
     last_trial = context.trials[-1]
     failures = last_trial.eval.get_failures()
     if failures:
