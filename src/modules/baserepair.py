@@ -6,7 +6,7 @@ from typing import Dict, List, Optional, Any
 import logging
 
 from modules.base import BaseModule
-from modules.veval import VEval, VerusError
+from modules.veval import VEval, VerusError, VerusErrorType
 from infer import LLM
 
 class BaseRepairModule(BaseModule):
