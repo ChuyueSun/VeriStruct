@@ -1,7 +1,6 @@
-#[allow(unused_imports)]
 use vstd::prelude::*;
 
-pub fn main() {}
+pub fn main() {} // Do not add anything to main.
 
 verus! {
     pub open spec fn ex_saturating_sub_spec(a: int, b: int) -> (ret: nat)
@@ -15,8 +14,10 @@ verus! {
 
     #[verifier::external_fn_specification]
     pub fn ex_saturating_sub(a: usize, b: usize) -> (ret: usize)
-    ensures
-        ex_saturating_sub_spec(a as int, b as int) == ret as int
+        requires
+            true,
+        ensures
+            ex_saturating_sub_spec(a as int, b as int) == ret as int
     {
         a.saturating_sub(b)
     }
@@ -108,6 +109,10 @@ verus! {
         }
 
         pub fn len(&self) -> (ret: usize)
+            requires
+                true,
+            ensures
+                ret == self@.0.len(),
         {
             proof {
                 use_type_invariant(&*self);
@@ -123,6 +128,10 @@ verus! {
         }
 
         pub fn has_elements(&self) -> (ret: bool)
+            requires
+                true,
+            ensures
+                ret == (self@.0.len() > 0),
         {
             proof {
                 use_type_invariant(&*self);
@@ -131,6 +140,10 @@ verus! {
         }
 
         pub fn is_full(&self) -> (ret: bool)
+            requires
+                true,
+            ensures
+                ret == (self@.0.len() == self@.1 - 1),
         {
             proof {
                 use_type_invariant(&*self);
@@ -141,7 +154,10 @@ verus! {
 
         pub fn new(ring: Vec<T>) -> (ret: RingBuffer<T>)
             requires
-                ring.len() > 0
+                ring.len() > 0,
+            ensures
+                ret@.0.len() == 0,
+                ret@.1 == ring.len() as nat,
         {
             RingBuffer {
                 head: 0,
@@ -151,6 +167,12 @@ verus! {
         }
 
         pub fn enqueue(&mut self, val: T) -> (succ: bool)
+            requires
+                true,
+            ensures
+                (succ <==> old(self)@.0.len() < old(self)@.1 - 1),
+                succ ==> self@.0 == old(self)@.0 + seq![val],
+                !succ ==> self@.0 == old(self)@.0,
         {
             proof {
                 use_type_invariant(&*self);
@@ -161,11 +183,23 @@ verus! {
             } else {
                 my_set(&mut self.ring, self.tail, val);
                 self.tail = (self.tail + 1) % self.ring.len();
+                proof {
+                    let ghost old_seq = old(self)@.0; // Added by AI
+                    let ghost new_seq = old_seq + seq![val]; // Added by AI
+                    assert(self@.0 == new_seq); // Added by AI
+                }
                 true
             }
         }
 
         pub fn dequeue(&mut self) -> (ret: Option<T>)
+            requires
+                true,
+            ensures
+                (ret.is_Some() <==> old(self)@.0.len() > 0),
+                ret.is_Some() ==> ret.get_Some_0() == old(self)@.0[0],
+                ret.is_Some() ==> self@.0 == old(self)@.0.subrange(1, ( old(self)@.0.len() ) as int),
+                ret.is_None() ==> self@.0 == old(self)@.0,
         {
             proof {
                 use_type_invariant(&*self);
@@ -181,6 +215,10 @@ verus! {
         }
 
         pub fn available_len(&self) -> (ret: usize)
+            requires
+                true,
+            ensures
+                ret == self@.1 - 1 - self@.0.len(),
         {
             proof {
                 use_type_invariant(&self);
@@ -192,7 +230,6 @@ verus! {
     #[verifier::loop_isolation(false)]
     fn test_enqueue_dequeue_generic(len: usize, value: i32, iterations: usize)
         requires
-            len > 0,                               // Added by AI, for assertion fail
             len < usize::MAX - 1,
             iterations * 2 < usize::MAX,
     {
@@ -213,16 +250,10 @@ verus! {
         let mut buf = RingBuffer::new(ring);
         assert(buf@.1 > 1);
 
-        proof {
-            assert(buf@.0.len() == 0);
-        }
-
         for _ in 0..2 * iterations
             invariant
                 buf@.0.len() == 0,
-                buf@.1 > 1,
-                0 <= buf@.0.len(),
-                1 + buf@.0.len() <= buf@.1
+                buf@.1 > 1
         {
             let enqueue_res = buf.enqueue(value);
             assert(enqueue_res);
@@ -241,9 +272,10 @@ verus! {
 
             let has_elements = buf.has_elements();
             assert(!has_elements);
-        }
-        proof {
-            assert(buf@.0.len() == 0);
+
+            proof {
+                assert(buf@.1 > 1);
+            }
         }
     }
 }

@@ -119,14 +119,52 @@ def main():
     if failures:
         logger.info(f"Last trial has failures. Attempting repairs...")
         
-        # Use the repair registry to handle all failures
-        repair_results = repair_registry.repair_all(context, failures, output_dir)
+        # Multiple rounds of repair
+        max_repair_rounds = 3  # Maximum number of repair rounds to attempt
+        current_round = 1
+        previous_failure_count = len(failures)
+        previous_verified_count = last_trial.eval.get_verified_count()
         
-        # Check if any repairs were successful
-        if repair_results:
-            logger.info(f"Completed repairs for: {', '.join([err.name for err in repair_results.keys()])}")
+        while failures and current_round <= max_repair_rounds:
+            logger.info(f"Starting repair round {current_round}/{max_repair_rounds}")
+            
+            # Use the repair registry to handle all failures
+            repair_results = repair_registry.repair_all(context, failures, output_dir)
+            
+            # Check if any repairs were successful
+            if repair_results:
+                logger.info(f"Round {current_round}: Completed repairs for: {', '.join([err.name for err in repair_results.keys()])}")
+            else:
+                logger.warning(f"Round {current_round}: No repairs were completed.")
+                break  # Exit if no repairs were made in this round
+            
+            # Get the new failures after repairs
+            last_trial = context.trials[-1]
+            failures = last_trial.eval.get_failures()
+            current_failure_count = len(failures)
+            current_verified_count = last_trial.eval.get_verified_count()
+            
+            # Check if we made progress
+            if (current_failure_count >= previous_failure_count and 
+                current_verified_count <= previous_verified_count):
+                logger.info(f"Round {current_round}: No progress made (Failures: {current_failure_count}, Verified: {current_verified_count})")
+                break  # Exit if no progress was made
+            
+            # Update counters for the next round
+            previous_failure_count = current_failure_count
+            previous_verified_count = current_verified_count
+            current_round += 1
+            
+            # Save intermediate results after each round
+            round_result = context.trials[-1].code
+            (output_dir / f"repair_round_{current_round-1}.rs").write_text(round_result)
+            
+        if failures:
+            logger.warning(f"Repairs completed after {current_round-1} rounds. {len(failures)} failures remain.")
         else:
-            logger.warning("No repairs were completed.")
+            logger.info(f"All failures fixed after {current_round-1} repair rounds!")
+    else:
+        logger.info("No failures detected after inference. Skipping repair stage.")
 
     # Save the final result (potentially after repairs)
     final_result = context.trials[-1].code

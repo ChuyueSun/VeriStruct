@@ -439,6 +439,10 @@ class VEval:
             verified = -1
             self.compilation_error = True
         return verified
+        
+    # Returns the count of verified functions (convenience alias for get_verified)
+    def get_verified_count(self) -> int:
+        return self.get_verified()
 
     # Returns the number of failed functions.
     def get_errors(self) -> int:
