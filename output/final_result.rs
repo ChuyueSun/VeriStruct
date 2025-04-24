@@ -1,6 +1,6 @@
 use vstd::prelude::*;
 
-pub fn main() {} // Do not add anything to main.
+pub fn main() {}
 
 verus! {
     pub open spec fn ex_saturating_sub_spec(a: int, b: int) -> (ret: nat)
@@ -17,7 +17,7 @@ verus! {
         requires
             true,
         ensures
-            ex_saturating_sub_spec(a as int, b as int) == ret as int
+            ex_saturating_sub_spec(a as int, b as int) == ret as int,
     {
         a.saturating_sub(b)
     }
@@ -32,15 +32,15 @@ verus! {
         type V = (Seq<T>, nat);
 
         closed spec fn view(&self) -> Self::V {
-            let ring_len = self.ring.len() as int;
-            let n = if (self.tail as int) >= (self.head as int) {
-                (self.tail as int) - (self.head as int)
+            let c = self.ring@.len();
+            let h = self.head as int;
+            let t = self.tail as int;
+            let used = if h <= t {
+                self.ring@.subrange(h, t)
             } else {
-                ring_len - ((self.head as int) - (self.tail as int))
+                self.ring@.subrange(h, c as int) + self.ring@.subrange(0, t)
             };
-            let content = Seq::new(n as nat, |i: int|
-                self.ring@[((self.head as int + i) % ring_len) as int]);
-            (content, ring_len as nat)
+            (used, c)
         }
     }
 
@@ -154,10 +154,10 @@ verus! {
 
         pub fn new(ring: Vec<T>) -> (ret: RingBuffer<T>)
             requires
-                ring.len() > 0,
+                ring@.len() > 0,
             ensures
                 ret@.0.len() == 0,
-                ret@.1 == ring.len() as nat,
+                ret@.1 == ring@.len(),
         {
             RingBuffer {
                 head: 0,
@@ -170,9 +170,10 @@ verus! {
             requires
                 true,
             ensures
-                (succ <==> old(self)@.0.len() < old(self)@.1 - 1),
-                succ ==> self@.0 == old(self)@.0 + seq![val],
-                !succ ==> self@.0 == old(self)@.0,
+                self@.1 == old(self)@.1,
+                succ == (old(self)@.0.len() < old(self)@.1 - 1),
+                succ ==> (self@.0 == old(self)@.0 + seq![val]),
+                !succ ==> (self@.0 == old(self)@.0),
         {
             proof {
                 use_type_invariant(&*self);
@@ -184,10 +185,8 @@ verus! {
                 my_set(&mut self.ring, self.tail, val);
                 self.tail = (self.tail + 1) % self.ring.len();
                 proof {
-                    let ghost old_seq = old(self)@.0;
-                    let ghost new_seq = old_seq + seq![val];
-                    assert(self@.0 == new_seq);
-                }
+                    assert(self@.0 == old(self)@.0 + seq![val]);
+                } // Added by AI
                 true
             }
         }
@@ -196,10 +195,12 @@ verus! {
             requires
                 true,
             ensures
-                (ret.is_Some() <==> old(self)@.0.len() > 0),
-                ret.is_Some() ==> ret.get_Some_0() == old(self)@.0[0],
-                ret.is_Some() ==> self@.0 == old(self)@.0.subrange(1, ( old(self)@.0.len() ) as int),
-                ret.is_None() ==> self@.0 == old(self)@.0,
+                self@.1 == old(self)@.1,
+                (ret.is_None() == (old(self)@.0.len() == 0)),
+                (ret.is_Some() == (old(self)@.0.len() > 0)),
+                ret.is_Some() ==> (ret.get_Some_0() == old(self)@.0.index(0)),
+                ret.is_Some() ==> (self@.0 == old(self)@.0.subrange(1, ( old(self)@.0.len() ) as int)),
+                ret.is_None() ==> (self@.0 == old(self)@.0),
         {
             proof {
                 use_type_invariant(&*self);
@@ -209,9 +210,7 @@ verus! {
                 let val = self.ring[self.head];
                 self.head = (self.head + 1) % self.ring.len();
                 proof {
-                    let ghost old_seq = old(self)@.0;
-                    let ghost new_seq = old_seq.subrange(1, ( old_seq.len() ) as int);
-                    assert(self@.0 == new_seq);
+                    assert(self@.0 == old(self)@.0.subrange(1, ( old(self)@.0.len() ) as int)); // Added by AI
                 }
                 Some(val)
             } else {
@@ -235,7 +234,6 @@ verus! {
     #[verifier::loop_isolation(false)]
     fn test_enqueue_dequeue_generic(len: usize, value: i32, iterations: usize)
         requires
-            len >= 1,
             len < usize::MAX - 1,
             iterations * 2 < usize::MAX,
     {
@@ -252,19 +250,10 @@ verus! {
             ring.push(0);
         }
 
-        proof {
-            assert(len + 1 >= 2);
-            assert(ring.len() == len + 1);
-            assert(ring.len() >= 2);
-        }
         assert(ring.len() > 1);
-
         let mut buf = RingBuffer::new(ring);
+        assert(buf@.1 > 1);
 
-        proof {
-            assert(buf@.1 == (len + 1) as nat);
-            assert(buf@.1 > 1);
-        }
         for _ in 0..2 * iterations
             invariant
                 buf@.0.len() == 0,
@@ -287,10 +276,6 @@ verus! {
 
             let has_elements = buf.has_elements();
             assert(!has_elements);
-
-            proof {
-                assert(buf@.1 > 1);
-            }
         }
     }
 }
