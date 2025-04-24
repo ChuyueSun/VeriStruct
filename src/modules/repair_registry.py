@@ -33,6 +33,93 @@ class RepairRegistry:
         self.repair_modules = {}
         self.error_to_module_map = {}
         self.output_paths = {}
+    
+    @classmethod
+    def create(cls, config: Dict[str, Any], logger: logging.Logger, immutable_funcs: Optional[List[str]] = None):
+        """
+        Factory method to create and initialize a registry with all available repair modules.
+        
+        Args:
+            config: Configuration dictionary
+            logger: Logger instance
+            immutable_funcs: List of function names that should not be modified
+            
+        Returns:
+            Fully initialized RepairRegistry with all repair modules registered
+        """
+        # Import here to avoid circular imports
+        from modules.repair_assertion import RepairAssertionModule
+        from modules.repair_precond import RepairPrecondModule
+        from modules.repair_postcond import RepairPostcondModule
+        
+        # Create registry instance
+        registry = cls(config, logger, immutable_funcs)
+        
+        # Initialize and register assertion repair module
+        assertion_repair = RepairAssertionModule(config, logger, immutable_funcs)
+        registry.register_module(
+            "repair_assertion", 
+            assertion_repair, 
+            [
+                VerusErrorType.AssertFail, 
+                VerusErrorType.SplitAssertFail
+            ],
+            "04_repair_assertion.rs"
+        )
+        
+        # Initialize and register precondition repair module
+        precond_repair = RepairPrecondModule(config, logger, immutable_funcs)
+        registry.register_module(
+            "repair_precond", 
+            precond_repair, 
+            [
+                VerusErrorType.PreCondFail,
+                VerusErrorType.PreCondFailVecLen,
+                VerusErrorType.SplitPreFail,
+                VerusErrorType.require_private
+            ],
+            "05_repair_precond.rs"
+        )
+        
+        # Initialize and register postcondition repair module
+        postcond_repair = RepairPostcondModule(config, logger, immutable_funcs)
+        registry.register_module(
+            "repair_postcond", 
+            postcond_repair, 
+            [
+                VerusErrorType.PostCondFail,
+                VerusErrorType.SplitPostFail,
+                VerusErrorType.ensure_private
+            ],
+            "06_repair_postcond.rs"
+        )
+        
+        # TODO: Add more specialized repair modules for other error types:
+        # - InvFailFront
+        # - InvFailEnd
+        # - DecFailEnd
+        # - DecFailCont
+        # - RecommendNotMet
+        # - ArithmeticFlow
+        # - MismatchedType
+        # - MissImpl
+        # - MissingImport
+        # - TypeAnnotation
+        # - ConstructorFailTypeInvariant
+        
+        return registry
+        
+    def register_with_context(self, context):
+        """
+        Register all repair modules with the given context.
+        
+        Args:
+            context: The execution context
+        """
+        for name, module in self.repair_modules.items():
+            context.register_modoule(name, module)
+            
+        self.logger.info(f"Registered repair modules: {list(self.repair_modules.keys())}")
         
     def register_module(self, name: str, module: BaseRepairModule, 
                         error_types: List[VerusErrorType], output_path: str = None):
@@ -79,6 +166,40 @@ class RepairRegistry:
             return self.output_paths[error.error]
         return None
     
+    def prioritize_failures(self, failures: List[VerusError]) -> List[VerusError]:
+        """
+        Prioritize failures based on error type, returning a sorted list.
+        Errors are sorted according to a predefined priority order.
+        
+        Args:
+            failures: List of Verus errors to prioritize
+            
+        Returns:
+            Sorted list of errors with highest priority first
+        """
+        if not failures:
+            return []
+            
+        # Define a priority order for error types
+        # Lower number = higher priority
+        priority_order = {
+            VerusErrorType.MismatchedType: 1,       # Fix type errors first
+            VerusErrorType.PreCondFailVecLen: 2,    # Fix vector length errors next
+            VerusErrorType.ArithmeticFlow: 3,       # Fix arithmetic overflow/underflow
+            VerusErrorType.InvFailFront: 4,         # Fix invariants not satisfied before loop
+            VerusErrorType.InvFailEnd: 5,           # Fix invariants not satisfied at end of loop
+            VerusErrorType.AssertFail: 6,           # Fix assertion failures
+            VerusErrorType.PreCondFail: 7,          # Fix precondition failures
+            VerusErrorType.PostCondFail: 8,         # Fix postcondition failures
+            # Add more error types with their priorities here
+        }
+        
+        # Default priority for errors not explicitly listed
+        default_priority = 100
+        
+        # Sort failures based on priority
+        return sorted(failures, key=lambda f: priority_order.get(f.error, default_priority))
+        
     def repair_error(self, context, error: VerusError, output_dir: Optional[Path] = None) -> Optional[str]:
         """
         Attempt to repair a specific error using the appropriate module.
@@ -122,14 +243,17 @@ class RepairRegistry:
         """
         result_map = {}
         
-        # Group failures by error type
+        # Prioritize failures
+        prioritized_failures = self.prioritize_failures(failures)
+        
+        # Group failures by error type while maintaining priority order
         error_type_map = {}
-        for failure in failures:
+        for failure in prioritized_failures:
             if failure.error not in error_type_map:
                 error_type_map[failure.error] = []
             error_type_map[failure.error].append(failure)
         
-        # Process each error type
+        # Process each error type in priority order
         for error_type, type_failures in error_type_map.items():
             if error_type in self.error_to_module_map:
                 module = self.error_to_module_map[error_type]
@@ -150,3 +274,33 @@ class RepairRegistry:
                 self.logger.warning(f"No repair module registered for error type: {error_type.name}")
         
         return result_map 
+    
+    def get_registry_info(self) -> str:
+        """
+        Get a string representation of the repair registry for debugging.
+        
+        Returns:
+            String containing information about registered modules and error types
+        """
+        info = ["Repair Registry Information:"]
+        info.append(f"- Number of registered modules: {len(self.repair_modules)}")
+        
+        # Module information
+        info.append("\nRegistered Modules:")
+        for name, module in self.repair_modules.items():
+            info.append(f"  - {name}: {module.desc}")
+        
+        # Error type mappings
+        info.append("\nError Type Mappings:")
+        error_to_module_name = {}
+        for error_type, module in self.error_to_module_map.items():
+            if module.name not in error_to_module_name:
+                error_to_module_name[module.name] = []
+            error_to_module_name[module.name].append(error_type)
+        
+        for module_name, error_types in error_to_module_name.items():
+            info.append(f"  - {module_name} handles:")
+            for error_type in error_types:
+                info.append(f"    - {error_type.name}")
+        
+        return "\n".join(info) 

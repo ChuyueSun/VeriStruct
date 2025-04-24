@@ -60,22 +60,11 @@ def main():
     params = HyperParams()
     context = Context(sample_code, params, logger)
     
-    # Initialize repair modules
-    repair_assertion = RepairAssertionModule(config, logger)
-    repair_precond = RepairPrecondModule(config, logger)
-    repair_postcond = RepairPostcondModule(config, logger)
+    # Initialize repair registry with all repair modules
+    repair_registry = RepairRegistry.create(config, logger)
     
-    # Set up the repair registry
-    repair_registry = RepairRegistry(config, logger)
-    repair_registry.register_module("assertion_repair", repair_assertion, 
-                                   [VerusErrorType.AssertFail], 
-                                   "04_repair_assertion.rs")
-    repair_registry.register_module("precondition_repair", repair_precond, 
-                                   [VerusErrorType.PreCondFail], 
-                                   "05_repair_precond.rs")
-    repair_registry.register_module("postcondition_repair", repair_postcond, 
-                                   [VerusErrorType.PostCondFail], 
-                                   "06_repair_postcond.rs")
+    # Log repair registry information in debug mode
+    logger.debug(repair_registry.get_registry_info())
     
     # Register modules (inference, refinement, and repair)
     view_inference = ViewInferenceModule(config, logger)
@@ -85,9 +74,9 @@ def main():
     context.register_modoule("view_inference", view_inference)
     context.register_modoule("view_refinement", view_refinement)
     context.register_modoule("inv_inference", inv_inference)
-    context.register_modoule("repair_assertion", repair_assertion)
-    context.register_modoule("repair_precond", repair_precond)
-    context.register_modoule("repair_postcond", repair_postcond)
+    
+    # Register all repair modules with the context
+    repair_registry.register_with_context(context)
     
     logger.info(f"Registered modules: {list(context.modules.keys())}")
     
