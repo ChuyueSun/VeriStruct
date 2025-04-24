@@ -1,6 +1,6 @@
 # Planner System Prompt
 
-You are given a task to generate or repair Verus code. 
+You are given a task to generate or repair Verus code.
 
 ${task_overview}
 

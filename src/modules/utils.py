@@ -5,24 +5,31 @@ This module provides shared functionality used across different inference and re
 particularly for writing, evaluating, and scoring code samples.
 """
 
-from typing import List, Dict, Any, Optional, Tuple, Callable
-from pathlib import Path
-import os
-import logging
-import re
-import sys
 import json
-import tempfile
+import logging
+import os
+import re
 import subprocess
+import sys
+import tempfile
+from pathlib import Path
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
-from modules.veval import VEval, EvalScore
+from modules.veval import EvalScore, VEval
 
-def write_candidate_code(sample: str, veval: VEval, score: EvalScore, 
-                         output_dir: Path, prefix: str, idx: int, 
-                         logger: logging.Logger) -> None:
+
+def write_candidate_code(
+    sample: str,
+    veval: VEval,
+    score: EvalScore,
+    output_dir: Path,
+    prefix: str,
+    idx: int,
+    logger: logging.Logger,
+) -> None:
     """
     Writes an individual candidate code out to a file, including VEval metadata.
-    
+
     Args:
         sample: The code sample to write
         veval: The VEval instance that evaluated the sample
@@ -34,7 +41,7 @@ def write_candidate_code(sample: str, veval: VEval, score: EvalScore,
     """
     output_dir.mkdir(exist_ok=True, parents=True)
     sample_path = output_dir / f"{prefix}_sample_{idx}.rs"
-    
+
     try:
         # Append the score at the end of the file
         sample_with_score = f"{sample}\n\n// VEval Score: {score}"
@@ -43,31 +50,36 @@ def write_candidate_code(sample: str, veval: VEval, score: EvalScore,
     except Exception as e:
         logger.error(f"Error saving sample {idx}: {e}")
 
-def evaluate_samples(samples: List[str], output_dir: Path, prefix: str, 
-                     logger: logging.Logger, 
-                     max_errs: int = 5) -> Tuple[str, EvalScore, List[EvalScore]]:
+
+def evaluate_samples(
+    samples: List[str],
+    output_dir: Path,
+    prefix: str,
+    logger: logging.Logger,
+    max_errs: int = 5,
+) -> Tuple[str, EvalScore, List[EvalScore]]:
     """
     Evaluates multiple code samples using VEval, writes them to files with scores,
     and returns the best sample, its score, and all scores.
-    
+
     Args:
         samples: List of code samples to evaluate
         output_dir: Directory to write the samples to
         prefix: Prefix for the filenames
         logger: Logger instance
         max_errs: Maximum number of errors to report in VEval
-        
+
     Returns:
         Tuple containing (best_code, best_score, all_scores)
     """
     if not samples:
         logger.error(f"No samples provided for evaluation")
         return "", None, []
-    
+
     best_code = samples[0]  # Default to first sample
     best_score = None
     scores = []
-    
+
     logger.info(f"Scoring generated {prefix} samples using VEval...")
     for i, sample in enumerate(samples):
         try:
@@ -75,19 +87,21 @@ def evaluate_samples(samples: List[str], output_dir: Path, prefix: str,
             veval.eval(max_errs=max_errs)
             score = veval.get_score()
             scores.append(score)
-            
+
             # Write the sample with its score
-            write_candidate_code(sample, veval, score, output_dir, prefix, i+1, logger)
-            
+            write_candidate_code(
+                sample, veval, score, output_dir, prefix, i + 1, logger
+            )
+
             # Log the score details
             logger.info(f"Sample {i+1} score: {score}")
-            
+
             # Update best if this is better
             if best_score is None or score > best_score:
                 best_score = score
                 best_code = sample
                 logger.info(f"New best sample: {i+1}")
-                
+
             # If code is correct according to VEval, we can stop early
             if score.is_correct():
                 logger.info(f"Found a correct proof in sample {i+1}!")
@@ -95,20 +109,26 @@ def evaluate_samples(samples: List[str], output_dir: Path, prefix: str,
                 correct_path = output_dir / f"{prefix}_correct.rs"
                 correct_path.write_text(sample)
                 break
-                
+
         except Exception as e:
             logger.error(f"Error scoring sample {i+1}: {e}")
-    
+
     # Save the selected sample with details
     save_selection_info(output_dir, prefix, scores, best_score, logger)
-    
+
     return best_code, best_score, scores
 
-def save_selection_info(output_dir: Path, prefix: str, scores: List[EvalScore], 
-                        best_score: EvalScore, logger: logging.Logger) -> None:
+
+def save_selection_info(
+    output_dir: Path,
+    prefix: str,
+    scores: List[EvalScore],
+    best_score: EvalScore,
+    logger: logging.Logger,
+) -> None:
     """
     Saves selection information to a text file.
-    
+
     Args:
         output_dir: Directory to write the selection info to
         prefix: Prefix for the filename
@@ -119,21 +139,25 @@ def save_selection_info(output_dir: Path, prefix: str, scores: List[EvalScore],
     selected_path = output_dir / f"{prefix}_selected.txt"
     try:
         best_idx = [str(s) for s in scores].index(str(best_score)) + 1
-        selection_info = f"Selected sample: {best_idx}\nScore: {best_score}\n\nAll scores:\n" + "\n".join([f"Sample {i+1}: {s}" for i, s in enumerate(scores)])
+        selection_info = (
+            f"Selected sample: {best_idx}\nScore: {best_score}\n\nAll scores:\n"
+            + "\n".join([f"Sample {i+1}: {s}" for i, s in enumerate(scores)])
+        )
         selected_path.write_text(selection_info)
         logger.info(f"Selection details saved to {selected_path}")
     except Exception as e:
         logger.error(f"Error saving selection details: {e}")
 
+
 def check_and_handle_success(code: str, logger: logging.Logger) -> bool:
     """
     Checks if the given code is correct. If it is, returns True (success).
     Otherwise, returns False.
-    
+
     Args:
         code: Code to evaluate
         logger: Logger instance
-        
+
     Returns:
         True if the code is correct, False otherwise
     """
@@ -141,41 +165,46 @@ def check_and_handle_success(code: str, logger: logging.Logger) -> bool:
     score = veval.eval_and_get_score()
     return score.is_correct()
 
-def update_global_best(cand_code: str, best_score_of_all: EvalScore, 
-                       best_code_of_all: str, temp_dir: Path, 
-                       logger: logging.Logger) -> Tuple[EvalScore, str]:
+
+def update_global_best(
+    cand_code: str,
+    best_score_of_all: EvalScore,
+    best_code_of_all: str,
+    temp_dir: Path,
+    logger: logging.Logger,
+) -> Tuple[EvalScore, str]:
     """
     Compares cand_code's score with the global best. If cand_code is better,
     update the global best and write it to a file.
-    
+
     Args:
         cand_code: Candidate code to compare
         best_score_of_all: Current best score
         best_code_of_all: Current best code
         temp_dir: Directory to save the best code to
         logger: Logger instance
-        
+
     Returns:
         Tuple of (updated_best_score, updated_best_code)
     """
     veval = VEval(cand_code, logger)
     score = veval.eval_and_get_score()
-    
+
     # Debug logging
     logger.debug(f"update_global_best - Candidate score: {score}")
     logger.debug(f"update_global_best - Current best score: {best_score_of_all}")
     logger.debug(f"update_global_best - Has best code: {best_code_of_all is not None}")
-    
+
     # Make sure the directory exists
     if not temp_dir.exists():
         temp_dir.mkdir(parents=True, exist_ok=True)
-    
+
     # If best_score_of_all is None, set it to current score
     if best_score_of_all is None:
         logger.info(f"Initializing global best with score: {score}")
         best_score_of_all = score
         best_code_of_all = cand_code
-        
+
         # Write to best.rs file
         best_path = temp_dir / "best.rs"
         sample_with_score = f"{best_code_of_all}\n\n// VEval Score: {score}"
@@ -185,7 +214,9 @@ def update_global_best(cand_code: str, best_score_of_all: EvalScore,
     # Compare scores
     try:
         is_better = score > best_score_of_all
-        logger.debug(f"update_global_best - Candidate is better than current best: {is_better}")
+        logger.debug(
+            f"update_global_best - Candidate is better than current best: {is_better}"
+        )
     except Exception as e:
         logger.error(f"Error comparing scores: {e}")
         is_better = False
@@ -193,7 +224,7 @@ def update_global_best(cand_code: str, best_score_of_all: EvalScore,
     if is_better:
         best_score_of_all = score
         best_code_of_all = cand_code
-        
+
         # Write to best.rs file
         best_path = temp_dir / "best.rs"
         sample_with_score = f"{best_code_of_all}\n\n// VEval Score: {score}"
@@ -203,21 +234,32 @@ def update_global_best(cand_code: str, best_score_of_all: EvalScore,
         # Even if not better, ensure the best.rs file exists with the current best
         best_path = temp_dir / "best.rs"
         if not best_path.exists() and best_code_of_all is not None:
-            sample_with_score = f"{best_code_of_all}\n\n// VEval Score: {best_score_of_all}"
+            sample_with_score = (
+                f"{best_code_of_all}\n\n// VEval Score: {best_score_of_all}"
+            )
             best_path.write_text(sample_with_score)
-            logger.info(f"Created best.rs file with existing best score: {best_score_of_all}")
-    
+            logger.info(
+                f"Created best.rs file with existing best score: {best_score_of_all}"
+            )
+
     return best_score_of_all, best_code_of_all
 
-def evaluate_candidates(candidates: List[str], prefix: str, 
-                        func_name: str, iteration_idx: int,
-                        last_best_code: str, last_best_score: EvalScore, 
-                        temp_dir: Path, logger: logging.Logger, 
-                        debug_type_error_fn: Optional[Callable] = None) -> Tuple[str, str, EvalScore]:
+
+def evaluate_candidates(
+    candidates: List[str],
+    prefix: str,
+    func_name: str,
+    iteration_idx: int,
+    last_best_code: str,
+    last_best_score: EvalScore,
+    temp_dir: Path,
+    logger: logging.Logger,
+    debug_type_error_fn: Optional[Callable] = None,
+) -> Tuple[str, str, EvalScore]:
     """
     Evaluates multiple candidate codes generated by a single function.
     Updates and returns the best candidate code and score for this iteration.
-    
+
     Args:
         candidates: List of candidate codes to evaluate
         prefix: Prefix for the filename
@@ -228,13 +270,13 @@ def evaluate_candidates(candidates: List[str], prefix: str,
         temp_dir: Directory to save files to
         logger: Logger instance
         debug_type_error_fn: Optional function to debug and fix type errors
-        
+
     Returns:
         Tuple of (candidate_code, best_code, best_score)
     """
     best_score = EvalScore.get_worst_score()
     best_code = last_best_code
-    
+
     for j, cand in enumerate(candidates):
         # Use our new debug_type_error function if no external one is provided
         if debug_type_error_fn:
@@ -264,23 +306,24 @@ def evaluate_candidates(candidates: List[str], prefix: str,
         candidate_path = temp_dir / f"{prefix}_{iteration_idx}_{func_name}_{j}.rs"
         sample_with_score = f"{cand}\n\n// VEval Score: {score}"
         candidate_path.write_text(sample_with_score)
-    
+
     # Return the best after evaluating all candidates of this func
     if best_score.is_good_code_next_phase(last_best_score):
         return best_code, best_code, best_score
     else:
         return last_best_code, last_best_code, last_best_score
 
+
 def fix_one_type_error(oldline, cstart, cend, newtype):
     """
     Fix a type error in a line by inserting an appropriate cast.
-    
+
     Args:
         oldline: The line containing the type error
         cstart: The starting index of the problematic expression
         cend: The ending index of the problematic expression
         newtype: The new type to cast to
-        
+
     Returns:
         The fixed line
     """
@@ -312,15 +355,16 @@ def fix_one_type_error(oldline, cstart, cend, newtype):
 
     return prefix + newmid + suffix
 
+
 def fix_one_type_error_in_code(code, err_trace, verbose=True):
     """
     Fix a type error in the code based on the error trace.
-    
+
     Args:
         code: The Verus code
         err_trace: The error trace from VEval
         verbose: Whether to output verbose debugging information
-        
+
     Returns:
         The fixed code, or an empty string if the error could not be fixed
     """
@@ -381,35 +425,38 @@ def fix_one_type_error_in_code(code, err_trace, verbose=True):
 
     return "\n".join(newlines) + "\n"
 
+
 def debug_type_error(code: str, verus_error=None, num=1, logger=None) -> tuple:
     """
     Debug and fix type errors in the Verus code.
-    
+
     Args:
         code: The Verus code to fix
         verus_error: A specific error to fix (optional)
         num: Maximum number of errors to fix
         logger: Logger instance
-        
+
     Returns:
         A tuple of (fixed_code, remaining_errors)
     """
     del num
-    
+
     if logger is None:
-        logger = logging.getLogger('debug_type_error')
+        logger = logging.getLogger("debug_type_error")
         logger.setLevel(logging.INFO)
-    
+
     rnd = 0
     max_rnd = 10
-    
+
     # Import the needed class here to avoid circular imports
-    from modules.veval import VEval, VerusErrorType
+    from modules.veval import VerusErrorType, VEval
 
     if verus_error:
         # fix the reported one
         if verus_error.error != VerusErrorType.MismatchedType:
-            logger.warning(f"Warning: a non type error is passed to debug_type_error: {verus_error.error}")
+            logger.warning(
+                f"Warning: a non type error is passed to debug_type_error: {verus_error.error}"
+            )
         else:
             newcode = fix_one_type_error_in_code(
                 code, verus_error.trace[0], verbose=False
@@ -458,6 +505,7 @@ def debug_type_error(code: str, verus_error=None, num=1, logger=None) -> tuple:
 
     return code, len(failures)
 
+
 def remove_comment(code):
     """
     remove single-line comments in code
@@ -469,34 +517,37 @@ def remove_comment(code):
         new_code += line + "\n"
     return new_code
 
+
 def remove_rust_comments(code: str) -> str:
     """
     Removes comment lines and inline comments from Rust code.
-    
-    Full-line comments (lines that, after stripping leading whitespace, 
+
+    Full-line comments (lines that, after stripping leading whitespace,
     start with '//') are completely removed.
-    
+
     Inline comments (everything after a '//' on a line) are stripped away.
-    
-    Note: This simple implementation does not handle the case where '//' 
+
+    Note: This simple implementation does not handle the case where '//'
     might appear inside a string literal.
     """
     lines = code.splitlines()
     new_lines = []
     for line in lines:
         # Skip lines that are entirely comments.
-        if re.match(r'^\s*//', line):
+        if re.match(r"^\s*//", line):
             continue
         # Remove any inline comment (everything after the first occurrence of '//')
         # and also strip trailing whitespace.
-        new_line = re.split(r'//', line)[0].rstrip()
+        new_line = re.split(r"//", line)[0].rstrip()
         new_lines.append(new_line)
     return "\n".join(new_lines)
+
 
 # Ported from archive/code/utils.py
 class AttrDict(dict):
     def __getattr__(self, name):
         return self[name]
+
 
 def get_nonlinear_lines(code, logger):
     """
@@ -524,18 +575,23 @@ def get_nonlinear_lines(code, logger):
                     elif ex_type == "invariant":
                         output_lines.append((st, ed, text))
                 return output_lines
-            except Exception as e: # Changed from JSONDecodeError to broader Exception
+            except Exception as e:  # Changed from JSONDecodeError to broader Exception
                 if logger:
-                    logger.error(f"Error in decoding nonlinear arithmetic operations: {m.stdout} ({e})")
+                    logger.error(
+                        f"Error in decoding nonlinear arithmetic operations: {m.stdout} ({e})"
+                    )
                 return []
         else:
             if logger:
-                logger.warning(f"Lynette code_detect_nonlinear failed with return code {m.returncode}")
+                logger.warning(
+                    f"Lynette code_detect_nonlinear failed with return code {m.returncode}"
+                )
             return []
     except Exception as e:
         if logger:
             logger.error(f"Error running lynette for nonlinear detection: {e}")
         return []
+
 
 def code_change_is_safe(
     origin_code,
@@ -549,22 +605,26 @@ def code_change_is_safe(
     immutable_funcs=[],
 ):
     # Debug mode override (from original code)
-    if debug and os.environ.get('DEBUG_SAFE_CODE_CHANGE', '0') == '1':
-        logger.warning("DEBUG_SAFE_CODE_CHANGE is set, skipping safe code change checking")
+    if debug and os.environ.get("DEBUG_SAFE_CODE_CHANGE", "0") == "1":
+        logger.warning(
+            "DEBUG_SAFE_CODE_CHANGE is set, skipping safe code change checking"
+        )
         return True
 
     for func_name in immutable_funcs:
         # Get function bodies safely, handling potential errors
         origin_body = get_func_body(origin_code, func_name, util_path, logger)
         changed_body = get_func_body(changed_code, func_name, util_path, logger)
-        
+
         if origin_body is None or changed_body is None:
-            logger.warning(f"Could not compare immutable function '{func_name}'. Assuming unsafe.")
+            logger.warning(
+                f"Could not compare immutable function '{func_name}'. Assuming unsafe."
+            )
             return False
 
         origin = remove_rust_comments(origin_body)
         changed = remove_rust_comments(changed_body)
-        
+
         if origin != changed:
             logger.error(f"Immutable function '{func_name}' was changed")
             return False
@@ -584,11 +644,17 @@ def code_change_is_safe(
 
         cargopath = os.path.join(util_path, "lynette/source/Cargo.toml")
         if not os.path.exists(cargopath):
-             # Attempt relative path from src/modules/utils.py if absolute fails
-            cargopath = Path(__file__).parent.parent.parent / "utils" / "lynette" / "source" / "Cargo.toml"
+            # Attempt relative path from src/modules/utils.py if absolute fails
+            cargopath = (
+                Path(__file__).parent.parent.parent
+                / "utils"
+                / "lynette"
+                / "source"
+                / "Cargo.toml"
+            )
             if not cargopath.exists():
                 logger.error(f"Could not find lynette Cargo.toml at {cargopath}")
-                return False # Assume unsafe if we can't compare
+                return False  # Assume unsafe if we can't compare
             cargopath = str(cargopath.resolve())
 
         opts = []
@@ -617,16 +683,17 @@ def code_change_is_safe(
         else:
             err_m = m.stderr.strip()
             logger.error(f"Error running cargo compare: {err_m}")
-            return False # Assume unsafe on compare tool error
-            
+            return False  # Assume unsafe on compare tool error
+
     except Exception as e:
         logger.error(f"Exception during code comparison: {e}")
-        return False # Assume unsafe on any exception
+        return False  # Assume unsafe on any exception
     finally:
-        if 'orig_f' in locals() and os.path.exists(orig_f.name):
+        if "orig_f" in locals() and os.path.exists(orig_f.name):
             os.unlink(orig_f.name)
-        if 'changed_f' in locals() and os.path.exists(changed_f.name):
+        if "changed_f" in locals() and os.path.exists(changed_f.name):
             os.unlink(changed_f.name)
+
 
 def get_func_body(code, fname, util_path=None, logger=None):
     try:
@@ -640,15 +707,15 @@ def get_func_body(code, fname, util_path=None, logger=None):
         if util_path is None:
             util_path = Path(__file__).parent.parent.parent / "utils"
             util_path = str(util_path.resolve())
-        
+
         # Construct absolute path to Cargo.toml
         cargopath = Path(util_path) / "lynette" / "source" / "Cargo.toml"
-        
+
         if not cargopath.exists():
             if logger:
                 logger.error(f"Error: Cargo.toml not found at {cargopath}")
             return None
-        
+
         cargopath = str(cargopath.resolve())
 
         lynette_extract_cmd = [
@@ -666,29 +733,32 @@ def get_func_body(code, fname, util_path=None, logger=None):
         ]
 
         m = subprocess.run(lynette_extract_cmd, capture_output=True, text=True)
-        
+
         # Handle error cases
         if m.returncode != 0:
             if logger:
                 if m.stderr:
                     logger.error(f"Error extracting function '{fname}': {m.stderr}")
                 else:
-                    logger.error(f"Error extracting function '{fname}' (no stderr output). Return code: {m.returncode}")
+                    logger.error(
+                        f"Error extracting function '{fname}' (no stderr output). Return code: {m.returncode}"
+                    )
                     if m.stdout:
                         logger.error(f"stdout: {m.stdout}")
             return None
-            
+
         if m.returncode == 0:
             return m.stdout.strip()
         return None
-        
+
     except Exception as e:
         if logger:
             logger.error(f"Exception during get_func_body: {e}")
         return None
     finally:
-        if 'orig_f' in locals() and os.path.exists(orig_f.name):
+        if "orig_f" in locals() and os.path.exists(orig_f.name):
             os.unlink(orig_f.name)
+
 
 def evaluate(code, verus_path, func_name=None):
     """Simple Verus evaluation, returns score tuple and subprocess result."""
@@ -703,7 +773,7 @@ def evaluate(code, verus_path, func_name=None):
         commands += ["--verify-function", func_name, "--verify-root"]
     m = subprocess.run(commands, capture_output=True, text=True)
     os.unlink(fn.name)
-    
+
     temp = 0
     chunks = m.stderr.split("\n\n")
     for ch in chunks:
@@ -717,6 +787,7 @@ def evaluate(code, verus_path, func_name=None):
         score = (0, temp)
     score = (int(score[0]), max(int(score[1]), temp))
     return score, m
+
 
 def compress_nl_assertion(code):
     """Compresses nonlinear assertions into a single line."""
@@ -745,6 +816,7 @@ def compress_nl_assertion(code):
                 tmp_line += " " + line.strip()
     return new_code
 
+
 def remove_redundant_loopinv(code):
     """
     remove redundant loop invariants in code
@@ -772,6 +844,7 @@ def remove_redundant_loopinv(code):
             new_code += line + "\n"
     return new_code
 
+
 def same_code_verus(code1, code2, verus_path):
     """
     Check if two code snippets return the same Verus err results
@@ -781,6 +854,7 @@ def same_code_verus(code1, code2, verus_path):
     err1 = msg1.stderr + msg1.stdout
     err2 = msg2.stderr + msg2.stdout
     return err1 == err2
+
 
 def insert_loop_isolation(code):
     """Insert #[verifier::loop_isolation(false)]"""
@@ -799,6 +873,7 @@ def insert_loop_isolation(code):
     )
     return new_code
 
+
 def insert_lemma_func(code, lemma_names, lemma_path):
     """Insert existing already-proved lemmas"""
     for lemma_name in lemma_names:
@@ -810,6 +885,7 @@ def insert_lemma_func(code, lemma_names, lemma_path):
         lemma_func_dict = {lemma_name: lemma_code}
         code = insert_proof_func(code, lemma_func_dict)
     return code
+
 
 def insert_proof_func(code, proof_func_dict):
     """Insert the proof functions into the code."""
@@ -827,17 +903,20 @@ def insert_proof_func(code, proof_func_dict):
     )
     return new_code
 
-def get_examples(config: Dict[str, Any], example_dir_name: str, logger: logging.Logger) -> List[Dict[str, str]]:
+
+def get_examples(
+    config: Dict[str, Any], example_dir_name: str, logger: logging.Logger
+) -> List[Dict[str, str]]:
     """
-    Gathers example input/output pairs from two directories (input-<example_dir_name> 
-    and output-<example_dir_name>), and returns a list of dictionaries 
+    Gathers example input/output pairs from two directories (input-<example_dir_name>
+    and output-<example_dir_name>), and returns a list of dictionaries
     with 'query' and 'answer' keys.
 
     Args:
         config: Configuration dictionary containing example_path
         example_dir_name: The suffix for the input/output directories
         logger: Logger instance
-        
+
     Returns:
         A list of example dictionaries, or an empty list if errors occur.
     """
@@ -850,7 +929,7 @@ def get_examples(config: Dict[str, Any], example_dir_name: str, logger: logging.
         # Ensure the required directories exist
         if not input_dir.is_dir():
             logger.warning(f"Input directory '{input_dir}' does not exist.")
-            return [] # Return empty list if input dir missing
+            return []  # Return empty list if input dir missing
         if not output_dir.is_dir():
             logger.warning(f"Output directory '{output_dir}' does not exist.")
             # Proceed but output files might be missing
@@ -862,26 +941,25 @@ def get_examples(config: Dict[str, Any], example_dir_name: str, logger: logging.
                 output_file = output_dir / input_file.name
 
                 if not output_file.is_file():
-                    logger.warning(f"No matching output file for '{input_file}'. Using empty answer.")
-                    output_content = "" # Use empty string if output is missing
+                    logger.warning(
+                        f"No matching output file for '{input_file}'. Using empty answer."
+                    )
+                    output_content = ""  # Use empty string if output is missing
                 else:
                     try:
                         output_content = output_file.read_text(encoding="utf-8")
                     except OSError as e:
                         logger.error(f"Failed to read output file '{output_file}': {e}")
-                        output_content = "" # Use empty string on read error
+                        output_content = ""  # Use empty string on read error
 
                 # Safely read the input file
                 try:
                     input_content = input_file.read_text(encoding="utf-8")
                 except OSError as e:
                     logger.error(f"Failed to read input file '{input_file}': {e}")
-                    continue # Skip this example if input fails
+                    continue  # Skip this example if input fails
 
-                examples.append({
-                    "query": input_content,
-                    "answer": output_content
-                })
+                examples.append({"query": input_content, "answer": output_content})
 
         # Warn if no valid examples were found
         if not examples:
@@ -891,6 +969,7 @@ def get_examples(config: Dict[str, Any], example_dir_name: str, logger: logging.
         logger.error(f"Error loading examples from {example_dir_name}: {e}")
 
     return examples
+
 
 def clean_code(code):
     """Remove markdown code blocks and potentially other unwanted characters."""
@@ -909,4 +988,4 @@ def clean_code(code):
 
         lines.append(line)
     code = "\n".join(lines)
-    return code 
+    return code

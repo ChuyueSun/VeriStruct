@@ -2,15 +2,16 @@
 # Licensed under the MIT license.      #
 
 
+import json
 import os
+import re
 import subprocess
 import tempfile
-import json
-from enum import Enum
-import re
-from pathlib import Path
 from dataclasses import dataclass
+from enum import Enum
+from pathlib import Path
 from typing import List, Optional, Set
+
 from configs.sconfig import config, reset_config
 
 
@@ -58,10 +59,11 @@ m2VerusError = {
     "cannot find macro `verus` in this scope": VerusErrorType.MissingImport,
     "type annotations needed": VerusErrorType.TypeAnnotation,
     "constructed value may fail to meet its declared type invariant": VerusErrorType.ConstructorFailTypeInvariant,
-    "cannot call function": VerusErrorType.CannotCallFunc
+    "cannot call function": VerusErrorType.CannotCallFunc,
 }
 
 VerusError2m = {v: k for k, v in m2VerusError.items()}
+
 
 class VerusErrorLabel(Enum):
     NullLabel = 0
@@ -142,6 +144,7 @@ class ErrorTrace:
     def get_lines(self):
         return self.lines
 
+
 class VerusError:
     def __init__(self, err: dict):
         # Store the raw message text
@@ -161,7 +164,6 @@ class VerusError:
             if "not all trait items implemented, missing" in self.error_text:
                 self.error = VerusErrorType.MissImpl
 
-
         self.trace = [ErrorTrace(t) for t in err["spans"]]  # Bottom-up stack trace
         self.error_text = err["message"]
         self.spans = err["spans"] if "spans" in err else []
@@ -173,10 +175,11 @@ class VerusError:
 
     def __str__(self):
         return f"{self.error}: {self.error_text}"
-    
+
     def get_miss_impl_funcs(self):
         if self.error != VerusErrorType.MissImpl:
             return []
+
         def extract_function_names(text):
             pattern = r"`(\w+)`"
             matches = re.findall(pattern, text)
@@ -250,7 +253,7 @@ class EvalScore:
         if self.compilation_error != value.compilation_error:
             return not self.compilation_error
         return self.verified >= value.verified
-    
+
     def is_good_code_next_phase(self, value: object, abs_diff=2) -> bool:
         # TODO: Now we always return True. Need to implement a better check.
         # always include next phase change (phase1-4 all done then compare)
@@ -311,6 +314,7 @@ class EvalScore:
 # Add a flag to enable/disable veval (for testing without Verus installed)
 DUMMY_MODE = os.environ.get("ENABLE_LLM_INFERENCE", "1") != "1"
 
+
 class VEval:
     def __init__(self, code: str, logger=None):
         self.logger = logger
@@ -326,15 +330,17 @@ class VEval:
         self.compilation_error = False
         self.rustc_out = ""
         self.verus_out = ""
-        
+
         # In dummy mode, we'll pretend to have basic compilation issues
         self.dummy_mode = DUMMY_MODE
-        
-        # Also set dummy mode if verus_path is None 
+
+        # Also set dummy mode if verus_path is None
         if self.verus_path is None:
             self.dummy_mode = True
             if self.logger:
-                self.logger.warning("VEval in dummy mode (no verus_path). Will return placeholder results.")
+                self.logger.warning(
+                    "VEval in dummy mode (no verus_path). Will return placeholder results."
+                )
         elif self.dummy_mode and self.logger:
             self.logger.warning("VEval in dummy mode. Will return placeholder results.")
 
@@ -352,17 +358,27 @@ class VEval:
         )
 
     # Run verus on the code and parse the output.
-    def eval(self, max_errs=5, json_mode=True, func_name=None, no_verify=False, log_dir=None, expand_errors=False) -> None:
+    def eval(
+        self,
+        max_errs=5,
+        json_mode=True,
+        func_name=None,
+        no_verify=False,
+        log_dir=None,
+        expand_errors=False,
+    ) -> None:
         if self.dummy_mode:
             if self.logger:
-                self.logger.warning("VEval in dummy mode. Generating placeholder results.")
-            
+                self.logger.warning(
+                    "VEval in dummy mode. Generating placeholder results."
+                )
+
             # Simulate a basic evaluation result
             self.verus_errors = ["Dummy error: TODO placeholder not implemented"]
             self.verus_out = "Dummy output: This is a simulation of Verus output"
             self.rustc_out = "error[E0999]: TODO placeholders need to be implemented"
             return
-            
+
         with tempfile.NamedTemporaryFile(mode="w", delete=False) as f:
             f.write(self.code)
             code_path = f.name
@@ -383,13 +399,13 @@ class VEval:
             # - verus intermediate language (vir),
             # - and smt file
             # Maybe useful for in-depth analysis
-            if log_dir != '':
-                cmd += ['--log-dir', log_dir]
-            cmd += ['--log-all']
+            if log_dir != "":
+                cmd += ["--log-dir", log_dir]
+            cmd += ["--log-all"]
         if expand_errors:
             # When expand_errors = true,
             # verus will report which postcond is established and which are not
-            cmd += ['--expand-errors']
+            cmd += ["--expand-errors"]
         # self.logger.info(f"Running command: {' '.join(cmd)}")
         m = subprocess.run(cmd, capture_output=True, text=True)
         verus_out = m.stdout
@@ -425,9 +441,11 @@ class VEval:
                     continue  # Skip trivial aborting errors.
                 # Make unclosed delimiter error worse than other errors
                 if "unclosed delimiter" in e["message"]:
-                    self.verus_errors.append(VerusError({"message": "unclosed delimiter", "spans": []}))
+                    self.verus_errors.append(
+                        VerusError({"message": "unclosed delimiter", "spans": []})
+                    )
                 self.verus_errors.append(VerusError(e))
-                
+
     # Returns the number of verifed functions.
     def get_verified(self) -> int:
         if not self.verus_result:
@@ -435,11 +453,13 @@ class VEval:
         try:
             verified = self.verus_result["verification-results"]["verified"]
         except Exception as e:
-            self.logger.error(f"Failure in VEval.get_verified. Verus Compilation error.")
+            self.logger.error(
+                f"Failure in VEval.get_verified. Verus Compilation error."
+            )
             verified = -1
             self.compilation_error = True
         return verified
-        
+
     # Returns the count of verified functions (convenience alias for get_verified)
     def get_verified_count(self) -> int:
         return self.get_verified()
@@ -447,7 +467,7 @@ class VEval:
     # Returns the number of failed functions.
     def get_errors(self) -> int:
         if not self.verus_result:
-            self.logger.error(f"Failure in VEval.get_errors. Rust Syntax error.") 
+            self.logger.error(f"Failure in VEval.get_errors. Rust Syntax error.")
         try:
             errors = self.verus_result["verification-results"]["errors"]
         except Exception as e:
@@ -521,10 +541,12 @@ class VEval:
 
 
 if __name__ == "__main__":
-    import sys
-    from utils import AttrDict
     import argparse
+    import sys
+
     from loguru import logger
+
+    from utils import AttrDict
 
     # Parse arguments
     parser = argparse.ArgumentParser(description="Verus Copilot")

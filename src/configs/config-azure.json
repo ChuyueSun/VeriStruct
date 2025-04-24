@@ -12,8 +12,5 @@
     "aoai_debug_model": "o1",
     "aoai_refinement_model": "o3-mini",
     "verus_path": "/home/chuyue/verus/source/target-verus/release/verus",
-    "example_path": "/home/chuyue/-verusyth/code/examples",
-    "lemma_path": "/home/chuyue/-verusyth/code/lemmas",
-    "util_path": "/home/chuyue/-verusyth/utils",
     "platform": "azure"
 }

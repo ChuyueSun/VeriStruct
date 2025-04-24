@@ -3,11 +3,13 @@ Registry for repair modules in VerusAgent.
 Maps error types to appropriate repair modules.
 """
 
-from typing import Dict, Tuple, Type, List, Optional, Any
 import logging
 from pathlib import Path
-from modules.veval import VerusErrorType, VerusError
+from typing import Any, Dict, List, Optional, Tuple, Type
+
 from modules.baserepair import BaseRepairModule
+from modules.veval import VerusError, VerusErrorType
+
 
 class RepairRegistry:
     """
@@ -17,11 +19,16 @@ class RepairRegistry:
     2. Track which errors can be handled
     3. Select appropriate repair strategies
     """
-    
-    def __init__(self, config: Dict[str, Any], logger: logging.Logger, immutable_funcs: Optional[List[str]] = None):
+
+    def __init__(
+        self,
+        config: Dict[str, Any],
+        logger: logging.Logger,
+        immutable_funcs: Optional[List[str]] = None,
+    ):
         """
         Initialize the repair registry.
-        
+
         Args:
             config: Configuration dictionary
             logger: Logger instance
@@ -33,177 +40,173 @@ class RepairRegistry:
         self.repair_modules = {}
         self.error_to_module_map = {}
         self.output_paths = {}
-    
+
     @classmethod
-    def create(cls, config: Dict[str, Any], logger: logging.Logger, immutable_funcs: Optional[List[str]] = None):
+    def create(
+        cls,
+        config: Dict[str, Any],
+        logger: logging.Logger,
+        immutable_funcs: Optional[List[str]] = None,
+    ):
         """
         Factory method to create and initialize a registry with all available repair modules.
-        
+
         Args:
             config: Configuration dictionary
             logger: Logger instance
             immutable_funcs: List of function names that should not be modified
-            
+
         Returns:
             Fully initialized RepairRegistry with all repair modules registered
         """
         # Import here to avoid circular imports
-        from modules.repair_assertion import RepairAssertionModule
-        from modules.repair_precond import RepairPrecondModule
-        from modules.repair_postcond import RepairPostcondModule
-        from modules.repair_invariant import RepairInvariantModule
         from modules.repair_arithmetic import RepairArithmeticModule
-        from modules.repair_type import RepairTypeModule
+        from modules.repair_assertion import RepairAssertionModule
         from modules.repair_decrease import RepairDecreaseModule
+        from modules.repair_invariant import RepairInvariantModule
         from modules.repair_missing import RepairMissingModule
         from modules.repair_mode import RepairModeModule
+        from modules.repair_postcond import RepairPostcondModule
+        from modules.repair_precond import RepairPrecondModule
         from modules.repair_syntax import RepairSyntaxModule
-        
+        from modules.repair_type import RepairTypeModule
+
         # Create registry instance
         registry = cls(config, logger, immutable_funcs)
-        
+
         # Initialize and register syntax repair module (general purpose)
         # This module handles both general syntax errors and Seq-specific syntax errors
         syntax_repair = RepairSyntaxModule(config, logger, immutable_funcs)
         registry.register_module(
-            "repair_syntax", 
-            syntax_repair, 
+            "repair_syntax",
+            syntax_repair,
             [],  # No specific VerusErrorType for syntax errors
-            "03_repair_syntax.rs"
+            "03_repair_syntax.rs",
         )
-        
+
         # Initialize and register assertion repair module
         assertion_repair = RepairAssertionModule(config, logger, immutable_funcs)
         registry.register_module(
-            "repair_assertion", 
-            assertion_repair, 
-            [
-                VerusErrorType.AssertFail, 
-                VerusErrorType.SplitAssertFail
-            ],
-            "04_repair_assertion.rs"
+            "repair_assertion",
+            assertion_repair,
+            [VerusErrorType.AssertFail, VerusErrorType.SplitAssertFail],
+            "04_repair_assertion.rs",
         )
-        
+
         # Initialize and register precondition repair module
         precond_repair = RepairPrecondModule(config, logger, immutable_funcs)
         registry.register_module(
-            "repair_precond", 
-            precond_repair, 
+            "repair_precond",
+            precond_repair,
             [
                 VerusErrorType.PreCondFail,
                 VerusErrorType.PreCondFailVecLen,
                 VerusErrorType.SplitPreFail,
-                VerusErrorType.require_private
+                VerusErrorType.require_private,
             ],
-            "05_repair_precond.rs"
+            "05_repair_precond.rs",
         )
-        
+
         # Initialize and register postcondition repair module
         postcond_repair = RepairPostcondModule(config, logger, immutable_funcs)
         registry.register_module(
-            "repair_postcond", 
-            postcond_repair, 
+            "repair_postcond",
+            postcond_repair,
             [
                 VerusErrorType.PostCondFail,
                 VerusErrorType.SplitPostFail,
-                VerusErrorType.ensure_private
+                VerusErrorType.ensure_private,
             ],
-            "06_repair_postcond.rs"
+            "06_repair_postcond.rs",
         )
-        
+
         # Initialize and register invariant repair module
         invariant_repair = RepairInvariantModule(config, logger, immutable_funcs)
         registry.register_module(
-            "repair_invariant", 
-            invariant_repair, 
-            [
-                VerusErrorType.InvFailFront,
-                VerusErrorType.InvFailEnd
-            ],
-            "07_repair_invariant.rs"
+            "repair_invariant",
+            invariant_repair,
+            [VerusErrorType.InvFailFront, VerusErrorType.InvFailEnd],
+            "07_repair_invariant.rs",
         )
-        
+
         # Initialize and register arithmetic repair module
         arithmetic_repair = RepairArithmeticModule(config, logger, immutable_funcs)
         registry.register_module(
-            "repair_arithmetic", 
-            arithmetic_repair, 
-            [
-                VerusErrorType.ArithmeticFlow
-            ],
-            "08_repair_arithmetic.rs"
+            "repair_arithmetic",
+            arithmetic_repair,
+            [VerusErrorType.ArithmeticFlow],
+            "08_repair_arithmetic.rs",
         )
-        
+
         # Initialize and register type repair module
         type_repair = RepairTypeModule(config, logger, immutable_funcs)
         registry.register_module(
-            "repair_type", 
-            type_repair, 
+            "repair_type",
+            type_repair,
             [
                 VerusErrorType.MismatchedType,
                 VerusErrorType.TypeAnnotation,
-                VerusErrorType.ConstructorFailTypeInvariant
+                VerusErrorType.ConstructorFailTypeInvariant,
             ],
-            "09_repair_type.rs"
+            "09_repair_type.rs",
         )
-        
+
         # Initialize and register decrease repair module
         decrease_repair = RepairDecreaseModule(config, logger, immutable_funcs)
         registry.register_module(
-            "repair_decrease", 
-            decrease_repair, 
-            [
-                VerusErrorType.DecFailEnd,
-                VerusErrorType.DecFailCont
-            ],
-            "10_repair_decrease.rs"
+            "repair_decrease",
+            decrease_repair,
+            [VerusErrorType.DecFailEnd, VerusErrorType.DecFailCont],
+            "10_repair_decrease.rs",
         )
-        
+
         # Initialize and register missing element repair module
         missing_repair = RepairMissingModule(config, logger, immutable_funcs)
         registry.register_module(
-            "repair_missing", 
-            missing_repair, 
-            [
-                VerusErrorType.MissingImport,
-                VerusErrorType.MissImpl
-            ],
-            "11_repair_missing.rs"
+            "repair_missing",
+            missing_repair,
+            [VerusErrorType.MissingImport, VerusErrorType.MissImpl],
+            "11_repair_missing.rs",
         )
-        
+
         # Initialize and register mode repair module
         mode_repair = RepairModeModule(config, logger, immutable_funcs)
         registry.register_module(
-            "repair_mode", 
-            mode_repair, 
-            [
-                VerusErrorType.CannotCallFunc
-            ],
-            "12_repair_mode.rs"
+            "repair_mode",
+            mode_repair,
+            [VerusErrorType.CannotCallFunc],
+            "12_repair_mode.rs",
         )
-        
+
         # TODO: Add more specialized repair modules for other error types:
         # - RecommendNotMet
-        
+
         return registry
-        
+
     def register_with_context(self, context):
         """
         Register all repair modules with the given context.
-        
+
         Args:
             context: The execution context
         """
         for name, module in self.repair_modules.items():
             context.register_modoule(name, module)
-            
-        self.logger.info(f"Registered repair modules: {list(self.repair_modules.keys())}")
-        
-    def register_module(self, name: str, module: BaseRepairModule, 
-                        error_types: List[VerusErrorType], output_path: str = None):
+
+        self.logger.info(
+            f"Registered repair modules: {list(self.repair_modules.keys())}"
+        )
+
+    def register_module(
+        self,
+        name: str,
+        module: BaseRepairModule,
+        error_types: List[VerusErrorType],
+        output_path: str = None,
+    ):
         """
         Register a repair module to handle specific error types.
-        
+
         Args:
             name: Name of the repair module
             module: The repair module instance
@@ -215,125 +218,135 @@ class RepairRegistry:
             self.error_to_module_map[error_type] = module
             if output_path:
                 self.output_paths[error_type] = output_path
-                
+
     def get_module_for_error(self, error: VerusError) -> Optional[BaseRepairModule]:
         """
         Get the appropriate repair module for a given error.
-        
+
         Args:
             error: The Verus error to repair
-            
+
         Returns:
             The repair module instance, or None if no module is registered
         """
         if error.error in self.error_to_module_map:
             return self.error_to_module_map[error.error]
         return None
-    
+
     def get_output_path(self, error: VerusError) -> Optional[str]:
         """
         Get the output path for a given error type.
-        
+
         Args:
             error: The Verus error
-            
+
         Returns:
             The output path template, or None if not specified
         """
         if error.error in self.output_paths:
             return self.output_paths[error.error]
         return None
-    
+
     def prioritize_failures(self, failures: List[VerusError]) -> List[VerusError]:
         """
         Prioritize failures based on error type, returning a sorted list.
         Errors are sorted according to a predefined priority order.
-        
+
         Args:
             failures: List of Verus errors to prioritize
-            
+
         Returns:
             Sorted list of errors with highest priority first
         """
         if not failures:
             return []
-            
+
         # Define a priority order for error types based on refinement.py's get_one_failure method
         # Lower number = higher priority
         priority_order = {
-            VerusErrorType.MismatchedType: 1,       # Fix type errors first
-            VerusErrorType.PreCondFailVecLen: 2,    # Fix vector length errors next
-            VerusErrorType.ArithmeticFlow: 3,       # Fix arithmetic overflow/underflow
-            VerusErrorType.InvFailFront: 4,         # Fix invariants not satisfied before loop
-            VerusErrorType.InvFailEnd: 5,           # Fix invariants not satisfied at end of loop
+            VerusErrorType.MismatchedType: 1,  # Fix type errors first
+            VerusErrorType.PreCondFailVecLen: 2,  # Fix vector length errors next
+            VerusErrorType.ArithmeticFlow: 3,  # Fix arithmetic overflow/underflow
+            VerusErrorType.InvFailFront: 4,  # Fix invariants not satisfied before loop
+            VerusErrorType.InvFailEnd: 5,  # Fix invariants not satisfied at end of loop
             VerusErrorType.ConstructorFailTypeInvariant: 6,  # Fix constructor type invariant errors
-            VerusErrorType.TypeAnnotation: 7,       # Fix type annotation errors
-            VerusErrorType.DecFailEnd: 8,           # Fix decreases not satisfied at end of loop
-            VerusErrorType.DecFailCont: 9,          # Fix decreases not satisfied at continue
-            VerusErrorType.MissingImport: 10,       # Fix missing imports
-            VerusErrorType.MissImpl: 11,            # Fix missing implementations
-            VerusErrorType.CannotCallFunc: 12,      # Fix mode errors
-            VerusErrorType.AssertFail: 13,          # Fix assertion failures
-            VerusErrorType.SplitAssertFail: 14,     # Fix split assertion failures
-            VerusErrorType.PreCondFail: 15,         # Fix precondition failures
-            VerusErrorType.SplitPreFail: 16,        # Fix split precondition failures
-            VerusErrorType.PostCondFail: 17,        # Fix postcondition failures
-            VerusErrorType.SplitPostFail: 18,       # Fix split postcondition failures
-            VerusErrorType.ensure_private: 19,      # Fix private field access in ensures
-            VerusErrorType.require_private: 20,     # Fix private function access in requires
-            VerusErrorType.RecommendNotMet: 21,     # Fix recommendation not met errors
+            VerusErrorType.TypeAnnotation: 7,  # Fix type annotation errors
+            VerusErrorType.DecFailEnd: 8,  # Fix decreases not satisfied at end of loop
+            VerusErrorType.DecFailCont: 9,  # Fix decreases not satisfied at continue
+            VerusErrorType.MissingImport: 10,  # Fix missing imports
+            VerusErrorType.MissImpl: 11,  # Fix missing implementations
+            VerusErrorType.CannotCallFunc: 12,  # Fix mode errors
+            VerusErrorType.AssertFail: 13,  # Fix assertion failures
+            VerusErrorType.SplitAssertFail: 14,  # Fix split assertion failures
+            VerusErrorType.PreCondFail: 15,  # Fix precondition failures
+            VerusErrorType.SplitPreFail: 16,  # Fix split precondition failures
+            VerusErrorType.PostCondFail: 17,  # Fix postcondition failures
+            VerusErrorType.SplitPostFail: 18,  # Fix split postcondition failures
+            VerusErrorType.ensure_private: 19,  # Fix private field access in ensures
+            VerusErrorType.require_private: 20,  # Fix private function access in requires
+            VerusErrorType.RecommendNotMet: 21,  # Fix recommendation not met errors
             # Add more error types with their priorities here
         }
-        
+
         # Default priority for errors not explicitly listed
         default_priority = 100
-        
+
         # Sort failures based on priority
-        return sorted(failures, key=lambda f: priority_order.get(f.error, default_priority))
-        
-    def repair_error(self, context, error: VerusError, output_dir: Optional[Path] = None) -> Optional[str]:
+        return sorted(
+            failures, key=lambda f: priority_order.get(f.error, default_priority)
+        )
+
+    def repair_error(
+        self, context, error: VerusError, output_dir: Optional[Path] = None
+    ) -> Optional[str]:
         """
         Attempt to repair a specific error using the appropriate module.
-        
+
         Args:
             context: The execution context
             error: The error to repair
             output_dir: Optional directory to save the repair result
-            
+
         Returns:
             The repaired code if successful, None otherwise
         """
         module = self.get_module_for_error(error)
         if not module:
-            self.logger.warning(f"No repair module registered for error type: {error.error.name}")
+            self.logger.warning(
+                f"No repair module registered for error type: {error.error.name}"
+            )
             return None
-            
+
         self.logger.info(f"Attempting {error.error.name} repair with {module.name}...")
         result = module.exec(context, error)
-        
+
         if output_dir and result:
             output_path = self.get_output_path(error)
             if output_path:
                 output_file = output_dir / output_path
                 output_file.write_text(result)
-                self.logger.info(f"Saved {error.error.name} repair result to {output_file}")
-        
+                self.logger.info(
+                    f"Saved {error.error.name} repair result to {output_file}"
+                )
+
         return result
-    
-    def repair_all(self, context, failures: List[VerusError], output_dir: Optional[Path] = None) -> Dict[VerusErrorType, str]:
+
+    def repair_all(
+        self, context, failures: List[VerusError], output_dir: Optional[Path] = None
+    ) -> Dict[VerusErrorType, str]:
         """
         Attempt to repair all errors in the list using appropriate modules.
-        
+
         Args:
             context: The execution context
             failures: List of errors to repair
             output_dir: Optional directory to save repair results
-            
+
         Returns:
             Dictionary mapping error types to repaired code
         """
         result_map = {}
-        
+
         # If there's a compilation error, try to fix it first
         if context.trials[-1].eval.compilation_error:
             self.logger.info("Compilation error detected. Attempting to repair...")
@@ -352,54 +365,60 @@ class RepairRegistry:
                         # Use a special key for compilation errors
                         result_map["compilation"] = compilation_result
                         return result_map
-        
+
         # Prioritize failures
         prioritized_failures = self.prioritize_failures(failures)
-        
+
         # Group failures by error type while maintaining priority order
         error_type_map = {}
         for failure in prioritized_failures:
             if failure.error not in error_type_map:
                 error_type_map[failure.error] = []
             error_type_map[failure.error].append(failure)
-        
+
         # Process each error type in priority order
         for error_type, type_failures in error_type_map.items():
             if error_type in self.error_to_module_map:
                 module = self.error_to_module_map[error_type]
-                self.logger.info(f"Attempting {error_type.name} repair with {module.name}...")
-                
+                self.logger.info(
+                    f"Attempting {error_type.name} repair with {module.name}..."
+                )
+
                 # Use the first failure of this type
                 result = module.exec(context, type_failures[0])
                 result_map[error_type] = result
-                
+
                 # Save the result if an output directory is provided
                 if output_dir and result:
                     output_path = self.get_output_path(type_failures[0])
                     if output_path:
                         output_file = output_dir / output_path
                         output_file.write_text(result)
-                        self.logger.info(f"Saved {error_type.name} repair result to {output_file}")
+                        self.logger.info(
+                            f"Saved {error_type.name} repair result to {output_file}"
+                        )
             else:
-                self.logger.warning(f"No repair module registered for error type: {error_type.name}")
-        
+                self.logger.warning(
+                    f"No repair module registered for error type: {error_type.name}"
+                )
+
         return result_map
-    
+
     def get_registry_info(self) -> str:
         """
         Get a string representation of the repair registry for debugging.
-        
+
         Returns:
             String containing information about registered modules and error types
         """
         info = ["Repair Registry Information:"]
         info.append(f"- Number of registered modules: {len(self.repair_modules)}")
-        
+
         # Module information
         info.append("\nRegistered Modules:")
         for name, module in self.repair_modules.items():
             info.append(f"  - {name}: {module.desc}")
-        
+
         # Error type mappings
         info.append("\nError Type Mappings:")
         error_to_module_name = {}
@@ -407,46 +426,52 @@ class RepairRegistry:
             if module.name not in error_to_module_name:
                 error_to_module_name[module.name] = []
             error_to_module_name[module.name].append(error_type)
-        
+
         for module_name, error_types in error_to_module_name.items():
             info.append(f"  - {module_name} handles:")
             for error_type in error_types:
                 info.append(f"    - {error_type.name}")
-        
-        return "\n".join(info) 
-    
-    def repair_compilation_error(self, context, output_dir: Optional[Path] = None) -> Optional[str]:
+
+        return "\n".join(info)
+
+    def repair_compilation_error(
+        self, context, output_dir: Optional[Path] = None
+    ) -> Optional[str]:
         """
         Handle compilation errors that may not have a specific VerusErrorType.
         This includes syntax errors and other compilation issues.
-        
+
         Args:
             context: The execution context
             output_dir: Optional directory to save the repair result
-            
+
         Returns:
             The repaired code if successful, None otherwise
         """
         last_trial = context.trials[-1]
-        
+
         if not last_trial.eval.compilation_error:
             self.logger.info("No compilation error detected.")
             return None
-            
+
         # Check for modules registered to handle syntax errors
-        syntax_modules = [m for m in self.repair_modules.values() if m.name == "repair_syntax"]
-        
+        syntax_modules = [
+            m for m in self.repair_modules.values() if m.name == "repair_syntax"
+        ]
+
         if syntax_modules:
             syntax_module = syntax_modules[0]
-            self.logger.info(f"Attempting compilation error repair with {syntax_module.name}...")
+            self.logger.info(
+                f"Attempting compilation error repair with {syntax_module.name}..."
+            )
             result = syntax_module.exec(context)
-            
+
             if output_dir and result:
                 output_file = output_dir / "03_repair_syntax.rs"
                 output_file.write_text(result)
                 self.logger.info(f"Saved syntax repair result to {output_file}")
-                
+
             return result
-            
+
         self.logger.warning("No repair module found for compilation errors.")
-        return None 
+        return None
