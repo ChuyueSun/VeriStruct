@@ -51,6 +51,9 @@ class RepairRegistry:
         from modules.repair_assertion import RepairAssertionModule
         from modules.repair_precond import RepairPrecondModule
         from modules.repair_postcond import RepairPostcondModule
+        from modules.repair_invariant import RepairInvariantModule
+        from modules.repair_arithmetic import RepairArithmeticModule
+        from modules.repair_type import RepairTypeModule
         
         # Create registry instance
         registry = cls(config, logger, immutable_funcs)
@@ -94,18 +97,49 @@ class RepairRegistry:
             "06_repair_postcond.rs"
         )
         
+        # Initialize and register invariant repair module
+        invariant_repair = RepairInvariantModule(config, logger, immutable_funcs)
+        registry.register_module(
+            "repair_invariant", 
+            invariant_repair, 
+            [
+                VerusErrorType.InvFailFront,
+                VerusErrorType.InvFailEnd
+            ],
+            "07_repair_invariant.rs"
+        )
+        
+        # Initialize and register arithmetic repair module
+        arithmetic_repair = RepairArithmeticModule(config, logger, immutable_funcs)
+        registry.register_module(
+            "repair_arithmetic", 
+            arithmetic_repair, 
+            [
+                VerusErrorType.ArithmeticFlow
+            ],
+            "08_repair_arithmetic.rs"
+        )
+        
+        # Initialize and register type repair module
+        type_repair = RepairTypeModule(config, logger, immutable_funcs)
+        registry.register_module(
+            "repair_type", 
+            type_repair, 
+            [
+                VerusErrorType.MismatchedType,
+                VerusErrorType.TypeAnnotation,
+                VerusErrorType.ConstructorFailTypeInvariant
+            ],
+            "09_repair_type.rs"
+        )
+        
         # TODO: Add more specialized repair modules for other error types:
-        # - InvFailFront
-        # - InvFailEnd
         # - DecFailEnd
         # - DecFailCont
         # - RecommendNotMet
-        # - ArithmeticFlow
-        # - MismatchedType
         # - MissImpl
         # - MissingImport
-        # - TypeAnnotation
-        # - ConstructorFailTypeInvariant
+        # - CannotCallFunc (mode errors)
         
         return registry
         
@@ -180,7 +214,7 @@ class RepairRegistry:
         if not failures:
             return []
             
-        # Define a priority order for error types
+        # Define a priority order for error types based on refinement.py's get_one_failure method
         # Lower number = higher priority
         priority_order = {
             VerusErrorType.MismatchedType: 1,       # Fix type errors first
@@ -188,9 +222,16 @@ class RepairRegistry:
             VerusErrorType.ArithmeticFlow: 3,       # Fix arithmetic overflow/underflow
             VerusErrorType.InvFailFront: 4,         # Fix invariants not satisfied before loop
             VerusErrorType.InvFailEnd: 5,           # Fix invariants not satisfied at end of loop
-            VerusErrorType.AssertFail: 6,           # Fix assertion failures
-            VerusErrorType.PreCondFail: 7,          # Fix precondition failures
-            VerusErrorType.PostCondFail: 8,         # Fix postcondition failures
+            VerusErrorType.ConstructorFailTypeInvariant: 6,  # Fix constructor type invariant errors
+            VerusErrorType.TypeAnnotation: 7,       # Fix type annotation errors
+            VerusErrorType.AssertFail: 8,           # Fix assertion failures
+            VerusErrorType.SplitAssertFail: 9,      # Fix split assertion failures
+            VerusErrorType.PreCondFail: 10,         # Fix precondition failures
+            VerusErrorType.SplitPreFail: 11,        # Fix split precondition failures
+            VerusErrorType.PostCondFail: 12,        # Fix postcondition failures
+            VerusErrorType.SplitPostFail: 13,       # Fix split postcondition failures
+            VerusErrorType.ensure_private: 14,      # Fix private field access in ensures
+            VerusErrorType.require_private: 15,     # Fix private function access in requires
             # Add more error types with their priorities here
         }
         
