@@ -6,7 +6,7 @@ import re
 from modules.base import BaseModule
 from infer import LLM
 from modules.veval import VEval
-from modules.utils import evaluate_samples, save_selection_info, write_candidate_code
+from modules.utils import evaluate_samples, save_selection_info, write_candidate_code, update_global_best
 
 class InvInferenceModule(BaseModule):
     """
@@ -174,6 +174,10 @@ When combining multiple conditions, avoid excessive &&&. Fewer (or well-structur
         output_dir = Path("output/samples")
         output_dir.mkdir(exist_ok=True, parents=True)
         
+        # Create a directory for tracking global best samples
+        global_dir = Path("output/best")
+        global_dir.mkdir(exist_ok=True, parents=True)
+        
         for i, sample in enumerate(responses):
             sample_path = output_dir / f"03_inv_inference_raw_sample_{i+1}.rs"
             try:
@@ -189,14 +193,42 @@ When combining multiple conditions, avoid excessive &&&. Fewer (or well-structur
             processed_responses.append(processed)
             
         # Evaluate processed samples and get the best one
-        best_code, _, _ = evaluate_samples(
+        best_code, best_score, _ = evaluate_samples(
             samples=processed_responses if processed_responses else [code],
             output_dir=output_dir,
             prefix="03_inv_inference_processed",
             logger=self.logger
         )
         
+        # Get the global best from context
+        global_best_score = context.get_best_score()
+        global_best_code = context.get_best_code()
+        
+        # Update global best if current best is better
+        global_best_score, global_best_code = update_global_best(
+            best_code, global_best_score, global_best_code, global_dir, self.logger
+        )
+        
+        # Store the updated global best in context
+        context.set_best_score(global_best_score)
+        context.set_best_code(global_best_code)
+        
+        # Also write to a module-specific best file
+        module_best_path = output_dir / "03_inv_inference_global_best.rs"
+        try:
+            sample_with_score = f"{global_best_code}\n\n// VEval Score: {global_best_score}"
+            module_best_path.write_text(sample_with_score)
+            self.logger.info(f"Saved global best inv inference to {module_best_path}")
+        except Exception as e:
+            self.logger.error(f"Error saving global best: {e}")
+        
         # Add the best result to context
         context.add_trial(best_code)
+        
+        # If the global best is significantly better than what we just generated,
+        # consider returning the global best instead
+        if global_best_score and best_score and global_best_score.is_correct() and not best_score.is_correct():
+            self.logger.info("Using global best code as it is correct while current best is not")
+            return global_best_code
         
         return best_code 

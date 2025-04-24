@@ -5,7 +5,7 @@ import os
 from modules.base import BaseModule
 from infer import LLM
 from modules.veval import VEval
-from modules.utils import evaluate_samples, save_selection_info
+from modules.utils import evaluate_samples, save_selection_info, update_global_best
 
 class ViewRefinementModule(BaseModule):
     """
@@ -103,13 +103,39 @@ Please provide only the complete Rust code of the refined file with no additiona
         output_dir = Path("output/samples")
         output_dir.mkdir(exist_ok=True, parents=True)
         
+        # Create a directory for tracking global best samples
+        global_dir = Path("output/best")
+        global_dir.mkdir(exist_ok=True, parents=True)
+        
         # Evaluate samples and get the best one
-        best_code, _, _ = evaluate_samples(
+        best_code, best_score, _ = evaluate_samples(
             samples=responses if responses else [code], 
             output_dir=output_dir, 
             prefix="02_view_refinement", 
             logger=self.logger
         )
+        
+        # Get the global best from context
+        global_best_score = context.get_best_score()
+        global_best_code = context.get_best_code()
+        
+        # Update global best if current best is better
+        global_best_score, global_best_code = update_global_best(
+            best_code, global_best_score, global_best_code, global_dir, self.logger
+        )
+        
+        # Store the updated global best in context
+        context.set_best_score(global_best_score)
+        context.set_best_code(global_best_code)
+        
+        # Also write to a module-specific best file
+        module_best_path = output_dir / "02_view_refinement_global_best.rs"
+        try:
+            sample_with_score = f"{global_best_code}\n\n// VEval Score: {global_best_score}"
+            module_best_path.write_text(sample_with_score)
+            self.logger.info(f"Saved global best view refinement to {module_best_path}")
+        except Exception as e:
+            self.logger.error(f"Error saving global best: {e}")
         
         # Add the best result to context
         context.add_trial(best_code)

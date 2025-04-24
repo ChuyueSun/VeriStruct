@@ -1,6 +1,6 @@
 from typing import List, Dict, Optional
 from modules.base import BaseModule
-from modules.veval import VEval
+from modules.veval import VEval, EvalScore
 from configs.sconfig import config
 from prompts.template import fill_template
 import os, subprocess
@@ -76,6 +76,10 @@ class Context:
         self.raw_code = raw_code
         self.params = params
         self.llm = LLM(config, logger)
+        
+        # Global best tracking
+        self.best_code = None
+        self.best_score = None
 
         # Use a default tmp directory if not specified in config
         tmp_dir = config.get('tmp_dir', 'tmp')
@@ -103,6 +107,22 @@ class Context:
         self.trials.append(Trial(trial_id, eval, path, self.logger))
 
     def get_trial(self, id: int): return self.trials[id]
+
+    def get_best_code(self) -> Optional[str]:
+        """Get the global best code tracked by this context."""
+        return self.best_code
+    
+    def get_best_score(self) -> Optional[EvalScore]:
+        """Get the global best score tracked by this context."""
+        return self.best_score
+    
+    def set_best_code(self, code: str) -> None:
+        """Set the global best code."""
+        self.best_code = code
+    
+    def set_best_score(self, score: EvalScore) -> None:
+        """Set the global best score."""
+        self.best_score = score
 
     def register_modoule(self, name: str, module: BaseModule) -> None:
         """

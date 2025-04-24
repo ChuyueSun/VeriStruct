@@ -5,7 +5,7 @@ import os
 from modules.base import BaseModule
 from infer import LLM
 from modules.veval import VEval
-from modules.utils import evaluate_samples, save_selection_info
+from modules.utils import evaluate_samples, save_selection_info, update_global_best
 
 class ViewInferenceModule(BaseModule):
     """
@@ -305,13 +305,54 @@ verus! {
         output_dir = Path("output/samples")
         output_dir.mkdir(exist_ok=True, parents=True)
         
+        # Create a directory for tracking global best samples
+        global_dir = Path("output/best")
+        global_dir.mkdir(exist_ok=True, parents=True)
+        
         # Evaluate samples and get the best one
-        best_code, _, _ = evaluate_samples(
+        best_code, best_score, _ = evaluate_samples(
             samples=responses if responses else [code], 
             output_dir=output_dir, 
             prefix="01_view_inference", 
             logger=self.logger
         )
+        
+        # Initialize and update global best
+        global_best_score = context.get_best_score() if hasattr(context, 'get_best_score') else None
+        global_best_code = context.get_best_code() if hasattr(context, 'get_best_code') else None
+        
+        self.logger.debug(f"ViewInference - Initial global_best_score: {global_best_score}")
+        self.logger.debug(f"ViewInference - Initial global_best_code is None: {global_best_code is None}")
+        self.logger.debug(f"ViewInference - Current best_score: {best_score}")
+        
+        if global_best_score is None:
+            # If no global best exists yet, use the current best
+            self.logger.info("ViewInference - Initializing global best with current best")
+            global_best_score = best_score
+            global_best_code = best_code
+        else:
+            # Update global best if current best is better
+            self.logger.debug("ViewInference - Updating global best with current best")
+            global_best_score, global_best_code = update_global_best(
+                best_code, global_best_score, global_best_code, global_dir, self.logger
+            )
+        
+        # Store the global best in context if context supports it
+        if hasattr(context, 'set_best_score') and hasattr(context, 'set_best_code'):
+            context.set_best_score(global_best_score)
+            context.set_best_code(global_best_code)
+            self.logger.debug(f"ViewInference - Stored global best in context with score: {global_best_score}")
+        else:
+            self.logger.warning("ViewInference - Context does not support global best tracking")
+        
+        # Also write to a view-specific best file
+        view_best_path = output_dir / "01_view_inference_global_best.rs"
+        try:
+            sample_with_score = f"{global_best_code}\n\n// VEval Score: {global_best_score}"
+            view_best_path.write_text(sample_with_score)
+            self.logger.info(f"Saved global best view inference to {view_best_path}")
+        except Exception as e:
+            self.logger.error(f"Error saving global best: {e}")
         
         # Add the best result to context
         context.add_trial(best_code)

@@ -9,6 +9,9 @@ from configs.sconfig import config, reset_config
 from modules.veval import verus
 
 logger = loguru.logger
+# Set the logging level to DEBUG to see more detailed information
+logger.remove()
+logger.add(lambda msg: print(msg, end=""), level="DEBUG")
 
 def main():
     """
@@ -90,6 +93,36 @@ def main():
     # Save the final result
     final_result = context.trials[-1].code
     (output_dir / "final_result.rs").write_text(final_result)
+    
+    # Save the global best if available
+    global_best_code = context.get_best_code()
+    logger.debug(f"Main - Final global_best_code is None: {global_best_code is None}")
+    
+    if global_best_code:
+        global_best_score = context.get_best_score()
+        logger.debug(f"Main - Final global_best_score: {global_best_score}")
+        
+        # Save to output directory
+        global_best_path = output_dir / "global_best_result.rs"
+        global_best_with_score = f"{global_best_code}\n\n// VEval Score: {global_best_score}"
+        global_best_path.write_text(global_best_with_score)
+        logger.info(f"Saved global best result with score: {global_best_score}")
+        
+        # Also ensure it's saved to the best directory
+        best_dir = Path("output/best")
+        best_dir.mkdir(exist_ok=True, parents=True)
+        best_file = best_dir / "best.rs"
+        best_file.write_text(global_best_with_score)
+        logger.info(f"Saved global best to {best_file}")
+
+        # If the global best has a better score than the final result, use it as the final result
+        final_score = context.trials[-1].eval.get_score()
+        logger.debug(f"Main - Final trial score: {final_score}")
+        if global_best_score and global_best_score.is_correct() and not final_score.is_correct():
+            logger.info("Global best is correct while final result is not. Overwriting final result with global best.")
+            (output_dir / "final_result.rs").write_text(global_best_with_score)
+    else:
+        logger.warning("No global best code available. Check if global best tracking is working correctly.")
     
     logger.info(f"VerusAgent completed! Results saved to {output_dir.absolute()}")
 
