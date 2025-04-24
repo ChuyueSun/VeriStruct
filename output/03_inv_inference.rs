@@ -30,13 +30,15 @@ verus! {
         type V = (Seq<T>, nat);
 
         closed spec fn view(&self) -> Self::V {
-            let cap = self.ring@.len();
-            let content = if self.tail >= self.head {
-                self.ring@.subrange(self.head as int, self.tail as int)
+            let ring_len = self.ring.len() as int;
+            let n = if (self.tail as int) >= (self.head as int) {
+                (self.tail as int) - (self.head as int)
             } else {
-                self.ring@.subrange(self.head as int, cap).concat(self.ring@.subrange(0, self.tail as int))
+                ring_len - ((self.head as int) - (self.tail as int))
             };
-            (content, cap)
+            let content = Seq::new(n as nat, |i: int|
+                self.ring@[((self.head as int + i) % ring_len) as int]);
+            (content, ring_len as nat)
         }
     }
 
@@ -97,6 +99,7 @@ verus! {
         admit()
     }
 
+
     #[verifier::external_body]
     fn my_set<T: Copy>(vec: &mut Vec<T>, i: usize, value: T)
         requires
@@ -108,6 +111,7 @@ verus! {
     {
         vec[i] = value;
     }
+
 
     impl<T: Copy> RingBuffer<T> {
         /// Invariant for the ring buffer.
@@ -163,6 +167,7 @@ verus! {
             }
         }
 
+        
         /// If the buffer isn't full, adds a new element to the back.
         /// Returns whether the element was added.
         pub fn enqueue(&mut self, val: T) -> (succ: bool)
@@ -195,7 +200,7 @@ verus! {
                 None
             }
         }
-
+        
         /// Returns the number of elements that can still be enqueued until it is full.
         pub fn available_len(&self) -> (ret: usize)
         {

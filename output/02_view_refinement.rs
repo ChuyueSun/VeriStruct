@@ -30,13 +30,15 @@ verus! {
         type V = (Seq<T>, nat);
 
         closed spec fn view(&self) -> Self::V {
-            let cap = self.ring@.len();
-            let content = if self.tail >= self.head {
-                self.ring@.subrange(self.head as int, self.tail as int)
+            let ring_len = self.ring.len() as int;
+            let n = if (self.tail as int) >= (self.head as int) {
+                (self.tail as int) - (self.head as int)
             } else {
-                self.ring@.subrange(self.head as int, cap).concat(self.ring@.subrange(0, self.tail as int))
+                ring_len - ((self.head as int) - (self.tail as int))
             };
-            (content, cap)
+            let content = Seq::new(n as nat, |i: int|
+                self.ring@[((self.head as int + i) % ring_len) as int]);
+            (content, ring_len as nat)
         }
     }
 
