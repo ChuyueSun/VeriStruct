@@ -32,7 +32,19 @@ class LLMCache:
             logger: Optional logger for cache operations
         """
         self.cache_dir = Path(cache_dir)
-        self.enabled = enabled
+        
+        # Check environment variables to determine if caching is enabled
+        # Environment variables override the passed parameter
+        enable_cache_env = os.environ.get("ENABLE_LLM_CACHE", "1")
+        llm_cache_enabled_env = os.environ.get("LLM_CACHE_ENABLED", "1")
+        
+        # If either environment variable is set to '0', disable caching
+        self.enabled = enabled and enable_cache_env == "1" and llm_cache_enabled_env == "1"
+        
+        # Log the cache status
+        if logger:
+            logger.info(f"LLM cache {'enabled' if self.enabled else 'disabled'} (from env: ENABLE_LLM_CACHE={enable_cache_env}, LLM_CACHE_ENABLED={llm_cache_enabled_env})")
+        
         self.max_age_seconds = max_age_days * 24 * 60 * 60
         self.logger = logger
 
@@ -87,6 +99,13 @@ class LLMCache:
         Returns:
             List of response strings if cache hit, None if cache miss
         """
+        # Double-check environment variables in case they changed after initialization
+        if os.environ.get("ENABLE_LLM_CACHE", "1") == "0" or os.environ.get("LLM_CACHE_ENABLED", "1") == "0":
+            if self.logger:
+                self.logger.debug("Cache disabled by environment variable")
+            self.misses += 1
+            return None
+            
         if not self.enabled:
             self.misses += 1
             return None
@@ -140,6 +159,12 @@ class LLMCache:
         system_info: Optional[str] = None,
     ) -> None:
         """Save a response to the cache."""
+        # Double-check environment variables in case they changed after initialization
+        if os.environ.get("ENABLE_LLM_CACHE", "1") == "0" or os.environ.get("LLM_CACHE_ENABLED", "1") == "0":
+            if self.logger:
+                self.logger.debug("Cache save skipped - disabled by environment variable")
+            return
+            
         if not self.enabled:
             return
 

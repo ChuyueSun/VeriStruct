@@ -1,12 +1,14 @@
 import os
+from pathlib import Path
 
 from configs.sconfig import config
 from context import Context
 from prompts.template import fill_template
 
-task_overview = open(
-    os.path.join(config["project_dir"], "prompts", "task_overview.md"), "w"
-).read()
+# Fix the file loading bug - changing from 'w' (write) to 'r' (read) mode
+# Using Path for better file handling
+task_overview_path = Path(config["project_dir"]) / "prompts" / "task_overview.md"
+task_overview = task_overview_path.read_text() if task_overview_path.exists() else ""
 
 
 class Planner:

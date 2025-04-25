@@ -250,21 +250,43 @@ class EvalScore:
         # Check whether self is a good repair to value
         if not isinstance(value, EvalScore):
             return False
+        
+        # Compilation error is the highest priority - a repair that causes compilation errors
+        # is NEVER an improvement over code that compiles
         if self.compilation_error != value.compilation_error:
             return not self.compilation_error
-        return self.verified >= value.verified
+        
+        # For code that both compile or both fail to compile
+        # Consider it an improvement if more functions are verified
+        if self.verified > value.verified:
+            return True
+            
+        # If same number of verified functions, compare errors
+        if self.verified == value.verified:
+            # Less errors is better
+            if self.errors < value.errors:
+                return True
+            # If same number of errors, less Verus errors is better
+            if self.errors == value.errors and self.verus_errors < value.verus_errors:
+                return True
+                
+        return False
 
     def is_good_code_next_phase(self, value: object, abs_diff=2) -> bool:
-        # TODO: Now we always return True. Need to implement a better check.
-        # always include next phase change (phase1-4 all done then compare)
-        return True
-
         # Check whether self is a good code to value
         if not isinstance(value, EvalScore):
             return False
+            
+        # Compilation error is the highest priority - code that compiles is ALWAYS better
         if self.compilation_error != value.compilation_error:
             return not self.compilation_error
-        return self.verified >= value.verified - abs_diff
+            
+        # Allow a small reduction in verified functions when moving between phases
+        # but compilation status must be preserved
+        if self.verified >= value.verified - abs_diff:
+            return True
+            
+        return False
 
     def __eq__(self, value: object) -> bool:
         if not isinstance(value, EvalScore):
@@ -279,12 +301,16 @@ class EvalScore:
     def __lt__(self, value: object) -> bool:
         if not isinstance(value, EvalScore):
             raise Exception("Invalid comparison")
+        # Compilation error is the highest priority
         if self.compilation_error != value.compilation_error:
             return self.compilation_error
+        # Then compare verified count
         if self.verified != value.verified:
             return self.verified < value.verified
+        # Then compare error count
         if self.errors != value.errors:
             return self.errors > value.errors
+        # Finally compare verus error count
         if self.verus_errors != value.verus_errors:
             return self.verus_errors > value.verus_errors
         return False
@@ -292,8 +318,10 @@ class EvalScore:
     def __gt__(self, value: object) -> bool:
         if not isinstance(value, EvalScore):
             raise Exception("Invalid comparison")
+        # Compilation error is the highest priority - code that compiles is ALWAYS better
         if self.compilation_error != value.compilation_error:
             return not self.compilation_error
+        # For code that both compile or both fail to compile, compare other metrics
         if self.verified != value.verified:
             return self.verified > value.verified
         if self.errors != value.errors:
@@ -546,7 +574,39 @@ if __name__ == "__main__":
 
     from loguru import logger
 
-    from utils import AttrDict
+    # Run simple EvalScore comparison tests
+    def test_evalscore_comparison():
+        print("Testing EvalScore comparison logic...")
+        
+        # Test that compilation status is prioritized correctly
+        compiles_with_errors = EvalScore(verified=5, errors=3, compilation_error=False, verus_errors=5)
+        noncompiles_with_better_metrics = EvalScore(verified=7, errors=1, compilation_error=True, verus_errors=1)
+        
+        # Compiling code should be BETTER than non-compiling code
+        assert compiles_with_errors > noncompiles_with_better_metrics, "Prioritization error: Compilation status should be highest priority"
+        
+        # Non-compiling code should be WORSE than compiling code
+        assert noncompiles_with_better_metrics < compiles_with_errors, "Prioritization error: Compilation status should be highest priority"
+        
+        # is_good_repair should return False when introducing compilation errors
+        assert not noncompiles_with_better_metrics.is_good_repair(compiles_with_errors), "Repair that introduces compilation errors should not be considered good"
+        
+        # is_good_code_next_phase should respect compilation status
+        assert not noncompiles_with_better_metrics.is_good_code_next_phase(compiles_with_errors), "Phase transition should respect compilation status"
+        
+        print("All tests passed!")
+    
+    # Simple argument parsing
+    if len(sys.argv) > 1 and sys.argv[1] == "--test":
+        test_evalscore_comparison()
+        sys.exit(0)
+
+    try:
+        from utils import AttrDict
+    except ImportError:
+        class AttrDict(dict):
+            def __getattr__(self, key):
+                return self[key]
 
     # Parse arguments
     parser = argparse.ArgumentParser(description="Verus Copilot")
@@ -554,7 +614,12 @@ if __name__ == "__main__":
     parser.add_argument("--mode", default="gen", help="Mode to run in (gen, refine)")
     parser.add_argument("--input", default="input.rs", help="Path to input file")
     parser.add_argument("--output", default="output.rs", help="Path to output file")
+    parser.add_argument("--test", action="store_true", help="Run unit tests")
     args = parser.parse_args()
+
+    if args.test:
+        test_evalscore_comparison()
+        sys.exit(0)
 
     # Check if config file exists
     if not os.path.isfile(args.config):

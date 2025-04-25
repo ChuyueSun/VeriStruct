@@ -63,8 +63,19 @@ class LLM:
 
         # Initialize the cache
         use_cache = self.config.get("use_cache", True)
+        
+        # Environment variables override the config setting
+        enable_cache_env = os.environ.get("ENABLE_LLM_CACHE", "1")
+        llm_cache_enabled_env = os.environ.get("LLM_CACHE_ENABLED", "1")
+        
+        # If either environment variable is set to '0', disable caching
+        use_cache = use_cache and enable_cache_env == "1" and llm_cache_enabled_env == "1"
+        
         cache_dir = self.config.get("cache_dir", "llm_cache")
         cache_max_age = self.config.get("cache_max_age_days", 7)
+        
+        self.logger.info(f"Cache status: {'enabled' if use_cache else 'disabled'} (from env: ENABLE_LLM_CACHE={enable_cache_env}, LLM_CACHE_ENABLED={llm_cache_enabled_env})")
+        
         self.cache = LLMCache(
             cache_dir=cache_dir,
             enabled=use_cache,
@@ -210,36 +221,40 @@ class LLM:
 
         # Check cache if enabled
         if use_cache and self.cache.enabled:
-            cached_responses = self.cache.get(
-                engine, instruction, query, max_tokens, exemplars, system_info
-            )
-
-            if cached_responses:
-                self.logger.info(
-                    f"Using cached response (hit rate: {self.cache.get_stats()['hit_rate']:.2f})"
+            # Double-check environment variables in case they changed after the call started
+            if os.environ.get("ENABLE_LLM_CACHE", "1") == "0" or os.environ.get("LLM_CACHE_ENABLED", "1") == "0":
+                self.logger.debug("Cache disabled by environment variable for this call")
+            else:
+                cached_responses = self.cache.get(
+                    engine, instruction, query, max_tokens, exemplars, system_info
                 )
 
-                # Return the requested number of responses (up to what's available)
-                available_responses = min(len(cached_responses), answer_num)
-                result = cached_responses[:available_responses]
+                if cached_responses:
+                    self.logger.info(
+                        f"Using cached response (hit rate: {self.cache.get_stats()['hit_rate']:.2f})"
+                    )
 
-                # If we don't have enough cached responses, add duplicates to meet the requested number
-                if available_responses < answer_num:
-                    result.extend([result[0]] * (answer_num - available_responses))
+                    # Return the requested number of responses (up to what's available)
+                    available_responses = min(len(cached_responses), answer_num)
+                    result = cached_responses[:available_responses]
 
-                if return_msg:
-                    # Create a dummy message list when using cache
-                    dummy_messages = [
-                        {
-                            "role": "system",
-                            "content": system_info or "You are a helpful assistant",
-                        },
-                        {"role": "user", "content": query},
-                        {"role": "assistant", "content": result[0]},
-                    ]
-                    return result, dummy_messages
-                else:
-                    return result
+                    # If we don't have enough cached responses, add duplicates to meet the requested number
+                    if available_responses < answer_num:
+                        result.extend([result[0]] * (answer_num - available_responses))
+
+                    if return_msg:
+                        # Create a dummy message list when using cache
+                        dummy_messages = [
+                            {
+                                "role": "system",
+                                "content": system_info or "You are a helpful assistant",
+                            },
+                            {"role": "user", "content": query},
+                            {"role": "assistant", "content": result[0]},
+                        ]
+                        return result, dummy_messages
+                    else:
+                        return result
 
         if verbose:
             self.logger.info(f"Using backend #{self.client_id}")
@@ -290,16 +305,20 @@ class LLM:
 
         # Cache the result if caching is enabled
         if use_cache and self.cache.enabled:
-            self.cache.save(
-                engine,
-                instruction,
-                query,
-                max_tokens,
-                final_answers,
-                exemplars,
-                system_info,
-            )
-            self.logger.debug(f"Saved response to cache (time: {infer_time:.2f}s)")
+            # Double-check environment variables in case they changed during the call
+            if os.environ.get("ENABLE_LLM_CACHE", "1") == "0" or os.environ.get("LLM_CACHE_ENABLED", "1") == "0":
+                self.logger.debug("Cache save skipped - disabled by environment variable")
+            else:
+                self.cache.save(
+                    engine,
+                    instruction,
+                    query,
+                    max_tokens,
+                    final_answers,
+                    exemplars,
+                    system_info,
+                )
+                self.logger.debug(f"Saved response to cache (time: {infer_time:.2f}s)")
 
         if return_msg:
             # state.messages() presumably returns a list of conversation messages

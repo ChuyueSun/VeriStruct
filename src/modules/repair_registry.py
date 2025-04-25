@@ -6,6 +6,8 @@ Maps error types to appropriate repair modules.
 import logging
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Type
+import time
+import os
 
 from modules.baserepair import BaseRepairModule
 from modules.veval import VerusError, VerusErrorType
@@ -323,6 +325,13 @@ class RepairRegistry:
         if output_dir and result:
             output_path = self.get_output_path(error)
             if output_path:
+                # Get file ID from environment (set in main.py)
+                file_id = os.environ.get("VERUS_FILE_ID", "")
+                if file_id:
+                    # Insert file ID before file extension
+                    base, ext = os.path.splitext(output_path)
+                    output_path = f"{base}_{file_id}{ext}"
+                
                 output_file = output_dir / output_path
                 output_file.write_text(result)
                 self.logger.info(
@@ -332,7 +341,8 @@ class RepairRegistry:
         return result
 
     def repair_all(
-        self, context, failures: List[VerusError], output_dir: Optional[Path] = None
+        self, context, failures: List[VerusError], output_dir: Optional[Path] = None,
+        progress_logger = None
     ) -> Dict[VerusErrorType, str]:
         """
         Attempt to repair all errors in the list using appropriate modules.
@@ -341,6 +351,7 @@ class RepairRegistry:
             context: The execution context
             failures: List of errors to repair
             output_dir: Optional directory to save repair results
+            progress_logger: Optional progress logger to track repair operations
 
         Returns:
             Dictionary mapping error types to repaired code
@@ -350,13 +361,34 @@ class RepairRegistry:
         # If there's a compilation error, try to fix it first
         if context.trials[-1].eval.compilation_error:
             self.logger.info("Compilation error detected. Attempting to repair...")
+            
+            # Store the state before repair
+            before_score = context.trials[-1].eval.get_score()
+            repair_start_time = time.time()
+            
             compilation_result = self.repair_compilation_error(context, output_dir)
+            
+            # Calculate repair time
+            repair_time = time.time() - repair_start_time
+            
             if compilation_result:
-                self.logger.info("Compilation error repair was successful.")
+                self.logger.info(f"Compilation error repair was successful in {repair_time:.2f}s.")
                 # Since we've potentially fixed the compilation error, we should re-evaluate
                 # and see if there are any remaining errors
                 context.add_trial(compilation_result)
                 last_trial = context.trials[-1]
+                
+                # Log the repair in the progress logger
+                if progress_logger:
+                    after_score = last_trial.eval.get_score()
+                    progress_logger.add_repair(
+                        "CompilationError", 
+                        "repair_syntax", 
+                        before_score, 
+                        after_score,
+                        repair_time
+                    )
+                
                 if not last_trial.eval.compilation_error:
                     # If compilation succeeded, update failures list
                     failures = last_trial.eval.get_failures()
@@ -384,18 +416,44 @@ class RepairRegistry:
                     f"Attempting {error_type.name} repair with {module.name}..."
                 )
 
+                # Store the state before repair
+                before_score = context.trials[-1].eval.get_score() if context.trials else None
+                repair_start_time = time.time()
+                
                 # Use the first failure of this type
                 result = module.exec(context, type_failures[0])
+                
+                # Calculate repair time
+                repair_time = time.time() - repair_start_time
+                
                 result_map[error_type] = result
+
+                # Log the repair in the progress logger
+                if progress_logger and context.trials:
+                    after_score = context.trials[-1].eval.get_score()
+                    progress_logger.add_repair(
+                        error_type.name, 
+                        module.name, 
+                        before_score, 
+                        after_score,
+                        repair_time
+                    )
 
                 # Save the result if an output directory is provided
                 if output_dir and result:
                     output_path = self.get_output_path(type_failures[0])
                     if output_path:
+                        # Get file ID from environment (set in main.py)
+                        file_id = os.environ.get("VERUS_FILE_ID", "")
+                        if file_id:
+                            # Insert file ID before file extension
+                            base, ext = os.path.splitext(output_path)
+                            output_path = f"{base}_{file_id}{ext}"
+                        
                         output_file = output_dir / output_path
                         output_file.write_text(result)
                         self.logger.info(
-                            f"Saved {error_type.name} repair result to {output_file}"
+                            f"Saved {error_type.name} repair result to {output_file} after {repair_time:.2f}s"
                         )
             else:
                 self.logger.warning(
@@ -467,7 +525,16 @@ class RepairRegistry:
             result = syntax_module.exec(context)
 
             if output_dir and result:
-                output_file = output_dir / "03_repair_syntax.rs"
+                # Get file ID from environment (set in main.py)
+                file_id = os.environ.get("VERUS_FILE_ID", "")
+                output_path = "03_repair_syntax.rs"
+                
+                if file_id:
+                    # Insert file ID before file extension
+                    base, ext = os.path.splitext(output_path)
+                    output_path = f"{base}_{file_id}{ext}"
+                
+                output_file = output_dir / output_path
                 output_file.write_text(result)
                 self.logger.info(f"Saved syntax repair result to {output_file}")
 
