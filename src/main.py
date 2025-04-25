@@ -285,15 +285,25 @@ def main():
         # Record the final result in our progress logger
         progress_logger.record_final_result(final_score)
         
-        if (
-            global_best_score
-            and global_best_score.is_correct()
-            and not final_score.is_correct()
-        ):
+        # Compare the global best score with the final score
+        # If global best is better, overwrite the final result
+        if global_best_score > final_score:
             logger.info(
-                "Global best is correct while final result is not. Overwriting final result with global best."
+                f"Global best score ({global_best_score}) is better than final result ({final_score}). "
+                f"Overwriting final result with global best."
             )
             (output_dir / f"final_result_{file_id}.rs").write_text(global_best_with_score)
+            # Also update the final score for recording
+            progress_logger.record_final_result(global_best_score)
+        # Special check for compilation errors - always prefer code that compiles
+        elif not global_best_score.compilation_error and final_score.compilation_error:
+            logger.info(
+                f"Global best compiles while final result has compilation errors. "
+                f"Overwriting final result with global best."
+            )
+            (output_dir / f"final_result_{file_id}.rs").write_text(global_best_with_score)
+            # Also update the final score for recording
+            progress_logger.record_final_result(global_best_score)
     else:
         # Still record the final result even if no global best
         final_score = context.trials[-1].eval.get_score()
