@@ -49,32 +49,43 @@ ENABLE_LLM_INFERENCE = os.environ.get("ENABLE_LLM_INFERENCE", "1") == "1"
 
 
 class LLM:
-    def __init__(self, config, logger):
+    def __init__(self, config, logger, use_cache=True):
         """
         Initialize the LLM with SGL backends. If multiple keys/backends exist,
         you could store them in self.backends and set one as the default.
         """
         self.config = config
         self.logger = logger
+        self.dummy_mode = False
 
-        # Check if LLM inference is enabled through environment variable
-        enable_llm = os.environ.get("ENABLE_LLM_INFERENCE", "1")
-        self.dummy_mode = enable_llm != "1"
+        # Check if LLM inference is enabled via environment variable
+        if (
+            os.environ.get("ENABLE_LLM_INFERENCE", "1") == "0"
+            or self.config.get("dummy_mode", False)
+        ):
+            self.dummy_mode = True
+            self.logger.warning("LLM in dummy mode. Will return placeholder responses.")
+            return
 
-        # Initialize the cache
-        use_cache = self.config.get("use_cache", True)
-        
-        # Environment variables override the config setting
+        # Check environment variable to determine if caching is enabled
         enable_cache_env = os.environ.get("ENABLE_LLM_CACHE", "1")
-        llm_cache_enabled_env = os.environ.get("LLM_CACHE_ENABLED", "1")
         
-        # If either environment variable is set to '0', disable caching
-        use_cache = use_cache and enable_cache_env == "1" and llm_cache_enabled_env == "1"
+        # Check for deprecated environment variable
+        deprecated_cache_env = os.environ.get("LLM_CACHE_ENABLED")
+        if deprecated_cache_env is not None:
+            self.logger.warning("LLM_CACHE_ENABLED is deprecated. Please use ENABLE_LLM_CACHE instead.")
+            # Still honor the deprecated variable if it's set to disable caching
+            if deprecated_cache_env == "0":
+                self.logger.warning("Disabling cache due to deprecated LLM_CACHE_ENABLED=0 setting")
+                enable_cache_env = "0"
+        
+        # Cache is enabled if passed parameter is True and environment variable is "1"
+        use_cache = use_cache and enable_cache_env == "1"
         
         cache_dir = self.config.get("cache_dir", "llm_cache")
         cache_max_age = self.config.get("cache_max_age_days", 7)
         
-        self.logger.info(f"Cache status: {'enabled' if use_cache else 'disabled'} (from env: ENABLE_LLM_CACHE={enable_cache_env}, LLM_CACHE_ENABLED={llm_cache_enabled_env})")
+        self.logger.info(f"Cache status: {'enabled' if use_cache else 'disabled'} (from env: ENABLE_LLM_CACHE={enable_cache_env})")
         
         self.cache = LLMCache(
             cache_dir=cache_dir,
@@ -221,8 +232,8 @@ class LLM:
 
         # Check cache if enabled
         if use_cache and self.cache.enabled:
-            # Double-check environment variables in case they changed after the call started
-            if os.environ.get("ENABLE_LLM_CACHE", "1") == "0" or os.environ.get("LLM_CACHE_ENABLED", "1") == "0":
+            # Double-check environment variable in case it changed after the call started
+            if os.environ.get("ENABLE_LLM_CACHE", "1") == "0":
                 self.logger.debug("Cache disabled by environment variable for this call")
             else:
                 cached_responses = self.cache.get(
@@ -306,7 +317,7 @@ class LLM:
         # Cache the result if caching is enabled
         if use_cache and self.cache.enabled:
             # Double-check environment variables in case they changed during the call
-            if os.environ.get("ENABLE_LLM_CACHE", "1") == "0" or os.environ.get("LLM_CACHE_ENABLED", "1") == "0":
+            if os.environ.get("ENABLE_LLM_CACHE", "1") == "0":
                 self.logger.debug("Cache save skipped - disabled by environment variable")
             else:
                 self.cache.save(
