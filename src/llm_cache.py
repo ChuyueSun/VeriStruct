@@ -20,6 +20,7 @@ class LLMCache:
         cache_dir: str = "llm_cache",
         enabled: bool = True,
         max_age_days: int = 7,
+        always_write: bool = False,
         logger=None,
     ):
         """
@@ -27,11 +28,13 @@ class LLMCache:
 
         Args:
             cache_dir: Directory to store cache files
-            enabled: Whether caching is enabled
+            enabled: Whether caching is enabled for reading
             max_age_days: Maximum age of cache entries in days
+            always_write: Whether to always write to cache even if reading is disabled
             logger: Optional logger for cache operations
         """
         self.cache_dir = Path(cache_dir)
+        self.always_write = always_write
         
         # Check environment variable to determine if caching is enabled
         enable_cache_env = os.environ.get("ENABLE_LLM_CACHE", "1")
@@ -52,13 +55,18 @@ class LLMCache:
         
         # Log the cache status
         if logger:
-            logger.info(f"LLM cache {'enabled' if self.enabled else 'disabled'} (from env: ENABLE_LLM_CACHE={enable_cache_env})")
+            if self.enabled:
+                logger.info(f"LLM cache enabled for reading and writing (from env: ENABLE_LLM_CACHE={enable_cache_env})")
+            elif self.always_write:
+                logger.info(f"LLM cache disabled for reading but enabled for writing (from env: ENABLE_LLM_CACHE={enable_cache_env})")
+            else:
+                logger.info(f"LLM cache disabled (from env: ENABLE_LLM_CACHE={enable_cache_env})")
         
         self.max_age_seconds = max_age_days * 24 * 60 * 60
         self.logger = logger
 
-        # Create cache directory if it doesn't exist
-        if self.enabled:
+        # Create cache directory if needed for writing
+        if self.enabled or self.always_write:
             self.cache_dir.mkdir(exist_ok=True, parents=True)
 
         # Cache hit statistics
@@ -169,12 +177,13 @@ class LLMCache:
     ) -> None:
         """Save a response to the cache."""
         # Double-check environment variables in case they changed after initialization
-        if os.environ.get("ENABLE_LLM_CACHE", "1") == "0":
+        if os.environ.get("ENABLE_LLM_CACHE", "1") == "0" and not self.always_write:
             if self.logger:
                 self.logger.debug("Cache save skipped - disabled by environment variable")
             return
             
-        if not self.enabled:
+        # Only skip saving if both enabled and always_write are False
+        if not self.enabled and not self.always_write:
             return
 
         cache_key = self._get_cache_key(
@@ -197,11 +206,18 @@ class LLMCache:
                 },
             }
 
+            # Ensure the cache directory exists (might have been created after initialization)
+            if not self.cache_dir.exists():
+                self.cache_dir.mkdir(exist_ok=True, parents=True)
+
             with open(cache_file, "w") as f:
                 json.dump(cache_data, f, indent=2)
 
             if self.logger:
-                self.logger.debug(f"Saved to cache: {cache_key}")
+                if self.enabled:
+                    self.logger.debug(f"Saved to cache: {cache_key}")
+                else:
+                    self.logger.debug(f"Saved to cache (write-only mode): {cache_key}")
 
         except Exception as e:
             if self.logger:
