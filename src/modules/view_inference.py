@@ -11,6 +11,7 @@ from modules.utils import (
     update_global_best,
 )
 from modules.veval import VEval
+from prompts.template import build_instruction
 
 
 class ViewInferenceModule(BaseModule):
@@ -37,49 +38,8 @@ class ViewInferenceModule(BaseModule):
         self.logger = logger
         self.llm = LLM(config, logger)
 
-    def add_seq_knowledge(self, code: str, instruction: str) -> str:
-        """
-        Add knowledge about Seq operations if needed for the given code.
-
-        Args:
-            code: The Verus code
-            instruction: The current instruction
-
-        Returns:
-            Updated instruction with sequence knowledge if needed
-        """
-        if "Seq" in code:
-            seq_knowledge = """**Seq Knowledge**:
-Seq<T> is a mathematical sequence type used in specifications:
-- Building: Seq::empty(), seq![x, y, z], Seq::singleton(x)
-- Length: s.len()
-- Indexing: s[i] (0-based)
-- Subrange: s.subrange(lo, hi) gives elements from index lo (inclusive) to hi (exclusive)
-- Concatenation: s1 + s2
-- Update: s.update(i, v) returns a new sequence with index i updated to value v
-- Contains: s.contains(v) checks if v is in the sequence
-- Push/pop: s.push(v), s.pop() (returns new sequence, doesn't modify original)
-You can use forall or exists for properties over sequences."""
-            instruction += "\n\n" + seq_knowledge
-        return instruction
-
-    def exec(self, context) -> str:
-        """
-        Execute the view inference module with the given context.
-
-        Args:
-            context: Context object containing trial information
-
-        Returns:
-            Generated code with View function
-        """
-        self.logger.info("View Inference ...")
-
-        # Get the latest trial code
-        code = context.trials[-1].code
-
-        # Basic instruction
-        instruction = """
+        # Main instruction for View inference
+        self.view_instruction = """
 You are an expert in Verus (verifier for rust). Your task is to generate a View function for the given module. View is the mathematical abstraction for the given data structure. It contains the minimal information to completely represent it. View is used strictly in Verus spec.
     - Add a `View` spec function that provides a mathematical abstraction for types used in the executable code.
     - For `Vec` type variables in the `View`, append "@" to their names.
@@ -109,26 +69,28 @@ impl<T: Copy> View for RingBuffer<T> {
 }
 ```"""
 
-        # Add important notes
-        important_note = """**Important Notes**:
-- Don't delete existing non-buggy `#[trigger]`!
-- Don't change "unwind" to `(unwind) as bool`!
-- Return the complete modified Rust code in your response without explanations."""
-        instruction += "\n\n" + important_note
+    def exec(self, context) -> str:
+        """
+        Execute the view inference module with the given context.
 
-        # Add spec knowledge
-        spec_knowledge = """**Spec Functions**:
-1. No Direct Method Calls:
-In a spec function, you cannot directly call instance methods such as vector.is_full().
-2. Use the @ Operator:
-To invoke methods on a variable within a spec, first convert it to its specification-level representation View with @.
-3. Always use vector.len() instead of vector@.len().
-4. Simplify Boolean Conjunctions:
-When combining multiple conditions, avoid excessive &&&. Fewer (or well-structured) conjunctions make the spec code easier to read and debug."""
-        instruction += "\n\n" + spec_knowledge
+        Args:
+            context: Context object containing trial information
 
-        # Add sequence knowledge if needed
-        instruction = self.add_seq_knowledge(code, instruction)
+        Returns:
+            Generated code with View function
+        """
+        self.logger.info("View Inference ...")
+
+        # Get the latest trial code
+        code = context.trials[-1].code
+
+        # Build the complete instruction using the prompt system
+        instruction = build_instruction(
+            base_instruction=self.view_instruction,
+            add_common=True,
+            add_view=True,  # Include View guidelines
+            code=code
+        )
 
         # Load examples
         examples = []
@@ -349,52 +311,33 @@ verus! {
             context.get_best_code() if hasattr(context, "get_best_code") else None
         )
 
-        self.logger.debug(
-            f"ViewInference - Initial global_best_score: {global_best_score}"
-        )
-        self.logger.debug(
-            f"ViewInference - Initial global_best_code is None: {global_best_code is None}"
-        )
-        self.logger.debug(f"ViewInference - Current best_score: {best_score}")
-
-        if global_best_score is None:
-            # If no global best exists yet, use the current best
-            self.logger.info(
-                "ViewInference - Initializing global best with current best"
-            )
-            global_best_score = best_score
+        # If this is the first global_best_code, initialize it
+        if global_best_code is None:
+            self.logger.debug(f"ViewInference - Initial global_best_code is None: {global_best_code is None}")
+            self.logger.debug(f"ViewInference - Initial global_best_score: {global_best_score}")
+            self.logger.debug(f"ViewInference - Current best_score: {best_score}")
+            self.logger.info("ViewInference - Initializing global best with current best")
             global_best_code = best_code
-        else:
-            # Update global best if current best is better
-            self.logger.debug("ViewInference - Updating global best with current best")
-            global_best_score, global_best_code = update_global_best(
-                best_code, global_best_score, global_best_code, global_dir, self.logger
-            )
+            global_best_score = best_score
 
-        # Store the global best in context if context supports it
-        if hasattr(context, "set_best_score") and hasattr(context, "set_best_code"):
-            context.set_best_score(global_best_score)
-            context.set_best_code(global_best_code)
-            self.logger.debug(
-                f"ViewInference - Stored global best in context with score: {global_best_score}"
-            )
-        else:
-            self.logger.warning(
-                "ViewInference - Context does not support global best tracking"
-            )
-
-        # Also write to a view-specific best file
-        view_best_path = output_dir / "01_view_inference_global_best.rs"
+        # Save the module-specific best from this step
+        module_best_path = output_dir / "01_view_inference_global_best.rs"
         try:
             sample_with_score = (
-                f"{global_best_code}\n\n// VEval Score: {global_best_score}"
+                f"{best_code}\n\n// VEval Score: {best_score}"
             )
-            view_best_path.write_text(sample_with_score)
-            self.logger.info(f"Saved global best view inference to {view_best_path}")
+            module_best_path.write_text(sample_with_score)
+            self.logger.info(f"Saved best view inference to {module_best_path}")
         except Exception as e:
-            self.logger.error(f"Error saving global best: {e}")
+            self.logger.error(f"Error saving best view inference: {e}")
 
-        # Add the best result to context
-        context.add_trial(best_code)
+        # Update context's global best tracking
+        context.set_best_code(global_best_code)
+        context.set_best_score(global_best_score)
+        
+        self.logger.debug(f"ViewInference - Stored global best in context with score: {global_best_score}")
+
+        # Add the best sample from current step to context
+        context.add_trial(best_code)  # Always use the best sample from this step
 
         return best_code

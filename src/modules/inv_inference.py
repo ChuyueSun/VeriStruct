@@ -13,6 +13,7 @@ from modules.utils import (
     write_candidate_code,
 )
 from modules.veval import VEval
+from prompts.template import build_instruction
 
 
 class InvInferenceModule(BaseModule):
@@ -39,31 +40,8 @@ class InvInferenceModule(BaseModule):
         self.logger = logger
         self.llm = LLM(config, logger)
 
-    def add_seq_knowledge(self, code: str, instruction: str) -> str:
-        """
-        Add knowledge about Seq operations if needed for the given code.
-
-        Args:
-            code: The Verus code
-            instruction: The current instruction
-
-        Returns:
-            Updated instruction with sequence knowledge if needed
-        """
-        if "Seq" in code:
-            seq_knowledge = """**Seq Knowledge**:
-Seq<T> is a mathematical sequence type used in specifications:
-- Building: Seq::empty(), seq![x, y, z], Seq::singleton(x)
-- Length: s.len()
-- Indexing: s[i] (0-based)
-- Subrange: s.subrange(lo, hi) gives elements from index lo (inclusive) to hi (exclusive)
-- Concatenation: s1 + s2
-- Update: s.update(i, v) returns a new sequence with index i updated to value v
-- Contains: s.contains(v) checks if v is in the sequence
-- Push/pop: s.push(v), s.pop() (returns new sequence, doesn't modify original)
-You can use forall or exists for properties over sequences."""
-            instruction += "\n\n" + seq_knowledge
-        return instruction
+        # Main instruction for inv inference
+        self.inv_instruction = """You are an expert in Verus (a Rust-based verification framework). Given the following Rust code that defines a data structure with private fields, create a closed spec function: `closed spec fn inv(&self) -> bool`. This function should capture all necessary invariants of the data structure. You are allowed to reference private fields directly (i.e., do not rely on "view" conversions unless absolutely necessary). Do not modify other parts of the code or add explanatory text—just provide the final inv function definition."""
 
     def replace_at_len_in_type_invariant(self, content: str) -> str:
         """
@@ -118,29 +96,13 @@ You can use forall or exists for properties over sequences."""
         # Get the latest trial code
         code = context.trials[-1].code
 
-        # Basic instruction
-        instruction = """You are an expert in Verus (a Rust-based verification framework). Given the following Rust code that defines a data structure with private fields, create a closed spec function: `closed spec fn inv(&self) -> bool`. This function should capture all necessary invariants of the data structure. You are allowed to reference private fields directly (i.e., do not rely on "view" conversions unless absolutely necessary). Do not modify other parts of the code or add explanatory text—just provide the final inv function definition."""
-
-        # Add important notes
-        important_note = """**Important Notes**:
-- Don't delete existing non-buggy `#[trigger]`!
-- Don't change "unwind" to `(unwind) as bool`!
-- Return the complete modified Rust code in your response without explanations."""
-        instruction += "\n" + important_note
-
-        # Add spec knowledge
-        spec_knowledge = """**Spec Functions**:
-1. No Direct Method Calls:
-In a spec function, you cannot directly call instance methods such as vector.is_full().
-2. Use the @ Operator:
-To invoke methods on a variable within a spec, first convert it to its specification-level representation View with @.
-3. Always use vector.len() instead of vector@.len().
-4. Simplify Boolean Conjunctions:
-When combining multiple conditions, avoid excessive &&&. Fewer (or well-structured) conjunctions make the spec code easier to read and debug."""
-        instruction += "\n" + spec_knowledge
-
-        # Add sequence knowledge if needed
-        instruction = self.add_seq_knowledge(code, instruction)
+        # Build the complete instruction using the prompt system
+        instruction = build_instruction(
+            base_instruction=self.inv_instruction,
+            add_common=True,
+            add_invariant=True,  # Include invariant guidelines
+            code=code
+        )
 
         # Load examples
         examples = []
@@ -228,28 +190,28 @@ When combining multiple conditions, avoid excessive &&&. Fewer (or well-structur
         global_best_score = context.get_best_score()
         global_best_code = context.get_best_code()
 
-        # Update global best if current best is better
-        global_best_score, global_best_code = update_global_best(
+        # Update global best if current best is better, but don't use it for the current step
+        updated_global_best_score, updated_global_best_code = update_global_best(
             best_code, global_best_score, global_best_code, global_dir, self.logger
         )
 
-        # Store the updated global best in context
-        context.set_best_score(global_best_score)
-        context.set_best_code(global_best_code)
-
-        # Also write to a module-specific best file
+        # Save the best inv inference from this step to a module-specific file
         module_best_path = output_dir / "03_inv_inference_global_best.rs"
         try:
             sample_with_score = (
-                f"{global_best_code}\n\n// VEval Score: {global_best_score}"
+                f"{best_code}\n\n// VEval Score: {best_score}"
             )
             module_best_path.write_text(sample_with_score)
-            self.logger.info(f"Saved global best inv inference to {module_best_path}")
+            self.logger.info(f"Saved best inv inference to {module_best_path}")
         except Exception as e:
-            self.logger.error(f"Error saving global best: {e}")
+            self.logger.error(f"Error saving best inv inference: {e}")
 
-        # Add the best result to context
-        context.add_trial(best_code)
+        # Store the updated global best in context
+        context.set_best_score(updated_global_best_score)
+        context.set_best_code(updated_global_best_code)
+
+        # Add the best sample from current step to context, regardless of global best
+        context.add_trial(best_code)  # Always use the best sample from this step
 
         # If the global best is significantly better than what we just generated,
         # consider returning the global best instead

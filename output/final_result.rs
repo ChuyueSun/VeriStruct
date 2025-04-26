@@ -14,10 +14,8 @@ verus! {
 
     #[verifier::external_fn_specification]
     pub fn ex_saturating_sub(a: usize, b: usize) -> (ret: usize)
-        requires
-            true,
-        ensures
-            ex_saturating_sub_spec(a as int, b as int) == ret as int,
+    ensures
+        ex_saturating_sub_spec(a as int, b as int) == ret as int
     {
         a.saturating_sub(b)
     }
@@ -29,21 +27,17 @@ verus! {
     }
 
     impl<T: Copy> View for RingBuffer<T> {
-        type V = (Seq<T>, nat);
+        type V = (Seq<T>, nat, nat);
 
         closed spec fn view(&self) -> Self::V {
-            let c = self.ring@.len();
-            let h = self.head as int;
-            let t = self.tail as int;
-            let used = if h <= t {
-                self.ring@.subrange(h, t)
-            } else {
-                self.ring@.subrange(h, c as int) + self.ring@.subrange(0, t)
-            };
-            (used, c)
+            (self.ring@, ( self.head ) as nat, ( self.tail ) as nat)
         }
     }
 
+    /// This function says that for any `x` and `y`, there are two
+    /// possibilities for the sum `x % n + y % n`: 
+    /// (1) It's in the range `[0, n)` and equals `(x + y) % n`.
+    /// (2) It's in the range `[n, 2n)` and equals `(x + y) % n + n`.
     pub open spec fn mod_auto_plus(n: int) -> bool
         recommends
             n > 0,
@@ -56,6 +50,10 @@ verus! {
             }
     }
 
+    /// This function says that for any `x` and `y`, there are two
+    /// possibilities for the difference `x % n - y % n`:
+    /// (1) It's in the range `[0, n)` and equals `(x - y) % n`.
+    /// (2) It's in the range `[-n, 0)` and equals `(x - y) % n - n`.
     pub open spec fn mod_auto_minus(n: int) -> bool
         recommends
             n > 0,
@@ -68,6 +66,8 @@ verus! {
             }
     }
 
+    /// This function states various useful properties about the modulo
+    /// operator when the divisor is `n`.
     pub open spec fn mod_auto(n: int) -> bool
         recommends
             n > 0,
@@ -79,6 +79,9 @@ verus! {
         &&& mod_auto_minus(n)
     }
 
+    /// Proof of `mod_auto(n)`, which states various useful properties
+    /// about the modulo operator when the divisor is the positive
+    /// number `n`
     pub proof fn lemma_mod_auto(n: int)
         requires
             n > 0,
@@ -88,194 +91,173 @@ verus! {
         admit()
     }
 
-    #[verifier::external_body]
-    fn my_set<T: Copy>(vec: &mut Vec<T>, i: usize, value: T)
-        requires
-            i < old(vec).len(),
-        ensures
-            vec@ == old(vec)@.update(i as int, value),
-            vec@.len() == old(vec).len()
-            no_unwind
-    {
-        vec[i] = value;
+
+#[verifier::external_body]
+fn my_set<T: Copy>(vec: &mut Vec<T>, i: usize, value: T)
+    requires
+        i < old(vec).len(),
+    ensures
+        vec@ == old(vec)@.update(i as int, value),
+        vec@.len() == old(vec).len()
+        no_unwind
+{
+    vec[i] = value;
+}
+
+
+impl<T: Copy> RingBuffer<T> {
+    /// Invariant for the ring buffer.
+    #[verifier::type_invariant]
+    closed spec fn inv(&self) -> bool {
+        // TODO: implement this.
+        true
     }
 
-    impl<T: Copy> RingBuffer<T> {
-        #[verifier::type_invariant]
-        closed spec fn inv(&self) -> bool {
-            &&& self.ring.len() > 0
-            &&& self.head < self.ring.len()
-            &&& self.tail < self.ring.len()
+    /// Returns how many elements are in the buffer.
+    pub fn len(&self) -> (ret: usize)
+    // TODO: implement this.
+    {
+        proof {
+            use_type_invariant(&*self);
+            lemma_mod_auto(self@.1 as int);
         }
-
-        pub fn len(&self) -> (ret: usize)
-            requires
-                true,
-            ensures
-                ret == self@.0.len(),
-        {
-            proof {
-                use_type_invariant(&*self);
-                lemma_mod_auto(self@.1 as int);
-            }
-            if self.tail > self.head {
-                self.tail - self.head
-            } else if self.tail < self.head {
-                (self.ring.len() - self.head) + self.tail
-            } else {
-                0
-            }
-        }
-
-        pub fn has_elements(&self) -> (ret: bool)
-            requires
-                true,
-            ensures
-                ret == (self@.0.len() > 0),
-        {
-            proof {
-                use_type_invariant(&*self);
-            }
-            self.head != self.tail
-        }
-
-        pub fn is_full(&self) -> (ret: bool)
-            requires
-                true,
-            ensures
-                ret == (self@.0.len() == self@.1 - 1),
-        {
-            proof {
-                use_type_invariant(&*self);
-                lemma_mod_auto(self@.1 as int);
-            }
-            self.head == ((self.tail + 1) % self.ring.len())
-        }
-
-        pub fn new(ring: Vec<T>) -> (ret: RingBuffer<T>)
-            requires
-                ring@.len() > 0,
-            ensures
-                ret@.0.len() == 0,
-                ret@.1 == ring@.len(),
-        {
-            RingBuffer {
-                head: 0,
-                tail: 0,
-                ring,
-            }
-        }
-
-        pub fn enqueue(&mut self, val: T) -> (succ: bool)
-            requires
-                true,
-            ensures
-                self@.1 == old(self)@.1,
-                succ == (old(self)@.0.len() < old(self)@.1 - 1),
-                succ ==> (self@.0 == old(self)@.0 + seq![val]),
-                !succ ==> (self@.0 == old(self)@.0),
-        {
-            proof {
-                use_type_invariant(&*self);
-                lemma_mod_auto(self@.1 as int);
-            }
-            if self.is_full() {
-                false
-            } else {
-                my_set(&mut self.ring, self.tail, val);
-                self.tail = (self.tail + 1) % self.ring.len();
-                proof {
-                    assert(self@.0 == old(self)@.0 + seq![val]);
-                } // Added by AI
-                true
-            }
-        }
-
-        pub fn dequeue(&mut self) -> (ret: Option<T>)
-            requires
-                true,
-            ensures
-                self@.1 == old(self)@.1,
-                (ret.is_None() == (old(self)@.0.len() == 0)),
-                (ret.is_Some() == (old(self)@.0.len() > 0)),
-                ret.is_Some() ==> (ret.get_Some_0() == old(self)@.0.index(0)),
-                ret.is_Some() ==> (self@.0 == old(self)@.0.subrange(1, ( old(self)@.0.len() ) as int)),
-                ret.is_None() ==> (self@.0 == old(self)@.0),
-        {
-            proof {
-                use_type_invariant(&*self);
-                lemma_mod_auto(self@.1 as int);
-            }
-            if self.has_elements() {
-                let val = self.ring[self.head];
-                self.head = (self.head + 1) % self.ring.len();
-                proof {
-                    assert(self@.0 == old(self)@.0.subrange(1, ( old(self)@.0.len() ) as int)); // Added by AI
-                }
-                Some(val)
-            } else {
-                None
-            }
-        }
-
-        pub fn available_len(&self) -> (ret: usize)
-            requires
-                true,
-            ensures
-                ret == self@.1 - 1 - self@.0.len(),
-        {
-            proof {
-                use_type_invariant(&self);
-            }
-            self.ring.len().saturating_sub(1 + self.len())
+        if self.tail > self.head {
+            self.tail - self.head
+        } else if self.tail < self.head {
+            (self.ring.len() - self.head) + self.tail
+        } else {
+            0
         }
     }
 
-    #[verifier::loop_isolation(false)]
-    fn test_enqueue_dequeue_generic(len: usize, value: i32, iterations: usize)
-        requires
-            len < usize::MAX - 1,
-            iterations * 2 < usize::MAX,
+    /// Returns true if there are any items in the buffer, false otherwise.
+    pub fn has_elements(&self) -> (ret: bool)
+    // TODO: implement this.
     {
-        let mut ring: Vec<i32> = Vec::new();
-
-        if len == 0 {
-            return;
+        proof {
+            use_type_invariant(&*self);
         }
+        self.head != self.tail
+    }
 
-        for i in 0..(len + 1)
-            invariant
-                ring.len() == i,
-        {
-            ring.push(0);
+    /// Returns true if the buffer is full, false otherwise.
+    pub fn is_full(&self) -> (ret: bool)
+    // TODO: implement this.
+    {
+        proof {
+            use_type_invariant(&*self);
+            lemma_mod_auto(self@.1 as int);
         }
+        self.head == ((self.tail + 1) % self.ring.len())
+    }
 
-        assert(ring.len() > 1);
-        let mut buf = RingBuffer::new(ring);
-        assert(buf@.1 > 1);
-
-        for _ in 0..2 * iterations
-            invariant
-                buf@.0.len() == 0,
-                buf@.1 > 1
-        {
-            let enqueue_res = buf.enqueue(value);
-            assert(enqueue_res);
-
-            let buf_len = buf.len();
-            assert(buf_len == 1);
-
-            let has_elements = buf.has_elements();
-            assert(has_elements);
-
-            let dequeue_res = buf.dequeue();
-            assert(dequeue_res =~= Some(value));
-
-            let buf_len = buf.len();
-            assert(buf_len == 0);
-
-            let has_elements = buf.has_elements();
-            assert(!has_elements);
+    /// Creates a new RingBuffer with the given backing `ring` storage.
+    pub fn new(ring: Vec<T>) -> (ret: RingBuffer<T>)
+    // TODO: implement this.
+    {
+        RingBuffer {
+            head: 0,
+            tail: 0,
+            ring,
         }
+    }
+
+    
+    /// If the buffer isn't full, adds a new element to the back.
+    /// Returns whether the element was added.
+    pub fn enqueue(&mut self, val: T) -> (succ: bool)
+    // TODO: implement this.
+    {
+        proof {
+            use_type_invariant(&*self);
+            lemma_mod_auto(self@.1 as int);
+        }
+        if self.is_full() {
+            false
+        } else {
+            my_set(&mut self.ring, self.tail, val);
+            self.tail = (self.tail + 1) % self.ring.len();
+            true
+        }
+    }
+
+    /// Removes and returns the front element, if any.
+    pub fn dequeue(&mut self) -> (ret: Option<T>)
+    // TODO: implement this.
+    {
+        proof {
+            use_type_invariant(&*self);
+            lemma_mod_auto(self@.1 as int);
+        }
+        if self.has_elements() {
+            let val = self.ring[self.head];
+            self.head = (self.head + 1) % self.ring.len();
+            Some(val)
+        } else {
+            None
+        }
+    }
+
+    /// Returns the number of elements that can still be enqueued until it is full.
+    pub fn available_len(&self) -> (ret: usize)
+    // TODO: implement this.
+    {
+        proof {
+            use_type_invariant(&self);
+        }
+        self.ring.len().saturating_sub(1 + self.len())
     }
 }
+
+#[verifier::loop_isolation(false)]
+fn test_enqueue_dequeue_generic(len: usize, value: i32, iterations: usize)
+    requires
+        len < usize::MAX - 1,
+        iterations * 2 < usize::MAX,
+{
+    let mut ring: Vec<i32> = Vec::new();
+
+    if len == 0 {
+        return;
+    }
+
+    for i in 0..(len + 1)
+        invariant
+            ring.len() == i,
+    {
+        ring.push(0);
+    }
+
+    assert(ring.len() > 1);
+    let mut buf = RingBuffer::new(ring);
+    assert(buf@.1 > 1);
+
+    for _ in 0..2 * iterations
+        invariant
+            buf@.0.len() == 0,
+            buf@.1 > 1
+    {
+        let enqueue_res = buf.enqueue(value);
+        assert(enqueue_res);
+
+        let buf_len = buf.len();
+        assert(buf_len == 1);
+
+        let has_elements = buf.has_elements();
+        assert(has_elements);
+
+        let dequeue_res = buf.dequeue();
+        assert(dequeue_res =~= Some(value));
+
+        let buf_len = buf.len();
+        assert(buf_len == 0);
+
+        let has_elements = buf.has_elements();
+        assert(!has_elements);
+    }
+}
+}
+
+
+
+// VEval Score: Compilation Error: False, Verified: 3, Errors: 6, Verus Errors: 20

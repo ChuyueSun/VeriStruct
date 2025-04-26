@@ -182,7 +182,8 @@ def main():
         current_round = 1
         previous_failure_count = len(failures)
         previous_verified_count = last_trial.eval.get_verified_count()
-
+        previous_non_other_failures = sum(1 for failure in failures if failure.error.name != "Other")
+        
         while failures and current_round <= max_repair_rounds:
             # Start repair round tracking
             progress_logger.start_repair_round(current_round)
@@ -190,7 +191,7 @@ def main():
 
             # Store the score before repairs
             before_score = last_trial.eval.get_score()
-
+            
             # Track time for this repair round
             repair_round_start = time.time()
             
@@ -208,28 +209,42 @@ def main():
             else:
                 logger.warning(f"Round {current_round}: No repairs were completed in {repair_round_time:.2f}s")
                 progress_logger.end_repair_round()
-                break  # Exit if no repairs were made in this round
+                
+                # For errors of type "Other", don't break out of the repair loop
+                # Check if any "Other" errors are present
+                has_other_errors = any(failure.error.name == "Other" for failure in failures)
+                if has_other_errors:
+                    logger.info("Errors of type 'Other' found. Continuing to next repair round...")
+                    # Continue to the next round without breaking
+                else:
+                    break  # Exit if no repairs were made and no "Other" errors
 
             # Get the new failures after repairs
             last_trial = context.trials[-1]
             failures = last_trial.eval.get_failures()
             current_failure_count = len(failures)
             current_verified_count = last_trial.eval.get_verified_count()
-
-            # Check if we made progress
+            
+            # Count failures excluding "Other" errors
+            current_non_other_failures = sum(1 for failure in failures if failure.error.name != "Other")
+            
+            # Check if we made progress (excluding "Other" errors from the comparison)
             if (
-                current_failure_count >= previous_failure_count
-                and current_verified_count <= previous_verified_count
+                # Only break if there are non-Other errors present AND no progress is made
+                current_non_other_failures > 0 and
+                current_non_other_failures >= previous_non_other_failures and
+                current_verified_count <= previous_verified_count
             ):
                 logger.info(
-                    f"Round {current_round}: No progress made (Failures: {current_failure_count}, Verified: {current_verified_count})"
+                    f"Round {current_round}: No progress made on non-Other errors (Non-Other failures: {current_non_other_failures}, Verified: {current_verified_count})"
                 )
                 progress_logger.end_repair_round()
                 break  # Exit if no progress was made
-
+            
             # Update counters for the next round
             previous_failure_count = current_failure_count
             previous_verified_count = current_verified_count
+            previous_non_other_failures = current_non_other_failures
             
             # End the repair round tracking
             progress_logger.end_repair_round()
@@ -240,6 +255,53 @@ def main():
             round_result = context.trials[-1].code
             (output_dir / f"repair_round_{current_round-1}_{file_id}.rs").write_text(round_result)
 
+            # Special handling for "Other" errors
+            # If we only have "Other" errors remaining and repairs failed
+            if failures and all(failure.error.name == "Other" for failure in failures) and not repair_results:
+                logger.info("Only 'Other' type errors remain. Attempting fallback strategy...")
+                
+                # Find the best trial so far
+                best_trial = None
+                best_score = None
+                
+                for trial in context.trials:
+                    if trial.eval and (best_score is None or trial.eval.get_score() > best_score):
+                        best_score = trial.eval.get_score()
+                        best_trial = trial
+                
+                if best_trial and best_trial != context.trials[-1]:
+                    logger.info(f"Reverting to best trial with score: {best_score}")
+                    
+                    # Get the best code
+                    best_code = best_trial.code
+                    
+                    # Create a VEval object first
+                    v_eval = VEval(best_code, logger)
+                    
+                    # Create the fallback trial using the correct constructor parameters
+                    trial_id = len(context.trials)
+                    tmp_dir = config.get("tmp_dir", "tmp")
+                    path = os.path.join(tmp_dir, f"trial_{trial_id}_fallback.rs")
+                    
+                    # Write the code to file
+                    with open(path, "w") as f:
+                        f.write(best_code)
+                    
+                    # Create the Trial object with the correct parameters
+                    fallback_trial = Trial(trial_id, v_eval, path, logger)
+                    
+                    # Add to context
+                    context.trials.append(fallback_trial)
+                    
+                    # Update failures for next round
+                    failures = fallback_trial.eval.get_failures()
+                    
+                    # Log the fallback
+                    logger.info(f"Fallback complete. New failure count: {len(failures)}")
+                    
+                    # Save the fallback result
+                    (output_dir / f"fallback_result_{current_round-1}_{file_id}.rs").write_text(fallback_trial.code)
+
         if failures:
             logger.warning(
                 f"Repairs completed after {current_round-1} rounds. {len(failures)} failures remain."
@@ -249,9 +311,10 @@ def main():
     else:
         logger.info("No failures detected after inference. Skipping repair stage.")
 
-    # Save the final result with timestamp
+    # Save the final result with timestamp and to a consistent file
     final_result = context.trials[-1].code
     (output_dir / f"final_result_{file_id}.rs").write_text(final_result)
+    (output_dir / "final_result.rs").write_text(final_result)
 
     # Save the global best if available
     global_best_code = context.get_best_code()
@@ -292,7 +355,17 @@ def main():
                 f"Global best score ({global_best_score}) is better than final result ({final_score}). "
                 f"Overwriting final result with global best."
             )
+            # Write to both the timestamped file and the standard final_result.rs file
             (output_dir / f"final_result_{file_id}.rs").write_text(global_best_with_score)
+            (output_dir / "final_result.rs").write_text(global_best_with_score)
+            
+            # Verify that the file was successfully overwritten
+            final_result_path = output_dir / "final_result.rs"
+            if final_result_path.exists():
+                logger.info(f"Verified: Final result file was successfully overwritten with global best (size: {final_result_path.stat().st_size} bytes)")
+            else:
+                logger.warning("Failed to overwrite final_result.rs file")
+                
             # Also update the final score for recording
             progress_logger.record_final_result(global_best_score)
         # Special check for compilation errors - always prefer code that compiles
@@ -301,9 +374,22 @@ def main():
                 f"Global best compiles while final result has compilation errors. "
                 f"Overwriting final result with global best."
             )
+            # Write to both the timestamped file and the standard final_result.rs file
             (output_dir / f"final_result_{file_id}.rs").write_text(global_best_with_score)
+            (output_dir / "final_result.rs").write_text(global_best_with_score)
+            
+            # Verify that the file was successfully overwritten
+            final_result_path = output_dir / "final_result.rs"
+            if final_result_path.exists():
+                logger.info(f"Verified: Final result file was successfully overwritten with global best (size: {final_result_path.stat().st_size} bytes)")
+            else:
+                logger.warning("Failed to overwrite final_result.rs file")
+                
             # Also update the final score for recording
             progress_logger.record_final_result(global_best_score)
+        else:
+            # Even if we're not overwriting with global best, still create a consistent final_result.rs file
+            (output_dir / "final_result.rs").write_text(final_result)
     else:
         # Still record the final result even if no global best
         final_score = context.trials[-1].eval.get_score()

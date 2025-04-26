@@ -39,21 +39,21 @@ except ImportError as e:
 
 def verify_cache_in_run_context():
     """Simulate a basic workflow and verify cache functionality."""
-    # Get environment variables (should be set by run.sh)
-    python_path = os.environ.get('PYTHONPATH', 'Not set')
-    enable_llm = os.environ.get('ENABLE_LLM_INFERENCE', 'Not set')
-    cache_enabled = os.environ.get('LLM_CACHE_ENABLED', 'Not set')
+    # Print environment vars
+    version = sys.version
+    enable_inference = os.environ.get('ENABLE_LLM_INFERENCE', 'Not set')
+    enable_cache = os.environ.get('ENABLE_LLM_CACHE', 'Not set')
     cache_dir = os.environ.get('LLM_CACHE_DIR', 'Not set')
     
-    # Print environment configuration
-    print(f"\nEnvironment Configuration:")
-    print(f"- PYTHONPATH: {python_path}")
-    print(f"- ENABLE_LLM_INFERENCE: {enable_llm}")
-    print(f"- LLM_CACHE_ENABLED: {cache_enabled}")
+    print(f"\nEnvironment:")
+    print(f"- Python version: {version}")
+    print(f"- ENABLE_LLM_INFERENCE: {enable_inference}")
+    print(f"- ENABLE_LLM_CACHE: {enable_cache}")
     print(f"- LLM_CACHE_DIR: {cache_dir}")
+    print()
     
     # Configure LLM with caching
-    config['use_cache'] = cache_enabled == '1'
+    config['use_cache'] = enable_cache == '1'
     config['cache_dir'] = cache_dir
     config['cache_max_age_days'] = int(os.environ.get('LLM_CACHE_MAX_AGE_DAYS', '7'))
     

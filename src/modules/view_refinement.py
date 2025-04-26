@@ -11,6 +11,7 @@ from modules.utils import (
     update_global_best,
 )
 from modules.veval import VEval
+from prompts.template import build_instruction
 
 
 class ViewRefinementModule(BaseModule):
@@ -37,6 +38,20 @@ class ViewRefinementModule(BaseModule):
         self.logger = logger
         self.llm = LLM(config, logger)
 
+        # Main instruction for view refinement
+        self.refinement_instruction = """
+You are a highly experienced expert in Verus (the verifier for Rust). Your task is to refine the "View" function within the given Verus file. The "View" function is the mathematical abstraction for a data structure, capturing the minimal information needed for its specification in Verus.
+
+Your responsibilities:
+  1. Analyze the current "View" function to determine if its tuple (or other structure) adequately represents the module.
+  2. Evaluate whether the abstraction can be improved. (Hint: If the tuple is identical to the internal fields, that is likely not an ideal abstraction.)
+  3. Modify only the "View" function to improve its abstraction while leaving all other parts of the file unchanged.
+  4. Use a flattened tuple.
+  5. Return the **entire updated Verus file** with your refined "View" function.
+
+Please provide only the complete Rust code of the refined file with no additional commentary.
+"""
+
     def exec(self, context) -> str:
         """
         Execute the view refinement module with the given context.
@@ -52,19 +67,13 @@ class ViewRefinementModule(BaseModule):
         # Get the latest trial code
         code = context.trials[-1].code
 
-        # Basic instruction
-        instruction = """
-You are a highly experienced expert in Verus (the verifier for Rust). Your task is to refine the "View" function within the given Verus file. The "View" function is the mathematical abstraction for a data structure, capturing the minimal information needed for its specification in Verus.
-
-Your responsibilities:
-  1. Analyze the current "View" function to determine if its tuple (or other structure) adequately represents the module.
-  2. Evaluate whether the abstraction can be improved. (Hint: If the tuple is identical to the internal fields, that is likely not an ideal abstraction.)
-  3. Modify only the "View" function to improve its abstraction while leaving all other parts of the file unchanged.
-  4. Use a flattened tuple.
-  5. Return the **entire updated Verus file** with your refined "View" function.
-
-Please provide only the complete Rust code of the refined file with no additional commentary.
-"""
+        # Build the complete instruction using the prompt system
+        instruction = build_instruction(
+            base_instruction=self.refinement_instruction,
+            add_common=True,
+            add_view=True,  # Include View refinement guidelines
+            code=code
+        )
 
         # Load examples
         examples = []
@@ -129,39 +138,37 @@ Please provide only the complete Rust code of the refined file with no additiona
         global_dir = Path("output/best")
         global_dir.mkdir(exist_ok=True, parents=True)
 
-        # Evaluate samples and get the best one
+        # Evaluate the samples and get the best one
         best_code, best_score, _ = evaluate_samples(
-            samples=processed_responses if processed_responses else [code],
-            output_dir=output_dir,
-            prefix="02_view_refinement",
-            logger=self.logger,
+            samples=processed_responses, 
+            output_dir=output_dir, 
+            prefix="02_view_refinement", 
+            logger=self.logger
         )
 
         # Get the global best from context
         global_best_score = context.get_best_score()
         global_best_code = context.get_best_code()
 
-        # Update global best if current best is better
-        global_best_score, global_best_code = update_global_best(
+        # Update global best if current best is better, but don't use it for the current step
+        updated_global_best_score, updated_global_best_code = update_global_best(
             best_code, global_best_score, global_best_code, global_dir, self.logger
         )
 
-        # Store the updated global best in context
-        context.set_best_score(global_best_score)
-        context.set_best_code(global_best_code)
-
-        # Also write to a module-specific best file
+        # Save the best view refinement from this step to a module-specific file
         module_best_path = output_dir / "02_view_refinement_global_best.rs"
         try:
-            sample_with_score = (
-                f"{global_best_code}\n\n// VEval Score: {global_best_score}"
-            )
+            sample_with_score = f"{best_code}\n\n// VEval Score: {best_score}"
             module_best_path.write_text(sample_with_score)
-            self.logger.info(f"Saved global best view refinement to {module_best_path}")
+            self.logger.info(f"Saved best view refinement to {module_best_path}")
         except Exception as e:
-            self.logger.error(f"Error saving global best: {e}")
+            self.logger.error(f"Error saving best view refinement: {e}")
 
-        # Add the best result to context
-        context.add_trial(best_code)
+        # Store the updated global best in context
+        context.set_best_score(updated_global_best_score)
+        context.set_best_code(updated_global_best_code)
+        
+        # Add the best sample from current step to context, regardless of global best
+        context.add_trial(best_code)  # Always use the best sample from this step
 
         return best_code

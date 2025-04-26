@@ -13,15 +13,15 @@ set -x PYTHONPATH "$SCRIPT_DIR:$PYTHONPATH"
 # Enable LLM inference
 set -x ENABLE_LLM_INFERENCE 1
 
-# Configure LLM caching
-set -x LLM_CACHE_ENABLED 1
+# Configure Cache
+set -x ENABLE_LLM_CACHE 1
 set -x LLM_CACHE_DIR "$SCRIPT_DIR/llm_cache"
 set -x LLM_CACHE_MAX_AGE_DAYS 7
 
-echo "=== Testing Caching in run.sh Environment ==="
+echo "=== Testing LLM Cache with Dummy Mode ==="
 echo "Python path: $PYTHONPATH"
 echo "LLM inference enabled: $ENABLE_LLM_INFERENCE"
-echo "LLM caching enabled: $LLM_CACHE_ENABLED"
+echo "LLM caching enabled: $ENABLE_LLM_CACHE"
 echo "LLM cache directory: $LLM_CACHE_DIR"
 
 # Create cache directory if it doesn't exist

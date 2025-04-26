@@ -47,10 +47,22 @@ except ImportError as e:
 def test_cache_with_actual_config():
     """Test the cache using the actual Azure configuration."""
     
-    # Get cache settings from environment or use defaults
+    # Cache setup
     cache_dir = os.environ.get("LLM_CACHE_DIR", "llm_cache")
-    cache_enabled = os.environ.get("LLM_CACHE_ENABLED", "1") == "1"
+    cache_enabled = os.environ.get("ENABLE_LLM_CACHE", "1") == "1"
     cache_max_age = int(os.environ.get("LLM_CACHE_MAX_AGE_DAYS", "7"))
+    
+    print(f"Cache directory: {cache_dir}")
+    print(f"Cache enabled: {cache_enabled}")
+    print(f"Cache max age: {cache_max_age} days")
+    
+    # Initialize cache
+    cache = LLMCache(
+        cache_dir=cache_dir,
+        enabled=cache_enabled,
+        max_age_days=cache_max_age,
+        logger=logging.getLogger("cache")
+    )
     
     # Add cache configuration to the config
     config["use_cache"] = cache_enabled

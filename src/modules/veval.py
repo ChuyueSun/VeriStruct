@@ -330,6 +330,12 @@ class EvalScore:
             return self.verus_errors < value.verus_errors
         return False
 
+    def __le__(self, value: object) -> bool:
+        return self < value or self == value
+
+    def __ge__(self, value: object) -> bool:
+        return self > value or self == value
+
     def __str__(self) -> str:
         return (
             f"Compilation Error: {self.compilation_error},"

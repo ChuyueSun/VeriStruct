@@ -1,6 +1,11 @@
+"""
+Template utilities for loading and processing prompts.
+"""
+
 import os
 from pathlib import Path
 from string import Template
+from typing import Dict, List, Optional
 
 from configs.sconfig import config
 
@@ -42,3 +47,85 @@ def fill_template(name: str, keys: dict):
     keys["_blank"] = ""
     keys["_blanks"] = ""
     return templates[name].substitute(keys)
+
+
+# New functions for loading Verus prompts directly
+
+def load_prompt(filename: str) -> str:
+    """
+    Load a prompt from a markdown file in the prompts directory.
+    
+    Args:
+        filename: Name of the markdown file (with or without .md extension)
+        
+    Returns:
+        The content of the prompt file as a string
+    """
+    if not filename.endswith('.md'):
+        filename = f"{filename}.md"
+    
+    # Get the directory of this file
+    current_dir = Path(os.path.dirname(os.path.abspath(__file__)))
+    file_path = current_dir / filename
+    
+    if not file_path.exists():
+        raise FileNotFoundError(f"Prompt file not found: {file_path}")
+    
+    return file_path.read_text()
+
+
+def add_seq_knowledge_if_needed(code: str, instruction: str) -> str:
+    """
+    Add Seq knowledge to the instruction if the code contains Seq references.
+    
+    Args:
+        code: The Verus code to check for Seq usage
+        instruction: The current instruction
+        
+    Returns:
+        Updated instruction with sequence knowledge if needed
+    """
+    if "Seq" in code:
+        instruction += f"\n\n{load_prompt('verus_seq')}"
+    return instruction
+
+
+def build_instruction(base_instruction: str, 
+                      add_common: bool = True,
+                      add_view: bool = False, 
+                      add_invariant: bool = False,
+                      add_requires_ensures: bool = False,
+                      code: Optional[str] = None) -> str:
+    """
+    Build a complete instruction by combining various prompt components.
+    
+    Args:
+        base_instruction: The main instruction for the specific module
+        add_common: Whether to add common Verus knowledge
+        add_view: Whether to add View refinement guidelines
+        add_invariant: Whether to add invariant guidelines
+        add_requires_ensures: Whether to add requires/ensures formatting info
+        code: The Verus code to analyze for Seq usage
+        
+    Returns:
+        Complete instruction with all requested components
+    """
+    instruction = base_instruction
+    
+    if add_common:
+        instruction += f"\n\n{load_prompt('verus_common')}"
+    
+    if add_view:
+        instruction += f"\n\n{load_prompt('verus_view')}"
+    
+    if add_invariant:
+        instruction += f"\n\n{load_prompt('verus_invariant')}"
+    
+    if add_requires_ensures:
+        instruction += f"\n\n{load_prompt('verus_requires_ensures')}"
+    
+    # Add Seq knowledge if needed and code is provided
+    if code:
+        instruction = add_seq_knowledge_if_needed(code, instruction)
+    
+    return instruction

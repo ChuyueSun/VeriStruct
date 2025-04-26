@@ -7,7 +7,7 @@ set SCRIPT_DIR (cd $SCRIPT_DIR && pwd)
 # Set required environment variables
 set -x PYTHONPATH "$SCRIPT_DIR:$PYTHONPATH"
 set -x ENABLE_LLM_INFERENCE 1
-set -x LLM_CACHE_ENABLED 1
+set -x ENABLE_LLM_CACHE 1
 set -x LLM_CACHE_DIR "$SCRIPT_DIR/llm_cache"
 set -x LLM_CACHE_MAX_AGE_DAYS 7
 
@@ -22,7 +22,7 @@ end
 
 echo "=== Testing LLM Cache with Azure Configuration ==="
 echo "Cache directory: $LLM_CACHE_DIR"
-echo "LLM Cache enabled: $LLM_CACHE_ENABLED"
+echo "LLM Cache enabled: $ENABLE_LLM_CACHE"
 echo "Max cache age: $LLM_CACHE_MAX_AGE_DAYS days"
 
 # Create cache directory if it doesn't exist

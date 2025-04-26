@@ -11,14 +11,15 @@ set -x PYTHONPATH "$SCRIPT_DIR:$PYTHONPATH"
 set -x ENABLE_LLM_INFERENCE 1
 
 # Configure LLM caching
-set -x LLM_CACHE_ENABLED 1
+set -x ENABLE_LLM_CACHE 1
+ 
 set -x LLM_CACHE_DIR "$SCRIPT_DIR/llm_cache"
 set -x LLM_CACHE_MAX_AGE_DAYS 7
 
 echo "=== Running VerusAgent with Azure Configuration ==="
 echo "Python path: $PYTHONPATH"
 echo "LLM inference enabled: $ENABLE_LLM_INFERENCE"
-echo "LLM caching enabled: $LLM_CACHE_ENABLED"
+echo "LLM caching enabled: $ENABLE_LLM_CACHE"
 echo "LLM cache directory: $LLM_CACHE_DIR"
 echo "LLM cache max age: $LLM_CACHE_MAX_AGE_DAYS days"
 

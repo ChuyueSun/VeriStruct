@@ -87,11 +87,15 @@ VerusAgent now includes LLM caching functionality to improve performance and red
 
 LLM caching is controlled by the following environment variables:
 
-- `LLM_CACHE_ENABLED`: Set to `1` to enable caching (default is enabled)
+- `ENABLE_LLM_CACHE`: Set to `1` to enable caching for reading (default is enabled)
 - `LLM_CACHE_DIR`: Directory to store cache files (default is `llm_cache` in the project root)
 - `LLM_CACHE_MAX_AGE_DAYS`: Maximum age of cache entries in days (default is 7 days)
 
 These variables are set in the `run.sh` script.
+
+### Cache Writing Behavior
+
+By default, the system will write to the cache even when cache reading is disabled. This allows you to build up a cache of responses over time. This behavior can be controlled via the `always_write_cache` configuration option.
 
 ### Testing Cache Functionality
 
