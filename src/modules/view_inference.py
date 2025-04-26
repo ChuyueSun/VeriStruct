@@ -98,152 +98,7 @@ impl<T: Copy> View for RingBuffer<T> {
             example_path = (
                 Path(self.config.get("example_path", "examples")) / "input-view"
             )
-            if not example_path.exists():
-                self.logger.error(f"Example path {example_path} does not exist.")
-
-                # Create a fallback example
-                self.logger.warning("Creating a simple built-in example")
-                examples.append(
-                    {
-                        "query": """use vstd::prelude::*;
-
-verus! {
-    struct RingBuffer<T> {
-        buffer: Vec<T>,
-        head: usize,
-        tail: usize,
-    }
-
-    impl<T: Copy> RingBuffer<T> {
-        pub fn new(cap: usize) -> Self
-        {
-            let mut buffer = Vec::new();
-            buffer.reserve(cap);
-
-            RingBuffer {
-                buffer,
-                head: 0,
-                tail: 0,
-            }
-        }
-
-        pub fn push(&mut self, value: T) -> bool
-        {
-            if self.is_full() {
-                return false;
-            }
-
-            if self.buffer.len() < self.buffer.capacity() {
-                self.buffer.push(value);
-            } else {
-                self.buffer.set(self.tail, value);
-            }
-
-            self.tail = (self.tail + 1) % self.buffer.capacity();
-            true
-        }
-
-        pub fn pop(&mut self) -> Option<T>
-        {
-            if self.is_empty() {
-                return None;
-            }
-
-            let value = self.buffer[self.head];
-            self.head = (self.head + 1) % self.buffer.capacity();
-
-            Some(value)
-        }
-
-        pub fn is_empty(&self) -> bool
-        {
-            self.head == self.tail
-        }
-
-        pub fn is_full(&self) -> bool
-        {
-            self.head == ((self.tail + 1) % self.buffer.capacity())
-        }
-    }
-}""",
-                        "answer": """use vstd::prelude::*;
-use vstd::seq::Seq;
-
-verus! {
-    struct RingBuffer<T> {
-        buffer: Vec<T>,
-        head: usize,
-        tail: usize,
-    }
-
-    impl<T: Copy> View for RingBuffer<T> {
-        type V = Seq<T>;
-
-        closed spec fn view(&self) -> Self::V {
-            let cap = self.buffer.capacity();
-            if self.head <= self.tail {
-                self.buffer@.subrange(self.head as int, self.tail as int)
-            } else {
-                self.buffer@.subrange(self.head as int, cap as int) + self.buffer@.subrange(0, self.tail as int)
-            }
-        }
-    }
-
-    impl<T: Copy> RingBuffer<T> {
-        pub fn new(cap: usize) -> Self
-        {
-            let mut buffer = Vec::new();
-            buffer.reserve(cap);
-
-            RingBuffer {
-                buffer,
-                head: 0,
-                tail: 0,
-            }
-        }
-
-        pub fn push(&mut self, value: T) -> bool
-        {
-            if self.is_full() {
-                return false;
-            }
-
-            if self.buffer.len() < self.buffer.capacity() {
-                self.buffer.push(value);
-            } else {
-                self.buffer.set(self.tail, value);
-            }
-
-            self.tail = (self.tail + 1) % self.buffer.capacity();
-            true
-        }
-
-        pub fn pop(&mut self) -> Option<T>
-        {
-            if self.is_empty() {
-                return None;
-            }
-
-            let value = self.buffer[self.head];
-            self.head = (self.head + 1) % self.buffer.capacity();
-
-            Some(value)
-        }
-
-        pub fn is_empty(&self) -> bool
-        {
-            self.head == self.tail
-        }
-
-        pub fn is_full(&self) -> bool
-        {
-            self.head == ((self.tail + 1) % self.buffer.capacity())
-        }
-    }
-}""",
-                    }
-                )
-            else:
+            if example_path.exists():
                 for f in sorted(example_path.iterdir()):
                     if f.suffix == ".rs":
                         input_content = f.read_text()
@@ -254,11 +109,10 @@ verus! {
                         )
                         answer = answer_path.read_text() if answer_path.exists() else ""
                         examples.append({"query": input_content, "answer": answer})
+            else:
+                self.logger.warning("Example path does not exist - proceeding without examples")
         except Exception as e:
             self.logger.error(f"Error loading examples: {e}")
-            # If we failed to create examples, at least create an empty one
-            if not examples:
-                examples.append({"query": "", "answer": ""})
 
         # Run inference
         try:

@@ -81,12 +81,7 @@ Please provide only the complete Rust code of the refined file with no additiona
             example_path = (
                 Path(self.config.get("example_path", "examples")) / "input-view-refine"
             )
-            if not example_path.exists():
-                self.logger.error(f"Example path {example_path} does not exist.")
-                # Use the latest code as the example
-                self.logger.warning("Using latest code as the example")
-                examples.append({"query": code, "answer": ""})
-            else:
+            if example_path.exists():
                 for f in sorted(example_path.iterdir()):
                     if f.suffix == ".rs":
                         input_content = f.read_text()
@@ -97,11 +92,10 @@ Please provide only the complete Rust code of the refined file with no additiona
                         )
                         answer = answer_path.read_text() if answer_path.exists() else ""
                         examples.append({"query": input_content, "answer": answer})
+            else:
+                self.logger.warning("Example path does not exist - proceeding without examples")
         except Exception as e:
             self.logger.error(f"Error loading examples: {e}")
-            # If we failed to create examples, at least create an empty one
-            if not examples:
-                examples.append({"query": code, "answer": ""})
 
         # Run inference
         try:
