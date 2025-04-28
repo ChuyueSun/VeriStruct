@@ -14,6 +14,7 @@ from modules.utils import (
 )
 from modules.veval import VEval
 from prompts.template import build_instruction
+from context import Context
 
 
 class ViewInferenceModule(BaseModule):
@@ -122,7 +123,7 @@ impl<T: Copy> View for RingBuffer<T> {
         )
         return parsed_code
 
-    def exec(self, context) -> str:
+    def exec(self, context: Context) -> str:
         """
         Execute the view inference module with the given context.
 

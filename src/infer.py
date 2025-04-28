@@ -7,6 +7,8 @@ import random
 import time
 import warnings
 from typing import List, Tuple, Union
+import json as json_lib
+from pathlib import Path
 
 # Import our new cache
 from llm_cache import LLMCache
@@ -204,7 +206,7 @@ class LLM:
         json: bool = False,
         return_msg: bool = False,
         verbose: bool = False,
-        use_cache: bool = True,  # New parameter to control caching per call
+        use_cache: bool = True,
     ) -> Union[List[str], Tuple[List[str], List[dict]]]:
         """
         Calls SGL to build and run an LLM prompt. Returns a list of strings
@@ -292,6 +294,36 @@ class LLM:
                 return [], []
             else:
                 return []
+
+        # Get the cache key (MD5) that will be used
+        cache_key = self.cache._get_cache_key(
+            engine, instruction, query, max_tokens, exemplars, system_info
+        )
+        
+        # Create a prompt directory next to the cache directory
+        prompt_dir = Path(self.cache.cache_dir).parent / "prompt_cache"
+        prompt_dir.mkdir(exist_ok=True, parents=True)
+        
+        # Create the prompt file path using the same MD5
+        prompt_file = prompt_dir / f"{cache_key}.md"
+        
+        # Format the prompt components
+        prompt_content = "# Prompt\n\n"
+        if system_info:
+            prompt_content += f"## System\n{system_info}\n\n"
+        if instruction:
+            prompt_content += f"## Instruction\n{instruction}\n\n"
+        if exemplars:
+            prompt_content += f"## Exemplars\n```json\n{json_lib.dumps(exemplars, indent=2)}\n```\n\n"
+        if query:
+            prompt_content += f"## Query\n{query}\n\n"
+        
+        # Save the prompt
+        try:
+            prompt_file.write_text(prompt_content)
+            self.logger.debug(f"Saved prompt to {prompt_file}")
+        except Exception as e:
+            self.logger.warning(f"Failed to save prompt: {e}")
 
         start_time = time.time()
         try:

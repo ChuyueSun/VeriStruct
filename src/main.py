@@ -129,7 +129,7 @@ def main():
         logger.info(f"Using custom test file from environment: {test_file_path}")
     else:
         # Default test file if no custom one specified
-        test_file_path = Path("tests/rb_type_invariant_todo.rs")
+        test_file_path = Path(f"{config['project_dir']}/benchmarks/even_cell_todo.rs")
         logger.info(f"Using default test file: {test_file_path}")
 
     if not test_file_path.exists():

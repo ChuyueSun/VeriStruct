@@ -8,6 +8,7 @@ from infer import LLM
 from modules.base import BaseModule
 from modules.veval import EvalScore, VEval
 from prompts.template import fill_template
+from doc.naive_reader import get_content
 
 
 class Trial:
@@ -98,6 +99,14 @@ class Context:
 
         self.add_trial(raw_code)
 
+        for line in raw_code.split("\n"):
+            if line.startswith('use'):
+                lib_name = line.split(" ")[1].strip()
+                print(lib_name)
+                content = get_content(lib_name)
+                if len(content) > 0:
+                    self.add_knowledge(lib_name, content, append=False)
+        
     def add_trial(self, code: str) -> None:
         """
         Add a result generate by LLM to the context.
@@ -172,6 +181,7 @@ class Context:
             # Other mode: TODO
             trial = None
             prevs = []
+
 
         rloc = self.raw_code_loc
         verus_code = trial.code
