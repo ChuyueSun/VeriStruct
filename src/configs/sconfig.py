@@ -36,8 +36,8 @@ except FileNotFoundError:
     }
 
 # Default Set to our verusagent config or fallback to any config
-if "config-azure" in configs:
-    config = configs["config-azure"]
+if "config-yican" in configs:
+    config = configs["config-yican"]
 else:
     # Use the first config found or the default
     config = (

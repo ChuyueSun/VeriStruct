@@ -73,6 +73,7 @@ Please provide only the complete Rust code of the refined file with no additiona
             add_common=True,
             add_view=True,  # Include View refinement guidelines
             code=code,
+            context=context
         )
 
         # Load examples

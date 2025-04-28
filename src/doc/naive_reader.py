@@ -26,12 +26,13 @@ def get_content(use_path: str):
     use_path = use_path.lstrip().rstrip()
     use_path = use_path.replace("*", "")
     use_path = use_path.replace("::", "/")
+    use_path = use_path.replace(";", "")
     while use_path.endswith("/"):
         use_path = use_path[:-1]
     if use_path == "vstd" or use_path == "vstd/":
         return ""
     use_path = os.path.join(external_dir, use_path + ".rs")
-    # print(use_path)
+    #print(use_path)
     if os.path.exists(use_path):
         return open(use_path, "r").read()
     else:

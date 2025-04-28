@@ -113,6 +113,7 @@ def build_instruction(
     add_invariant: bool = False,
     add_requires_ensures: bool = False,
     code: Optional[str] = None,
+    knowledge: Optional[str] = None
 ) -> str:
     """
     Build a complete instruction by combining various prompt components.
@@ -145,5 +146,8 @@ def build_instruction(
     # Add Seq knowledge if needed and code is provided
     if code:
         instruction = add_seq_knowledge_if_needed(code, instruction)
+
+    if knowledge is not None:
+        instruction += knowledge
 
     return instruction
