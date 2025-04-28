@@ -1107,3 +1107,129 @@ def parse_llm_response(response: str, logger=None) -> str:
     if logger:
         logger.warning("Could not extract Rust/Verus code from response")
     return ""
+
+
+def parse_plan_execution_order(plan_text: str, available_modules: List[str], logger=None) -> List[str]:
+    """
+    Parses the planner's response to determine module execution order.
+    
+    This function:
+    1. Detects explicit module mentions in step-by-step plans
+    2. Uses NLP-like techniques to identify implicit module references
+    3. Scores modules based on their relevance in the plan
+    
+    Args:
+        plan_text: The planner's response text
+        available_modules: List of available module names
+        logger: Optional logger for debugging
+        
+    Returns:
+        Ordered list of module names to execute
+    """
+    if logger:
+        logger.info("Parsing plan to determine module execution order...")
+    
+    # Initialize result and module tracking
+    execution_order = []
+    module_scores = {module: 0 for module in available_modules}
+    
+    # Define module keywords and phrases for each module
+    module_keywords = {
+        "view_inference": [
+            "view inference", "view function", "view generation", 
+            "infer view", "implement view", "create view",
+            "generate view", "define view", "write view"
+        ],
+        "view_refinement": [
+            "view refinement", "refine view", "refining view",
+            "improve view", "optimize view", "enhance view", 
+            "correct view", "fix view", "update view"
+        ],
+        "inv_inference": [
+            "invariant inference", "inv inference", "invariant function",
+            "infer invariant", "implement invariant", "create invariant",
+            "generate invariant", "define invariant", "write invariant"
+        ],
+        "spec_inference": [
+            "specification inference", "spec inference", "requires/ensures",
+            "infer specification", "implement specification", "create specification",
+            "generate specification", "define specification", "write specification",
+            "requires", "ensures", "pre-condition", "post-condition"
+        ]
+    }
+    
+    # Check for numbered step markers in the plan
+    step_patterns = [
+        r"step\s*(\d+)[\s:]+(.+?)(?=step\s*\d+[\s:]|$)",  # "Step 1: Do X"
+        r"(\d+)[\.:\)]\s*(.+?)(?=\d+[\.:\)]|$)",          # "1. Do X" or "1) Do X"
+        r"(\d+)\.\s*(.+?)(?=\d+\.\s|$)"                    # "1. Do X"
+    ]
+    
+    steps = []
+    
+    # Extract steps using patterns
+    for pattern in step_patterns:
+        matches = re.findall(pattern, plan_text, re.DOTALL | re.IGNORECASE)
+        if matches:
+            # Sort by step number
+            sorted_matches = sorted(matches, key=lambda x: int(x[0]))
+            steps = [(int(num), content.strip()) for num, content in sorted_matches]
+            if logger:
+                logger.info(f"Found {len(steps)} ordered steps in plan")
+            break
+    
+    # If we found steps, process them in order
+    if steps:
+        for step_num, step_content in steps:
+            step_modules = []
+            
+            # Check each module's keywords against this step
+            for module, keywords in module_keywords.items():
+                for keyword in keywords:
+                    if keyword.lower() in step_content.lower():
+                        if module not in step_modules:
+                            step_modules.append(module)
+                            # Add score based on step position (earlier = higher priority)
+                            module_scores[module] += 10 * (len(steps) - step_num + 1)
+                            break
+            
+            # Add modules mentioned in this step to the execution order
+            for module in step_modules:
+                if module not in execution_order and module in available_modules:
+                    execution_order.append(module)
+    
+    # If we couldn't extract steps or no modules were found in steps,
+    # fall back to scoring mentions throughout the text
+    if not execution_order:
+        # Split plan into sentences for context-based analysis
+        sentences = re.split(r'[.!?]\s+', plan_text)
+        
+        # Check each sentence for module keywords
+        for i, sentence in enumerate(sentences):
+            for module, keywords in module_keywords.items():
+                for keyword in keywords:
+                    if keyword.lower() in sentence.lower():
+                        # Add score based on position (earlier = higher priority)
+                        module_scores[module] += 5 * (len(sentences) - i)
+                        break
+        
+        # Create execution order based on scores
+        if any(score > 0 for score in module_scores.values()):
+            # Sort modules by score (highest first)
+            scored_modules = [(module, score) for module, score in module_scores.items() 
+                              if score > 0 and module in available_modules]
+            scored_modules.sort(key=lambda x: x[1], reverse=True)
+            
+            execution_order = [module for module, _ in scored_modules]
+            
+            if logger:
+                logger.info(f"Determined module order by keyword frequency: {execution_order}")
+    
+    # If still no modules found, use default order for available modules
+    if not execution_order:
+        default_order = ["view_inference", "view_refinement", "inv_inference", "spec_inference"]
+        execution_order = [module for module in default_order if module in available_modules]
+        if logger:
+            logger.warning(f"Using default module order: {execution_order}")
+    
+    return execution_order

@@ -3,6 +3,7 @@ Template utilities for loading and processing prompts.
 """
 
 import os
+import re
 from pathlib import Path
 from string import Template
 from typing import Dict, List, Optional
@@ -36,17 +37,31 @@ def fill_template(name: str, keys: dict):
     :param name: The name of the template to use.
     :param keys: A dictionary of keys to use in the template.
     :return: The generated prompt.
+    
     Example:
-        fill_template("plan_system", {"modules": "42", "task_desc": "42"})
+        fill_template("plan_system", {"modules": "42", "task_overview": "42"})
         This will return the prompt with the keys replaced with the values, from
         "plan_system.md".
+        
+    Note:
+        This function supports both ${var} and {{var}} style template variables.
     """
     if name not in templates:
         print(f"Warning: Template {name} not found. Using empty template.")
         return ""
+    
+    # Add default values
     keys["_blank"] = ""
     keys["_blanks"] = ""
-    return templates[name].substitute(keys)
+    
+    # First use string.Template to handle ${var} style variables
+    template_content = templates[name].substitute(keys)
+    
+    # Then handle {{var}} style variables
+    for key, value in keys.items():
+        template_content = template_content.replace(f"{{{{{key}}}}}", str(value))
+    
+    return template_content
 
 
 # New functions for loading Verus prompts directly

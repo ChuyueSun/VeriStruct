@@ -14,9 +14,11 @@ from modules.repair_postcond import RepairPostcondModule
 from modules.repair_precond import RepairPrecondModule
 from modules.repair_registry import RepairRegistry
 from modules.spec_inference import SpecInferenceModule
+from modules.utils import parse_plan_execution_order
 from modules.veval import VerusErrorType, VEval, verus
 from modules.view_inference import ViewInferenceModule
 from modules.view_refinement import ViewRefinementModule
+from planner import Planner
 
 # Set the logging level to DEBUG to see more detailed information
 logger.remove()
@@ -190,77 +192,86 @@ def main():
 
     logger.info(f"Registered modules: {list(context.modules.keys())}")
 
-    # Run the entire workflow (Sequential for now, Planner integration is TODO)
+    # Create and execute planner to get a workflow strategy
+    logger.info("Creating verification plan using the Planner...")
+    planner = Planner(logger)
+    plan_result = planner.exec(context)
+    logger.info(f"Planning complete. Plan length: {len(plan_result) if isinstance(plan_result, (list, tuple)) else 'unknown'}")
+    
+    # Extract the plan text from the result, handling various possible data structures
+    def extract_text_from_data(data):
+        if isinstance(data, str):
+            return data
+        elif isinstance(data, (list, tuple)):
+            if len(data) == 0:
+                return ""
+            
+            # Try the first element
+            first_item = data[0]
+            if isinstance(first_item, str):
+                return first_item
+            elif isinstance(first_item, (list, tuple, dict)):
+                return extract_text_from_data(first_item)
+        elif isinstance(data, dict):
+            # If there's a 'content' key, use that
+            if 'content' in data:
+                return extract_text_from_data(data['content'])
+            # Otherwise, just use the first value
+            elif data:
+                return extract_text_from_data(next(iter(data.values())))
+        
+        # Fallback: convert to string
+        return str(data)
+    
+    plan_text = extract_text_from_data(plan_result)
+    if not plan_text:
+        plan_text = "No plan generated. Proceeding with default execution order."
+        logger.warning(plan_text)
+    
+    # Save the plan to the output directory
+    plan_file_path = output_dir / f"verification_plan_{file_id}.txt"
+    write_and_verify_file(plan_file_path, plan_text, logger)
+    logger.info(f"Saved verification plan to {plan_file_path}")
+    
+    # Add the plan to the context as knowledge
+    context.add_knowledge("verification_plan", plan_text)
+    logger.info("Added verification plan to context knowledge")
 
-    # Step 1: Generate View function
-    progress_logger.start_step("view_inference", 1)
-    step_start_time = time.time()
-    logger.info("Step 1: Generating View function...")
-    view_result = view_inference.exec(context)
-    step_time = time.time() - step_start_time
-    logger.info(
-        f"View inference completed with result length: {len(view_result)} in {step_time:.2f}s"
-    )
-    # Save the intermediate result with timestamp
-    write_and_verify_file(
-        output_dir / f"01_view_inference_{file_id}.rs", view_result, logger
-    )
-    # Log step progress
-    if context.trials and context.trials[-1].eval:
-        progress_logger.end_step(context.trials[-1].eval.get_score(), len(view_result))
-
-    # Step 2: Refine View function
-    progress_logger.start_step("view_refinement", 2)
-    step_start_time = time.time()
-    logger.info("Step 2: Refining View function...")
-    refined_view_result = view_refinement.exec(context)
-    step_time = time.time() - step_start_time
-    logger.info(
-        f"View refinement completed with result length: {len(refined_view_result)} in {step_time:.2f}s"
-    )
-    # Save the intermediate result with timestamp
-    write_and_verify_file(
-        output_dir / f"02_view_refinement_{file_id}.rs", refined_view_result, logger
-    )
-    # Log step progress
-    if context.trials and context.trials[-1].eval:
-        progress_logger.end_step(
-            context.trials[-1].eval.get_score(), len(refined_view_result)
+    # Parse the plan to determine execution order using the new utility function
+    available_modules = list(context.modules.keys())
+    execution_order = parse_plan_execution_order(plan_text, available_modules, logger)
+    logger.info(f"Determined execution order from plan: {execution_order}")
+    
+    # Execute modules according to the plan-derived order
+    step_number = 1
+    for module_name in execution_order:
+        # Ensure the module exists
+        if module_name not in context.modules:
+            logger.warning(f"Module '{module_name}' not found in registered modules. Skipping.")
+            continue
+            
+        module = context.modules[module_name]
+        
+        # Start step tracking
+        progress_logger.start_step(module_name, step_number)
+        step_start_time = time.time()
+        
+        logger.info(f"Step {step_number}: Executing {module_name}...")
+        step_result = module.exec(context)
+        
+        step_time = time.time() - step_start_time
+        logger.info(f"{module_name} completed with result length: {len(step_result)} in {step_time:.2f}s")
+        
+        # Save the intermediate result with timestamp
+        write_and_verify_file(
+            output_dir / f"{step_number:02}_{module_name}_{file_id}.rs", step_result, logger
         )
-
-    # Step 3: Generate Inv function
-    progress_logger.start_step("inv_inference", 3)
-    step_start_time = time.time()
-    logger.info("Step 3: Generating Inv function...")
-    inv_result = inv_inference.exec(context)
-    step_time = time.time() - step_start_time
-    logger.info(
-        f"Inv inference completed with result length: {len(inv_result)} in {step_time:.2f}s"
-    )
-    # Save the intermediate result with timestamp
-    write_and_verify_file(
-        output_dir / f"03_inv_inference_{file_id}.rs", inv_result, logger
-    )
-    # Log step progress
-    if context.trials and context.trials[-1].eval:
-        progress_logger.end_step(context.trials[-1].eval.get_score(), len(inv_result))
-
-    # Step 4: Generate Requires/Ensures specifications
-    progress_logger.start_step("spec_inference", 4)
-    step_start_time = time.time()
-    logger.info("Step 4: Generating Requires/Ensures specifications...")
-    spec_result = spec_inference.exec(context)
-    step_time = time.time() - step_start_time
-    logger.info(
-        f"Spec inference completed with result length: {len(spec_result)} in {step_time:.2f}s"
-    )
-    # Save the intermediate result with timestamp
-    write_and_verify_file(
-        output_dir / f"04_spec_inference_{file_id}.rs", spec_result, logger
-    )
-    # Log step progress
-    if context.trials and context.trials[-1].eval:
-        progress_logger.end_step(context.trials[-1].eval.get_score(), len(spec_result))
+        
+        # Log step progress
+        if context.trials and context.trials[-1].eval:
+            progress_logger.end_step(context.trials[-1].eval.get_score(), len(step_result))
+            
+        step_number += 1
 
     # Step 5: Attempt repairs if needed using the repair registry
     last_trial = context.trials[-1]
