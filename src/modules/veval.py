@@ -12,7 +12,7 @@ from enum import Enum
 from pathlib import Path
 from typing import List, Optional, Set
 
-from configs.sconfig import config, reset_config
+from src.configs.sconfig import config, reset_config
 
 
 class VerusErrorType(Enum):
@@ -316,18 +316,41 @@ class EvalScore:
         return False
 
     def __gt__(self, value: object) -> bool:
+        """
+        Compare two EvalScore objects to determine if self is better than value.
+        
+        Args:
+            value: Another EvalScore object to compare with
+            
+        Returns:
+            True if self is better than value, False otherwise
+        """
+        # Handle edge cases in dummy mode
         if not isinstance(value, EvalScore):
-            raise Exception("Invalid comparison")
+            # Log but don't throw exception (prevents crashes in dummy mode)
+            import logging
+            logging.getLogger("EvalScore").warning(f"Attempted invalid comparison between EvalScore and {type(value)}")
+            return False
+            
         # Compilation error is the highest priority - code that compiles is ALWAYS better
         if self.compilation_error != value.compilation_error:
             return not self.compilation_error
+            
         # For code that both compile or both fail to compile, compare other metrics
-        if self.verified != value.verified:
-            return self.verified > value.verified
-        if self.errors != value.errors:
-            return self.errors < value.errors
-        if self.verus_errors != value.verus_errors:
-            return self.verus_errors < value.verus_errors
+        try:
+            # Handle negative values safely (can happen in dummy mode)
+            if self.verified != value.verified:
+                return self.verified > value.verified
+            if self.errors != value.errors:
+                return self.errors < value.errors
+            if self.verus_errors != value.verus_errors:
+                return self.verus_errors < value.verus_errors
+        except Exception as e:
+            # If any comparison fails, log it and return False
+            import logging
+            logging.getLogger("EvalScore").warning(f"Error during score comparison: {e}")
+            return False
+            
         return False
 
     def __le__(self, value: object) -> bool:
@@ -345,8 +368,8 @@ class EvalScore:
         )
 
 
-# Add a flag to enable/disable veval (for testing without Verus installed)
-DUMMY_MODE = os.environ.get("ENABLE_LLM_INFERENCE", "1") != "1"
+# Don't use dummy mode by default
+DUMMY_MODE = False
 
 
 class VEval:
@@ -368,6 +391,24 @@ class VEval:
         # In dummy mode, we'll pretend to have basic compilation issues
         self.dummy_mode = DUMMY_MODE
 
+        # Try to find a valid verus_path if ours is None
+        if self.verus_path is None:
+            # See if we can find verus in the environment
+            import os
+            verus_from_env = os.environ.get("VERUS_PATH")
+            if verus_from_env and os.path.exists(verus_from_env):
+                self.verus_path = verus_from_env
+                if self.logger:
+                    self.logger.info(f"Found Verus path from environment: {self.verus_path}")
+                # Update the global verus object too
+                verus.set_verus_path(self.verus_path)
+            elif os.environ.get("ENABLE_VEVAL", "1") == "1":
+                # Specifically enabled but no path found - log a warning
+                if self.logger:
+                    self.logger.warning(
+                        "VEval enabled but no verus_path found. Please set verus_path in config or VERUS_PATH environment variable."
+                    )
+            
         # Also set dummy mode if verus_path is None
         if self.verus_path is None:
             self.dummy_mode = True

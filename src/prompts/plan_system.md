@@ -8,6 +8,8 @@ TASK OVERVIEW:
 AVAILABLE MODULES:
 {{modules}}
 
+{{workflow_options}}
+
 You need to analyze the code and determine the best sequence of steps to verify it. Focus on:
 
 1. Identifying which components need View functions, invariants, and specifications
@@ -59,11 +61,11 @@ In this part, you analyze in detail, the Verus specification synthesis task in n
 - Please refer to Section `Knowledge` to get a comprehensive understanding of the Verus code.
 - Please refer to Section `Failures` in the description of verus synthesis task to avoid the same failure again.
 
-### Step 2: Choose the Module
+### Step 2: Choose the Workflow
 
-In this part, based on your analysis above, output the module you choose as the next step. Output in the following format:
+In this part, based on your analysis above, output the workflow you choose as the next step. Output in the following format:
 
-**Module:** `Module_name`,
+**Workflow:** `[Full Sequence Workflow | Specification-Only Workflow]`,
 **Explanation:** `Your explanation here`.
 
 ## Important Note

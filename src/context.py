@@ -3,11 +3,11 @@ import subprocess
 from dataclasses import dataclass
 from typing import Dict, List, Optional
 
-from configs.sconfig import config
-from infer import LLM
-from modules.base import BaseModule
+from src.configs.sconfig import config
+from src.infer import LLM
+from src.modules.base import BaseModule
 from modules.veval import EvalScore, VEval
-from prompts.template import fill_template
+from src.prompts.template import fill_template
 
 
 class Trial:

@@ -8,7 +8,7 @@ from pathlib import Path
 from string import Template
 from typing import Dict, List, Optional
 
-from configs.sconfig import config
+from src.configs.sconfig import config
 
 """
 Automatically collects all templates in the prompts directory.

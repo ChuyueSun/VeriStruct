@@ -12,10 +12,16 @@ import re
 import subprocess
 import sys
 import tempfile
+import time
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
-from modules.veval import EvalScore, VEval
+from loguru import logger
+
+import glob
+
+# Import VEval from modules.veval rather than src.modules.veval
+from modules.veval import VerusErrorType, VEval, EvalScore
 
 
 def write_candidate_code(
@@ -462,11 +468,16 @@ def debug_type_error(code: str, verus_error=None, num=1, logger=None) -> tuple:
     # Import the needed class here to avoid circular imports
     from modules.veval import VerusErrorType, VEval
 
+    # Handle dummy mode - if verus_error is a string rather than a VerusError object
+    if isinstance(verus_error, str):
+        logger.warning("Received string error in dummy mode instead of VerusError object")
+        return code, 0
+
     if verus_error:
         # fix the reported one
-        if verus_error.error != VerusErrorType.MismatchedType:
+        if not hasattr(verus_error, 'error') or verus_error.error != VerusErrorType.MismatchedType:
             logger.warning(
-                f"Warning: a non type error is passed to debug_type_error: {verus_error.error}"
+                f"Warning: a non type error is passed to debug_type_error: {getattr(verus_error, 'error', 'unknown')}"
             )
         else:
             newcode = fix_one_type_error_in_code(
@@ -489,7 +500,12 @@ def debug_type_error(code: str, verus_error=None, num=1, logger=None) -> tuple:
         has_typeerr = False
         fixed_typeerr = False
         for cur_failure in failures:
-            if cur_failure.error == VerusErrorType.MismatchedType:
+            # Skip string failures in dummy mode
+            if isinstance(cur_failure, str):
+                logger.warning(f"Skipping string failure in dummy mode: {cur_failure}")
+                continue
+                
+            if hasattr(cur_failure, 'error') and cur_failure.error == VerusErrorType.MismatchedType:
                 has_typeerr = True
                 newcode = fix_one_type_error_in_code(
                     code, cur_failure.trace[0], verbose=False
@@ -511,7 +527,10 @@ def debug_type_error(code: str, verus_error=None, num=1, logger=None) -> tuple:
 
         if not fixed_typeerr:
             logger.info("Remaining type errors are unfixable.")
-            logger.info(cur_failure.trace[0].get_text())
+            if isinstance(cur_failure, str):
+                logger.info(cur_failure)
+            else:
+                logger.info(cur_failure.trace[0].get_text())
             return "", len(failures)
 
     return code, len(failures)
@@ -1111,125 +1130,49 @@ def parse_llm_response(response: str, logger=None) -> str:
 
 def parse_plan_execution_order(plan_text: str, available_modules: List[str], logger=None) -> List[str]:
     """
-    Parses the planner's response to determine module execution order.
-    
-    This function:
-    1. Detects explicit module mentions in step-by-step plans
-    2. Uses NLP-like techniques to identify implicit module references
-    3. Scores modules based on their relevance in the plan
+    Simplified plan execution parser that only allows two possible workflows:
+    1. Full sequence: view_inference -> view_refinement -> inv_inference -> spec_inference
+    2. Just spec_inference alone
     
     Args:
         plan_text: The planner's response text
-        available_modules: List of available module names
+        available_modules: List of available module names 
         logger: Optional logger for debugging
         
     Returns:
         Ordered list of module names to execute
     """
     if logger:
-        logger.info("Parsing plan to determine module execution order...")
+        logger.info("Parsing plan to determine module execution order (limited to two possible workflows)...")
     
-    # Initialize result and module tracking
-    execution_order = []
-    module_scores = {module: 0 for module in available_modules}
+    # Define our two possible workflows
+    full_workflow = ["view_inference", "view_refinement", "inv_inference", "spec_inference"]
+    spec_only_workflow = ["spec_inference"]
     
-    # Define module keywords and phrases for each module
-    module_keywords = {
-        "view_inference": [
-            "view inference", "view function", "view generation", 
-            "infer view", "implement view", "create view",
-            "generate view", "define view", "write view"
-        ],
-        "view_refinement": [
-            "view refinement", "refine view", "refining view",
-            "improve view", "optimize view", "enhance view", 
-            "correct view", "fix view", "update view"
-        ],
-        "inv_inference": [
-            "invariant inference", "inv inference", "invariant function",
-            "infer invariant", "implement invariant", "create invariant",
-            "generate invariant", "define invariant", "write invariant"
-        ],
-        "spec_inference": [
-            "specification inference", "spec inference", "requires/ensures",
-            "infer specification", "implement specification", "create specification",
-            "generate specification", "define specification", "write specification",
-            "requires", "ensures", "pre-condition", "post-condition"
-        ]
-    }
+    # Check which modules are available
+    available_full_workflow = [m for m in full_workflow if m in available_modules]
     
-    # Check for numbered step markers in the plan
-    step_patterns = [
-        r"step\s*(\d+)[\s:]+(.+?)(?=step\s*\d+[\s:]|$)",  # "Step 1: Do X"
-        r"(\d+)[\.:\)]\s*(.+?)(?=\d+[\.:\)]|$)",          # "1. Do X" or "1) Do X"
-        r"(\d+)\.\s*(.+?)(?=\d+\.\s|$)"                    # "1. Do X"
+    # Check if we should do the spec-only workflow
+    spec_only_indicators = [
+        "only need specification",
+        "only spec inference",
+        "spec inference only",
+        "only specification",
+        "skip view",
+        "no view needed",
+        "no need for view",
+        "focus on spec",
+        "specification is sufficient",
+        "specification alone"
     ]
     
-    steps = []
+    use_spec_only = any(indicator.lower() in plan_text.lower() for indicator in spec_only_indicators)
     
-    # Extract steps using patterns
-    for pattern in step_patterns:
-        matches = re.findall(pattern, plan_text, re.DOTALL | re.IGNORECASE)
-        if matches:
-            # Sort by step number
-            sorted_matches = sorted(matches, key=lambda x: int(x[0]))
-            steps = [(int(num), content.strip()) for num, content in sorted_matches]
-            if logger:
-                logger.info(f"Found {len(steps)} ordered steps in plan")
-            break
-    
-    # If we found steps, process them in order
-    if steps:
-        for step_num, step_content in steps:
-            step_modules = []
-            
-            # Check each module's keywords against this step
-            for module, keywords in module_keywords.items():
-                for keyword in keywords:
-                    if keyword.lower() in step_content.lower():
-                        if module not in step_modules:
-                            step_modules.append(module)
-                            # Add score based on step position (earlier = higher priority)
-                            module_scores[module] += 10 * (len(steps) - step_num + 1)
-                            break
-            
-            # Add modules mentioned in this step to the execution order
-            for module in step_modules:
-                if module not in execution_order and module in available_modules:
-                    execution_order.append(module)
-    
-    # If we couldn't extract steps or no modules were found in steps,
-    # fall back to scoring mentions throughout the text
-    if not execution_order:
-        # Split plan into sentences for context-based analysis
-        sentences = re.split(r'[.!?]\s+', plan_text)
-        
-        # Check each sentence for module keywords
-        for i, sentence in enumerate(sentences):
-            for module, keywords in module_keywords.items():
-                for keyword in keywords:
-                    if keyword.lower() in sentence.lower():
-                        # Add score based on position (earlier = higher priority)
-                        module_scores[module] += 5 * (len(sentences) - i)
-                        break
-        
-        # Create execution order based on scores
-        if any(score > 0 for score in module_scores.values()):
-            # Sort modules by score (highest first)
-            scored_modules = [(module, score) for module, score in module_scores.items() 
-                              if score > 0 and module in available_modules]
-            scored_modules.sort(key=lambda x: x[1], reverse=True)
-            
-            execution_order = [module for module, _ in scored_modules]
-            
-            if logger:
-                logger.info(f"Determined module order by keyword frequency: {execution_order}")
-    
-    # If still no modules found, use default order for available modules
-    if not execution_order:
-        default_order = ["view_inference", "view_refinement", "inv_inference", "spec_inference"]
-        execution_order = [module for module in default_order if module in available_modules]
+    if use_spec_only and "spec_inference" in available_modules:
         if logger:
-            logger.warning(f"Using default module order: {execution_order}")
-    
-    return execution_order
+            logger.info("Using spec-inference-only workflow based on plan.")
+        return spec_only_workflow
+    else:
+        if logger:
+            logger.info("Using full workflow sequence: view_inference -> view_refinement -> inv_inference -> spec_inference")
+        return available_full_workflow

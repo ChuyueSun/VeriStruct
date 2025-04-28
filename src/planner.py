@@ -26,16 +26,42 @@ class Planner:
         modules = ""
         for module in ctx.modules.values():
             modules += f"- **{module.name}**: {module.desc}\n"
+            
+        workflow_options = """
+## Workflow Options
+There are exactly two possible workflows for verifying Verus code:
+
+1. **Full Sequence Workflow**: 
+   - Step 1: View Inference - Generate a View function for the data structure
+   - Step 2: View Refinement - Refine the generated View implementation
+   - Step 3: Invariant Inference - Generate invariants for loops and data structures
+   - Step 4: Specification Inference - Generate function specifications (requires/ensures)
+
+2. **Specification-Only Workflow**:
+   - Step 1: Specification Inference - Generate function specifications without implementing a View
+
+Your task is to decide which workflow is most appropriate for the given Verus code.
+Choose the Specification-Only workflow only if the code has no data structures needing a View implementation.
+        """
 
         system = fill_template(
             "plan_system",
             {
                 "task_overview": task_overview,
                 "modules": modules,
+                "workflow_options": workflow_options
             },
         )
 
-        prompt = ctx.gen_task_desc()
+        prompt = f"""
+{ctx.gen_task_desc()}
+
+Analyze the code and decide which of the two possible workflows is most appropriate:
+1. Full Sequence Workflow (view_inference → view_refinement → inv_inference → spec_inference)
+2. Specification-Only Workflow (spec_inference only)
+
+Explain your choice in 2-3 sentences, then specify the exact workflow to use.
+"""
 
         return ctx.llm.infer_llm(
             "",

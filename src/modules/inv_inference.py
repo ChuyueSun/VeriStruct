@@ -1,11 +1,15 @@
+import json
 import os
 import re
+import tempfile
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
-from infer import LLM
-from modules.base import BaseModule
-from modules.utils import (
+from loguru import logger
+
+from src.infer import LLM
+from src.modules.base import BaseModule
+from src.modules.utils import (
     debug_type_error,
     evaluate_samples,
     save_selection_info,
@@ -13,7 +17,7 @@ from modules.utils import (
     write_candidate_code,
 )
 from modules.veval import VEval
-from prompts.template import build_instruction
+from src.prompts.template import build_instruction
 
 
 class InvInferenceModule(BaseModule):

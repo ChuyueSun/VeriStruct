@@ -5,20 +5,20 @@ from pathlib import Path
 
 from loguru import logger
 
-from configs.sconfig import config, reset_config
-from context import Context, HyperParams, Trial
-from modules.inv_inference import InvInferenceModule
-from modules.progress_logger import ProgressLogger
-from modules.repair_assertion import RepairAssertionModule
-from modules.repair_postcond import RepairPostcondModule
-from modules.repair_precond import RepairPrecondModule
-from modules.repair_registry import RepairRegistry
-from modules.spec_inference import SpecInferenceModule
-from modules.utils import parse_plan_execution_order
+from src.configs.sconfig import config, reset_config
+from src.context import Context, HyperParams, Trial
+from src.modules.inv_inference import InvInferenceModule
+from src.modules.progress_logger import ProgressLogger
+from src.modules.repair_assertion import RepairAssertionModule
+from src.modules.repair_postcond import RepairPostcondModule
+from src.modules.repair_precond import RepairPrecondModule
+from src.modules.repair_registry import RepairRegistry
+from src.modules.spec_inference import SpecInferenceModule
 from modules.veval import VerusErrorType, VEval, verus
-from modules.view_inference import ViewInferenceModule
-from modules.view_refinement import ViewRefinementModule
-from planner import Planner
+from src.modules.utils import parse_plan_execution_order
+from src.modules.view_inference import ViewInferenceModule
+from src.modules.view_refinement import ViewRefinementModule
+from src.planner import Planner
 
 # Set the logging level to DEBUG to see more detailed information
 logger.remove()
@@ -116,6 +116,9 @@ def main():
         if "verus_path" in config:
             verus.set_verus_path(config["verus_path"])
             logger.info(f"Verus path set to: {verus.verus_path}")
+            # Also set as environment variable for modules to access
+            os.environ["VERUS_PATH"] = str(config["verus_path"])
+            logger.info(f"VERUS_PATH environment variable set to: {os.environ['VERUS_PATH']}")
         else:
             logger.warning("verus_path not found in configuration")
     except Exception as e:
