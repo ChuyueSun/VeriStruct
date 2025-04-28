@@ -52,5 +52,5 @@ fn start_thread(counter: PPtr<u64>, Tracked(perm): Tracked<PointsTo<u64>>)
 // VerusErrorType.Other: in requires, use `old(perm)` to refer to the pre-state of an &mut variable
 // {"$message_type":"diagnostic","message":"in requires, use `old(perm)` to refer to the pre-state of an &mut variable","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmphq_omw6n","byte_start":905,"byte_end":909,"line_start":29,"line_end":29,"column_start":35,"column_end":39,"is_primary":true,"text":[{"text":"        *counter.borrow(Tracked(&*perm)) < u64::MAX,","highlight_start":35,"highlight_end":39}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: in requires, use `old(perm)` to refer to the pre-state of an &mut variable\n  --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmphq_omw6n:29:35\n   |\n29 |         *counter.borrow(Tracked(&*perm)) < u64::MAX,\n   |                                   ^^^^\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}
-// 
-// 
+//
+//

@@ -5,7 +5,7 @@ use vstd::prelude::*;
 fn main() {}
 
 verus!{
-     
+
 spec fn triangle(n: nat) -> nat
     decreases n
 {

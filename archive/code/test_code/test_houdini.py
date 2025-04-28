@@ -1,12 +1,15 @@
-import os
-import sys
 import json
 import logging
-from refinement import Refinement
-from utils import AttrDict
-from veval import verus
-from houdini import houdini
+import os
+import sys
 from pathlib import Path
+
+from houdini import houdini
+from refinement import Refinement
+from veval import verus
+
+from utils import AttrDict
+
 
 def main():
     # Set up logging
@@ -15,11 +18,11 @@ def main():
 
     print("=== Starting repair_veval test ===")
     # Load configuration from config-o3mini.json
-    config_path = '/home/chuyue/-verusyth/code/config-4o.json'
+    config_path = "/home/chuyue/-verusyth/code/config-4o.json"
     if not os.path.isfile(config_path):
         logger.error("Config file not found: %s", config_path)
         sys.exit(1)
-    with open(config_path, 'r') as f:
+    with open(config_path, "r") as f:
         config_data = json.load(f)
     config = AttrDict(config_data)
 
@@ -31,7 +34,7 @@ def main():
     logger.info("Verus path set to: %s", verus.verus_path)
 
     # If you need specific immutable functions, list them here
-    immutable_funcs = ['test_enqueue_dequeue_generic']  
+    immutable_funcs = ["test_enqueue_dequeue_generic"]
     hdn = houdini(config, immutable_funcs)
     # Read the .rs file from the command line
     rs_path = Path(sys.argv[1])
@@ -67,6 +70,7 @@ def main():
     with open("output.rs", "w", encoding="utf-8") as out_f:
         out_f.write(new_code)
     print("\n[Info] Wrote the updated code to output.rs")
+
 
 if __name__ == "__main__":
     main()

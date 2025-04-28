@@ -8,10 +8,10 @@ verus! {
 spec fn my_recursive_spec(i: nat) -> nat
     decreases i
 {
-    if i == 0 { 
-        0 
-    } else { 
-        10 + my_recursive_spec( (i - 1) as nat) 
+    if i == 0 {
+        0
+    } else {
+        10 + my_recursive_spec( (i - 1) as nat)
     }
 }
 
@@ -53,4 +53,4 @@ fn my_fun(n: u64) -> (sum: u64)
 }
 
 
-} 
+}

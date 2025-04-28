@@ -45,7 +45,7 @@ verus! {
     }
 
     /// This function says that for any `x` and `y`, there are two
-    /// possibilities for the sum `x % n + y % n`: 
+    /// possibilities for the sum `x % n + y % n`:
     /// (1) It's in the range `[0, n)` and equals `(x + y) % n`.
     /// (2) It's in the range `[n, 2n)` and equals `(x + y) % n + n`.
     pub open spec fn mod_auto_plus(n: int) -> bool
@@ -175,7 +175,7 @@ verus! {
             }
         }
 
-        
+
         /// If the buffer isn't full, adds a new element to the back.
         /// Returns whether the element was added.
         pub fn enqueue(&mut self, val: T) -> (succ: bool)
@@ -211,7 +211,7 @@ verus! {
                 None
             }
         }
-        
+
         /// Returns the number of elements that can still be enqueued until it is full.
         pub fn available_len(&self) -> (ret: usize)
             // TODO: add requires and ensures
@@ -294,5 +294,5 @@ verus! {
 // {"$message_type":"diagnostic","message":"assertion failed","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpe9frfebl","byte_start":7590,"byte_end":7602,"line_start":258,"line_end":258,"column_start":20,"column_end":32,"is_primary":true,"text":[{"text":"            assert(buf_len == 1);","highlight_start":20,"highlight_end":32}],"label":"assertion failed","suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: assertion failed\n   --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpe9frfebl:258:20\n    |\n258 |             assert(buf_len == 1);\n    |                    ^^^^^^^^^^^^ assertion failed\n\n"}
 // {"$message_type":"diagnostic","message":"assertion failed","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpe9frfebl","byte_start":7676,"byte_end":7688,"line_start":261,"line_end":261,"column_start":20,"column_end":32,"is_primary":true,"text":[{"text":"            assert(has_elements);","highlight_start":20,"highlight_end":32}],"label":"assertion failed","suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: assertion failed\n   --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpe9frfebl:261:20\n    |\n261 |             assert(has_elements);\n    |                    ^^^^^^^^^^^^ assertion failed\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 17 previous errors","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 17 previous errors\n\n"}
-// 
-// 
+//
+//

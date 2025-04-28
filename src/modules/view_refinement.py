@@ -72,7 +72,7 @@ Please provide only the complete Rust code of the refined file with no additiona
             base_instruction=self.refinement_instruction,
             add_common=True,
             add_view=True,  # Include View refinement guidelines
-            code=code
+            code=code,
         )
 
         # Load examples
@@ -93,7 +93,9 @@ Please provide only the complete Rust code of the refined file with no additiona
                         answer = answer_path.read_text() if answer_path.exists() else ""
                         examples.append({"query": input_content, "answer": answer})
             else:
-                self.logger.warning("Example path does not exist - proceeding without examples")
+                self.logger.warning(
+                    "Example path does not exist - proceeding without examples"
+                )
         except Exception as e:
             self.logger.error(f"Error loading examples: {e}")
 
@@ -134,10 +136,10 @@ Please provide only the complete Rust code of the refined file with no additiona
 
         # Evaluate the samples and get the best one
         best_code, best_score, _ = evaluate_samples(
-            samples=processed_responses, 
-            output_dir=output_dir, 
-            prefix="02_view_refinement", 
-            logger=self.logger
+            samples=processed_responses,
+            output_dir=output_dir,
+            prefix="02_view_refinement",
+            logger=self.logger,
         )
 
         # Get the global best from context
@@ -161,7 +163,7 @@ Please provide only the complete Rust code of the refined file with no additiona
         # Store the updated global best in context
         context.set_best_score(updated_global_best_score)
         context.set_best_code(updated_global_best_code)
-        
+
         # Add the best sample from current step to context, regardless of global best
         context.add_trial(best_code)  # Always use the best sample from this step
 

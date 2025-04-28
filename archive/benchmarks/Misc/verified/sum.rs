@@ -32,7 +32,7 @@ fn compute_arith_sum(n: u64) -> (sum: u64)
     let mut i: u64 = 0;
     let mut sum: u64 = 0;
     while i < n
-        invariant 
+        invariant
             i <= n,
             sum == arith_sum_int(i as nat),
             arith_sum_int(n as nat) < 10000,

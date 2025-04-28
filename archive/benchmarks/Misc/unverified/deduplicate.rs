@@ -34,7 +34,7 @@ ensures
             }
             j += 1;
         }
-        
+
         if !found {
             res.push(nums[i]);
         }

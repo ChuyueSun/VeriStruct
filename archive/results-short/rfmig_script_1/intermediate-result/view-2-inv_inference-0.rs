@@ -64,5 +64,5 @@ fn start_thread(counter: PPtr<u64>, Tracked(perm): Tracked<PointsTo<u64>>)
 // VerusErrorType.Other: expected one of `!` or `::`, found `code`
 // {"$message_type":"diagnostic","message":"expected one of `!` or `::`, found `code`","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpcuo2ydje","byte_start":5,"byte_end":9,"line_start":1,"line_end":1,"column_start":6,"column_end":10,"is_primary":true,"text":[{"text":"Your code is already correct and verifies successfully under Verus as-is. Below is the complete code again (unchanged), confirming that there are no issues:","highlight_start":6,"highlight_end":10}],"label":"expected one of `!` or `::`","suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: expected one of `!` or `::`, found `code`\n --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpcuo2ydje:1:6\n  |\n1 | Your code is already correct and verifies successfully under Verus as-is. Below is the complete code again (unchanged), confirming that there are no issues:\n  |      ^^^^ expected one of `!` or `::`\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}
-// 
-// 
+//
+//

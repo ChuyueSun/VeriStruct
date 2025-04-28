@@ -20,24 +20,24 @@ proof fn lemma_seq_take_all<T>(v: Seq<T>)
 }
 
 pub fn myfun4(x: &Vec<u64>, y: &mut Vec<u64>)
-requires 
+requires
     old(y).len() == 0,
-ensures 
+ensures
     y@ == x@.filter(|k:u64| k%3 == 0),
 {
     let mut i: usize = 0;
     let xlen = x.len();
-    
-    assert(y@ == x@.take(0).filter(|k:u64| k%3 ==0)); 
-    while (i < xlen) 
-        invariant 
+
+    assert(y@ == x@.take(0).filter(|k:u64| k%3 ==0));
+    while (i < xlen)
+        invariant
             0 <= i <= xlen,
-            x@.len() == xlen,  
+            x@.len() == xlen,
             y@ == x@.take(i as int).filter(|k:u64| k%3 == 0),
-    { 
+    {
         if (x[i] % 3 == 0) {
             y.push(x[i]);
-            
+
         }
         proof{
             lemma_seq_take_ascend(x@, i+1);

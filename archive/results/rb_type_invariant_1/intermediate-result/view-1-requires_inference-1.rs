@@ -95,5 +95,5 @@ verus! {
 // VerusErrorType.Other: unclosed delimiterVerusErrorType.Other: this file contains an unclosed delimiter
 // {"$message_type":"diagnostic","message":"this file contains an unclosed delimiter","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpwozfh4wl","byte_start":48,"byte_end":49,"line_start":5,"line_end":5,"column_start":8,"column_end":9,"is_primary":false,"text":[{"text":"verus! {","highlight_start":8,"highlight_end":9}],"label":"unclosed delimiter","suggested_replacement":null,"suggestion_applicability":null,"expansion":null},{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpwozfh4wl","byte_start":2408,"byte_end":2408,"line_start":93,"line_end":93,"column_start":20,"column_end":20,"is_primary":true,"text":[{"text":"            vec@ ==","highlight_start":20,"highlight_end":20}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: this file contains an unclosed delimiter\n  --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpwozfh4wl:93:20\n   |\n5  | verus! {\n   |        - unclosed delimiter\n...\n93 |             vec@ ==\n   |                    ^\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}
-// 
-// 
+//
+//

@@ -2,8 +2,8 @@ use vstd::prelude::*;
 fn main() {}
 verus!{
 
-pub fn myfun(a: &mut Vec<i32>, sum: &mut Vec<i32>, N: i32) 
-	requires 
+pub fn myfun(a: &mut Vec<i32>, sum: &mut Vec<i32>, N: i32)
+	requires
 		old(a).len() == N,
 		old(sum).len() == 1,
 		N > 0,
@@ -18,7 +18,7 @@ pub fn myfun(a: &mut Vec<i32>, sum: &mut Vec<i32>, N: i32)
 	}
 
 	i = 0;
-	
+
 	while (i < N as usize)
 	{
 		if (i == 0) {

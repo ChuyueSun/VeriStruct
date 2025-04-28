@@ -11,4 +11,4 @@ Seq<T> is a mathematical sequence type used in specifications:
 - Contains: s.contains(v) checks if v is in the sequence
 - Push/pop: s.push(v), s.pop() (returns new sequence, doesn't modify original)
 
-You can use forall or exists for properties over sequences. 
+You can use forall or exists for properties over sequences.

@@ -47,7 +47,7 @@ fn sub_array_at_index(main: &Vec<i32>, sub: &Vec<i32>, idx: usize) -> (result: b
 
 spec fn is_subrange_at(main: Seq<i32>, sub: Seq<i32>, i: int) -> bool {
     sub =~= main.subrange(i, i+sub.len())
-} 
+}
 
 fn is_sub_array(main: &Vec<i32>, sub: &Vec<i32>) -> (result: bool)
     ensures

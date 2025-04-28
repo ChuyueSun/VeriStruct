@@ -1,6 +1,6 @@
 /*
  This lemma is often useful to put near the end of a loop body that has a loop invariant involving Seq::subrange(j, k), with k being the loop index. It will help prove the property of range j..k+1 of a Sequence based on the property held for range j..k of a Sequence.
- 
+
  Example usage:
     while ( k < s.len() )
       invariant

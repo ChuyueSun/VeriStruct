@@ -102,5 +102,3 @@ fn test_lock_generic() {
 }
 
 fn main() { }
-
-

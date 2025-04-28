@@ -63,7 +63,3 @@ pub fn myfun(a: &mut Vec<i32>, b: &mut Vec<i32>, sum: &mut Vec<i32>, N: i32)
 	}
 }
 }
-
-
-
-

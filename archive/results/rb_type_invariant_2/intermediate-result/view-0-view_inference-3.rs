@@ -164,7 +164,7 @@ impl<T: Copy> RingBuffer<T> {
         }
     }
 
-    
+
     /// If the buffer isn't full, adds a new element to the back.
     /// Returns whether the element was added.
     pub fn enqueue(&mut self, val: T) -> (succ: bool)
@@ -200,7 +200,7 @@ impl<T: Copy> RingBuffer<T> {
             None
         }
     }
-    
+
 
 
     /// Returns the number of elements that can still be enqueued until it is full.
@@ -286,5 +286,5 @@ fn test_enqueue_dequeue_generic(len: usize, value: i32, iterations: usize)
 // {"$message_type":"diagnostic","message":"assertion failed","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpu0dphx6_","byte_start":6625,"byte_end":6637,"line_start":249,"line_end":249,"column_start":16,"column_end":28,"is_primary":true,"text":[{"text":"        assert(buf_len == 1);","highlight_start":16,"highlight_end":28}],"label":"assertion failed","suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: assertion failed\n   --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpu0dphx6_:249:16\n    |\n249 |         assert(buf_len == 1);\n    |                ^^^^^^^^^^^^ assertion failed\n\n"}
 // {"$message_type":"diagnostic","message":"assertion failed","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpu0dphx6_","byte_start":6703,"byte_end":6715,"line_start":252,"line_end":252,"column_start":16,"column_end":28,"is_primary":true,"text":[{"text":"        assert(has_elements);","highlight_start":16,"highlight_end":28}],"label":"assertion failed","suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: assertion failed\n   --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpu0dphx6_:252:16\n    |\n252 |         assert(has_elements);\n    |                ^^^^^^^^^^^^ assertion failed\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 20 previous errors","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 20 previous errors\n\n"}
-// 
-// 
+//
+//

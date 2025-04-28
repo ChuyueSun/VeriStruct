@@ -57,5 +57,5 @@ fn start_thread(counter: PPtr<u64>, Tracked(perm): Tracked<PointsTo<u64>>) -> (r
 // VerusErrorType.CannotCallFunc: cannot call function `vstd::simple_pptr::impl&%4::borrow` with mode exec
 // {"$message_type":"diagnostic","message":"cannot call function `vstd::simple_pptr::impl&%4::borrow` with mode exec","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpnrurh0wi","byte_start":875,"byte_end":909,"line_start":32,"line_end":32,"column_start":10,"column_end":44,"is_primary":true,"text":[{"text":"        *counter.borrow(Tracked(old(perm))) < u64::MAX,","highlight_start":10,"highlight_end":44}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: cannot call function `vstd::simple_pptr::impl&%4::borrow` with mode exec\n  --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpnrurh0wi:32:10\n   |\n32 |         *counter.borrow(Tracked(old(perm))) < u64::MAX,\n   |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}
-// 
-// 
+//
+//

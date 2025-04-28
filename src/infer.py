@@ -59,9 +59,8 @@ class LLM:
         self.dummy_mode = False
 
         # Check if LLM inference is enabled via environment variable
-        if (
-            os.environ.get("ENABLE_LLM_INFERENCE", "1") == "0"
-            or self.config.get("dummy_mode", False)
+        if os.environ.get("ENABLE_LLM_INFERENCE", "1") == "0" or self.config.get(
+            "dummy_mode", False
         ):
             self.dummy_mode = True
             self.logger.warning("LLM in dummy mode. Will return placeholder responses.")
@@ -69,29 +68,35 @@ class LLM:
 
         # Check environment variable to determine if caching is enabled
         enable_cache_env = os.environ.get("ENABLE_LLM_CACHE", "1")
-        
+
         # Check for deprecated environment variable
         deprecated_cache_env = os.environ.get("LLM_CACHE_ENABLED")
         if deprecated_cache_env is not None:
-            self.logger.warning("LLM_CACHE_ENABLED is deprecated. Please use ENABLE_LLM_CACHE instead.")
+            self.logger.warning(
+                "LLM_CACHE_ENABLED is deprecated. Please use ENABLE_LLM_CACHE instead."
+            )
             # Still honor the deprecated variable if it's set to disable caching
             if deprecated_cache_env == "0":
-                self.logger.warning("Disabling cache due to deprecated LLM_CACHE_ENABLED=0 setting")
+                self.logger.warning(
+                    "Disabling cache due to deprecated LLM_CACHE_ENABLED=0 setting"
+                )
                 enable_cache_env = "0"
-        
+
         # Cache is enabled if passed parameter is True and environment variable is "1"
         use_cache = use_cache and enable_cache_env == "1"
-        
+
         cache_dir = self.config.get("cache_dir", "llm_cache")
         cache_max_age = self.config.get("cache_max_age_days", 7)
-        
+
         # Get always_write option from config, default to True to always write to cache
         always_write = self.config.get("always_write_cache", True)
-        
-        self.logger.info(f"Cache status: {'enabled' if use_cache else 'disabled'} for reading (from env: ENABLE_LLM_CACHE={enable_cache_env})")
+
+        self.logger.info(
+            f"Cache status: {'enabled' if use_cache else 'disabled'} for reading (from env: ENABLE_LLM_CACHE={enable_cache_env})"
+        )
         if always_write and not use_cache:
             self.logger.info("Cache writing enabled even though reading is disabled")
-        
+
         self.cache = LLMCache(
             cache_dir=cache_dir,
             enabled=use_cache,
@@ -240,7 +245,9 @@ class LLM:
         if use_cache and self.cache.enabled:
             # Double-check environment variable in case it changed after the call started
             if os.environ.get("ENABLE_LLM_CACHE", "1") == "0":
-                self.logger.debug("Cache disabled by environment variable for this call")
+                self.logger.debug(
+                    "Cache disabled by environment variable for this call"
+                )
             else:
                 cached_responses = self.cache.get(
                     engine, instruction, query, max_tokens, exemplars, system_info
@@ -321,11 +328,18 @@ class LLM:
             ]
 
         # Cache the result if caching is enabled or always_write is enabled
-        cache_saving_enabled = (use_cache and self.cache.enabled) or self.cache.always_write
+        cache_saving_enabled = (
+            use_cache and self.cache.enabled
+        ) or self.cache.always_write
         if cache_saving_enabled:
             # Double-check environment variable in case it changed during the call
-            if os.environ.get("ENABLE_LLM_CACHE", "1") == "0" and not self.cache.always_write:
-                self.logger.debug("Cache save skipped - disabled by environment variable")
+            if (
+                os.environ.get("ENABLE_LLM_CACHE", "1") == "0"
+                and not self.cache.always_write
+            ):
+                self.logger.debug(
+                    "Cache save skipped - disabled by environment variable"
+                )
             else:
                 self.cache.save(
                     engine,
@@ -337,9 +351,13 @@ class LLM:
                     system_info,
                 )
                 if self.cache.enabled:
-                    self.logger.debug(f"Saved response to cache (time: {infer_time:.2f}s)")
+                    self.logger.debug(
+                        f"Saved response to cache (time: {infer_time:.2f}s)"
+                    )
                 else:
-                    self.logger.debug(f"Saved response to cache in write-only mode (time: {infer_time:.2f}s)")
+                    self.logger.debug(
+                        f"Saved response to cache in write-only mode (time: {infer_time:.2f}s)"
+                    )
 
         if return_msg:
             # state.messages() presumably returns a list of conversation messages

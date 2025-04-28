@@ -239,5 +239,5 @@ verus! {
 // VerusErrorType.Other: expected curly braces
 // {"$message_type":"diagnostic","message":"expected curly braces","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmp7p_uo9x5","byte_start":2635,"byte_end":2637,"line_start":103,"line_end":103,"column_start":47,"column_end":49,"is_primary":true,"text":[{"text":"        closed spec fn inv(&self) -> ( bool ) as bool {","highlight_start":47,"highlight_end":49}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: expected curly braces\n   --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmp7p_uo9x5:103:47\n    |\n103 |         closed spec fn inv(&self) -> ( bool ) as bool {\n    |                                               ^^\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}
-// 
-// 
+//
+//

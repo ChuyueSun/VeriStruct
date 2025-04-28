@@ -151,4 +151,4 @@ if test $status -eq 0
     echo "Progress logs can be found in: '$SCRIPT_DIR/output/progress_logs/'"
 else
     echo "❌ VerusAgent failed to run. Please check the error messages above."
-end 
+end

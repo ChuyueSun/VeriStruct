@@ -2,8 +2,8 @@ use vstd::prelude::*;
 fn main() {}
 verus!{
 
-pub fn myfun(a: &mut Vec<usize>, sum: &mut Vec<usize>, N: usize) 
-	requires 
+pub fn myfun(a: &mut Vec<usize>, sum: &mut Vec<usize>, N: usize)
+	requires
 		old(a).len() == N,
 		old(sum).len() == 1,
 		N > 0,
@@ -21,7 +21,7 @@ pub fn myfun(a: &mut Vec<usize>, sum: &mut Vec<usize>, N: usize)
 	}
 
 	i = 0;
-	
+
 	while (i < N as usize)
 		invariant
 			forall |k: int| 0<= k < N ==> a[k] == 0,

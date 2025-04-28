@@ -289,5 +289,5 @@ verus! {
 // VerusErrorType.require_private: in 'requires' clause of public function, cannot refer to private function
 // {"$message_type":"diagnostic","message":"in 'requires' clause of public function, cannot refer to private function","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpo51ej6es","byte_start":2866,"byte_end":2876,"line_start":111,"line_end":111,"column_start":17,"column_end":27,"is_primary":true,"text":[{"text":"                self.inv(),","highlight_start":17,"highlight_end":27}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: in 'requires' clause of public function, cannot refer to private function\n   --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpo51ej6es:111:17\n    |\n111 |                 self.inv(),\n    |                 ^^^^^^^^^^\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}
-// 
-// 
+//
+//

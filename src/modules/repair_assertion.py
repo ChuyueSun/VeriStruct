@@ -94,18 +94,18 @@ class RepairAssertionModule(BaseRepairModule):
         self.logger.info("Repairing assertion failure...")
         code = context.trials[-1].code
 
-        # Enhanced instruction based on archive code
-        instruction = """Fix the assertion error in the given Rust code by introducing necessary proof blocks. Specifically:
+        # Use the specified instruction
+        instruction = """
+Fix the assertion error in the given Rust code by introducing necessary proof blocks. Specifically:
 
 1. For each `assert(P)`, analyze the preceding code to determine how `P` is derived.
 2. If `P` depends on a function's return value, check if `P` can be established as a postcondition (`ensures P`) for that function.
-3. If the correctness of `P` depends on the parameters of the function it is located in, add a suitable pre-condition (i.e., 'requires P') for that function.
-4. If the assertion is inside a loop or after a loop, you may need to add appropriate loop invariants to ensure the assertion holds.
-5. Only introduce essential pre/postconditions—avoid unnecessary additions and do not remove `#[trigger]`.
-6. Do not modify immutable functions - instead, adjust the pre/postconditions of called methods.
+3. Only introduce essential postconditions—avoid unnecessary additions and do not remove `#[trigger]`.
+4. Do not change the test code.
 
 **Response Format:**
-Provide only the modified Rust code—no explanations."""
+Provide only the modified Rust code—no explanations.
+"""
 
         instruction = self.add_seq_knowledge(code, instruction)
         instruction += "\n\n" + self.proof_block_info
@@ -127,7 +127,9 @@ Provide only the modified Rust code—no explanations."""
         # Save query for debugging (optional)
         debug_dir = Path("output/debug")
         debug_dir.mkdir(exist_ok=True, parents=True)
-        (debug_dir / "assert-query.txt").write_text(query)
+        debug_file = debug_dir / "assert-query.txt"
+        debug_file.write_text(query)
+        self.logger.info(f"Saved assertion query to {debug_file}")
 
         # Use the llm instance from the base class
         responses = self.llm.infer_llm(
@@ -153,6 +155,9 @@ Provide only the modified Rust code—no explanations."""
         # Check if we made progress
         if best_score:
             self.logger.info(f"Assertion repair score: {best_score}")
+            self.logger.info(
+                f"Best code saved to {output_dir}/repair_assertion_sample_*.rs"
+            )
 
         # Add the best result to context
         context.add_trial(best_code)
@@ -207,7 +212,9 @@ Provide only the modified Rust code—no explanations."""
         # Save query for debugging
         debug_dir = Path("output/debug")
         debug_dir.mkdir(exist_ok=True, parents=True)
-        (debug_dir / "split-assert-query.txt").write_text(query)
+        debug_file = debug_dir / "split-assert-query.txt"
+        debug_file.write_text(query)
+        self.logger.info(f"Saved split assertion query to {debug_file}")
 
         # Use the llm instance from the base class
         responses = self.llm.infer_llm(
@@ -233,6 +240,9 @@ Provide only the modified Rust code—no explanations."""
         # Check if we made progress
         if best_score:
             self.logger.info(f"Split assertion repair score: {best_score}")
+            self.logger.info(
+                f"Best code saved to {output_dir}/repair_split_assertion_sample_*.rs"
+            )
 
         # Add the best result to context
         context.add_trial(best_code)

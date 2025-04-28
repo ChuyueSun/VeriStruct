@@ -268,5 +268,5 @@ verus! {
 // VerusErrorType.Other: expected an expression
 // {"$message_type":"diagnostic","message":"expected an expression","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmp71c2u6xt","byte_start":982,"byte_end":983,"line_start":38,"line_end":38,"column_start":22,"column_end":23,"is_primary":true,"text":[{"text":"                    ++ self.ring@.subrange(0, self.tail as int)","highlight_start":22,"highlight_end":23}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: expected an expression\n  --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmp71c2u6xt:38:22\n   |\n38 |                     ++ self.ring@.subrange(0, self.tail as int)\n   |                      ^\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}
-// 
-// 
+//
+//

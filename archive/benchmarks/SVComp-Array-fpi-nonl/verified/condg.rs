@@ -12,7 +12,7 @@ pub fn myfun(a: &mut Vec<i32>, sum: &mut Vec<i32>, N: i32)
 	sum.set(0, 0);
 	let mut i: usize = 0;
 	while (i < N as usize)
-		invariant 
+		invariant
 			forall |k:int| 0 <= k < i ==> a[k] == 1,
 			a.len() == N,
 	{

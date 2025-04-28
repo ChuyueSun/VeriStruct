@@ -43,16 +43,16 @@ python test_run_caching.py
 # Check exit status
 if test $status -eq 0
     echo -e "\n✅ Cache test completed successfully!"
-    
+
     # Display cache files
     echo -e "\nCache files in $LLM_CACHE_DIR:"
     ls -la $LLM_CACHE_DIR
-    
+
     # Show cache stats
     set CACHE_FILES (find $LLM_CACHE_DIR -name "*.json" | wc -l)
     echo -e "\nTotal cache files: $CACHE_FILES"
-    
+
     echo -e "\nVerification complete. The caching mechanism works properly in the run.sh environment."
 else
     echo -e "\n❌ Cache test failed. Check the error messages above."
-end 
+end

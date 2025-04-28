@@ -106,5 +106,5 @@ fn main() {
 // VerusErrorType.Other: trait function declarations cannot be open or closed, as they don't have a body
 // {"$message_type":"diagnostic","message":"trait function declarations cannot be open or closed, as they don't have a body","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpfsxxq4n5","byte_start":1846,"byte_end":1871,"line_start":87,"line_end":87,"column_start":17,"column_end":42,"is_primary":true,"text":[{"text":"    closed spec fn view(&self) -> Self::V;","highlight_start":17,"highlight_end":42}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: trait function declarations cannot be open or closed, as they don't have a body\n  --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpfsxxq4n5:87:17\n   |\n87 |     closed spec fn view(&self) -> Self::V;\n   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}
-// 
-// 
+//
+//

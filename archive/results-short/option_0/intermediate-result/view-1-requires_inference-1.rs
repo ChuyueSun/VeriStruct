@@ -135,7 +135,7 @@ fn test_option_generic() {
 
     let opt2: MyOption<i32> = MyOption::Some(42);
     let is_none = opt2.is_none();
-    let is_some = opt2.is_some(); 
+    let is_some = opt2.is_some();
     assert(!is_none);
     assert(is_some);
 
@@ -166,5 +166,5 @@ fn main() {
 // VerusErrorType.Other: expected `,`
 // {"$message_type":"diagnostic","message":"expected `,`","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpp9hrpayf","byte_start":269,"byte_end":270,"line_start":15,"line_end":15,"column_start":35,"column_end":36,"is_primary":true,"text":[{"text":"        result == (opt is MyOption::Some(_)),","highlight_start":35,"highlight_end":36}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: expected `,`\n  --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpp9hrpayf:15:35\n   |\n15 |         result == (opt is MyOption::Some(_)),\n   |                                   ^\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}
-// 
-// 
+//
+//

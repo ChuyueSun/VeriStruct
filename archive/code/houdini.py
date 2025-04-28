@@ -1,10 +1,12 @@
 # Copyright (c) Microsoft Corporation. #
 # Licensed under the MIT license.      #
 
-from utils import compress_nl_assertion
 import tempfile
+
 from lynette import lynette
-from veval import VEval, VerusErrorType, VerusError
+from veval import VerusError, VerusErrorType, VEval
+
+from utils import compress_nl_assertion
 
 
 class houdini:
@@ -53,7 +55,7 @@ class houdini:
             else:
                 continue
         return ret
-    
+
     def print_verus_errors(self, errors: list[VerusError]):
         for err in errors:
             print(f"Error Type: {err.error}")
@@ -65,11 +67,11 @@ class houdini:
 
     def run(self, code, verbose=False):
         """Run Houdini invariant inference algorithm.
-        
+
         Args:
             code: Source code to analyze
             verbose: Whether to print verbose output
-            
+
         Returns:
             Tuple of (failures, modified_code) where failures are verification errors
             and modified_code has problematic assertions commented out
@@ -94,7 +96,7 @@ class houdini:
             # Comment out problematic assertions
             code_lines = code.split("\n")
             all_immutable = True
-            
+
             for line in error_lines:
                 if line == 0:
                     continue
@@ -102,12 +104,12 @@ class houdini:
                 # Skip assertions in immutable areas
                 if self._is_in_immutable_area(line, immutable_areas):
                     continue
-                    
+
                 all_immutable = False
                 code_lines[line - 1] = "// // //" + code_lines[line - 1]
 
             code = "\n".join(code_lines)
-            
+
             if all_immutable:
                 print("All errors are in immutable areas, stop removing")
                 break
@@ -118,27 +120,31 @@ class houdini:
     def _get_immutable_areas(self, code):
         """Get line ranges of immutable functions that should not be modified."""
         immutable_areas = []
-        
-        with tempfile.NamedTemporaryFile(mode="w", prefix="immutable_area", suffix=".rs") as f:
+
+        with tempfile.NamedTemporaryFile(
+            mode="w", prefix="immutable_area", suffix=".rs"
+        ) as f:
             f.write(code)
             f.flush()
-            
+
             for func in self.immutable_funcs:
                 try:
                     res = lynette.func_code_extract(f.name, func)
                     if res.returncode != 0:
-                        print(f"Warning: Failed to extract function {func}: {res.stderr}")
+                        print(
+                            f"Warning: Failed to extract function {func}: {res.stderr}"
+                        )
                         continue
-                        
+
                     func_code = res.stdout.strip()
                     if not func_code:
                         print(f"Warning: Empty function code for {func}")
                         continue
-                    
+
                     # Find function location
                     code_lines = code.splitlines()
                     func_lines = func_code.splitlines()
-                    
+
                     if not func_lines:
                         print(f"Warning: No lines found for function {func}")
                         continue
@@ -146,7 +152,9 @@ class houdini:
                     # Find start line of function
                     start_line = self._find_function_start(code_lines, func_lines)
                     if start_line is not None:
-                        immutable_areas.append((start_line, start_line + len(func_lines) - 1))
+                        immutable_areas.append(
+                            (start_line, start_line + len(func_lines) - 1)
+                        )
                     else:
                         print(f"Warning: Could not find function {func} in code")
                 except Exception as e:
@@ -161,7 +169,8 @@ class houdini:
             if line.strip() == func_lines[0].strip():
                 # Verify full function match
                 if all(
-                    i + j < len(code_lines) and code_lines[i + j].strip() == func_lines[j].strip()
+                    i + j < len(code_lines)
+                    and code_lines[i + j].strip() == func_lines[j].strip()
                     for j in range(len(func_lines))
                 ):
                     return i + 1  # Convert to 1-based index

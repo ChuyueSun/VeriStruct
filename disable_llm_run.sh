@@ -19,4 +19,4 @@ mkdir -p "$SCRIPT_DIR/tmp"
 cd "$SCRIPT_DIR"
 python src/main.py
 
-echo "Check the '$SCRIPT_DIR/output' directory for results (LLM API calls were disabled)" 
+echo "Check the '$SCRIPT_DIR/output' directory for results (LLM API calls were disabled)"

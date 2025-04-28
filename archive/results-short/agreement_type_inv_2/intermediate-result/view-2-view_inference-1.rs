@@ -167,5 +167,5 @@ pub fn main() {
 // {"$message_type":"diagnostic","message":"aborting due to 10 previous errors","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 10 previous errors\n\n"}
 // {"$message_type":"diagnostic","message":"Some errors have detailed explanations: E0164, E0277, E0599.","code":null,"level":"failure-note","spans":[],"children":[],"rendered":"Some errors have detailed explanations: E0164, E0277, E0599.\n"}
 // {"$message_type":"diagnostic","message":"For more information about an error, try `rustc --explain E0164`.","code":null,"level":"failure-note","spans":[],"children":[],"rendered":"For more information about an error, try `rustc --explain E0164`.\n"}
-// 
-// 
+//
+//

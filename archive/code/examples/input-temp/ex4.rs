@@ -8,7 +8,7 @@ verus! {
         forall|i: int, j:int| from <= i < j < to ==> a[i] <= a[j]
 
     }
-    
+
     spec fn multiset_from_seq<T>(input: Seq<T>) -> Multiset<T>
 
         decreases input.len()
@@ -26,8 +26,8 @@ verus! {
         }
 
     }
-    
-    
+
+
     #[verifier::loop_isolation(false)]
 
     fn bubble_sort(nums: &mut Vec<u32>)

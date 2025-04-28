@@ -19,12 +19,12 @@ class BaseModule:
     default_system # default system prompt
     ... # Something that you might want oto add
 
-# Including generate/fix/inference tools, and doc reader 
+# Including generate/fix/inference tools, and doc reader
 class Module1(BaseModule):
     system (markdown follows some tempalte)
     instruction (markdown follows some template)
     important note
-    
+
     def exec(context: Context) -> str # Execute the module
 ```
 
@@ -72,7 +72,7 @@ src
   - each module corresponds to a file # implement each module
 ```
 
-VerusAgent 
+VerusAgent
   --> pass --> Clover
   --> fail --> repair --> Clover
 

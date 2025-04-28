@@ -11,7 +11,7 @@ pub fn myfun(a: &mut Vec<usize>, N: usize)
     let mut i: usize = 0;
 
     while (i < N)
-        invariant 
+        invariant
             N < 100,
             i <= N,
             a.len() == N,

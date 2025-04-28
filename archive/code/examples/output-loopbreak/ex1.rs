@@ -12,7 +12,7 @@ verus! {
                 ret <= 100,
     {
         let mut i = 0;
-        let mut sum = 0; 
+        let mut sum = 0;
         while i < nums.len()
             invariant
                 forall |k:int| 0<= k < nums.len() ==> 0<= #[trigger] nums[k] < 10,

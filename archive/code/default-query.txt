@@ -94,7 +94,7 @@ proof fn test_seq() {
         assert(seq_add.len() == 5);
         assert(seq_add.index(3) == 0); // Value from seq2
         // Incorrect (and won't compile):
-        // seq1.add(4);     
+        // seq1.add(4);
         ```
     - Subrange:
     Important: There is no syntactic sugar for subrange (so self.ring@[start..end] is invalid). You must explicitly call .subrange(start, end):
@@ -106,7 +106,7 @@ proof fn test_seq() {
         assert(s_sub.index(0) == 10);
         assert(s_sub.index(1) == 20);
         // Incorrect (and won't compile):
-        // self.ring@[self.head..self.ring@.len()]        
+        // self.ring@[self.head..self.ring@.len()]
         ```
     - Take:
         ```

@@ -101,7 +101,7 @@ class InvInferenceModule(BaseModule):
             base_instruction=self.inv_instruction,
             add_common=True,
             add_invariant=True,  # Include invariant guidelines
-            code=code
+            code=code,
         )
 
         # Load examples
@@ -122,7 +122,9 @@ class InvInferenceModule(BaseModule):
                         answer = answer_path.read_text() if answer_path.exists() else ""
                         examples.append({"query": input_content, "answer": answer})
             else:
-                self.logger.warning("Example path does not exist - proceeding without examples")
+                self.logger.warning(
+                    "Example path does not exist - proceeding without examples"
+                )
         except Exception as e:
             self.logger.error(f"Error loading examples: {e}")
 
@@ -192,9 +194,7 @@ class InvInferenceModule(BaseModule):
         # Save the best inv inference from this step to a module-specific file
         module_best_path = output_dir / "03_inv_inference_global_best.rs"
         try:
-            sample_with_score = (
-                f"{best_code}\n\n// VEval Score: {best_score}"
-            )
+            sample_with_score = f"{best_code}\n\n// VEval Score: {best_score}"
             module_best_path.write_text(sample_with_score)
             self.logger.info(f"Saved best inv inference to {module_best_path}")
         except Exception as e:

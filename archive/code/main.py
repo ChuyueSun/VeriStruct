@@ -2,20 +2,26 @@
 # Licensed under the MIT license.      #
 
 
-import os
 import argparse
-import logging
 import json
+import logging
+import os
+
+from veval import verus
+
 import utils
 from utils import AttrDict
-from veval import verus
 
 
 def main():
     # Parse arguments.
     parser = argparse.ArgumentParser(description="Verus Copilot")
     parser.add_argument("--config", default="config.json", help="Path to config file")
-    parser.add_argument("--mode", default="gen_view", help="Mode to run in (gen, gen_view, repair, reader, debug)")
+    parser.add_argument(
+        "--mode",
+        default="gen_view",
+        help="Mode to run in (gen, gen_view, repair, reader, debug)",
+    )
     parser.add_argument("--input", default="input.rs", help="Path to input file")
     parser.add_argument("--output", default="output.rs", help="Path to output file")
     parser.add_argument("--repair", default=10, type=int, help="Number of repair steps")
@@ -115,6 +121,7 @@ def main():
         logger.info("Generating View")
         logger.info("Repair steps: %d", args.repair)
         from generation import Generation
+
         immutable_functions = args.immutable_functions
         logger.info("Immutable functions: " + str(immutable_functions))
 
@@ -132,14 +139,16 @@ def main():
         from refinement import Refinement
 
         runner = Refinement(config, logger)
-    elif args.mode == 'reader':
+    elif args.mode == "reader":
         from reader import Reader
+
         runner = Reader(config, logger)
-    elif args.mode == 'debug':
+    elif args.mode == "debug":
         # Yican: Debug mode prints the system prompt and instructions,
         # currently, it hard-prints to '../yican-trial/debug-prompt.md'
         # to see if the prompt is correctly constructed without sending to llm.
         from reader import Reader
+
         runner = Reader(config, logger)
         runner.set_debug_mode(True)
     else:

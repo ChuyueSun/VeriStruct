@@ -28,7 +28,7 @@ verus! {
 
     impl<T: Copy> View for RingBuffer<T> {
         type V = (Seq<T>, usize);
-    
+
         closed spec fn view(&self) -> Self::V {
             let cap = self.ring.len();
             if self.tail >= self.head {
@@ -43,7 +43,7 @@ verus! {
     }
 
     /// This function says that for any `x` and `y`, there are two
-    /// possibilities for the sum `x % n + y % n`: 
+    /// possibilities for the sum `x % n + y % n`:
     /// (1) It's in the range `[0, n)` and equals `(x + y) % n`.
     /// (2) It's in the range `[n, 2n)` and equals `(x + y) % n + n`.
     pub open spec fn mod_auto_plus(n: int) -> bool
@@ -156,7 +156,7 @@ impl<T: Copy> RingBuffer<T> {
     /// Being 'full' means `self@.len() == (self.ring.len() - 1) as nat`.
     pub fn is_full(&self) -> (ret: bool)
     ensures
-        ret == (self@.0.len() == (self@.1 - 1) as nat) 
+        ret == (self@.0.len() == (self@.1 - 1) as nat)
     {
         proof {
             use_type_invariant(&self);
@@ -180,7 +180,7 @@ impl<T: Copy> RingBuffer<T> {
         }
     }
 
-    
+
     /// If the buffer isn't full, adds a new element to the back.
     /// Returns whether the element was added.
     pub fn enqueue(&mut self, val: T) -> (succ: bool)
@@ -218,7 +218,7 @@ impl<T: Copy> RingBuffer<T> {
             // Empty fails
             old(self)@.0.len() == 0 <==> ret == None::<T>,
             old(self)@.0.len() > 0 <==> ret != None::<T>,
-            
+
             if let Some(val) = ret {
                 &&& self@.0.len() == old(self)@.0.len() - 1
                 &&& val == old(self)@.0.first()
@@ -241,7 +241,7 @@ impl<T: Copy> RingBuffer<T> {
             None
         }
     }
-    
+
 
 
     /// Returns the number of elements that can still be enqueued until it is full.
@@ -324,7 +324,7 @@ fn test_fifo_property() {
 
     assert(ring.len() > 1);
     let mut buf = RingBuffer::new(ring);
-    
+
 
     let er = buf.enqueue(1);
     buf.enqueue(2);
@@ -340,9 +340,9 @@ fn test_fifo_property() {
 
     buf.enqueue(4);
     // assert(buf@ == s34());
-    
+
     let d3 = buf.dequeue();
-    assert(d3 =~= Some(3));   
+    assert(d3 =~= Some(3));
 }
 
 
@@ -369,7 +369,7 @@ fn should_enqueue(x: i32) -> (res: bool)
 fn test_fifo_property_generic(size: i32, iterations: i32, seed: i32)
     requires
         1 <= size < i32::MAX - 1,
-        iterations < i32::MAX - 1, 
+        iterations < i32::MAX - 1,
         1 <= iterations <= size - 1
 {
     let mut ring: Vec<i32> = Vec::new();
@@ -396,13 +396,13 @@ fn test_fifo_property_generic(size: i32, iterations: i32, seed: i32)
         buf@.0.len() == l,
         reference_queue.len() == l,
         l <= (buf@.1 - 1) as nat,
-        forall |i: int| 0 <= i < l ==> buf@.0[i] == reference_queue[i]        
+        forall |i: int| 0 <= i < l ==> buf@.0[i] == reference_queue[i]
     {
         x = get_next_value(x);
-        
+
         if should_enqueue(x) || reference_queue.len() == 0 {
             let enqueue_res = buf.enqueue(x);
-            
+
             if enqueue_res {
                 reference_queue.push(x);
                 l = l + 1;
@@ -412,13 +412,13 @@ fn test_fifo_property_generic(size: i32, iterations: i32, seed: i32)
         }
         else {
             let dequeue_res = buf.dequeue();
-            let expected_value = reference_queue.remove(0);             
+            let expected_value = reference_queue.remove(0);
             assert(dequeue_res =~= Some(expected_value));
-            l = l - 1;            
+            l = l - 1;
         }
 
     }
-    
+
 }
 
 

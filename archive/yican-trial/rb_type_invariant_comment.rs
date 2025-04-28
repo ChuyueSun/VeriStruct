@@ -44,7 +44,7 @@ verus! {
     //   and the usize is the capacity of the underlying ring.
     impl<T: Copy> View for RingBuffer<T> {
         type V = (Seq<T>, usize);
-    
+
         // Spec function that extracts the view from the ring buffer.
         // Pre-condition: None.
         // Post-condition: Returns a tuple where:
@@ -216,7 +216,7 @@ impl<T: Copy> RingBuffer<T> {
     //   - The function returns true if and only if the logical length equals (self@.1 - 1).
     pub fn is_full(&self) -> (ret: bool)
     ensures
-        ret == (self@.0.len() == (self@.1 - 1) as nat) 
+        ret == (self@.0.len() == (self@.1 - 1) as nat)
     {
         proof {
             // Ensure the invariant holds for the current state.
@@ -247,7 +247,7 @@ impl<T: Copy> RingBuffer<T> {
         }
     }
 
-    
+
     /// Attempts to enqueue a new element into the buffer.
     // Pre-condition: The ring buffer's invariant holds.
     // Post-condition:
@@ -324,7 +324,7 @@ impl<T: Copy> RingBuffer<T> {
             None
         }
     }
-    
+
     /// Returns the number of elements that can still be enqueued until the buffer is full.
     // Pre-condition: The invariant holds.
     // Post-condition: The value returned is the available slots computed as:

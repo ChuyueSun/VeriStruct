@@ -52,4 +52,4 @@ When running the system, it will:
 1. Generate a View function from the input code
 2. Refine the View function for better abstraction
 3. Generate an inv function to capture data structure invariants
-4. Save all intermediate and final results in the output directory 
+4. Save all intermediate and final results in the output directory

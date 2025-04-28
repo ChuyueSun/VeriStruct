@@ -35,7 +35,7 @@ verus! {
     }
 
     /// This function says that for any `x` and `y`, there are two
-    /// possibilities for the sum `x % n + y % n`: 
+    /// possibilities for the sum `x % n + y % n`:
     /// (1) It's in the range `[0, n)` and equals `(x + y) % n`.
     /// (2) It's in the range `[n, 2n)` and equals `(x + y) % n + n`.
     pub open spec fn mod_auto_plus(n: int) -> bool
@@ -164,7 +164,7 @@ impl<T: Copy> RingBuffer<T> {
         }
     }
 
-    
+
     /// If the buffer isn't full, adds a new element to the back.
     /// Returns whether the element was added.
     pub fn enqueue(&mut self, val: T) -> (succ: bool)
@@ -284,5 +284,5 @@ fn test_enqueue_dequeue_generic(len: usize, value: i32, iterations: usize)
 // {"$message_type":"diagnostic","message":"assertion failed","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpd1iuf18_","byte_start":6620,"byte_end":6632,"line_start":247,"line_end":247,"column_start":16,"column_end":28,"is_primary":true,"text":[{"text":"        assert(buf_len == 1);","highlight_start":16,"highlight_end":28}],"label":"assertion failed","suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: assertion failed\n   --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpd1iuf18_:247:16\n    |\n247 |         assert(buf_len == 1);\n    |                ^^^^^^^^^^^^ assertion failed\n\n"}
 // {"$message_type":"diagnostic","message":"assertion failed","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpd1iuf18_","byte_start":6698,"byte_end":6710,"line_start":250,"line_end":250,"column_start":16,"column_end":28,"is_primary":true,"text":[{"text":"        assert(has_elements);","highlight_start":16,"highlight_end":28}],"label":"assertion failed","suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: assertion failed\n   --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpd1iuf18_:250:16\n    |\n250 |         assert(has_elements);\n    |                ^^^^^^^^^^^^ assertion failed\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 20 previous errors","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 20 previous errors\n\n"}
-// 
-// 
+//
+//

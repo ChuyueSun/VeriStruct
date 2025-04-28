@@ -60,7 +60,7 @@ impl<A> MyOption<A> {
 
     #[inline(always)]
     pub const fn is_some(&self) -> (res: bool)
-        ensures 
+        ensures
             res <==> is_Some(*self)
     {
         match self {
@@ -125,7 +125,7 @@ fn test_option_generic() {
 
     let opt2: MyOption<i32> = MyOption::Some(42);
     let is_none = opt2.is_none();
-    let is_some = opt2.is_some(); 
+    let is_some = opt2.is_some();
     assert(!is_none);
     assert(is_some);
 

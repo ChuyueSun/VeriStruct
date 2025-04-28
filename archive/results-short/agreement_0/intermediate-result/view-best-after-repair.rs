@@ -158,5 +158,5 @@ pub fn main() {
 // VerusErrorType.Other: unexpected token, expected `;`
 // {"$message_type":"diagnostic","message":"unexpected token, expected `;`","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpl01jnoi1","byte_start":1907,"byte_end":1910,"line_start":77,"line_end":77,"column_start":14,"column_end":17,"is_primary":true,"text":[{"text":"        open let rr = self.r;","highlight_start":14,"highlight_end":17}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: unexpected token, expected `;`\n  --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpl01jnoi1:77:14\n   |\n77 |         open let rr = self.r;\n   |              ^^^\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}
-// 
-// 
+//
+//

@@ -19,7 +19,7 @@ verus! {
 // ignore
 // let tracked r1 = AgreementResource::<int>::alloc(72);
 // assert(r1@ == 72);
-// 
+//
 //
 // Knowledge of a constant value can be duplicated with `duplicate`,
 // which creates another agreement resource with the same constant
@@ -29,7 +29,7 @@ verus! {
 // let tracked r2 = r1.duplicate();
 // assert(r2.id() == r1.id());
 // assert(r2@ == r1@);
-// 
+//
 //
 // Any two agreement resources with the same `id()` are guaranteed to
 // have equal values. You can establish this by calling
@@ -39,7 +39,7 @@ verus! {
 // assert(r2.id() == r1.id());
 // proof { r1.lemma_agreement(&mut r2); }
 // assert(r2@ == r1@);
-// 
+//
 
 pub enum AgreementResourceValue<T> {
     Empty,

@@ -176,5 +176,5 @@ fn main() {
 // VerusErrorType.Other: expected curly braces
 // {"$message_type":"diagnostic","message":"expected curly braces","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmp2ht0vn0n","byte_start":915,"byte_end":917,"line_start":45,"line_end":45,"column_start":42,"column_end":44,"is_primary":true,"text":[{"text":"pub open spec fn arbitrary<A>() -> ( A ) as A { //~ just a placeholder spec","highlight_start":42,"highlight_end":44}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: expected curly braces\n  --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmp2ht0vn0n:45:42\n   |\n45 | pub open spec fn arbitrary<A>() -> ( A ) as A { //~ just a placeholder spec\n   |                                          ^^\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}
-// 
-// 
+//
+//

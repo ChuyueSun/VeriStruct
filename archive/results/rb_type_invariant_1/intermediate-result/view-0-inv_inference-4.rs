@@ -44,7 +44,7 @@ verus! {
     }
 
     /// This function says that for any `x` and `y`, there are two
-    /// possibilities for the sum `x % n + y % n`: 
+    /// possibilities for the sum `x % n + y % n`:
     /// (1) It's in the range `[0, n)` and equals `(x + y) % n`.
     /// (2) It's in the range `[n, 2n)` and equals `(x + y) % n + n`.
     pub open spec fn mod_auto_plus(n: int) -> bool
@@ -264,5 +264,5 @@ verus! {
 // {"$message_type":"diagnostic","message":"assertion failed","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmprxfdb25u","byte_start":6588,"byte_end":6600,"line_start":237,"line_end":237,"column_start":20,"column_end":32,"is_primary":true,"text":[{"text":"            assert(buf_len == 1);","highlight_start":20,"highlight_end":32}],"label":"assertion failed","suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: assertion failed\n   --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmprxfdb25u:237:20\n    |\n237 |             assert(buf_len == 1);\n    |                    ^^^^^^^^^^^^ assertion failed\n\n"}
 // {"$message_type":"diagnostic","message":"assertion failed","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmprxfdb25u","byte_start":6674,"byte_end":6686,"line_start":240,"line_end":240,"column_start":20,"column_end":32,"is_primary":true,"text":[{"text":"            assert(has_elements);","highlight_start":20,"highlight_end":32}],"label":"assertion failed","suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: assertion failed\n   --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmprxfdb25u:240:20\n    |\n240 |             assert(has_elements);\n    |                    ^^^^^^^^^^^^ assertion failed\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 9 previous errors","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 9 previous errors\n\n"}
-// 
-// 
+//
+//

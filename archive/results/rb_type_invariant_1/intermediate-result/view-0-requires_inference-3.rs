@@ -275,5 +275,5 @@ verus! {
 // VerusErrorType.Other: unexpected token, expected `;`
 // {"$message_type":"diagnostic","message":"unexpected token, expected `;`","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpplon5hm2","byte_start":4488,"byte_end":4489,"line_start":167,"line_end":167,"column_start":54,"column_end":55,"is_primary":true,"text":[{"text":"                    self@.0 == old(self)@.0.push(val),","highlight_start":54,"highlight_end":55}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: unexpected token, expected `;`\n   --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpplon5hm2:167:54\n    |\n167 |                     self@.0 == old(self)@.0.push(val),\n    |                                                      ^\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}
-// 
-// 
+//
+//

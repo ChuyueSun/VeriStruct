@@ -11,12 +11,12 @@ fn main() {}
 
 verus! {
 
-fn while_loop(n: usize) 
+fn while_loop(n: usize)
     requires
         n >= 2,
 {
     let mut i = 2;
-    while i < n 
+    while i < n
         invariant
             i <= n,
             n >= 2,

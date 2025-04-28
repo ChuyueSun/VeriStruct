@@ -30,7 +30,7 @@ verus! {
     #[verifier::external_fn_specification]
     pub fn ex_saturating_sub(a: usize, b: usize) -> (ret: usize)
     // Postcondition:
-    //   Ensures that the execution of ex_saturating_sub returns the same result 
+    //   Ensures that the execution of ex_saturating_sub returns the same result
     //   as specified by ex_saturating_sub_spec with the proper cast conversions.
     ensures
         ex_saturating_sub_spec(a as int, b as int) == ret as int
@@ -57,7 +57,7 @@ verus! {
         //   - First element: a sequence (Seq<T>) of the current elements in the buffer.
         //   - Second element: the capacity of the buffer (the length of the underlying ring vector).
         type V = (Seq<T>, usize);
-    
+
         // Specification function that returns the logical view of the RingBuffer.
         // It extracts the elements currently in use from the ring vector based on head and tail,
         // and provides the current capacity.
@@ -332,7 +332,7 @@ verus! {
                 None
             }
         }
-        
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////

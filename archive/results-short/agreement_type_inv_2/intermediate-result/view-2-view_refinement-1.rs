@@ -131,5 +131,5 @@ pub fn main() {
 // VerusErrorType.Other: unexpected token, expected `)`
 // {"$message_type":"diagnostic","message":"unexpected token, expected `)`","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpr2794y1k","byte_start":2029,"byte_end":2030,"line_start":87,"line_end":87,"column_start":20,"column_end":21,"is_primary":true,"text":[{"text":"        reveal(self.inv());","highlight_start":20,"highlight_end":21}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: unexpected token, expected `)`\n  --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpr2794y1k:87:20\n   |\n87 |         reveal(self.inv());\n   |                    ^\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}
-// 
-// 
+//
+//

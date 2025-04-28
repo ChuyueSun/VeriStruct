@@ -84,7 +84,7 @@ impl CounterSharedState {
 
             }
             x_value = self.x.load(Tracked(&inner.x_perm));
-            assert(x_value == 2); 
+            assert(x_value == 2);
         });
         x_value
     }

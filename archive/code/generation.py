@@ -1,22 +1,32 @@
 # Copyright (c) Microsoft Corporation. #
 # Licensed under the MIT license.      #
 
+import json
 import os
+import re
 from pathlib import Path
-from infer import LLM
+from typing import Callable, List
+
 from houdini import houdini
 from refinement import Refinement
-from veval import VEval, EvalScore
-from utils import evaluate, code_change_is_safe, clean_code, get_nonlinear_lines
-from typing import Callable, List
-import json
-import re
+from veval import EvalScore, VEval
 
-ANSWER_NUM = 5 # It needs to be 1 if using deepseek-reasoner
+from infer import LLM
+from utils import clean_code, code_change_is_safe, evaluate, get_nonlinear_lines
+
+ANSWER_NUM = 5  # It needs to be 1 if using deepseek-reasoner
+
 
 class Generation:
     def __init__(
-        self, config, logger, phase1_examples=["3", "6", "7"], view_examples = ["8", "9"], repair_uniform=False, test_repair=False, immutable_funcs=[]
+        self,
+        config,
+        logger,
+        phase1_examples=["3", "6", "7"],
+        view_examples=["8", "9"],
+        repair_uniform=False,
+        test_repair=False,
+        immutable_funcs=[],
     ):
         self.config = config
         self.llm = LLM(config, logger)
@@ -105,15 +115,15 @@ Note:
 Implication (==>) and equivalence (<==>) bind more tightly than &&& and |||.
 Using &&&/||| can make long specifications clearer by grouping logical clauses neatly."""
 
-
-
     def wrap_code(self, code, veval):
         code += "\n// " + str(veval.get_score())
-        code += "\n// " + ("".join(str(e) for e in veval.verus_errors)).replace("\n", "\n// ")
+        code += "\n// " + ("".join(str(e) for e in veval.verus_errors)).replace(
+            "\n", "\n// "
+        )
         code += "\n// " + str(veval.rustc_out).replace("\n", "\n// ")
         code += "\n// " + str(veval.verus_out).replace("\n", "\n// ")
         return code
-  
+
     def generate_view(self, code, temp_dir, answer_num=3, retry=3):
         """
         Enhanced generation pipeline:
@@ -130,14 +140,20 @@ Using &&&/||| can make long specifications clearer by grouping logical clauses n
             selected_funcs = self.select_refinement_funcs_llm(code)
 
             # Log chosen refinement methods for debugging
-            self.logger.info(f"Iteration {iteration}: Selected refinement functions: {', '.join(func.__name__ for func in selected_funcs)}")
+            self.logger.info(
+                f"Iteration {iteration}: Selected refinement functions: {', '.join(func.__name__ for func in selected_funcs)}"
+            )
 
             # Step 2: Run the refinement iteration using selected functions
-            cand_code, iteration_best_code, iteration_best_score = self.run_dynamic_refinement(
+            (
+                cand_code,
+                iteration_best_code,
+                iteration_best_score,
+            ) = self.run_dynamic_refinement(
                 code=code,
                 selected_funcs=selected_funcs,
                 iteration_idx=iteration,
-                temp_dir=temp_dir
+                temp_dir=temp_dir,
             )
 
             # Check if the candidate code is correct
@@ -147,10 +163,7 @@ Using &&&/||| can make long specifications clearer by grouping logical clauses n
 
             # Update global best candidate if necessary
             best_score_of_all, best_code_of_all = self.update_global_best(
-                cand_code,
-                best_score_of_all,
-                best_code_of_all,
-                temp_dir
+                cand_code, best_score_of_all, best_code_of_all, temp_dir
             )
 
             # Write iteration result
@@ -164,7 +177,6 @@ Using &&&/||| can make long specifications clearer by grouping logical clauses n
 
         self.logger.info("Attempting final repair on best code found...")
         return self.repair_and_finalize(best_code_of_all, temp_dir)
-
 
     def select_refinement_funcs_llm(self, code: str) -> List[Callable]:
         """
@@ -200,17 +212,20 @@ or ["requires_inference"]
             answer_num=1,
             max_tokens=8192,
             temp=0.0,
-            json=True
+            json=True,
         )
         try:
             needed_funcs_names = json.loads(response[0])
-            selected_funcs = [func for func in self.data_structure_funcs if func.__name__ in needed_funcs_names]
+            selected_funcs = [
+                func
+                for func in self.data_structure_funcs
+                if func.__name__ in needed_funcs_names
+            ]
             return selected_funcs if selected_funcs else self.data_structure_funcs
         except (json.JSONDecodeError, KeyError, IndexError) as e:
             self.logger.error(f"LLM response parsing error: {str(e)}")
             # Fallback to all functions if LLM fails
             return self.data_structure_funcs
-
 
     def run_dynamic_refinement(self, code, selected_funcs, iteration_idx, temp_dir):
         """
@@ -224,21 +239,16 @@ or ["requires_inference"]
         for func in selected_funcs:
             candidates = func(cand_code, temp=1.0, answer_num=ANSWER_NUM)
             cand_code, best_code, best_score = self.evaluate_candidates(
-                candidates,
-                iteration_idx,
-                func,
-                best_code,
-                best_score,
-                temp_dir
+                candidates, iteration_idx, func, best_code, best_score, temp_dir
             )
 
         cand_code, _ = self.refinement.debug_type_error(cand_code)
 
         return cand_code, best_code, best_score
 
-
-    def evaluate_candidates(self, candidates, iteration_idx, func,
-                            last_best_code, last_best_score, temp_dir):
+    def evaluate_candidates(
+        self, candidates, iteration_idx, func, last_best_code, last_best_score, temp_dir
+    ):
         """
         Evaluates multiple candidate codes generated by a single data_structure_func.
         Updates and returns the best candidate code and score for this iteration.
@@ -270,7 +280,7 @@ or ["requires_inference"]
 
             # Write each candidate's code to a temp file
             self.write_candidate_code(cand, veval, iteration_idx, func, j, temp_dir)
-        
+
         # Return the best after evaluating all candidates of this func
         if best_score.is_good_code_next_phase(last_best_score):
             return best_code, best_code, best_score
@@ -290,7 +300,9 @@ or ["requires_inference"]
         score = veval.eval_and_get_score()
         return score.is_correct()
 
-    def update_global_best(self, cand_code, best_score_of_all, best_code_of_all, temp_dir):
+    def update_global_best(
+        self, cand_code, best_score_of_all, best_code_of_all, temp_dir
+    ):
         """
         Compares cand_code's score with the global best. If cand_code is better,
         update the global best and write it to a file.
@@ -301,13 +313,15 @@ or ["requires_inference"]
         if score > best_score_of_all:
             best_score_of_all = score
             best_code_of_all = cand_code
-            (temp_dir / "view-best.rs").write_text(self.wrap_code(best_code_of_all, veval))
-        
+            (temp_dir / "view-best.rs").write_text(
+                self.wrap_code(best_code_of_all, veval)
+            )
+
         return best_score_of_all, best_code_of_all
 
     def write_iteration_result(self, cand_code, iteration_idx, temp_dir):
         """
-        Wraps the candidate code with context (e.g., VEval results) and 
+        Wraps the candidate code with context (e.g., VEval results) and
         writes it out to a file for the given iteration index.
         """
         veval = VEval(cand_code, self.logger)
@@ -315,7 +329,9 @@ or ["requires_inference"]
         wrapped_code = self.wrap_code(cand_code, veval)
         (temp_dir / f"view-{iteration_idx}.rs").write_text(wrapped_code)
 
-    def write_candidate_code(self, cand, veval, iteration_idx, func, cand_idx, temp_dir):
+    def write_candidate_code(
+        self, cand, veval, iteration_idx, func, cand_idx, temp_dir
+    ):
         """
         Writes an individual candidate code out to a file, including VEval metadata.
         """
@@ -333,9 +349,13 @@ or ["requires_inference"]
 
         if self.test_repair:
             self.logger.info("Repairing parameterized tests ...")
-            code = self.refinement.repair_test_veval(best_code_of_all, temp_dir=repair_temp_dir)
+            code = self.refinement.repair_test_veval(
+                best_code_of_all, temp_dir=repair_temp_dir
+            )
         else:
-            code = self.refinement.repair_veval(best_code_of_all, temp_dir=repair_temp_dir)
+            code = self.refinement.repair_veval(
+                best_code_of_all, temp_dir=repair_temp_dir
+            )
 
         veval = VEval(code, self.logger)
         score = veval.eval_and_get_score()
@@ -353,11 +373,11 @@ or ["requires_inference"]
                 self.logger.info("Found a correct proof after Houdini!")
                 (temp_dir / "view-correct-after-repair.rs").write_text(houdini_code)
                 return houdini_code
-            
+
         wrapped_code = self.wrap_code(code, veval)
         (temp_dir / "view-best-after-repair.rs").write_text(wrapped_code)
         return code
-     
+
     def view_inference(self, code, temp=0, answer_num=1):
         self.logger.info("View Inference ...")
         instruction = """
@@ -400,11 +420,13 @@ impl<T: Copy> View for RingBuffer<T> {
             for f in sorted(example_path.iterdir()):
                 if f.suffix == ".rs":
                     input_content = f.read_text()
-                    answer_path = Path(self.config.example_path) / "output-view" / f.name
+                    answer_path = (
+                        Path(self.config.example_path) / "output-view" / f.name
+                    )
                     answer = answer_path.read_text() if answer_path.exists() else ""
 
                     examples.append({"query": input_content, "answer": answer})
-        
+
         return self.llm.infer_llm(
             self.config.aoai_generation_model,
             instruction,
@@ -430,9 +452,9 @@ Your responsibilities:
 
 Please provide only the complete Rust code of the refined file with no additional commentary.
 """
-#         instruction += "\n\n" + self.important_note
-#         instruction += "\n\n" + self.spec_knowledge
-#         instruction = "\n\n" + self.refinement.add_seq_knowledge(code, instruction)
+        #         instruction += "\n\n" + self.important_note
+        #         instruction += "\n\n" + self.spec_knowledge
+        #         instruction = "\n\n" + self.refinement.add_seq_knowledge(code, instruction)
         examples = []
         example_path = Path(self.config.example_path) / "input-view-refine"
         if not example_path.exists():
@@ -441,11 +463,13 @@ Please provide only the complete Rust code of the refined file with no additiona
             for f in sorted(example_path.iterdir()):
                 if f.suffix == ".rs":
                     input_content = f.read_text()
-                    answer_path = Path(self.config.example_path) / "output-view-refine" / f.name
+                    answer_path = (
+                        Path(self.config.example_path) / "output-view-refine" / f.name
+                    )
                     answer = answer_path.read_text() if answer_path.exists() else ""
 
                     examples.append({"query": input_content, "answer": answer})
-        
+
         return self.llm.infer_llm(
             self.config.aoai_generation_model,
             instruction,
@@ -456,7 +480,7 @@ Please provide only the complete Rust code of the refined file with no additiona
             max_tokens=self.config.max_token,
             temp=1.0,
         )
-    
+
     def inv_inference(self, code, temp=0, answer_num=1):
         self.logger.info("Inv Inference ...")
         instruction = """You are an expert in Verus (a Rust-based verification framework). Given the following Rust code that defines a data structure with private fields, create a closed spec function: `closed spec fn inv(&self) -> bool`. This function should capture all necessary invariants of the data structure. You are allowed to reference private fields directly (i.e., do not rely on "view" conversions unless absolutely necessary). Do not modify other parts of the code or add explanatory text—just provide the final inv function definition."""
@@ -476,7 +500,7 @@ Please provide only the complete Rust code of the refined file with no additiona
                     answer = answer_path.read_text() if answer_path.exists() else ""
 
                     examples.append({"query": input_content, "answer": answer})
-        
+
         # Get responses from LLM
         responses = self.llm.infer_llm(
             self.config.aoai_generation_model,
@@ -488,41 +512,45 @@ Please provide only the complete Rust code of the refined file with no additiona
             max_tokens=self.config.max_token,
             temp=1.0,
         )
-        
+
         # Process each response to replace @.len() with .len() in type invariants
         processed_responses = []
         for response in responses:
             processed = self.replace_at_len_in_type_invariant(response)
             processed_responses.append(processed)
-        
+
         return processed_responses
-    
+
     def replace_at_len_in_type_invariant(self, content):
         """
-        Replace all instances of "@.len()" with ".len()" but only within functions 
+        Replace all instances of "@.len()" with ".len()" but only within functions
         labeled with #[verifier::type_invariant].
         """
         # Define regex pattern to find type_invariant blocks
-        type_invariant_pattern = r'(#\[verifier::type_invariant\][^{]*{((?:[^{}]|(?:\{[^{}]*\}))*)})'
-        
+        type_invariant_pattern = (
+            r"(#\[verifier::type_invariant\][^{]*{((?:[^{}]|(?:\{[^{}]*\}))*)})"
+        )
+
         # Use re.DOTALL to make '.' match newlines as well
         matches = re.finditer(type_invariant_pattern, content, re.DOTALL)
-        
+
         # Make a copy of the content to modify
         modified_content = content
-        
+
         # For each match, replace "@.len()" with .len() in the function block
         for match in matches:
-            full_match = match.group(1)  # The entire type_invariant function including the attribute
+            full_match = match.group(
+                1
+            )  # The entire type_invariant function including the attribute
             function_block = match.group(2)  # Just the function body
-            
+
             # Replace @.len() with .len() in the function block
-            modified_block = re.sub(r'@\.len\(\)', r'.len()', function_block)
-            
+            modified_block = re.sub(r"@\.len\(\)", r".len()", function_block)
+
             # Update the content
             modified_full_match = full_match.replace(function_block, modified_block)
             modified_content = modified_content.replace(full_match, modified_full_match)
-        
+
         return modified_content
 
     def inv_refinement(self, code, temp=0, answer_num=1):
@@ -548,11 +576,13 @@ Please provide only the complete Rust code of the refined file with no additiona
             for f in sorted(example_path.iterdir()):
                 if f.suffix == ".rs":
                     input_content = f.read_text()
-                    answer_path = Path(self.config.example_path) / "output-inv-refine" / f.name
+                    answer_path = (
+                        Path(self.config.example_path) / "output-inv-refine" / f.name
+                    )
                     answer = answer_path.read_text() if answer_path.exists() else ""
 
                     examples.append({"query": input_content, "answer": answer})
-        
+
         return self.llm.infer_llm(
             self.config.aoai_generation_model,
             instruction,
@@ -563,7 +593,6 @@ Please provide only the complete Rust code of the refined file with no additiona
             max_tokens=self.config.max_token,
             temp=1.0,
         )
-
 
     def ensures_inference(self, code, temp=0, answer_num=1):
         self.logger.info("Ensures Inference ...")
@@ -590,11 +619,13 @@ Please provide only the complete Rust code of the refined file with no additiona
             for f in sorted(example_path.iterdir()):
                 if f.suffix == ".rs":
                     input_content = f.read_text()
-                    answer_path = Path(self.config.example_path) / "output-ensures" / f.name
+                    answer_path = (
+                        Path(self.config.example_path) / "output-ensures" / f.name
+                    )
                     answer = answer_path.read_text() if answer_path.exists() else ""
 
                     examples.append({"query": input_content, "answer": answer})
-        
+
         return self.llm.infer_llm(
             self.config.aoai_generation_model,
             instruction,
@@ -605,7 +636,7 @@ Please provide only the complete Rust code of the refined file with no additiona
             max_tokens=self.config.max_token,
             temp=1.0,
         )
-    
+
     def requires_inference(self, code, temp=0, answer_num=3):
         self.logger.info("Requires Inference ...")
         instruction = """You are an expert in Verus (verifier for rust). Your task is **Add `requires` and `ensures` to public functions**:
@@ -629,7 +660,9 @@ Please provide only the complete Rust code of the refined file with no additiona
             for f in sorted(example_path.iterdir()):
                 if f.suffix == ".rs":
                     input_content = f.read_text()
-                    answer_path = Path(self.config.example_path) / "output-requires" / f.name
+                    answer_path = (
+                        Path(self.config.example_path) / "output-requires" / f.name
+                    )
                     answer = answer_path.read_text() if answer_path.exists() else ""
 
                     examples.append({"query": input_content, "answer": answer})
@@ -767,9 +800,9 @@ The ghost variable looks like this:
 let ghost ...; // Added by AI
 ```
 
-If there is nothing to add for a function, that is OK. 
+If there is nothing to add for a function, that is OK.
 """
-        simple_instruction = """Please generate loop invariants and proof blocks for the given Rust code, so that Verus can verify the give function behaves exact what is described in the specifications. 
+        simple_instruction = """Please generate loop invariants and proof blocks for the given Rust code, so that Verus can verify the give function behaves exact what is described in the specifications.
 
 Respond with the Rust code only, do not include any explanation.
 """
@@ -825,7 +858,7 @@ Respond with the Rust code only, do not include any explanation.
     def direct_inference(self, code, temp=0, answer_num=1, error=""):
         system = "You are an experienced formal language programmer. You are very familiar with Verus, which is a tool for verifying the correctness of code written in Rust."
 
-        instruction = """Your mission is to add loop invariants to the given Rust code, if there are loops in the code, so that Verus can verify the give function behaves exact what is described in the specifications. 
+        instruction = """Your mission is to add loop invariants to the given Rust code, if there are loops in the code, so that Verus can verify the give function behaves exact what is described in the specifications.
 
 Here are some principles that you have to follow:
 Respond with Rust code only, do not include any explanation.
@@ -879,8 +912,8 @@ Please follow these steps in adding loop invariants for every loop:
 
 ## Step 2: Constant propagation refinement
 
-If an upper bound or a lower bound about a constant function parameter (e.g., X < ..., X > ...) is provided in the function pre-condition (i.e., in the `requires' code block at the beginning of the function), 
-please copy that (e.g., X < 10, X > 5) as a loop invariant to every loop in the function. 
+If an upper bound or a lower bound about a constant function parameter (e.g., X < ..., X > ...) is provided in the function pre-condition (i.e., in the `requires' code block at the beginning of the function),
+please copy that (e.g., X < 10, X > 5) as a loop invariant to every loop in the function.
 Even if an invariant is already specified earlier in the program, please do repeat it in every loop suitable.
 
 ## Step 3: Array length refinement
@@ -890,12 +923,12 @@ For every loop in the function, please identify every array that is read (e.g., 
 ## Step 4: Quantifier range refinement
 
 Please take the following steps to check every loop invariant that involves an array (e.g., x[k]) in the given Rust code:
-If this array x[k] has been modified in this loop through x.set(), leave this invariant as it is, do NOT make any changes, and move on to the next invariant. 
+If this array x[k] has been modified in this loop through x.set(), leave this invariant as it is, do NOT make any changes, and move on to the next invariant.
 Otherwise, when there is no x.set() in the loop, please make sure that the invariant covers every element in the array and hence has the form like `forall |k:int| 0<= k < x.len() ==> whatever-property'. When you make this change, please use a comment to explain why you believe the related array is never changed in the loop. Do NOT make any other changes to the code or the loop invariant!
 
 ## Step 5: Conditional loop invariant refinement
 
-Your mission is to refine some loop invariants in the given Rust code only if the loop has special handling for the first iteration. This is what you should do: if an existing loop invariant P holds for all iterations of the loop except for the first iteration (e.g., some variable updates may only (not) occur during the first loop iteration), please leave P as it is and add another loop invariant conditioned on the loop index (e.g., index > 0 ==> P), following the example below. 
+Your mission is to refine some loop invariants in the given Rust code only if the loop has special handling for the first iteration. This is what you should do: if an existing loop invariant P holds for all iterations of the loop except for the first iteration (e.g., some variable updates may only (not) occur during the first loop iteration), please leave P as it is and add another loop invariant conditioned on the loop index (e.g., index > 0 ==> P), following the example below.
 Do not change P or any other loop invariants in any other way."""
 
         self.logger.warning("Direct Inference unified with Refinement ...")
@@ -935,7 +968,7 @@ Do not change P or any other loop invariants in any other way."""
         For every loop in the function, please identify every array that is read (e.g., x[k]) or written (e.g., x.set(..,..)) in it, and then add a loop invariant that specifies the length of the array (i.e., x.len() == ...).
 
 Here are some principles that you have to follow:
- You should only response with Rust code, and not include any explanation. 
+ You should only response with Rust code, and not include any explanation.
  You should not make any other changes to the program.
 """
         examples = []
@@ -962,7 +995,7 @@ Here are some principles that you have to follow:
 
         system = "You are an experienced formal language programmer. You are very familiar with Verus, which is a tool for verifying the correctness of code written in Rust."
 
-        instruction = """Your mission is to refine some loop invariants in the given Rust code only if the loop has special handling for the first iteration. This is what you should do: if an existing loop invariant P holds for all iterations of the loop except for the first iteration (e.g., some variable updates may only (not) occur during the first loop iteration), please leave P as it is and add another loop invariant conditioned on the loop index (e.g., index > 0 ==> P), following the example below. 
+        instruction = """Your mission is to refine some loop invariants in the given Rust code only if the loop has special handling for the first iteration. This is what you should do: if an existing loop invariant P holds for all iterations of the loop except for the first iteration (e.g., some variable updates may only (not) occur during the first loop iteration), please leave P as it is and add another loop invariant conditioned on the loop index (e.g., index > 0 ==> P), following the example below.
 Do not change P or any other loop invariants in any other way. """
 
         examples = []
@@ -1006,7 +1039,7 @@ Do not change P or any other loop invariants in any other way. """
         system = "You are an experienced formal language programmer. You are very familiar with Verus, which is a tool for verifying the correctness of code written in Rust."
 
         instruction = """Please take the following steps to check every loop invariant that involves an array (e.g., x[k]) in the given Rust code:
-        If this array x[k] has been modified in this loop through x.set(), leave this invariant as it is, do NOT make any changes, and move on to the next invariant. 
+        If this array x[k] has been modified in this loop through x.set(), leave this invariant as it is, do NOT make any changes, and move on to the next invariant.
         Otherwise, when there is no x.set() in the loop, please make sure that the invariant covers every element in the array and hence has the form like `forall |k:int| 0<= k < x.len() ==> whatever-property'. When you make this change, please use a comment to explain why you believe the related array is never changed in the loop. Do NOT make any other changes to the code or the loop invariant!
 
 You should only response with Rust code, and not include any explanation.
@@ -1038,12 +1071,12 @@ You should only make changes to existing loop invariants in the following ways, 
         system = "You are an experienced formal language programmer. You are very familiar with Verus, which is a tool for verifying the correctness of code written in Rust."
 
         instruction = """
-If an upper bound or a lower bound about a constant function parameter (e.g., X < ..., X > ...) is provided in the function pre-condition (i.e., in the `requires' code block at the beginning of the function), 
-please copy that (e.g., X < 10, X > 5) as a loop invariant to every loop in the function. 
+If an upper bound or a lower bound about a constant function parameter (e.g., X < ..., X > ...) is provided in the function pre-condition (i.e., in the `requires' code block at the beginning of the function),
+please copy that (e.g., X < 10, X > 5) as a loop invariant to every loop in the function.
 Even if an invariant is already specified earlier in the program, please do repeat it in every loop suitable.
 
 Here are some principles that you have to follow:
- You should only response with Rust code, and not include any explanation. 
+ You should only response with Rust code, and not include any explanation.
  You should not make any other changes to the program.
 """
 
@@ -1130,7 +1163,7 @@ For example, if a non-linear expression x*x*x is used in the program, only tell 
             x <= 10,
             {}
 
-In this example, the `nonlinear_arith' keyword enables Verus to use its non-linear reasoning, and 
+In this example, the `nonlinear_arith' keyword enables Verus to use its non-linear reasoning, and
 the `requires' statements should include all the variable bound information needed to prove no-arithmetic overflow.
 
 Please check the given program, and add above nonlinear_arith assertions when needed. Note that both the lower bound and upper bound of the expression should be specified in the assertion.
@@ -1575,7 +1608,10 @@ Here are some principles that you have to follow:
             code = self.generate_view(content, temp_dir=temp_dir, answer_num=3)
         elif mode == "repair_view":
             self.logger.info("Repair with view mode")
-            code = self.repair_and_finalize(content, temp_dir=temp_dir,)
+            code = self.repair_and_finalize(
+                content,
+                temp_dir=temp_dir,
+            )
         elif baseline:
             self.logger.info("Generate with baseline mode")
             code = self.generate_baseline(content)

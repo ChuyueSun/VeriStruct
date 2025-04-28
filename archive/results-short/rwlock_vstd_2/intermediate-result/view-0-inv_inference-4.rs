@@ -1,8 +1,8 @@
 This code demonstrates a simple use of traits to define a custom invariant for a read-write lock (RwLock) in Verus:
 
-• The FixedParity struct stores a parity field (0 for even, 1 for odd).  
-• The view function simply indicates whether parity == 0.  
-• The inv function required by the RwLockPredicate trait checks that the stored number aligns with the parity requirement.  
+• The FixedParity struct stores a parity field (0 for even, 1 for odd).
+• The view function simply indicates whether parity == 0.
+• The inv function required by the RwLockPredicate trait checks that the stored number aligns with the parity requirement.
 
 Because the code uses Ghost(FixedParity { parity: N }) when creating the RwLock, the locking mechanism ensures that, under verification, the stored value always satisfies the parity condition.
 // Compilation Error: True, Verified: -1, Errors: 999, Verus Errors: 4
@@ -12,5 +12,5 @@ Because the code uses Ghost(FixedParity { parity: N }) when creating the RwLock,
 // {"$message_type":"diagnostic","message":"unknown start of token: \\u{2022}","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpiv6btjwp","byte_start":255,"byte_end":258,"line_start":5,"line_end":5,"column_start":1,"column_end":2,"is_primary":true,"text":[{"text":"• The inv function required by the RwLockPredicate trait checks that the stored number aligns with the parity requirement.  ","highlight_start":1,"highlight_end":2}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[{"message":"Unicode character '•' (Bullet) looks like '.' (Period), but it is not","code":null,"level":"help","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpiv6btjwp","byte_start":255,"byte_end":258,"line_start":5,"line_end":5,"column_start":1,"column_end":2,"is_primary":true,"text":[{"text":"• The inv function required by the RwLockPredicate trait checks that the stored number aligns with the parity requirement.  ","highlight_start":1,"highlight_end":2}],"label":null,"suggested_replacement":".","suggestion_applicability":"MaybeIncorrect","expansion":null}],"children":[],"rendered":null}],"rendered":"error: unknown start of token: \\u{2022}\n --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpiv6btjwp:5:1\n  |\n5 | • The inv function required by the RwLockPredicate trait checks that the stored number aligns with the parity requirement.  \n  | ^\n  |\nhelp: Unicode character '•' (Bullet) looks like '.' (Period), but it is not\n  |\n5 | . The inv function required by the RwLockPredicate trait checks that the stored number aligns with the parity requirement.  \n  | ~\n\n"}
 // {"$message_type":"diagnostic","message":"expected one of `!` or `::`, found `code`","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpiv6btjwp","byte_start":5,"byte_end":9,"line_start":1,"line_end":1,"column_start":6,"column_end":10,"is_primary":true,"text":[{"text":"This code demonstrates a simple use of traits to define a custom invariant for a read-write lock (RwLock) in Verus:","highlight_start":6,"highlight_end":10}],"label":"expected one of `!` or `::`","suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: expected one of `!` or `::`, found `code`\n --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpiv6btjwp:1:6\n  |\n1 | This code demonstrates a simple use of traits to define a custom invariant for a read-write lock (RwLock) in Verus:\n  |      ^^^^ expected one of `!` or `::`\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 4 previous errors","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 4 previous errors\n\n"}
-// 
-// 
+//
+//

@@ -41,7 +41,7 @@ verus! {
     }
 
     /// This function says that for any `x` and `y`, there are two
-    /// possibilities for the sum `x % n + y % n`: 
+    /// possibilities for the sum `x % n + y % n`:
     /// (1) It's in the range `[0, n)` and equals `(x + y) % n`.
     /// (2) It's in the range `[n, 2n)` and equals `(x + y) % n + n`.
     pub open spec fn mod_auto_plus(n: int) -> bool
@@ -282,5 +282,5 @@ verus! {
 // VerusErrorType.Other: unexpected token, expected `;`
 // {"$message_type":"diagnostic","message":"unexpected token, expected `;`","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmppa5sby7c","byte_start":5284,"byte_end":5285,"line_start":179,"line_end":179,"column_start":60,"column_end":61,"is_primary":true,"text":[{"text":"                    self@.0.len() == old(self)@.0.len() + 1,","highlight_start":60,"highlight_end":61}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: unexpected token, expected `;`\n   --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmppa5sby7c:179:60\n    |\n179 |                     self@.0.len() == old(self)@.0.len() + 1,\n    |                                                            ^\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}
-// 
-// 
+//
+//

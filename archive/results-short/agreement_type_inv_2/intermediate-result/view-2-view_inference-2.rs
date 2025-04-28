@@ -154,5 +154,5 @@ pub fn main() {
 // VerusErrorType.Other: expected identifier or integer
 // {"$message_type":"diagnostic","message":"expected identifier or integer","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpq2kj9zly","byte_start":2159,"byte_end":2160,"line_start":81,"line_end":81,"column_start":46,"column_end":47,"is_primary":true,"text":[{"text":"            AgreementResourceValue::Chosen { _ } => true,","highlight_start":46,"highlight_end":47}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: expected identifier or integer\n  --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpq2kj9zly:81:46\n   |\n81 |             AgreementResourceValue::Chosen { _ } => true,\n   |                                              ^\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}
-// 
-// 
+//
+//

@@ -150,5 +150,5 @@ pub fn main() {
 // VerusErrorType.Other: unexpected proof block
 // {"$message_type":"diagnostic","message":"unexpected proof block","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmp63edp_8_","byte_start":2312,"byte_end":2336,"line_start":94,"line_end":94,"column_start":18,"column_end":42,"is_primary":true,"text":[{"text":"            _ => proof { unreachable!() },","highlight_start":18,"highlight_end":42}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: unexpected proof block\n  --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmp63edp_8_:94:18\n   |\n94 |             _ => proof { unreachable!() },\n   |                  ^^^^^^^^^^^^^^^^^^^^^^^^\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}
-// 
-// 
+//
+//

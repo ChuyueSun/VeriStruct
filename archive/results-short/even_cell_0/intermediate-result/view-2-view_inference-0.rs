@@ -57,5 +57,5 @@ fn main() {
 // {"$message_type":"diagnostic","message":"aborting due to 3 previous errors","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 3 previous errors\n\n"}
 // {"$message_type":"diagnostic","message":"Some errors have detailed explanations: E0061, E0609.","code":null,"level":"failure-note","spans":[],"children":[],"rendered":"Some errors have detailed explanations: E0061, E0609.\n"}
 // {"$message_type":"diagnostic","message":"For more information about an error, try `rustc --explain E0061`.","code":null,"level":"failure-note","spans":[],"children":[],"rendered":"For more information about an error, try `rustc --explain E0061`.\n"}
-// 
-// 
+//
+//

@@ -1,4 +1,5 @@
 import os
+import re
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -7,6 +8,7 @@ from modules.base import BaseModule
 from modules.utils import (
     debug_type_error,
     evaluate_samples,
+    parse_llm_response,
     save_selection_info,
     update_global_best,
 )
@@ -69,6 +71,57 @@ impl<T: Copy> View for RingBuffer<T> {
 }
 ```"""
 
+    def parse_view_response(self, response: str) -> str:
+        """
+        Parse the LLM response to extract and clean the View implementation.
+
+        Args:
+            response: Raw LLM response text
+
+        Returns:
+            Cleaned code with proper View implementation
+        """
+        self.logger.info("Parsing view inference response...")
+
+        # Use the general parser first to extract all Rust code
+        parsed_code = parse_llm_response(response, logger=self.logger)
+
+        # If parsing failed or returned empty string, log warning and return original
+        if not parsed_code:
+            self.logger.warning(
+                "General parser couldn't extract code, using original response"
+            )
+            return response
+
+        # Check if the parser gave us a complete View implementation
+        if (
+            "impl" in parsed_code
+            and "View for" in parsed_code
+            and "type V =" in parsed_code
+        ):
+            self.logger.info("Successfully extracted View implementation")
+            return parsed_code
+
+        # If we don't have a View implementation yet, try to extract it specifically
+        view_impl_pattern = r"impl\s*<.*?>\s*View\s+for\s+\w+.*?{.*?type\s+V\s*=.*?closed\s+spec\s+fn\s+view.*?}.*?}"
+        view_impls = re.findall(view_impl_pattern, parsed_code, re.DOTALL)
+
+        if view_impls:
+            self.logger.info("Extracted specific View implementation from parsed code")
+            return view_impls[0]
+
+        # If we still don't have a View implementation, try the original response
+        view_impls = re.findall(view_impl_pattern, response, re.DOTALL)
+        if view_impls:
+            self.logger.info("Extracted View implementation from original response")
+            return view_impls[0]
+
+        # If nothing worked, return the parsed code anyway
+        self.logger.warning(
+            "Could not find specific View implementation, returning general parsed code"
+        )
+        return parsed_code
+
     def exec(self, context) -> str:
         """
         Execute the view inference module with the given context.
@@ -89,7 +142,7 @@ impl<T: Copy> View for RingBuffer<T> {
             base_instruction=self.view_instruction,
             add_common=True,
             add_view=True,  # Include View guidelines
-            code=code
+            code=code,
         )
 
         # Load examples
@@ -110,7 +163,9 @@ impl<T: Copy> View for RingBuffer<T> {
                         answer = answer_path.read_text() if answer_path.exists() else ""
                         examples.append({"query": input_content, "answer": answer})
             else:
-                self.logger.warning("Example path does not exist - proceeding without examples")
+                self.logger.warning(
+                    "Example path does not exist - proceeding without examples"
+                )
         except Exception as e:
             self.logger.error(f"Error loading examples: {e}")
 
@@ -131,15 +186,19 @@ impl<T: Copy> View for RingBuffer<T> {
             # Return a placeholder response in case of error
             return code
 
-        # Process responses to fix any type errors
+        # Parse and process responses
         processed_responses = []
         for response in responses:
-            # Apply debug_type_error to fix any type errors
-            fixed_response, _ = debug_type_error(response, logger=self.logger)
+            # First parse the response to extract the View implementation
+            parsed_response = self.parse_view_response(response)
+
+            # Then apply debug_type_error to fix any type errors
+            fixed_response, _ = debug_type_error(parsed_response, logger=self.logger)
             if fixed_response:  # Only use the fixed version if it's not empty
                 processed_responses.append(fixed_response)
             else:
-                processed_responses.append(response)
+                # If fixing failed, still use the parsed response
+                processed_responses.append(parsed_response)
 
         # Save all generated samples
         output_dir = Path("output/samples")
@@ -167,19 +226,23 @@ impl<T: Copy> View for RingBuffer<T> {
 
         # If this is the first global_best_code, initialize it
         if global_best_code is None:
-            self.logger.debug(f"ViewInference - Initial global_best_code is None: {global_best_code is None}")
-            self.logger.debug(f"ViewInference - Initial global_best_score: {global_best_score}")
+            self.logger.debug(
+                f"ViewInference - Initial global_best_code is None: {global_best_code is None}"
+            )
+            self.logger.debug(
+                f"ViewInference - Initial global_best_score: {global_best_score}"
+            )
             self.logger.debug(f"ViewInference - Current best_score: {best_score}")
-            self.logger.info("ViewInference - Initializing global best with current best")
+            self.logger.info(
+                "ViewInference - Initializing global best with current best"
+            )
             global_best_code = best_code
             global_best_score = best_score
 
         # Save the module-specific best from this step
         module_best_path = output_dir / "01_view_inference_global_best.rs"
         try:
-            sample_with_score = (
-                f"{best_code}\n\n// VEval Score: {best_score}"
-            )
+            sample_with_score = f"{best_code}\n\n// VEval Score: {best_score}"
             module_best_path.write_text(sample_with_score)
             self.logger.info(f"Saved best view inference to {module_best_path}")
         except Exception as e:
@@ -188,8 +251,10 @@ impl<T: Copy> View for RingBuffer<T> {
         # Update context's global best tracking
         context.set_best_code(global_best_code)
         context.set_best_score(global_best_score)
-        
-        self.logger.debug(f"ViewInference - Stored global best in context with score: {global_best_score}")
+
+        self.logger.debug(
+            f"ViewInference - Stored global best in context with score: {global_best_score}"
+        )
 
         # Add the best sample from current step to context
         context.add_trial(best_code)  # Always use the best sample from this step

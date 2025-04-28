@@ -28,7 +28,7 @@ verus! {
 
     impl<T: Copy> View for RingBuffer<T> {
         type V = (Seq<T>, usize);
-    
+
         closed spec fn view(&self) -> Self::V {
             let cap = self.ring.len();
             if self.tail >= self.head {
@@ -43,7 +43,7 @@ verus! {
     }
 
     /// This function says that for any `x` and `y`, there are two
-    /// possibilities for the sum `x % n + y % n`: 
+    /// possibilities for the sum `x % n + y % n`:
     /// (1) It's in the range `[0, n)` and equals `(x + y) % n`.
     /// (2) It's in the range `[n, 2n)` and equals `(x + y) % n + n`.
     pub open spec fn mod_auto_plus(n: int) -> bool
@@ -173,7 +173,7 @@ impl<T: Copy> RingBuffer<T> {
         }
     }
 
-    
+
     /// If the buffer isn't full, adds a new element to the back.
     /// Returns whether the element was added.
     pub fn enqueue(&mut self, val: T) -> (succ: bool)
@@ -209,7 +209,7 @@ impl<T: Copy> RingBuffer<T> {
             None
         }
     }
-    
+
 }
 
 #[verifier::loop_isolation(false)]

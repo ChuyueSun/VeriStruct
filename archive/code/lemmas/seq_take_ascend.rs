@@ -23,4 +23,3 @@ proof fn lemma_seq_take_ascend<T>(v: Seq<T>, i: int)
 {
     assert(v.take(i as int).drop_last()=~=v.take(i-1));
 }
-

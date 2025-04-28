@@ -42,7 +42,7 @@ verus! {
     }
 
     /// This function says that for any `x` and `y`, there are two
-    /// possibilities for the sum `x % n + y % n`: 
+    /// possibilities for the sum `x % n + y % n`:
     /// (1) It's in the range `[0, n)` and equals `(x + y) % n`.
     /// (2) It's in the range `[n, 2n)` and equals `(x + y) % n + n`.
     pub open spec fn mod_auto_plus(n: int) -> bool
@@ -172,7 +172,7 @@ verus! {
             }
         }
 
-        
+
         /// If the buffer isn't full, adds a new element to the back.
         /// Returns whether the element was added.
         pub fn enqueue(&mut self, val: T) -> (succ: bool)
@@ -208,7 +208,7 @@ verus! {
                 None
             }
         }
-        
+
 
         /// Returns the number of elements that can still be enqueued until it is full.
         pub fn available_len(&self) -> (ret: usize)
@@ -273,5 +273,5 @@ verus! {
 // VerusErrorType.Other: expected an expression
 // {"$message_type":"diagnostic","message":"expected an expression","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpt9a7ouy5","byte_start":974,"byte_end":975,"line_start":38,"line_end":38,"column_start":22,"column_end":23,"is_primary":true,"text":[{"text":"                    ++ self.ring@.subrange(0, self.tail as int)","highlight_start":22,"highlight_end":23}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: expected an expression\n  --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpt9a7ouy5:38:22\n   |\n38 |                     ++ self.ring@.subrange(0, self.tail as int)\n   |                      ^\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}
-// 
-// 
+//
+//

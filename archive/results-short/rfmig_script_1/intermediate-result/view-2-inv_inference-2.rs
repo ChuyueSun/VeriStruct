@@ -23,7 +23,7 @@ impl Account {
     pub closed spec fn inv(&self) -> bool {
         // Example invariant: balance must not exceed the maximum for a 64-bit integer.
         // (This is trivially always true, but included here for demonstration.)
-        self.balance <= (u64::MAX) 
+        self.balance <= (u64::MAX)
     }
 }
 
@@ -69,5 +69,5 @@ fn start_thread(counter: PPtr<u64>, Tracked(perm): Tracked<PointsTo<u64>>)
 // VerusErrorType.Other: expected one of `!` or `::`, found `is`
 // {"$message_type":"diagnostic","message":"expected one of `!` or `::`, found `is`","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpkuuoouqt","byte_start":6,"byte_end":8,"line_start":1,"line_end":1,"column_start":7,"column_end":9,"is_primary":true,"text":[{"text":"Below is the same code with a simple closed spec function added to the Account struct. This function demonstrates how one might specify invariants (e.g., requiring the balance to fit within u64). Adjust or expand it if you have more specific invariants to capture.","highlight_start":7,"highlight_end":9}],"label":"expected one of `!` or `::`","suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: expected one of `!` or `::`, found `is`\n --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpkuuoouqt:1:7\n  |\n1 | Below is the same code with a simple closed spec function added to the Account struct. This function demonstrates how one might specify invariants (e.g., requi...\n  |       ^^ expected one of `!` or `::`\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}
-// 
-// 
+//
+//

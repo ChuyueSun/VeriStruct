@@ -40,5 +40,5 @@ pub fn main() {
 // VerusErrorType.Other: expected curly braces
 // {"$message_type":"diagnostic","message":"expected curly braces","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpllzznb72","byte_start":297,"byte_end":299,"line_start":15,"line_end":15,"column_start":48,"column_end":50,"is_primary":true,"text":[{"text":"    open spec fn inv(self, v: u64) -> ( bool ) as bool {","highlight_start":48,"highlight_end":50}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: expected curly braces\n  --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpllzznb72:15:48\n   |\n15 |     open spec fn inv(self, v: u64) -> ( bool ) as bool {\n   |                                                ^^\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}
-// 
-// 
+//
+//

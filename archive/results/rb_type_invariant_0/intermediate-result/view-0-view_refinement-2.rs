@@ -44,7 +44,7 @@ verus! {
     }
 
     /// This function says that for any `x` and `y`, there are two
-    /// possibilities for the sum `x % n + y % n`: 
+    /// possibilities for the sum `x % n + y % n`:
     /// (1) It's in the range `[0, n)` and equals `(x + y) % n`.
     /// (2) It's in the range `[n, 2n)` and equals `(x + y) % n + n`.
     pub open spec fn mod_auto_plus(n: int) -> bool
@@ -274,5 +274,5 @@ verus! {
 // VerusErrorType.Other: expected curly braces
 // {"$message_type":"diagnostic","message":"expected curly braces","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpxlpvhfxv","byte_start":3546,"byte_end":3548,"line_start":120,"line_end":120,"column_start":47,"column_end":49,"is_primary":true,"text":[{"text":"        closed spec fn inv(&self) -> ( bool ) as bool {","highlight_start":47,"highlight_end":49}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: expected curly braces\n   --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpxlpvhfxv:120:47\n    |\n120 |         closed spec fn inv(&self) -> ( bool ) as bool {\n    |                                               ^^\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}
-// 
-// 
+//
+//

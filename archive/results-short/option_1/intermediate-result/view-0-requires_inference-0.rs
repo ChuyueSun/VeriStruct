@@ -135,7 +135,7 @@ fn test_option_generic() {
 
     let opt2: MyOption<i32> = MyOption::Some(42);
     let is_none = opt2.is_none();
-    let is_some = opt2.is_some(); 
+    let is_some = opt2.is_some();
     assert(!is_none);
     assert(is_some);
 
@@ -166,5 +166,5 @@ fn main() {
 // VerusErrorType.Other: unexpected token, expected `;`
 // {"$message_type":"diagnostic","message":"unexpected token, expected `;`","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmp2uzy04ta","byte_start":495,"byte_end":502,"line_start":26,"line_end":26,"column_start":16,"column_end":23,"is_primary":true,"text":[{"text":"    recommends is_Some(opt);","highlight_start":16,"highlight_end":23}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: unexpected token, expected `;`\n  --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmp2uzy04ta:26:16\n   |\n26 |     recommends is_Some(opt);\n   |                ^^^^^^^\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}
-// 
-// 
+//
+//

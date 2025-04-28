@@ -42,7 +42,7 @@ verus! {
     }
 
     /// This function says that for any `x` and `y`, there are two
-    /// possibilities for the sum `x % n + y % n`: 
+    /// possibilities for the sum `x % n + y % n`:
     /// (1) It's in the range `[0, n)` and equals `(x + y) % n`.
     /// (2) It's in the range `[n, 2n)` and equals `(x + y) % n + n`.
     pub open spec fn mod_auto_plus(n: int) -> bool
@@ -170,7 +170,7 @@ impl<T: Copy> RingBuffer<T> {
         }
     }
 
-    
+
     /// If the buffer isn't full, adds a new element to the back.
     /// Returns whether the element was added.
     pub fn enqueue(&mut self, val: T) -> (succ: bool)
@@ -229,5 +229,5 @@ fn test_enqueue_dequeue_generic(len: usize, value: i32, iterations: usize)
 // VerusErrorType.Other: unclosed delimiterVerusErrorType.Other: this file contains an unclosed delimiter
 // {"$message_type":"diagnostic","message":"this file contains an unclosed delimiter","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmp8e_1m0d5","byte_start":48,"byte_end":49,"line_start":5,"line_end":5,"column_start":8,"column_end":9,"is_primary":false,"text":[{"text":"verus! {","highlight_start":8,"highlight_end":9}],"label":"unclosed delimiter","suggested_replacement":null,"suggestion_applicability":null,"expansion":null},{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmp8e_1m0d5","byte_start":6387,"byte_end":6388,"line_start":226,"line_end":226,"column_start":1,"column_end":2,"is_primary":false,"text":[{"text":"{","highlight_start":1,"highlight_end":2}],"label":"unclosed delimiter","suggested_replacement":null,"suggestion_applicability":null,"expansion":null},{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmp8e_1m0d5","byte_start":6389,"byte_end":6389,"line_start":226,"line_end":226,"column_start":3,"column_end":3,"is_primary":true,"text":[{"text":"{","highlight_start":3,"highlight_end":3}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: this file contains an unclosed delimiter\n   --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmp8e_1m0d5:226:3\n    |\n5   | verus! {\n    |        - unclosed delimiter\n...\n226 | {\n    | -^\n    | |\n    | unclosed delimiter\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}
-// 
-// 
+//
+//

@@ -65,5 +65,5 @@ fn start_thread(counter: PPtr<u64>, Tracked(perm): Tracked<PointsTo<u64>>)
 // VerusErrorType.Other: expected `!`
 // {"$message_type":"diagnostic","message":"expected `!`","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpdkfos08a","byte_start":1214,"byte_end":1215,"line_start":44,"line_end":44,"column_start":13,"column_end":14,"is_primary":true,"text":[{"text":"        perm.opt_value().get_Init_0() == old_val + 1","highlight_start":13,"highlight_end":14}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: expected `!`\n  --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpdkfos08a:44:13\n   |\n44 |         perm.opt_value().get_Init_0() == old_val + 1\n   |             ^\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}
-// 
-// 
+//
+//

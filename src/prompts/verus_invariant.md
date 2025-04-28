@@ -14,4 +14,4 @@
 
 5. For circular data structures, think about how the head/tail pointers relate to each other
 
-6. Include range checks when appropriate (e.g., indices must be less than length) 
+6. Include range checks when appropriate (e.g., indices must be less than length)

@@ -134,7 +134,7 @@ pub fn main() {
 }
 
 //         match *self.r.borrow() {
-//   the method is available for `vstd::pcm::Resource<AgreementResourceValue<T>>` here: 
+//   the method is available for `vstd::pcm::Resource<AgreementResourceValue<T>>` here:
 //   None: borrow
 
 // Compilation Error: True, Verified: -1, Errors: 999, Verus Errors: 4

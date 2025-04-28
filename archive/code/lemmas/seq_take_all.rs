@@ -19,4 +19,3 @@ proof fn lemma_seq_take_all<T>(v: Seq<T>)
 {
     assert(v =~= v.take(v.len() as int));
 }
-

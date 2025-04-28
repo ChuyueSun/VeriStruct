@@ -121,7 +121,7 @@ fn test_option_generic() {
 
     let opt2: MyOption<i32> = MyOption::Some(42);
     let is_none = opt2.is_none();
-    let is_some = opt2.is_some(); 
+    let is_some = opt2.is_some();
     assert(!is_none);
     assert(is_some);
 

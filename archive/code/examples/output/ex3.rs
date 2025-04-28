@@ -1,7 +1,7 @@
 use vstd::prelude::*;
 fn main() {}
 verus! {
-fn fun(v: &mut Vec<usize>, a: &mut Vec<usize>, k: usize, N: i32) 
+fn fun(v: &mut Vec<usize>, a: &mut Vec<usize>, k: usize, N: i32)
     requires
         0 < k < 1000,
         old(v).len() == old(a).len() == N,

@@ -40,7 +40,7 @@ verus! {
     }
 
     /// This function says that for any `x` and `y`, there are two
-    /// possibilities for the sum `x % n + y % n`: 
+    /// possibilities for the sum `x % n + y % n`:
     /// (1) It's in the range `[0, n)` and equals `(x + y) % n`.
     /// (2) It's in the range `[n, 2n)` and equals `(x + y) % n + n`.
     pub open spec fn mod_auto_plus(n: int) -> bool
@@ -170,7 +170,7 @@ impl<T: Copy> RingBuffer<T> {
         }
     }
 
-    
+
     /// If the buffer isn't full, adds a new element to the back.
     /// Returns whether the element was added.
     pub fn enqueue(&mut self, val: T) -> (succ: bool)
@@ -206,7 +206,7 @@ impl<T: Copy> RingBuffer<T> {
             None
         }
     }
-    
+
 
 
     /// Returns the number of elements that can still be enqueued until it is full.
@@ -280,5 +280,5 @@ fn test_enqueue_dequeue_generic(len: usize, value: i32, iterations: usize)
 // {"$message_type":"diagnostic","message":"no field `1` on type `vstd::seq::Seq<i32>`","code":{"code":"E0609","explanation":"Attempted to access a nonexistent field in a struct.\n\nErroneous code example:\n\n```compile_fail,E0609\nstruct StructWithFields {\n    x: u32,\n}\n\nlet s = StructWithFields { x: 0 };\nprintln!(\"{}\", s.foo); // error: no field `foo` on type `StructWithFields`\n```\n\nTo fix this error, check that you didn't misspell the field's name or that the\nfield actually exists. Example:\n\n```\nstruct StructWithFields {\n    x: u32,\n}\n\nlet s = StructWithFields { x: 0 };\nprintln!(\"{}\", s.x); // ok!\n```\n"},"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpv50epee9","byte_start":6711,"byte_end":6712,"line_start":249,"line_end":249,"column_start":18,"column_end":19,"is_primary":true,"text":[{"text":"            buf@.1 > 1","highlight_start":18,"highlight_end":19}],"label":"unknown field","suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error[E0609]: no field `1` on type `vstd::seq::Seq<i32>`\n   --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpv50epee9:249:18\n    |\n249 |             buf@.1 > 1\n    |                  ^ unknown field\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 7 previous errors","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 7 previous errors\n\n"}
 // {"$message_type":"diagnostic","message":"For more information about this error, try `rustc --explain E0609`.","code":null,"level":"failure-note","spans":[],"children":[],"rendered":"For more information about this error, try `rustc --explain E0609`.\n"}
-// 
-// 
+//
+//

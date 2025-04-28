@@ -15,4 +15,4 @@
    - Only include fields necessary for specification
    - Derive computable properties in method ensures clauses, not in the view
 
-4. Prefer mathematical types over concrete types when possible 
+4. Prefer mathematical types over concrete types when possible

@@ -36,4 +36,4 @@ is equivalent to:
 
 Note:
 - Implication (==>) and equivalence (<==>) bind more tightly than &&& and |||.
-- Using &&&/||| can make long specifications clearer by grouping logical clauses neatly. 
+- Using &&&/||| can make long specifications clearer by grouping logical clauses neatly.

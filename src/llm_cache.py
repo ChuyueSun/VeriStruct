@@ -35,33 +35,43 @@ class LLMCache:
         """
         self.cache_dir = Path(cache_dir)
         self.always_write = always_write
-        
+
         # Check environment variable to determine if caching is enabled
         enable_cache_env = os.environ.get("ENABLE_LLM_CACHE", "1")
-        
+
         # Check for deprecated environment variable
         deprecated_cache_env = os.environ.get("LLM_CACHE_ENABLED")
         if deprecated_cache_env is not None:
             if logger:
-                logger.warning("LLM_CACHE_ENABLED is deprecated. Please use ENABLE_LLM_CACHE instead.")
+                logger.warning(
+                    "LLM_CACHE_ENABLED is deprecated. Please use ENABLE_LLM_CACHE instead."
+                )
             # Still honor the deprecated variable if it's set to disable caching
             if deprecated_cache_env == "0":
                 if logger:
-                    logger.warning("Disabling cache due to deprecated LLM_CACHE_ENABLED=0 setting")
+                    logger.warning(
+                        "Disabling cache due to deprecated LLM_CACHE_ENABLED=0 setting"
+                    )
                 enable_cache_env = "0"
-        
+
         # Cache is enabled if passed parameter is True and environment variable is "1"
         self.enabled = enabled and enable_cache_env == "1"
-        
+
         # Log the cache status
         if logger:
             if self.enabled:
-                logger.info(f"LLM cache enabled for reading and writing (from env: ENABLE_LLM_CACHE={enable_cache_env})")
+                logger.info(
+                    f"LLM cache enabled for reading and writing (from env: ENABLE_LLM_CACHE={enable_cache_env})"
+                )
             elif self.always_write:
-                logger.info(f"LLM cache disabled for reading but enabled for writing (from env: ENABLE_LLM_CACHE={enable_cache_env})")
+                logger.info(
+                    f"LLM cache disabled for reading but enabled for writing (from env: ENABLE_LLM_CACHE={enable_cache_env})"
+                )
             else:
-                logger.info(f"LLM cache disabled (from env: ENABLE_LLM_CACHE={enable_cache_env})")
-        
+                logger.info(
+                    f"LLM cache disabled (from env: ENABLE_LLM_CACHE={enable_cache_env})"
+                )
+
         self.max_age_seconds = max_age_days * 24 * 60 * 60
         self.logger = logger
 
@@ -122,7 +132,7 @@ class LLMCache:
                 self.logger.debug("Cache disabled by environment variable")
             self.misses += 1
             return None
-            
+
         if not self.enabled:
             self.misses += 1
             return None
@@ -179,9 +189,11 @@ class LLMCache:
         # Double-check environment variables in case they changed after initialization
         if os.environ.get("ENABLE_LLM_CACHE", "1") == "0" and not self.always_write:
             if self.logger:
-                self.logger.debug("Cache save skipped - disabled by environment variable")
+                self.logger.debug(
+                    "Cache save skipped - disabled by environment variable"
+                )
             return
-            
+
         # Only skip saving if both enabled and always_write are False
         if not self.enabled and not self.always_write:
             return

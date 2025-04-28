@@ -12,7 +12,7 @@ set -x ENABLE_LLM_INFERENCE 1
 
 # Configure LLM caching
 set -x ENABLE_LLM_CACHE 1
- 
+
 set -x LLM_CACHE_DIR "$SCRIPT_DIR/llm_cache"
 set -x LLM_CACHE_MAX_AGE_DAYS 7
 
@@ -47,4 +47,4 @@ if test $status -eq 0
     echo "Cache statistics: Hit rate can be checked in the logs"
 else
     echo "❌ VerusAgent failed to run. Please check the error messages above."
-end 
+end

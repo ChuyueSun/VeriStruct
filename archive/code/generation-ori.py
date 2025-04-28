@@ -3,16 +3,23 @@
 
 import os
 from pathlib import Path
-from infer import LLM
+
 from houdini import houdini
 from refinement import Refinement
-from veval import VEval, EvalScore
-from utils import evaluate, code_change_is_safe, clean_code, get_nonlinear_lines
+from veval import EvalScore, VEval
+
+from infer import LLM
+from utils import clean_code, code_change_is_safe, evaluate, get_nonlinear_lines
 
 
 class Generation:
     def __init__(
-        self, config, logger, phase1_examples=["3", "6", "7"], view_examples = ["8", "9"], repair_uniform=False
+        self,
+        config,
+        logger,
+        phase1_examples=["3", "6", "7"],
+        view_examples=["8", "9"],
+        repair_uniform=False,
     ):
         self.config = config
         self.llm = LLM(config, logger)
@@ -43,7 +50,7 @@ class Generation:
             self.view_inference,
             self.inv_inference,
             self.requires_inference,
-            self.ensures_inference, # ensures is more difficult than requires
+            self.ensures_inference,  # ensures is more difficult than requires
         ]
         self.system = "You are an experienced formal language programmer. You are very familiar with Verus, which is a tool for verifying the correctness of code written in Rust."
         self.important_note = """**Important Notes**:
@@ -80,14 +87,15 @@ spec fn spec_fn(&self) -> bool {
 ```
 """
 
-
     def wrap_code(self, code, veval):
         code += "\n// " + str(veval.get_score())
-        code += "\n// " + ("".join(str(e) for e in veval.verus_errors)).replace("\n", "\n// ")
+        code += "\n// " + ("".join(str(e) for e in veval.verus_errors)).replace(
+            "\n", "\n// "
+        )
         code += "\n// " + str(veval.rustc_out).replace("\n", "\n// ")
         code += "\n// " + str(veval.verus_out).replace("\n", "\n// ")
         return code
-    
+
     def generate_view(self, code, temp_dir, answer_num=3, retry=3):
         temp = 1.0
         temp_dir = Path(temp_dir)
@@ -111,7 +119,7 @@ spec fn spec_fn(&self) -> bool {
                     if score.is_correct():
                         self.logger.info("Found a correct proof!")
                         return cand_code
-                    
+
                     failures, houdini_code = self.hdn.run(cand)
                     if len(failures) == 0:
                         self.logger.info("Found a correct proof!")
@@ -120,7 +128,9 @@ spec fn spec_fn(&self) -> bool {
                     if not (score < best_score):
                         best_score = score
                         best_code = cand
-                    (temp_dir / f"view-{i}-{func.__name__}-{j}.rs").write_text(self.wrap_code(cand, veval))
+                    (temp_dir / f"view-{i}-{func.__name__}-{j}.rs").write_text(
+                        self.wrap_code(cand, veval)
+                    )
                 cand_code = best_code
 
             cand_code, _ = self.refinement.debug_type_error(cand_code)
@@ -133,17 +143,19 @@ spec fn spec_fn(&self) -> bool {
                 best_score_of_all = score
                 best_code_of_all = cand_code
                 # Store the best code in a temp file
-                (temp_dir / "view-best.rs").write_text(self.wrap_code(best_code_of_all, veval))
+                (temp_dir / "view-best.rs").write_text(
+                    self.wrap_code(best_code_of_all, veval)
+                )
 
             # Store the code in a temp file
             cand_code = self.wrap_code(cand_code, veval)
             (temp_dir / f"view-{i}.rs").write_text(cand_code)
-        
+
         if best_score_of_all.is_correct():
             self.logger.info("Found a correct view function!")
             (temp_dir / "view-correct.rs").write_text(best_code_of_all)
             return best_code_of_all
-        
+
         repair_temp_dir = temp_dir / "repair"
         repair_temp_dir.mkdir(parents=True, exist_ok=True)
         code = self.refinement.repair_veval(best_code_of_all, temp_dir=repair_temp_dir)
@@ -153,11 +165,11 @@ spec fn spec_fn(&self) -> bool {
         if score.is_correct():
             (temp_dir / "view-correct-after-repair.rs").write_text(code)
             return code
-        
+
         code = self.wrap_code(code, veval)
         (temp_dir / "view-best-after-repair.rs").write_text(code)
         return code
-    
+
     def view_inference(self, code, temp=0, answer_num=1):
         instruction = """You are an expert in Verus (verifier for rust). Your task is to generate a View function for the given rust code. View is the mathematical abstraction for the given data structure. View is used strictly in Verus spec.
         - Add a `View` function to the code that provides a mathematical abstraction for types used in the executable code.
@@ -174,11 +186,13 @@ spec fn spec_fn(&self) -> bool {
             for f in sorted(example_path.iterdir()):
                 if f.suffix == ".rs":
                     input_content = f.read_text()
-                    answer_path = Path(self.config.example_path) / "output-view" / f.name
+                    answer_path = (
+                        Path(self.config.example_path) / "output-view" / f.name
+                    )
                     answer = answer_path.read_text() if answer_path.exists() else ""
 
                     examples.append({"query": input_content, "answer": answer})
-        
+
         return self.llm.infer_llm(
             self.config.aoai_generation_model,
             instruction,
@@ -189,7 +203,7 @@ spec fn spec_fn(&self) -> bool {
             max_tokens=self.config.max_token,
             temp=1.0,
         )
-    
+
     def inv_inference(self, code, temp=0, answer_num=1):
         instruction = """You are an expert in Verus (verifier for rust). Your task is to generate a closed spec fn inv(&self) -> bool function for the given rust code. This function represents the invariant of the data structure."""
         instruction += "\n" + self.important_note
@@ -208,7 +222,7 @@ spec fn spec_fn(&self) -> bool {
                     answer = answer_path.read_text() if answer_path.exists() else ""
 
                     examples.append({"query": input_content, "answer": answer})
-        
+
         return self.llm.infer_llm(
             self.config.aoai_generation_model,
             instruction,
@@ -219,7 +233,7 @@ spec fn spec_fn(&self) -> bool {
             max_tokens=self.config.max_token,
             temp=1.0,
         )
-    
+
     def ensures_inference(self, code, temp=0, answer_num=1):
         instruction = """You are an expert in Verus (verifier for rust). Your task is to **Add `ensures` clauses for trait methods**:
    - Analyze the semantics of the functions and append appropriate `ensures` clauses to the trait method implementations.
@@ -240,11 +254,13 @@ spec fn spec_fn(&self) -> bool {
             for f in sorted(example_path.iterdir()):
                 if f.suffix == ".rs":
                     input_content = f.read_text()
-                    answer_path = Path(self.config.example_path) / "output-ensures" / f.name
+                    answer_path = (
+                        Path(self.config.example_path) / "output-ensures" / f.name
+                    )
                     answer = answer_path.read_text() if answer_path.exists() else ""
 
                     examples.append({"query": input_content, "answer": answer})
-        
+
         return self.llm.infer_llm(
             self.config.aoai_generation_model,
             instruction,
@@ -255,7 +271,7 @@ spec fn spec_fn(&self) -> bool {
             max_tokens=self.config.max_token,
             temp=1.0,
         )
-    
+
     def requires_inference(self, code, temp=0, answer_num=1):
         instruction = """You are an expert in Verus (verifier for rust). Your task is **Add `requires` and `ensures` to public functions**:
    - Include `requires self.inv(),` and `ensures self.inv(),` in the signatures of relevant public functions.
@@ -273,7 +289,9 @@ spec fn spec_fn(&self) -> bool {
             for f in sorted(example_path.iterdir()):
                 if f.suffix == ".rs":
                     input_content = f.read_text()
-                    answer_path = Path(self.config.example_path) / "output-requires" / f.name
+                    answer_path = (
+                        Path(self.config.example_path) / "output-requires" / f.name
+                    )
                     answer = answer_path.read_text() if answer_path.exists() else ""
 
                     examples.append({"query": input_content, "answer": answer})
@@ -410,9 +428,9 @@ The ghost variable looks like this:
 let ghost ...; // Added by AI
 ```
 
-If there is nothing to add for a function, that is OK. 
+If there is nothing to add for a function, that is OK.
 """
-        simple_instruction = """Please generate loop invariants and proof blocks for the given Rust code, so that Verus can verify the give function behaves exact what is described in the specifications. 
+        simple_instruction = """Please generate loop invariants and proof blocks for the given Rust code, so that Verus can verify the give function behaves exact what is described in the specifications.
 
 Respond with the Rust code only, do not include any explanation.
 """
@@ -468,7 +486,7 @@ Respond with the Rust code only, do not include any explanation.
     def direct_inference(self, code, temp=0, answer_num=1, error=""):
         system = "You are an experienced formal language programmer. You are very familiar with Verus, which is a tool for verifying the correctness of code written in Rust."
 
-        instruction = """Your mission is to add loop invariants to the given Rust code, if there are loops in the code, so that Verus can verify the give function behaves exact what is described in the specifications. 
+        instruction = """Your mission is to add loop invariants to the given Rust code, if there are loops in the code, so that Verus can verify the give function behaves exact what is described in the specifications.
 
 Here are some principles that you have to follow:
 Respond with Rust code only, do not include any explanation.
@@ -522,8 +540,8 @@ Please follow these steps in adding loop invariants for every loop:
 
 ## Step 2: Constant propagation refinement
 
-If an upper bound or a lower bound about a constant function parameter (e.g., X < ..., X > ...) is provided in the function pre-condition (i.e., in the `requires' code block at the beginning of the function), 
-please copy that (e.g., X < 10, X > 5) as a loop invariant to every loop in the function. 
+If an upper bound or a lower bound about a constant function parameter (e.g., X < ..., X > ...) is provided in the function pre-condition (i.e., in the `requires' code block at the beginning of the function),
+please copy that (e.g., X < 10, X > 5) as a loop invariant to every loop in the function.
 Even if an invariant is already specified earlier in the program, please do repeat it in every loop suitable.
 
 ## Step 3: Array length refinement
@@ -533,12 +551,12 @@ For every loop in the function, please identify every array that is read (e.g., 
 ## Step 4: Quantifier range refinement
 
 Please take the following steps to check every loop invariant that involves an array (e.g., x[k]) in the given Rust code:
-If this array x[k] has been modified in this loop through x.set(), leave this invariant as it is, do NOT make any changes, and move on to the next invariant. 
+If this array x[k] has been modified in this loop through x.set(), leave this invariant as it is, do NOT make any changes, and move on to the next invariant.
 Otherwise, when there is no x.set() in the loop, please make sure that the invariant covers every element in the array and hence has the form like `forall |k:int| 0<= k < x.len() ==> whatever-property'. When you make this change, please use a comment to explain why you believe the related array is never changed in the loop. Do NOT make any other changes to the code or the loop invariant!
 
 ## Step 5: Conditional loop invariant refinement
 
-Your mission is to refine some loop invariants in the given Rust code only if the loop has special handling for the first iteration. This is what you should do: if an existing loop invariant P holds for all iterations of the loop except for the first iteration (e.g., some variable updates may only (not) occur during the first loop iteration), please leave P as it is and add another loop invariant conditioned on the loop index (e.g., index > 0 ==> P), following the example below. 
+Your mission is to refine some loop invariants in the given Rust code only if the loop has special handling for the first iteration. This is what you should do: if an existing loop invariant P holds for all iterations of the loop except for the first iteration (e.g., some variable updates may only (not) occur during the first loop iteration), please leave P as it is and add another loop invariant conditioned on the loop index (e.g., index > 0 ==> P), following the example below.
 Do not change P or any other loop invariants in any other way."""
 
         self.logger.warning("Direct Inference unified with Refinement ...")
@@ -578,7 +596,7 @@ Do not change P or any other loop invariants in any other way."""
         For every loop in the function, please identify every array that is read (e.g., x[k]) or written (e.g., x.set(..,..)) in it, and then add a loop invariant that specifies the length of the array (i.e., x.len() == ...).
 
 Here are some principles that you have to follow:
- You should only response with Rust code, and not include any explanation. 
+ You should only response with Rust code, and not include any explanation.
  You should not make any other changes to the program.
 """
         examples = []
@@ -605,7 +623,7 @@ Here are some principles that you have to follow:
 
         system = "You are an experienced formal language programmer. You are very familiar with Verus, which is a tool for verifying the correctness of code written in Rust."
 
-        instruction = """Your mission is to refine some loop invariants in the given Rust code only if the loop has special handling for the first iteration. This is what you should do: if an existing loop invariant P holds for all iterations of the loop except for the first iteration (e.g., some variable updates may only (not) occur during the first loop iteration), please leave P as it is and add another loop invariant conditioned on the loop index (e.g., index > 0 ==> P), following the example below. 
+        instruction = """Your mission is to refine some loop invariants in the given Rust code only if the loop has special handling for the first iteration. This is what you should do: if an existing loop invariant P holds for all iterations of the loop except for the first iteration (e.g., some variable updates may only (not) occur during the first loop iteration), please leave P as it is and add another loop invariant conditioned on the loop index (e.g., index > 0 ==> P), following the example below.
 Do not change P or any other loop invariants in any other way. """
 
         examples = []
@@ -649,7 +667,7 @@ Do not change P or any other loop invariants in any other way. """
         system = "You are an experienced formal language programmer. You are very familiar with Verus, which is a tool for verifying the correctness of code written in Rust."
 
         instruction = """Please take the following steps to check every loop invariant that involves an array (e.g., x[k]) in the given Rust code:
-        If this array x[k] has been modified in this loop through x.set(), leave this invariant as it is, do NOT make any changes, and move on to the next invariant. 
+        If this array x[k] has been modified in this loop through x.set(), leave this invariant as it is, do NOT make any changes, and move on to the next invariant.
         Otherwise, when there is no x.set() in the loop, please make sure that the invariant covers every element in the array and hence has the form like `forall |k:int| 0<= k < x.len() ==> whatever-property'. When you make this change, please use a comment to explain why you believe the related array is never changed in the loop. Do NOT make any other changes to the code or the loop invariant!
 
 You should only response with Rust code, and not include any explanation.
@@ -681,12 +699,12 @@ You should only make changes to existing loop invariants in the following ways, 
         system = "You are an experienced formal language programmer. You are very familiar with Verus, which is a tool for verifying the correctness of code written in Rust."
 
         instruction = """
-If an upper bound or a lower bound about a constant function parameter (e.g., X < ..., X > ...) is provided in the function pre-condition (i.e., in the `requires' code block at the beginning of the function), 
-please copy that (e.g., X < 10, X > 5) as a loop invariant to every loop in the function. 
+If an upper bound or a lower bound about a constant function parameter (e.g., X < ..., X > ...) is provided in the function pre-condition (i.e., in the `requires' code block at the beginning of the function),
+please copy that (e.g., X < 10, X > 5) as a loop invariant to every loop in the function.
 Even if an invariant is already specified earlier in the program, please do repeat it in every loop suitable.
 
 Here are some principles that you have to follow:
- You should only response with Rust code, and not include any explanation. 
+ You should only response with Rust code, and not include any explanation.
  You should not make any other changes to the program.
 """
 
@@ -773,7 +791,7 @@ For example, if a non-linear expression x*x*x is used in the program, only tell 
             x <= 10,
             {}
 
-In this example, the `nonlinear_arith' keyword enables Verus to use its non-linear reasoning, and 
+In this example, the `nonlinear_arith' keyword enables Verus to use its non-linear reasoning, and
 the `requires' statements should include all the variable bound information needed to prove no-arithmetic overflow.
 
 Please check the given program, and add above nonlinear_arith assertions when needed. Note that both the lower bound and upper bound of the expression should be specified in the assertion.

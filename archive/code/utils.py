@@ -2,15 +2,15 @@
 # Licensed under the MIT license.      #
 
 
-import sys
-import os
-import subprocess
-import re
 import difflib
 import json
+import os
+import re
+import subprocess
+import sys
 import tempfile
-from lynette import lynette
 
+from lynette import lynette
 
 DEBUG_SAFE_CODE_CHANGE = True
 
@@ -67,29 +67,31 @@ def get_nonlinear_lines(code, logger):
     else:
         return []
 
+
 def remove_rust_comments(code: str) -> str:
     """
     Removes comment lines and inline comments from Rust code.
-    
-    Full-line comments (lines that, after stripping leading whitespace, 
+
+    Full-line comments (lines that, after stripping leading whitespace,
     start with '//') are completely removed.
-    
+
     Inline comments (everything after a '//' on a line) are stripped away.
-    
-    Note: This simple implementation does not handle the case where '//' 
+
+    Note: This simple implementation does not handle the case where '//'
     might appear inside a string literal.
     """
     lines = code.splitlines()
     new_lines = []
     for line in lines:
         # Skip lines that are entirely comments.
-        if re.match(r'^\s*//', line):
+        if re.match(r"^\s*//", line):
             continue
         # Remove any inline comment (everything after the first occurrence of '//')
         # and also strip trailing whitespace.
-        new_line = re.split(r'//', line)[0].rstrip()
+        new_line = re.split(r"//", line)[0].rstrip()
         new_lines.append(new_line)
     return "\n".join(new_lines)
+
 
 def code_change_is_safe(
     origin_code,
@@ -106,7 +108,9 @@ def code_change_is_safe(
         origin = remove_rust_comments(get_func_body(origin_code, func_name, util_path))
         # print("=======ori_cha========")
         # print(get_func_body(changed, func_name, util_path))
-        changed = remove_rust_comments(get_func_body(changed_code, func_name, util_path))
+        changed = remove_rust_comments(
+            get_func_body(changed_code, func_name, util_path)
+        )
         # print("=======ori========")
         # print(origin)
 
@@ -180,10 +184,12 @@ def get_func_body(code, fname, util_path=None):
     print(f"util_path: {util_path}")
     if util_path is None:
         util_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "utils")
-    
+
     # Construct absolute path to Cargo.toml
-    cargopath = os.path.abspath(os.path.join(util_path, "lynette", "source", "Cargo.toml"))
-    
+    cargopath = os.path.abspath(
+        os.path.join(util_path, "lynette", "source", "Cargo.toml")
+    )
+
     if not os.path.exists(cargopath):
         print(f"Error: Cargo.toml not found at {cargopath}")
         return ""
@@ -208,7 +214,9 @@ def get_func_body(code, fname, util_path=None):
         if m.stderr:
             print(f"Error extracting function: {m.stderr}")
         else:
-            print(f"Error extracting function (no stderr output). Return code: {m.returncode}")
+            print(
+                f"Error extracting function (no stderr output). Return code: {m.returncode}"
+            )
             if m.stdout:
                 print(f"stdout: {m.stdout}")
 

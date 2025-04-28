@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ################################################################################################
-# This script verifies and compiles all *.rs files 
+# This script verifies and compiles all *.rs files
 # inside a directory using verus and runs the test cases.
 # It also removes all compiled files after test execution.
 #
@@ -18,9 +18,9 @@ SEARCH_DIR="${1:-.}"
 
 find "$SEARCH_DIR" -type f -name "*.rs" | while read -r rs_file; do
   echo "[Start] verifing and compiling: $rs_file..."
-  
+
   base_name=$(basename "$rs_file" .rs)
-  # verify and compile with Verus 
+  # verify and compile with Verus
   verus "$rs_file" --compile --multiple-errors 20
 
   if [ $? -eq 0 ]; then
@@ -38,7 +38,7 @@ find "$SEARCH_DIR" -type f -name "*.rs" | while read -r rs_file; do
       rm $base_name
     else
       echo "[Not Found] compiled file: $base_name"
-    fi 
+    fi
   else
     echo "[Not Verified]: $rs_file"
   fi

@@ -24,4 +24,4 @@ fn func(arg) -> rettype
 
 ```rust
 fn func(arg) -> (retname: rettype)
-``` 
+```

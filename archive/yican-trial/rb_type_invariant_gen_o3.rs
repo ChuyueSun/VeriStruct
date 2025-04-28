@@ -46,7 +46,7 @@ verus! {
     //   - The capacity of the underlying vector (usize).
     impl<T: Copy> View for RingBuffer<T> {
         type V = (Seq<T>, usize);
-    
+
         // Spec function to observe the current logical contents and capacity of the RingBuffer.
         // It returns the buffer elements by reading elements in the ring based on head and tail pointers.
         // Precondition: None (spec functions are side-effect free).
@@ -212,7 +212,7 @@ verus! {
         // Postcondition: Returns true if and only if the ghost view length equals (capacity - 1).
         pub fn is_full(&self) -> (ret: bool)
         ensures
-            ret == (self@.0.len() == (self@.1 - 1) as nat) 
+            ret == (self@.0.len() == (self@.1 - 1) as nat)
         {
             proof {
                 // Ensure the ring buffer invariant holds and the modulo properties for capacity.
@@ -299,7 +299,7 @@ verus! {
                 None
             }
         }
-    
+
         /// Returns the number of elements that can still be enqueued until the buffer is full.
         // Precondition: The type invariant holds.
         // Postcondition: The returned value equals the available capacity,

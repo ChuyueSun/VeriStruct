@@ -3,7 +3,7 @@ use vstd::prelude::*;
 pub fn main() {}
 
 verus! {
-  
+
   struct Vector<V> {
     pub ptr: PPtr<V>,
     pub len: usize,

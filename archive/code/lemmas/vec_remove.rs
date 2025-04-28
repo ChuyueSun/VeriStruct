@@ -6,7 +6,7 @@
     proof{
 	lemma_vec_remove(vec@, index);
     }
-    vec.remove(index); 
+    vec.remove(index);
  */
 proof fn lemma_vec_remove<T>(vec: Seq<T>, i: int)
     requires
@@ -15,6 +15,5 @@ proof fn lemma_vec_remove<T>(vec: Seq<T>, i: int)
         forall |k: int| 0 <= k < i ==> #[trigger] vec[k] == vec.remove(i)[k],
         forall |k: int| i < k  < vec.len() ==> #[trigger] vec[k] ==  vec.remove(i)[k-1],
 {
-    
-}
 
+}

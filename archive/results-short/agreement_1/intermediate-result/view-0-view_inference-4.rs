@@ -95,7 +95,7 @@ impl<T> AgreementResource<T> {
         match self.r@ {
             AgreementResourceValue::Chosen { c } => c,
             // If the resource is valid, it won't be Invalid;
-            // for the Empty case, we do not have a well-defined T. 
+            // for the Empty case, we do not have a well-defined T.
             // The recommends self.inv() ensures we won't call this in that situation for "Empty".
             AgreementResourceValue::Empty | AgreementResourceValue::Invalid => arbitrary(),
         }
@@ -164,5 +164,5 @@ pub fn main() {
 // {"$message_type":"diagnostic","message":"aborting due to 7 previous errors","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 7 previous errors\n\n"}
 // {"$message_type":"diagnostic","message":"Some errors have detailed explanations: E0277, E0599.","code":null,"level":"failure-note","spans":[],"children":[],"rendered":"Some errors have detailed explanations: E0277, E0599.\n"}
 // {"$message_type":"diagnostic","message":"For more information about an error, try `rustc --explain E0277`.","code":null,"level":"failure-note","spans":[],"children":[],"rendered":"For more information about an error, try `rustc --explain E0277`.\n"}
-// 
-// 
+//
+//

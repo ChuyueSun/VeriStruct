@@ -1,11 +1,12 @@
-import unittest
-import tempfile
 import os
-from unittest.mock import patch, MagicMock
+import tempfile
+import unittest
+from unittest.mock import MagicMock, patch
 
 # Adjust this import to your actual code location, e.g.,:
 # from my_module.file_name import get_func_body
 from utils import get_func_body
+
 
 class TestGetFuncBody(unittest.TestCase):
     def test_get_func_body_success(self):
@@ -74,9 +75,7 @@ fn test_enqueue_dequeue_generic(len: usize, value: i32, iterations: usize)
         # Patch subprocess.run so we don't actually call Cargo.
         with patch("subprocess.run") as mock_run:
             mock_run.return_value = MagicMock(
-                returncode=0,
-                stdout=mock_stdout,
-                stderr=""
+                returncode=0, stdout=mock_stdout, stderr=""
             )
 
             # Call the function
@@ -107,9 +106,7 @@ fn test_enqueue_dequeue_generic(len: usize, value: i32, iterations: usize)
 
         with patch("subprocess.run") as mock_run:
             mock_run.return_value = MagicMock(
-                returncode=1,
-                stdout="Some error text",
-                stderr="Cargo error"
+                returncode=1, stdout="Some error text", stderr="Cargo error"
             )
 
             result = get_func_body(test_code, func_name, util_path="/fake/util/path")
@@ -124,12 +121,18 @@ fn test_enqueue_dequeue_generic(len: usize, value: i32, iterations: usize)
 
         # We'll check that the temp file is created and then removed.
         with patch("subprocess.run") as mock_run:
-            mock_run.return_value = MagicMock(returncode=0, stdout="extracted", stderr="")
+            mock_run.return_value = MagicMock(
+                returncode=0, stdout="extracted", stderr=""
+            )
 
             # We'll also patch the NamedTemporaryFile to capture the filename
-            with patch("tempfile.NamedTemporaryFile", wraps=tempfile.NamedTemporaryFile) as mock_tmp:
-                result = get_func_body(test_code, func_name, util_path="/fake/util/path")
-                
+            with patch(
+                "tempfile.NamedTemporaryFile", wraps=tempfile.NamedTemporaryFile
+            ) as mock_tmp:
+                result = get_func_body(
+                    test_code, func_name, util_path="/fake/util/path"
+                )
+
                 # The function should return "extracted"
                 self.assertEqual(result, "extracted")
 
@@ -142,6 +145,7 @@ fn test_enqueue_dequeue_generic(len: usize, value: i32, iterations: usize)
 
     # Additional tests might include edge cases such as an empty code string,
     # a non-existent function name, etc.
+
 
 if __name__ == "__main__":
     unittest.main()

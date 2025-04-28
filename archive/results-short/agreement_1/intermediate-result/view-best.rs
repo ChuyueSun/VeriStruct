@@ -142,5 +142,5 @@ pub fn main() {
 // VerusErrorType.Other: expected -> (pattern: type)
 // {"$message_type":"diagnostic","message":"expected -> (pattern: type)","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmprr391v4z","byte_start":2203,"byte_end":2220,"line_start":91,"line_end":91,"column_start":50,"column_end":67,"is_primary":true,"text":[{"text":"    pub proof fn alloc(c: T) -> (result: tracked AgreementResource<T>)","highlight_start":50,"highlight_end":67}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: expected -> (pattern: type)\n  --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmprr391v4z:91:50\n   |\n91 |     pub proof fn alloc(c: T) -> (result: tracked AgreementResource<T>)\n   |                                                  ^^^^^^^^^^^^^^^^^\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}
-// 
-// 
+//
+//

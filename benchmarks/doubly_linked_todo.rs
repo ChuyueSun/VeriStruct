@@ -86,14 +86,14 @@ mod doubly_linked_list {
                     proof {
                         assert_by_contradiction!(self.ghost_state@.ptrs.len() == 0,
                         {
-                            assert(self.well_formed_node((self.ghost_state@.ptrs.len() - 1) as nat)); 
+                            assert(self.well_formed_node((self.ghost_state@.ptrs.len() - 1) as nat));
                         });
                     }
                     self.push_empty_case(v);
                 }
                 Some(old_tail_ptr) => {
                     proof {
-                        assert(self.well_formed_node((self.ghost_state@.ptrs.len() - 1) as nat)); 
+                        assert(self.well_formed_node((self.ghost_state@.ptrs.len() - 1) as nat));
                     }
                     let (new_tail_ptr, Tracked(new_tail_pointsto)) = PPtr::<Node<V>>::new(
                         Node::<V> { prev: Some(old_tail_ptr), next: None, payload: v },
@@ -123,7 +123,7 @@ mod doubly_linked_list {
                         assert forall|i: int| 0 <= i && i < self.ghost_state@.ptrs.len() as int - 1
                             implies old(self)@[i] == self@[i]
                         by {
-                            assert(old(self).well_formed_node(i as nat)); 
+                            assert(old(self).well_formed_node(i as nat));
                         }
                         assert(self@ =~= old(self)@.push(v));
 
@@ -185,7 +185,7 @@ mod doubly_linked_list {
                 assert forall|i: int| 0 <= i && i < self@.len() implies #[trigger] self@[i] == old(
                     self,
                 )@.drop_last()[i] by {
-                    assert(old(self).well_formed_node(i as nat));  
+                    assert(old(self).well_formed_node(i as nat));
                 }
                 assert(self@ =~= old(self)@.drop_last());
 
@@ -252,7 +252,7 @@ mod doubly_linked_list {
                         assert forall|i: int| 1 <= i && i <= self.ghost_state@.ptrs.len() as int - 1
                             implies old(self)@[i - 1] == self@[i]
                         by {
-                            assert(old(self).well_formed_node((i - 1) as nat));  
+                            assert(old(self).well_formed_node((i - 1) as nat));
                         }
                         assert(self@ =~= seq![v].add(old(self)@));
 
@@ -279,7 +279,7 @@ mod doubly_linked_list {
                     proof {
                         assert_by_contradiction!(self.ghost_state@.ptrs.len() == 1,
                         {
-                            assert(old(self).well_formed_node(1)); 
+                            assert(old(self).well_formed_node(1));
                         });
                     }
                 }
@@ -322,7 +322,7 @@ mod doubly_linked_list {
                 assert forall|i: int| 0 <= i && i < self@.len() implies #[trigger] self@[i] == old(
                     self,
                 )@.subrange(1, old(self)@.len() as int)[i] by {
-                    assert(old(self).well_formed_node(i as nat + 1));  
+                    assert(old(self).well_formed_node(i as nat + 1));
                 }
                 assert(self@ =~= old(self)@.subrange(1, old(self)@.len() as int));
 
@@ -344,7 +344,7 @@ mod doubly_linked_list {
                     ptr == self.ghost_state@.ptrs[j as int],
             {
                 proof {
-                    assert(self.well_formed_node(j as nat)); 
+                    assert(self.well_formed_node(j as nat));
                 }
 
                 let tracked pointsto_ref: &PointsTo<Node<V>> =
@@ -357,7 +357,7 @@ mod doubly_linked_list {
             }
 
             proof {
-                assert(self.well_formed_node(j as nat)); 
+                assert(self.well_formed_node(j as nat));
             }
 
             let tracked pointsto_ref: &PointsTo<Node<V>> =
@@ -434,7 +434,7 @@ mod main {
         let mut t = DoublyLinkedList::<u32>::new();
         t.push_back(2);
         t.push_back(3);
-        t.push_front(1);  
+        t.push_front(1);
         let mut it = Iterator::new(&t);
         let v1 = it.value();
         assert(*v1 == 1);
@@ -446,9 +446,9 @@ mod main {
         assert(*v3 == 3);
         let g = it.move_next();
         assert(!g);
-        let x = t.pop_back();  
-        let y = t.pop_front();  
-        let z = t.pop_front(); 
+        let x = t.pop_back();
+        let y = t.pop_front();
+        let z = t.pop_front();
         assert(x == 3);
         assert(y == 1);
         assert(z == 2);

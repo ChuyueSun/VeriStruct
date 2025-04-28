@@ -2,8 +2,8 @@ use vstd::prelude::*;
 fn main() {}
 
 verus!{
-fn conditional_average(vals_1: &Vec<u64>, vals_2: &Vec<u64>, conds_1: &Vec<bool>, conds_2: &Vec<bool>, avgs: &mut Vec<u64>) 
-    requires 
+fn conditional_average(vals_1: &Vec<u64>, vals_2: &Vec<u64>, conds_1: &Vec<bool>, conds_2: &Vec<bool>, avgs: &mut Vec<u64>)
+    requires
         vals_1.len() == vals_2.len(),
         vals_1.len() == conds_1.len(),
         vals_1.len() == conds_2.len(),
@@ -22,7 +22,7 @@ fn conditional_average(vals_1: &Vec<u64>, vals_2: &Vec<u64>, conds_1: &Vec<bool>
     let common_len = vals_1.len();
     avgs.clear();
     while (k < common_len)
-    invariant 
+    invariant
         k<=common_len,
         avgs.len()==k,
         vals_1.len()==common_len,

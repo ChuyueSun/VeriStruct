@@ -47,5 +47,5 @@ pub fn main() {
 // VerusErrorType.Other: function is marked `open` but not marked `pub`; for the body of a function to be visible, the function symbol must also be visible
 // {"$message_type":"diagnostic","message":"function is marked `open` but not marked `pub`; for the body of a function to be visible, the function symbol must also be visible","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpmaejcv8l","byte_start":158,"byte_end":183,"line_start":13,"line_end":13,"column_start":15,"column_end":40,"is_primary":true,"text":[{"text":"    open spec fn view(&self) -> (bool,) {","highlight_start":15,"highlight_end":40}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: function is marked `open` but not marked `pub`; for the body of a function to be visible, the function symbol must also be visible\n  --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmpmaejcv8l:13:15\n   |\n13 |     open spec fn view(&self) -> (bool,) {\n   |               ^^^^^^^^^^^^^^^^^^^^^^^^^\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}
-// 
-// 
+//
+//

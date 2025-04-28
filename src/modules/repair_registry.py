@@ -4,10 +4,10 @@ Maps error types to appropriate repair modules.
 """
 
 import logging
+import os
+import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Type
-import time
-import os
 
 from modules.baserepair import BaseRepairModule
 from modules.veval import VerusError, VerusErrorType
@@ -331,7 +331,7 @@ class RepairRegistry:
                     # Insert file ID before file extension
                     base, ext = os.path.splitext(output_path)
                     output_path = f"{base}_{file_id}{ext}"
-                
+
                 output_file = output_dir / output_path
                 output_file.write_text(result)
                 self.logger.info(
@@ -341,8 +341,11 @@ class RepairRegistry:
         return result
 
     def repair_all(
-        self, context, failures: List[VerusError], output_dir: Optional[Path] = None,
-        progress_logger = None
+        self,
+        context,
+        failures: List[VerusError],
+        output_dir: Optional[Path] = None,
+        progress_logger=None,
     ) -> Dict[VerusErrorType, str]:
         """
         Attempt to repair all errors in the list using appropriate modules.
@@ -357,66 +360,73 @@ class RepairRegistry:
             Dictionary mapping error types to repaired code
         """
         result_map = {}
-        
+
         # Track if we've made any progress (even if we can't repair all errors)
         made_progress = False
 
         # If there's a compilation error, try to fix it first
         if context.trials[-1].eval.compilation_error:
             self.logger.info("Compilation error detected. Attempting to repair...")
-            
+
             # Store the state before repair
             before_score = context.trials[-1].eval.get_score()
             repair_start_time = time.time()
-            
+
             compilation_result = self.repair_compilation_error(context, output_dir)
-            
+
             # Calculate repair time
             repair_time = time.time() - repair_start_time
-            
+
             if compilation_result:
                 # Evaluate the repaired code before adding it to context
                 from modules.veval import VEval
+
                 veval = VEval(compilation_result, self.logger)
                 after_score = veval.eval_and_get_score()
-                
+
                 # Only add the repair if it's an improvement
                 if after_score > before_score:
-                    self.logger.info(f"Compilation error repair was successful in {repair_time:.2f}s.")
+                    self.logger.info(
+                        f"Compilation error repair was successful in {repair_time:.2f}s."
+                    )
                     made_progress = True
-                    
+
                     # Add the successful repair to context
                     context.add_trial(compilation_result)
                     last_trial = context.trials[-1]
-                    
+
                     # Log the repair in the progress logger
                     if progress_logger:
                         progress_logger.add_repair(
-                            "CompilationError", 
-                            "repair_syntax", 
-                            before_score, 
+                            "CompilationError",
+                            "repair_syntax",
+                            before_score,
                             after_score,
-                            repair_time
+                            repair_time,
                         )
-                    
+
                     if not last_trial.eval.compilation_error:
                         # If compilation succeeded, update failures list
                         failures = last_trial.eval.get_failures()
                         if not failures:
-                            self.logger.info("All errors fixed after compilation repair.")
+                            self.logger.info(
+                                "All errors fixed after compilation repair."
+                            )
                             # Use a special key for compilation errors
                             result_map["compilation"] = compilation_result
                             return result_map
                 else:
-                    self.logger.warning("Compilation error repair did not improve the score. Discarding repair.")
+                    self.logger.warning(
+                        "Compilation error repair did not improve the score. Discarding repair."
+                    )
                     # Skip adding this repair to context
                     if progress_logger:
                         progress_logger.add_repair(
-                            "CompilationError", 
-                            "repair_syntax", 
-                            before_score, 
+                            "CompilationError",
+                            "repair_syntax",
+                            before_score,
                             after_score,
-                            repair_time
+                            repair_time,
                         )
 
         # Prioritize failures
@@ -438,26 +448,35 @@ class RepairRegistry:
                 )
 
                 # Store the state before repair
-                before_score = context.trials[-1].eval.get_score() if context.trials else None
+                before_score = (
+                    context.trials[-1].eval.get_score() if context.trials else None
+                )
                 repair_start_time = time.time()
-                
+
                 # Use the first failure of this type
                 result = module.exec(context, type_failures[0])
-                
+
                 # Calculate repair time
                 repair_time = time.time() - repair_start_time
-                
+
                 # Get the trial that was added by the repair module
                 if context.trials and len(context.trials) > 0:
                     after_score = context.trials[-1].eval.get_score()
-                    
+
                     # Check if the repair improved the score
                     if after_score <= before_score:
-                        self.logger.warning(f"{error_type.name} repair did not improve the score or made it worse.")
-                        # If repair made things worse (especially causing compilation errors), 
+                        self.logger.warning(
+                            f"{error_type.name} repair did not improve the score or made it worse."
+                        )
+                        # If repair made things worse (especially causing compilation errors),
                         # remove the last trial to revert to the previous state
-                        if context.trials[-1].eval.compilation_error and not before_score.compilation_error:
-                            self.logger.warning("Repair introduced compilation errors. Reverting to previous state.")
+                        if (
+                            context.trials[-1].eval.compilation_error
+                            and not before_score.compilation_error
+                        ):
+                            self.logger.warning(
+                                "Repair introduced compilation errors. Reverting to previous state."
+                            )
                             context.trials.pop()  # Remove the last trial
                             # Skip adding this error type to result_map
                             continue
@@ -465,7 +484,7 @@ class RepairRegistry:
                         # Only add to result_map if repair was successful
                         result_map[error_type] = result
                         made_progress = True
-                        
+
                         # Save the result if an output directory is provided
                         if output_dir and result:
                             output_path = self.get_output_path(type_failures[0])
@@ -476,29 +495,33 @@ class RepairRegistry:
                                     # Insert file ID before file extension
                                     base, ext = os.path.splitext(output_path)
                                     output_path = f"{base}_{file_id}{ext}"
-                                
+
                                 output_file = output_dir / output_path
                                 output_file.write_text(result)
                                 self.logger.info(
                                     f"Saved {error_type.name} repair result to {output_file} after {repair_time:.2f}s"
                                 )
-                
+
                 # Log the repair in the progress logger
                 if progress_logger and context.trials:
                     after_score = context.trials[-1].eval.get_score()
                     progress_logger.add_repair(
-                        error_type.name, 
-                        module.name, 
-                        before_score, 
+                        error_type.name,
+                        module.name,
+                        before_score,
                         after_score,
-                        repair_time
+                        repair_time,
                     )
             else:
                 # For 'Other' error type, log a warning but don't terminate repair process
                 if error_type.name == "Other":
-                    self.logger.warning(f"No repair module registered for error type: {error_type.name} - continuing with other errors")
+                    self.logger.warning(
+                        f"No repair module registered for error type: {error_type.name} - continuing with other errors"
+                    )
                 else:
-                    self.logger.warning(f"No repair module registered for error type: {error_type.name}")
+                    self.logger.warning(
+                        f"No repair module registered for error type: {error_type.name}"
+                    )
 
         # If we made progress on at least some errors, return the results
         # even if we couldn't repair all errors
@@ -570,12 +593,12 @@ class RepairRegistry:
                 # Get file ID from environment (set in main.py)
                 file_id = os.environ.get("VERUS_FILE_ID", "")
                 output_path = "03_repair_syntax.rs"
-                
+
                 if file_id:
                     # Insert file ID before file extension
                     base, ext = os.path.splitext(output_path)
                     output_path = f"{base}_{file_id}{ext}"
-                
+
                 output_file = output_dir / output_path
                 output_file.write_text(result)
                 self.logger.info(f"Saved syntax repair result to {output_file}")

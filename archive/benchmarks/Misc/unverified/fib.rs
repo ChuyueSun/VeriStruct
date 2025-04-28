@@ -19,7 +19,7 @@ requires
     fibo_fits_i32(n as int),
     n >= 2,
 ensures
-    forall |i: int| 2 <= i < n ==> #[trigger] ret@[i] ==  fibo(i), 
+    forall |i: int| 2 <= i < n ==> #[trigger] ret@[i] ==  fibo(i),
     ret@.len() == n,
 {
     let mut fib = Vec::new();
@@ -33,7 +33,7 @@ ensures
         let next_fib = fib[i - 1] + fib[i - 2];
 
         fib.push(next_fib);
-        
+
         i += 1;
     }
 

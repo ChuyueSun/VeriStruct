@@ -92,11 +92,11 @@ verus! {
         multiset_from_seq(old(nums)@) === multiset_from_seq(nums@)
     {
         let n = nums.len();
-        
+
         if n == 0 {
             return;
         }
-        
+
         for i in 1..n
         invariant
             n == nums@.len(),
@@ -145,7 +145,7 @@ verus! {
                     }
 
                 }
-            } 
+            }
         }
     }
 }

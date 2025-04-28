@@ -43,7 +43,7 @@ verus! {
     }
 
     /// This function says that for any `x` and `y`, there are two
-    /// possibilities for the sum `x % n + y % n`: 
+    /// possibilities for the sum `x % n + y % n`:
     /// (1) It's in the range `[0, n)` and equals `(x + y) % n`.
     /// (2) It's in the range `[n, 2n)` and equals `(x + y) % n + n`.
     pub open spec fn mod_auto_plus(n: int) -> bool
@@ -294,5 +294,5 @@ verus! {
 // VerusErrorType.Other: expected an expression
 // {"$message_type":"diagnostic","message":"expected an expression","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmph8wzjthp","byte_start":971,"byte_end":972,"line_start":39,"line_end":39,"column_start":26,"column_end":27,"is_primary":true,"text":[{"text":"                        ++ self.ring@.subrange(0, self.tail)","highlight_start":26,"highlight_end":27}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: expected an expression\n  --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmph8wzjthp:39:26\n   |\n39 |                         ++ self.ring@.subrange(0, self.tail)\n   |                          ^\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}
-// 
-// 
+//
+//

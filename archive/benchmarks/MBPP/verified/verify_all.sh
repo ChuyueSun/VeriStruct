@@ -17,10 +17,10 @@ SEARCH_DIR="${1:-.}"
 
 find "$SEARCH_DIR" -type f -name "*.rs" | while read -r rs_file; do
   echo "[Start] verifing: $rs_file..."
-  
+
   # verify with Verus with --multiple-errors
   verus "$rs_file" --multiple-errors 20
-  
+
   if [ $? -eq 0 ]; then
     echo "[Verified]: $rs_file"
     echo

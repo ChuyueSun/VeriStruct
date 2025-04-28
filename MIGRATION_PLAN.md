@@ -91,4 +91,4 @@ We'll tackle this migration in the following order:
 2. Module refactoring - migrate high-level logic
 3. Test migration - ensure correctness
 4. Configuration and CLI updates
-5. Documentation and cleanup 
+5. Documentation and cleanup

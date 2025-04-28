@@ -199,4 +199,4 @@ The Progress Logger has been integrated into the VerusAgent main flow by adding:
 2. Integration points in `main.py` to track steps and repair rounds
 3. Integration in `repair_registry.py` to track individual repairs
 
-The changes ensure minimal impact on existing code while providing comprehensive tracking. 
+The changes ensure minimal impact on existing code while providing comprehensive tracking.

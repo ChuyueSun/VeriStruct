@@ -75,7 +75,7 @@ class SpecInferenceModule(BaseModule):
             base_instruction=self.inference_instruction,
             add_common=True,
             add_requires_ensures=True,  # Include requires/ensures formatting
-            code=code
+            code=code,
         )
 
         # Load examples for spec inference
@@ -96,7 +96,9 @@ class SpecInferenceModule(BaseModule):
                         answer = answer_path.read_text() if answer_path.exists() else ""
                         examples.append({"query": input_content, "answer": answer})
             else:
-                self.logger.warning("Example path does not exist - proceeding without examples")
+                self.logger.warning(
+                    "Example path does not exist - proceeding without examples"
+                )
         except Exception as e:
             self.logger.error(f"Error loading examples: {e}")
 
@@ -155,9 +157,7 @@ class SpecInferenceModule(BaseModule):
         # Also write to a module-specific best file
         module_best_path = output_dir / "04_spec_inference_global_best.rs"
         try:
-            sample_with_score = (
-                f"{best_code}\n\n// VEval Score: {best_score}"
-            )
+            sample_with_score = f"{best_code}\n\n// VEval Score: {best_score}"
             module_best_path.write_text(sample_with_score)
             self.logger.info(f"Saved best spec inference to {module_best_path}")
         except Exception as e:

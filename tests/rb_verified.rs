@@ -78,10 +78,10 @@ verus! {
 
     // impl<T: Copy> View for RingBuffer<T> {
     //     type V = Seq<T>; // Logical sequence of elements
-    
+
     //     spec fn view(&self) -> Self::V {
     //         let capacity = self.ring.len() as int;
-    
+
     //         if self.tail >= self.head {
     //             // Continuous case: head <= tail
     //             Seq::new((self.tail - self.head) as nat, |i| self.ring[(self.head as int + i) as usize])
@@ -95,10 +95,10 @@ verus! {
     //         }
     //     }
     // }
-    
+
     impl<T: Copy> View for RingBuffer<T> {
         type V = Seq<T>;
-    
+
         closed spec fn view(&self) -> Self::V {
             let cap = self.ring.len();
             if self.tail >= self.head {

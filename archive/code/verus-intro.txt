@@ -215,6 +215,3 @@ Verus delineates code into **spec**, **proof**, and **exec**, ensuring clarity a
 
 ### **Conclusion**
 Verus provides a powerful framework for writing specifications, proofs, and executable Rust code. By separating concerns between spec, proof, and exec domains, and employing contracts such as `requires` and `ensures`, it ensures correctness in both logic and implementation. With constructs like invariants and `decreases`, Verus builds on traditional verification techniques to simplify verification and formal reasoning for system-level software. Its integration with Rust's syntax makes it approachable for developers familiar with Rust.
-
-
-

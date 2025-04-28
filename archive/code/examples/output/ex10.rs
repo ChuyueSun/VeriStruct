@@ -12,4 +12,4 @@ impl<V> Vector<V> {
     pub closed spec fn view(&self) -> Seq<V> {
         Seq::new(self.len as nat, |i: int| self.elems@.index(i as nat)@.value.get_Some_0())
     }
-}  
+}

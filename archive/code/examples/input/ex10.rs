@@ -12,4 +12,4 @@ impl<V> Vector<V> {
     pub closed spec fn view(&self) -> Seq<V> {
             // TODO: implement this. Use sequence to represent the vector as a sequence.
         }
-}  
+}

@@ -45,7 +45,7 @@ verus! {
     }
 
     /// This function says that for any `x` and `y`, there are two
-    /// possibilities for the sum `x % n + y % n`: 
+    /// possibilities for the sum `x % n + y % n`:
     /// (1) It's in the range `[0, n)` and equals `(x + y) % n`.
     /// (2) It's in the range `[n, 2n)` and equals `(x + y) % n + n`.
     pub open spec fn mod_auto_plus(n: int) -> bool
@@ -280,10 +280,10 @@ verus! {
                 ring.len() == i,
         {
             ring.push(0);
-       
+
 // Compilation Error: True, Verified: -1, Errors: 999, Verus Errors: 2
 // VerusErrorType.Other: unclosed delimiterVerusErrorType.Other: this file contains an unclosed delimiter
 // {"$message_type":"diagnostic","message":"this file contains an unclosed delimiter","code":null,"level":"error","spans":[{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmp0hq5i64y","byte_start":48,"byte_end":49,"line_start":5,"line_end":5,"column_start":8,"column_end":9,"is_primary":false,"text":[{"text":"verus! {","highlight_start":8,"highlight_end":9}],"label":"unclosed delimiter","suggested_replacement":null,"suggestion_applicability":null,"expansion":null},{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmp0hq5i64y","byte_start":8346,"byte_end":8347,"line_start":271,"line_end":271,"column_start":5,"column_end":6,"is_primary":false,"text":[{"text":"    {","highlight_start":5,"highlight_end":6}],"label":"unclosed delimiter","suggested_replacement":null,"suggestion_applicability":null,"expansion":null},{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmp0hq5i64y","byte_start":8540,"byte_end":8541,"line_start":281,"line_end":281,"column_start":9,"column_end":10,"is_primary":false,"text":[{"text":"        {","highlight_start":9,"highlight_end":10}],"label":"unclosed delimiter","suggested_replacement":null,"suggestion_applicability":null,"expansion":null},{"file_name":"/var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmp0hq5i64y","byte_start":8575,"byte_end":8575,"line_start":283,"line_end":283,"column_start":8,"column_end":8,"is_primary":true,"text":[{"text":"       ","highlight_start":8,"highlight_end":8}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: this file contains an unclosed delimiter\n   --> /var/folders/nh/_8qdng_n3357qvdjjrx5mchw0000gn/T/tmp0hq5i64y:283:8\n    |\n5   | verus! {\n    |        - unclosed delimiter\n...\n271 |     {\n    |     - unclosed delimiter\n...\n281 |         {\n    |         - unclosed delimiter\n282 |             ring.push(0);\n283 |        \n    |        ^\n\n"}
 // {"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}
-// 
-// 
+//
+//

@@ -28,7 +28,7 @@ verus! {
 
     impl<T: Copy> View for RingBuffer<T> {
         type V = (Seq<T>, usize);
-    
+
         closed spec fn view(&self) -> Self::V {
             let cap = self.ring.len();
             if self.tail >= self.head {
@@ -43,7 +43,7 @@ verus! {
     }
 
     /// This function says that for any `x` and `y`, there are two
-    /// possibilities for the sum `x % n + y % n`: 
+    /// possibilities for the sum `x % n + y % n`:
     /// (1) It's in the range `[0, n)` and equals `(x + y) % n`.
     /// (2) It's in the range `[n, 2n)` and equals `(x + y) % n + n`.
     pub open spec fn mod_auto_plus(n: int) -> bool
@@ -157,7 +157,7 @@ impl<T: Copy> RingBuffer<T> {
     /// Being 'full' means `self@.len() == (self.ring.len() - 1) as nat`.
     pub fn is_full(&self) -> (ret: bool)
     ensures
-        ret == (self@.0.len() == (self@.1 - 1) as nat) 
+        ret == (self@.0.len() == (self@.1 - 1) as nat)
     {
         proof {
             use_type_invariant(&self);
@@ -181,7 +181,7 @@ impl<T: Copy> RingBuffer<T> {
         }
     }
 
-    
+
     /// If the buffer isn't full, adds a new element to the back.
     /// Returns whether the element was added.
     pub fn enqueue(&mut self, val: T) -> (succ: bool)
@@ -219,7 +219,7 @@ impl<T: Copy> RingBuffer<T> {
             // Empty fails
             old(self)@.0.len() == 0 <==> ret == None::<T>,
             old(self)@.0.len() > 0 <==> ret != None::<T>,
-            
+
             if let Some(val) = ret {
                 &&& self@.0.len() == old(self)@.0.len() - 1
                 &&& val == old(self)@.0.first()
@@ -242,7 +242,7 @@ impl<T: Copy> RingBuffer<T> {
             None
         }
     }
-    
+
 
 
     /// Returns the number of elements that can still be enqueued until it is full.

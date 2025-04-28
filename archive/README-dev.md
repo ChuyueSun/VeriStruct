@@ -4,7 +4,7 @@ alias verus=/home/chuyue/verus/source/target-verus/release/verus
 
 - Goal: generate verified ring buffer
 
-  
+
   verified ring buffer = spec + code
 
 ### Step 0: Given executable rust code for ring buffer

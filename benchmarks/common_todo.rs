@@ -21,7 +21,7 @@ pub struct ExternalObjectRef {
 }
 
 impl KubeObjectRef {
-    pub fn into_external_object_ref(self) -> ExternalObjectRef 
+    pub fn into_external_object_ref(self) -> ExternalObjectRef
         // TODO: add ensures and requires
     {
         ExternalObjectRef {
@@ -490,11 +490,11 @@ impl ResourceView for SimpleCRView {
         // TODO: add specification
     }
 
-    open spec fn metadata(self) -> ObjectMetaView { 
+    open spec fn metadata(self) -> ObjectMetaView {
         // TODO: add specification
     }
 
-    open spec fn kind() -> Kind { 
+    open spec fn kind() -> Kind {
         // TODO: add specification
     }
 
@@ -509,7 +509,7 @@ impl ResourceView for SimpleCRView {
     }
 
     open spec fn status(self) -> Option<SimpleCRStatusView> {
-        // TODO: add specification 
+        // TODO: add specification
     }
 
     open spec fn marshal(self) -> DynamicObjectView {
@@ -553,7 +553,7 @@ impl ResourceView for SimpleCRView {
 impl CustomResourceView for SimpleCRView {
     proof fn kind_is_custom_resource() {}
 
-    open spec fn spec_status_validation(obj_spec: Self::Spec, obj_status: Self::Status) -> bool { 
+    open spec fn spec_status_validation(obj_spec: Self::Spec, obj_status: Self::Status) -> bool {
         // TODO: add specification
     }
 

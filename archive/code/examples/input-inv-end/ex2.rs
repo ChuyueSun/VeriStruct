@@ -17,7 +17,7 @@ spec fn sorted_between(a: Seq<u32>, from: int, to: int) -> bool {
     forall|i: int, j:int| from <= i < j < to ==> a[i] <= a[j]
 
 }
- 
+
 spec fn multiset_from_seq<T>(input: Seq<T>) -> Multiset<T>
 
     decreases input.len()
@@ -35,7 +35,7 @@ spec fn multiset_from_seq<T>(input: Seq<T>) -> Multiset<T>
     }
 
 }
- 
+
 proof fn update_seq_multiset<T>(s: Seq<T>, i: int, v: T)
     requires
         0 <= i < s.len(),
@@ -54,8 +54,8 @@ proof fn update_seq_multiset<T>(s: Seq<T>, i: int, v: T)
         assert(s.drop_last().update(i, v) =~= s.update(i, v).drop_last());
     }
 }
- 
- 
+
+
 #[verifier::loop_isolation(false)]
 
 fn test1(nums: &mut Vec<u32>)
@@ -92,12 +92,12 @@ fn test1(nums: &mut Vec<u32>)
             if nums[j - 1] > nums[j] {
 
                 let temp = nums[j - 1];
-                
+
                 proof {
                     update_seq_multiset(nums@, j-1, nums[j as int])
                 }
                 nums.set(j - 1, nums[j]);
-                
+
                 assert(multiset_from_seq(old(nums)@) == multiset_from_seq(nums@).remove(nums[j as int]).insert(temp));
 
                 proof{

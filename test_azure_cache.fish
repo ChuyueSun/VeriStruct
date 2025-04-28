@@ -43,15 +43,15 @@ end
 # Check the exit status
 if test $status -eq 0
     echo -e "\n✅ Azure cache test completed successfully!"
-    
+
     # Display cache files for review
     echo -e "\nCache files in $LLM_CACHE_DIR:"
     ls -la $LLM_CACHE_DIR
-    
+
     # Count and show cache hit rate
     set CACHE_FILES (find $LLM_CACHE_DIR -name "*.json" | wc -l)
     echo -e "\nTotal cache files: $CACHE_FILES"
-    
+
     if not $USE_FIXED_QUERY
         echo -e "\nTip: Run this test again with --fixed-query to see a cache hit on the first inference call:"
         echo "  fish test_azure_cache.fish --fixed-query"
@@ -60,4 +60,4 @@ if test $status -eq 0
     end
 else
     echo -e "\n❌ Azure cache test failed. Check the error messages above."
-end 
+end

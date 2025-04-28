@@ -174,4 +174,3 @@ fn test1(nums: &mut Vec<u32>)
     }
 }
 }
-

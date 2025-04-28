@@ -4,7 +4,7 @@
     proof{
 	lemma_vec_push(vec@, value, vec.len());
     }
-    vec.push(value); 
+    vec.push(value);
  */
 proof fn lemma_vec_push<T>(vec: Seq<T>, i: T, l: usize)
     requires
@@ -14,4 +14,3 @@ proof fn lemma_vec_push<T>(vec: Seq<T>, i: T, l: usize)
         vec.push(i).index(l as int) == i,
 {
 }
-

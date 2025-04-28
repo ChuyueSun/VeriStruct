@@ -434,7 +434,7 @@ impl<V> DListXor<V> {
                 assert(self@[0] == v);
                 assert forall|i: int| 1 <= i <= self.ptrs@.len() - 1 implies old(self)@[i - 1]
                     == self@[i] by {
-                    assert(old(self).wf_perm((i - 1) as nat)); 
+                    assert(old(self).wf_perm((i - 1) as nat));
                 };
                 assert(self@ =~= seq![v].add(old(self)@));
             }

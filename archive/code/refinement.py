@@ -2,24 +2,25 @@
 # Licensed under the MIT license.      #
 
 
+import logging
 import os
 import time
-from infer import LLM
-from houdini import houdini
-import logging
 from pathlib import Path
-from typing import Optional, Callable
+from typing import Any, Callable, List, Optional, Tuple, Union
 
+from houdini import houdini
+from veval import VerusError, VerusError2m, VerusErrorLabel, VerusErrorType, VEval
+
+from infer import LLM
 from utils import (
     clean_code,
     code_change_is_safe,
-    get_nonlinear_lines,
     fix_one_type_error_in_code,
-    insert_loop_isolation,
+    get_nonlinear_lines,
     insert_lemma_func,
+    insert_loop_isolation,
 )
-from veval import VEval, VerusErrorType, VerusError, VerusErrorLabel, VerusError2m
-from typing import List, Tuple, Union, Any
+
 
 class Refinement:
     def __init__(self, config, logger, immutable_funcs=[]):
@@ -50,7 +51,7 @@ let ghost ...; // Added by AI
 
 Note, please DO NOT modify all other proof blocks that are not related to the error. Just leave them as they are."""
         # disable proof block prompt for view
-        self.proof_block_info= ""
+        self.proof_block_info = ""
         # Seq knowledge.
         _seq_examples = self.get_text_examples("seq")
         self.seq_knowledge = (
@@ -72,7 +73,9 @@ Note, please DO NOT modify all other proof blocks that are not related to the er
                 break
         return instruction
 
-    def debug_type_error(self, code: str, verus_error: VerusError = None, num=1) -> tuple:
+    def debug_type_error(
+        self, code: str, verus_error: VerusError = None, num=1
+    ) -> tuple:
         """
         self debug to fix type error
         """
@@ -84,7 +87,9 @@ Note, please DO NOT modify all other proof blocks that are not related to the er
         if verus_error:
             # fix the reported one
             if verus_error.error != VerusErrorType.MismatchedType:
-                self.logger.warning(f"Warning: a non type error is passed to debug_type_error: {verus_error.error}")
+                self.logger.warning(
+                    f"Warning: a non type error is passed to debug_type_error: {verus_error.error}"
+                )
             else:
                 newcode = fix_one_type_error_in_code(
                     code, verus_error.trace[0], verbose=False
@@ -133,11 +138,10 @@ Note, please DO NOT modify all other proof blocks that are not related to the er
 
         return code, len(failures)
 
-
     def get_examples(self, example_dir_name: str):
         """
-        Gathers example input/output pairs from two directories (input-<example_dir_name> 
-        and output-<example_dir_name>), writes them to example-<example_dir_name>.txt, 
+        Gathers example input/output pairs from two directories (input-<example_dir_name>
+        and output-<example_dir_name>), writes them to example-<example_dir_name>.txt,
         and returns a list of dictionaries with 'query' and 'answer' keys.
 
         Error handling:
@@ -165,7 +169,9 @@ Note, please DO NOT modify all other proof blocks that are not related to the er
                 output_file = output_dir / input_file.name
 
                 if not output_file.is_file():
-                    logging.warning(f"No matching output file for '{input_file}'. Skipping.")
+                    logging.warning(
+                        f"No matching output file for '{input_file}'. Skipping."
+                    )
                     continue
 
                 # Safely read the input file
@@ -182,10 +188,7 @@ Note, please DO NOT modify all other proof blocks that are not related to the er
                     logging.error(f"Failed to read output file '{output_file}': {e}")
                     continue
 
-                examples.append({
-                    "query": input_content,
-                    "answer": output_content
-                })
+                examples.append({"query": input_content, "answer": output_content})
 
         # Warn if no valid examples were found
         if not examples:
@@ -202,7 +205,6 @@ Note, please DO NOT modify all other proof blocks that are not related to the er
             logging.error(f"Failed to write output file '{output_filename}': {e}")
 
         return examples
-
 
     def get_text_examples(self, example_dir_name):
         examples = []
@@ -444,7 +446,7 @@ For example, if a non-linear expression x*x*x is used in the program, only tell 
             x <= 10,
             {}
 
-In this example, the `nonlinear_arith' keyword enables Verus to use its non-linear reasoning, and 
+In this example, the `nonlinear_arith' keyword enables Verus to use its non-linear reasoning, and
 the `requires' statements should include all the variable bound information needed to prove no-arithmetic overflow.
 
 #### Task
@@ -474,8 +476,10 @@ Please check the given program, and add nonlinear_arith assertion for the follow
             temp=temp,
         )
 
-    def repair_test_assertion_error(self, code: str, verus_error: VerusError, num=1, temp=1.0) -> str:
- 
+    def repair_test_assertion_error(
+        self, code: str, verus_error: VerusError, num=1, temp=1.0
+    ) -> str:
+
         # Normal route of assertion fixing
         system = self.default_system
         instruction = """Your mission is to fix the assertion error for the following code. Basically, you should either introduce the necessary proof blocks before the location where the assertion fails, or, if the assertion is within a loop or after a loop, you may need to add appropriate loop invariants to ensure the assertion holds true.
@@ -492,21 +496,21 @@ Please check the given program, and add nonlinear_arith assertion for the follow
 
     Note: If the assertion is inside an immutable function, you must not modify the function itself. Instead, consider adjusting the preconditions or postconditions of the called functions/methods to resolve the error.
     """
-        
-        instruction = """
-Fix the assertion error in the given Rust code by introducing necessary proof blocks. Specifically:  
 
-1. For each `assert(P)`, analyze the preceding code to determine how `P` is derived.  
-2. If `P` depends on a function's return value, check if `P` can be established as a postcondition (`ensures P`) for that function.  
-3. Only introduce essential postconditions—avoid unnecessary additions and do not remove `#[trigger]`.  
+        instruction = """
+Fix the assertion error in the given Rust code by introducing necessary proof blocks. Specifically:
+
+1. For each `assert(P)`, analyze the preceding code to determine how `P` is derived.
+2. If `P` depends on a function's return value, check if `P` can be established as a postcondition (`ensures P`) for that function.
+3. Only introduce essential postconditions—avoid unnecessary additions and do not remove `#[trigger]`.
 4. Do not change the test code.
 
-**Response Format:**  
+**Response Format:**
 Provide only the modified Rust code—no explanations.
 """
         instruction = self.add_seq_knowledge(code, instruction)
         instruction += "\n\n" + self.general_knowledge
-        
+
         examples = self.get_examples("assert")
         query_template = "Failed assertion\n```\n{}```\n"
         query_template += "\nCode\n```\n{}```\n"
@@ -539,13 +543,9 @@ Provide only the modified Rust code—no explanations.
             max_tokens=8192,
             temp=temp,
         )
-        
+
     def repair_invariant_immutable(
-        self,
-        code: str,
-        verus_error: VerusError,
-        num: int = 1,
-        temp: float = 1.0
+        self, code: str, verus_error: VerusError, num: int = 1, temp: float = 1.0
     ) -> list[str]:
         """
         Fixes the 'invariant not satisfied at end of loop body' error
@@ -571,15 +571,14 @@ Provide only the modified Rust code—no explanations.
     TODO:
     1) Determine which methods are relevant to the error.
     2) For each of the relevant methods, append or create an `ensures` block containing necessary postconditions.
-    3) Return the full updated Rust code (no extra commentary). 
+    3) Return the full updated Rust code (no extra commentary).
     """
 
         examples = []  # or any relevant few-shot examples
 
         # Build the query: show the user’s error + the entire code
         query_template = (
-            "Verus Error:\n```\n{err}\n```\n\n"
-            "Code:\n```rust\n{code}\n```"
+            "Verus Error:\n```\n{err}\n```\n\n" "Code:\n```rust\n{code}\n```"
         )
         query = query_template.format(err=err_text, code=code)
 
@@ -596,7 +595,7 @@ Provide only the modified Rust code—no explanations.
         )
 
         return repaired_candidates
-    
+
     def repair_assertion_error(
         self, code: str, verus_error: VerusError, num=1, temp=1.0
     ) -> str:
@@ -622,7 +621,7 @@ Response with the Rust code only, do not include any explanation."""
 
         instruction = self.add_seq_knowledge(code, instruction)
         instruction += "\n\n" + self.general_knowledge
-        
+
         examples = self.get_examples("assert")
         query_template = "Failed assertion\n```\n{}```\n"
         query_template += "\nCode\n```\n{}```\n"
@@ -694,7 +693,7 @@ Response with the Rust code only, do not include any explanation."""
     ) -> str:
         system = self.default_system
         instruction = """Your mission is to fix the assertion error for the following code by creating the helper proof functions.
-        
+
         Basically, you should determine what proof functions are needed to prove the current failed assertion, based on the related invariants already had. Then generate them and their invocations in the code just before the assertion.
 
 Response with the Rust code only, do not include any explanation."""
@@ -757,7 +756,7 @@ Response with the Rust code only, do not include any explanation."""
             max_tokens=8192,
             temp=temp,
         )
-    
+
     def repair_missing_import_error(
         self, code: str, verus_error: VerusError, num: int = 1, temp: float = 1.0
     ) -> str:
@@ -767,7 +766,7 @@ Response with the Rust code only, do not include any explanation."""
             use vstd::prelude::verus;
         or
             use builtin_macros::verus;
-        
+
         Returns the repaired code as a single string (no explanations).
         """
         system = self.default_system
@@ -780,7 +779,6 @@ Response with the Rust code only, do not include any explanation."""
     Consider adding a `main` function if it does not already have one.
     Respond with the entire Rust code only (no explanations) after fixing the import issue.
     """
-
 
         instruction += "\n\n" + self.general_knowledge
 
@@ -815,7 +813,6 @@ Response with the Rust code only, do not include any explanation."""
             max_tokens=8192,
             temp=temp,
         )
-
 
     # a special type of precondition error: vec len
     def repair_precond_veclen_error(
@@ -988,7 +985,7 @@ Response with the Rust code only, do not include any explanation."""
         instruction = """Your mission is to fix the invariant not satisfied error before the loop for the following code. Here are several general and possible ways to fix the error:
 
 1. Add the assertions related to the failed loop invariant before the loop body.
-2. If there are multiple loops and you believe the failed invariant is also true in preceeding loops , you should add the failed invariant to those preceeding loops as well. 
+2. If there are multiple loops and you believe the failed invariant is also true in preceeding loops , you should add the failed invariant to those preceeding loops as well.
 3. If you believe the failed invariant is incorrect or not needed, you can modify it or delete it.
 
 Please think twice about which way is the best to fix the error!
@@ -1105,7 +1102,7 @@ Hint for the upper bound:
         # TODO: I probably should make this `if' condition more strict to capture the recursive expression bound situation
         if "decreases" in code:
             instruction = f"""Your mission is to fix the arithmetic underflow/overflow error for the following code.
-        Basically, add an assertion about the bound of `{error_trace.get_highlights()[0]}' right BEFORE the line `{error_trace.get_text()}' in the code. Note that, if the value of this expression is related to a recursively defined spec function in the program, generate a lemma function that shows the monotonicity of this expression could help prove its bound. Please look at the example below to see how a monotonicity lemma function can help eliminate arithmetic underflow/overflow concerns. 
+        Basically, add an assertion about the bound of `{error_trace.get_highlights()[0]}' right BEFORE the line `{error_trace.get_text()}' in the code. Note that, if the value of this expression is related to a recursively defined spec function in the program, generate a lemma function that shows the monotonicity of this expression could help prove its bound. Please look at the example below to see how a monotonicity lemma function can help eliminate arithmetic underflow/overflow concerns.
         """
             examples = self.get_examples("aritherr-recur")
 
@@ -1131,17 +1128,13 @@ Hint for the upper bound:
         )
 
     def repair_mismatched_type(
-        self,
-        code: str,
-        verus_error: VerusError,
-        num: int = 1,
-        temp: float = 1.0
+        self, code: str, verus_error: VerusError, num: int = 1, temp: float = 1.0
     ) -> list[str]:
         """
         Attempts to fix type mismatch errors by:
         1. Using `debug_type_error` to do an automatic fix.
         2. If that fails, calling `repair_default` for a more general approach.
-        
+
         Returns a list of candidate code strings.
         """
 
@@ -1259,7 +1252,6 @@ Response with the Rust code only, do not include any explanation."""
             self.logger.info(verus_error.trace[0].get_highlights()[0])
             self.logger.info(f"on Line {verus_error.trace[0].lines[0]}")
 
-
     def repair_pre_private(
         self, code: str, verus_error: VerusError, num=1, temp=1.0
     ) -> str:
@@ -1342,14 +1334,9 @@ Respond with the **fixed Rust code only** and do not include any explanation."""
             max_tokens=8192,
             temp=temp,
         )
-        
 
     def repair_mode_error(
-        self,
-        code: str,
-        verus_error: VerusError,
-        num: int = 1,
-        temp: float = 1.0
+        self, code: str, verus_error: VerusError, num: int = 1, temp: float = 1.0
     ) -> str:
         """
         Repairs the "cannot call function ... with mode exec" errors, e.g.:
@@ -1363,12 +1350,12 @@ Respond with the **fixed Rust code only** and do not include any explanation."""
         system = self.default_system
 
         # Instruction to the LLM: how we want it to fix the mode mismatch error.
-        instruction = """Your mission is to fix the mode error for the following code. 
-    The error indicates that a exec function with a spec/proof mode is being called 
+        instruction = """Your mission is to fix the mode error for the following code.
+    The error indicates that a exec function with a spec/proof mode is being called
     from an exec context. Typically, you need to rewrite the exec code with the functionally
     equivalent spec code, or delete the exec code.
 
-    Make sure to preserve the overall structure of the code but fix bug. 
+    Make sure to preserve the overall structure of the code but fix bug.
     Respond with the full corrected Rust code only, with no extra explanations."""
 
         # (Optional) add any helpful domain-specific knowledge or additional instructions
@@ -1385,14 +1372,12 @@ Respond with the **fixed Rust code only** and do not include any explanation."""
             "Mode mismatch error:\n```\n{err_text}```\n\n"
             "Code:\n```\n{code_text}\n```"
         )
- 
+
         # If there's a VerusError trace, extract the relevant text for context
         if verus_error.trace:
             err_text = verus_error.trace[0].get_text(snippet=False)
         else:
             err_text = verus_error.error_text
-
- 
 
         query = query_template.format(err_text=err_text, code_text=code)
 
@@ -1411,8 +1396,6 @@ Respond with the **fixed Rust code only** and do not include any explanation."""
             max_tokens=8192,
             temp=temp,
         )
-
-
 
     def repair_constructor_fail_type_invariant(
         self, code: str, verus_error: VerusError, num=1, temp=1.0
@@ -1440,7 +1423,6 @@ Respond with the **fixed Rust code only** and do not include any explanation."""
         with open("constructor_type_invariant.txt", "w") as f:
             f.write(query)
 
-
         return self.llm.infer_llm(
             self.config.aoai_generation_model,
             instruction,
@@ -1451,9 +1433,6 @@ Respond with the **fixed Rust code only** and do not include any explanation."""
             max_tokens=8192,
             temp=temp,
         )
-        
-
-
 
     def repair_post_private(
         self, code: str, verus_error: VerusError, num=1, temp=1.0
@@ -1510,7 +1489,7 @@ Response with the Rust code only, do not include any explanation."""
         for verus_error in verus_errors:
             if verus_error.error == VerusErrorType.PreCondFailVecLen:
                 return verus_error
-            
+
         # arith overflow 3rd priority
         for verus_error in verus_errors:
             if verus_error.error == VerusErrorType.ArithmeticFlow:
@@ -1521,11 +1500,11 @@ Response with the Rust code only, do not include any explanation."""
             if verus_error.error == VerusErrorType.InvFailFront:
                 return verus_error
 
-         # inv-fail after loop 5th priority
+        # inv-fail after loop 5th priority
         for verus_error in verus_errors:
             if verus_error.error == VerusErrorType.InvFailEnd:
                 return verus_error
-                       
+
         for verus_error in verus_errors:
             if verus_error.error == VerusErrorType.ConstructorFailTypeInvariant:
                 return verus_error
@@ -1747,7 +1726,7 @@ Response with the Rust code only, do not include any explanation."""
                     break
             failed_last_time += 1
         return code
-    
+
     def _iterative_repair_loop(
         self,
         code: str,
@@ -1758,11 +1737,11 @@ Response with the Rust code only, do not include any explanation."""
         label_mapping: dict,
         failed_mapping: dict,
         default_repair: Any,
-        repair_context: str = ""
+        repair_context: str = "",
     ) -> str:
         """
         Helper method implementing the common iterative repair loop.
-        
+
         Args:
             code: The current code to repair.
             max_attempt: Maximum number of repair iterations.
@@ -1802,12 +1781,20 @@ Response with the Rust code only, do not include any explanation."""
             return None
 
         # Helper to dump candidate code for debugging/analysis
-        def dump_candidate(candidate_code: str, attempt_i: int, index: Union[int, str], cur_failure: VerusError, score_obj: Any) -> None:
+        def dump_candidate(
+            candidate_code: str,
+            attempt_i: int,
+            index: Union[int, str],
+            cur_failure: VerusError,
+            score_obj: Any,
+        ) -> None:
             if temp_dir:
                 os.makedirs(temp_dir, exist_ok=True)
                 failure_str = cur_failure.error.name  # The VerusErrorType as a string
                 err_lines = cur_failure.get_text().splitlines()
-                file_name = os.path.join(temp_dir, f"repair-{attempt_i}-{index}-{failure_str}.rs")
+                file_name = os.path.join(
+                    temp_dir, f"repair-{attempt_i}-{index}-{failure_str}.rs"
+                )
                 with open(file_name, "w") as f:
                     f.write(candidate_code)
                     f.write("\n\n// " + "\n// ".join(err_lines))
@@ -1825,7 +1812,9 @@ Response with the Rust code only, do not include any explanation."""
             if not failures:
                 # We have no Verus errors, but the code is not correct => contradictory
                 self.logger.info(code)
-                raise RuntimeError("No error found in the code, but the code is still incorrect.")
+                raise RuntimeError(
+                    "No error found in the code, but the code is still incorrect."
+                )
 
             cur_failure = self.get_one_failure(failures)
             num_failure = sum(1 for f in failures if f.error == cur_failure.error)
@@ -1855,7 +1844,10 @@ Response with the Rust code only, do not include any explanation."""
                     repair_func = repair_func_candidate
                     self.logger.info(
                         "Step %d: partial-match (failed %d times) on '%s' with candidate count=%d.",
-                        attempt, consecutive_failures, error_text, candidate_count
+                        attempt,
+                        consecutive_failures,
+                        error_text,
+                        candidate_count,
                     )
                 else:
                     # If not found, check label_mapping
@@ -1864,14 +1856,18 @@ Response with the Rust code only, do not include any explanation."""
                         repair_func = repair_func_candidate
                         self.logger.info(
                             "Step %d: partial-match '%s' with candidate count=%d.",
-                            attempt, error_text, candidate_count
+                            attempt,
+                            error_text,
+                            candidate_count,
                         )
                     else:
                         # Fallback
                         repair_func = default_repair
                         self.logger.info(
                             "Step %d: unsupported error '%s' with candidate count=%d.",
-                            attempt, error_text, candidate_count
+                            attempt,
+                            error_text,
+                            candidate_count,
                         )
             else:
                 # Fewer failures => only check label_mapping
@@ -1880,21 +1876,27 @@ Response with the Rust code only, do not include any explanation."""
                     repair_func = repair_func_candidate
                     self.logger.info(
                         "Step %d: partial-match '%s' with candidate count=%d.",
-                        attempt, error_text, candidate_count
+                        attempt,
+                        error_text,
+                        candidate_count,
                     )
                 else:
                     # Fallback
                     repair_func = default_repair
                     self.logger.info(
                         "Step %d: unsupported error '%s' with candidate count=%d.",
-                        attempt, error_text, candidate_count
+                        attempt,
+                        error_text,
+                        candidate_count,
                     )
 
             self.logger.info("Current score: %s", score)
 
             # Generate candidate repairs
             self.logger.info("Attempting to repair with %s", repair_func.__name__)
-            candidates = repair_func(code, cur_failure, num=candidate_count, temp=temp) or []
+            candidates = (
+                repair_func(code, cur_failure, num=candidate_count, temp=temp) or []
+            )
             all_failed = True
 
             for i, candidate in enumerate(candidates):
@@ -1908,10 +1910,16 @@ Response with the Rust code only, do not include any explanation."""
                 # If compilation fails, try fallback for type mismatch
                 if cand_score.compilation_error:
                     new_error = self.get_one_failure(cand_failures)
-                    self.logger.info("Candidate failed compilation due to: %s.", new_error.error)
-                    fallback_candidates = self.repair_mismatched_type(candidate, new_error, num=1)
+                    self.logger.info(
+                        "Candidate failed compilation due to: %s.", new_error.error
+                    )
+                    fallback_candidates = self.repair_mismatched_type(
+                        candidate, new_error, num=1
+                    )
                     if fallback_candidates and len(fallback_candidates) > 0:
-                        candidate = clean_code(fallback_candidates[0]).replace("```", "")
+                        candidate = clean_code(fallback_candidates[0]).replace(
+                            "```", ""
+                        )
                     else:
                         self.logger.warning("Fallback for compilation error failed.")
                         continue
@@ -1927,7 +1935,7 @@ Response with the Rust code only, do not include any explanation."""
                     candidate,
                     self.config.verus_path,
                     self.logger,
-                    immutable_funcs=self.immutable_funcs
+                    immutable_funcs=self.immutable_funcs,
                 )
                 if not is_safe:
                     self.logger.warning("Candidate repair is not safe.")
@@ -1947,11 +1955,14 @@ Response with the Rust code only, do not include any explanation."""
                     return hdn_code
 
                 # Check if new candidate improved things
-                new_num_failure = sum(1 for f in cand_failures if f.error == cur_failure.error)
+                new_num_failure = sum(
+                    1 for f in cand_failures if f.error == cur_failure.error
+                )
                 new_num_failure_finer = sum(
                     1
                     for f in cand_failures
-                    if f.error == cur_failure.error and f.get_text() == cur_failure.get_text()
+                    if f.error == cur_failure.error
+                    and f.get_text() == cur_failure.get_text()
                 )
 
                 # If fewer failures => improvement
@@ -1959,7 +1970,9 @@ Response with the Rust code only, do not include any explanation."""
                     code = candidate
                     self.logger.info(
                         "Step %d: Error %s fixed; candidate %d reduced failure count.",
-                        attempt, error_text, i
+                        attempt,
+                        error_text,
+                        i,
                     )
                     consecutive_failures = -1
                     break
@@ -1969,17 +1982,25 @@ Response with the Rust code only, do not include any explanation."""
                     code = candidate
                     self.logger.info(
                         "Step %d: Error %s partially fixed; candidate %d improved score.",
-                        attempt, error_text, i
+                        attempt,
+                        error_text,
+                        i,
                     )
                     consecutive_failures = max(-1, consecutive_failures - 1)
                     break
 
                 # If "finer" improvement detected
-                if consecutive_failures > 0 and new_num_failure_finer < num_failure and cand_score.is_good_repair(score):
+                if (
+                    consecutive_failures > 0
+                    and new_num_failure_finer < num_failure
+                    and cand_score.is_good_repair(score)
+                ):
                     code = candidate
                     self.logger.info(
                         "Step %d: Error %s fixed on finer check; candidate %d.",
-                        attempt, error_text, i
+                        attempt,
+                        error_text,
+                        i,
                     )
                     consecutive_failures = -1
                     break
@@ -1993,10 +2014,16 @@ Response with the Rust code only, do not include any explanation."""
         # If we exit the loop without a complete fix, return the last code
         return code
 
-
     # --- Public Methods Using the Helper ---
 
-    def repair_veval(self, code: str, max_attempt: int = 5, func_name: Union[str, None] = None, temp_dir: Union[str, None] = None, temp: float = 1.0) -> str:
+    def repair_veval(
+        self,
+        code: str,
+        max_attempt: int = 5,
+        func_name: Union[str, None] = None,
+        temp_dir: Union[str, None] = None,
+        temp: float = 1.0,
+    ) -> str:
         """
         Comprehensive repair method that uses specialized repair functions for a variety of error types.
         """
@@ -2015,16 +2042,33 @@ Response with the Rust code only, do not include any explanation."""
             VerusErrorType.MissingImport: self.repair_missing_import_error,
             VerusErrorType.TypeAnnotation: self.repair_type_annotation_error,
             VerusErrorType.ConstructorFailTypeInvariant: self.repair_constructor_fail_type_invariant,
-            VerusErrorType.CannotCallFunc: self.repair_mode_error
+            VerusErrorType.CannotCallFunc: self.repair_mode_error,
         }
         failed_mapping = {
             VerusErrorType.AssertFail: self.repair_assertion_error_with_proof_func,
         }
         if "loop_isolation(false)" not in code:
             code = insert_loop_isolation(code)
-        return self._iterative_repair_loop(code, max_attempt, func_name, temp_dir, temp, label_mapping, failed_mapping, self.repair_default, repair_context="full repair")
+        return self._iterative_repair_loop(
+            code,
+            max_attempt,
+            func_name,
+            temp_dir,
+            temp,
+            label_mapping,
+            failed_mapping,
+            self.repair_default,
+            repair_context="full repair",
+        )
 
-    def repair_test_veval(self, code: str, max_attempt: int = 5, func_name: Union[str, None] = None, temp_dir: Union[str, None] = None, temp: float = 1.0) -> str:
+    def repair_test_veval(
+        self,
+        code: str,
+        max_attempt: int = 5,
+        func_name: Union[str, None] = None,
+        temp_dir: Union[str, None] = None,
+        temp: float = 1.0,
+    ) -> str:
         """
         Test repair method for ablation studies; uses a smaller mapping.
         """
@@ -2038,4 +2082,14 @@ Response with the Rust code only, do not include any explanation."""
         }
         if "loop_isolation(false)" not in code:
             code = insert_loop_isolation(code)
-        return self._iterative_repair_loop(code, max_attempt, func_name, temp_dir, temp, label_mapping, failed_mapping, self.repair_default, repair_context="test repair")
+        return self._iterative_repair_loop(
+            code,
+            max_attempt,
+            func_name,
+            temp_dir,
+            temp,
+            label_mapping,
+            failed_mapping,
+            self.repair_default,
+            repair_context="test repair",
+        )

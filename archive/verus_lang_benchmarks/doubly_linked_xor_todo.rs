@@ -416,7 +416,7 @@ impl<V> DListXor<V> {
                 assert(self@[0] == v);
                 assert forall|i: int| 1 <= i <= self.ptrs@.len() - 1 implies old(self)@[i - 1]
                     == self@[i] by {
-                    assert(old(self).wf_perm((i - 1) as nat)); 
+                    assert(old(self).wf_perm((i - 1) as nat));
                 };
                 assert(self@ =~= seq![v].add(old(self)@));
             }
@@ -439,7 +439,7 @@ fn main() {
     print_result("pushed", 1);
     let x = t.pop_back();  // 3
     let y = t.pop_front();  // 1
-    let z = t.pop_front(); 
+    let z = t.pop_front();
     assert(x == 3);
     assert(y == 1);
     assert(z == 2);

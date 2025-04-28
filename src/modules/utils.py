@@ -46,7 +46,9 @@ def write_candidate_code(
         # Append the score at the end of the file
         sample_with_score = f"{sample}\n\n// VEval Score: {score}"
         sample_path.write_text(sample_with_score)
-        logger.info(f"Saved {prefix} sample {idx} to {sample_path}")
+        logger.info(
+            f"Saved {prefix} sample {idx} to {output_dir}/{prefix}_sample_{idx}.rs (score: {score})"
+        )
     except Exception as e:
         logger.error(f"Error saving sample {idx}: {e}")
 
@@ -108,6 +110,7 @@ def evaluate_samples(
                 # Save a special 'correct' version
                 correct_path = output_dir / f"{prefix}_correct.rs"
                 correct_path.write_text(sample)
+                logger.info(f"Correct proof saved to {output_dir}/{prefix}_correct.rs")
                 break
 
         except Exception as e:
@@ -144,7 +147,15 @@ def save_selection_info(
             + "\n".join([f"Sample {i+1}: {s}" for i, s in enumerate(scores)])
         )
         selected_path.write_text(selection_info)
-        logger.info(f"Selection details saved to {selected_path}")
+        logger.info(
+            f"Selection details saved to {output_dir}/{prefix}_selected.txt (best sample: {best_idx}, score: {best_score})"
+        )
+
+        # Also note the best sample file path
+        best_sample_path = f"{output_dir}/{prefix}_sample_{best_idx}.rs"
+        logger.info(
+            f"Best {prefix} sample was #{best_idx}, located at {best_sample_path}"
+        )
     except Exception as e:
         logger.error(f"Error saving selection details: {e}")
 
@@ -989,3 +1000,110 @@ def clean_code(code):
         lines.append(line)
     code = "\n".join(lines)
     return code
+
+
+def parse_llm_response(response: str, logger=None) -> str:
+    """
+    General utility to parse and extract Rust/Verus code from any LLM response.
+
+    Args:
+        response: The raw LLM response text
+        logger: Optional logger for debugging information
+
+    Returns:
+        Extracted code as a string or empty string if no code found
+    """
+    if logger:
+        logger.info("Parsing LLM response for Rust/Verus code...")
+
+    # If response is empty, return empty string
+    if not response or response.strip() == "":
+        if logger:
+            logger.warning("Empty response received from LLM")
+        return ""
+
+    # First try to extract code blocks with explicit language markers
+    code_block_patterns = [
+        r"```rust(.*?)```",  # Standard rust code blocks
+        r"```verus(.*?)```",  # Verus code blocks
+        r"```rs(.*?)```",  # Sometimes used for Rust
+        r"```(?:code|Code)(.*?)```",  # Generic code blocks
+        r"```(.*?)```",  # Any code blocks as fallback
+    ]
+
+    for pattern in code_block_patterns:
+        code_blocks = re.findall(pattern, response, re.DOTALL)
+        if code_blocks:
+            # Join all matching code blocks
+            extracted_code = "\n".join(block.strip() for block in code_blocks)
+            if logger:
+                logger.info(
+                    f"Extracted {len(code_blocks)} code block(s) using pattern: {pattern}"
+                )
+            return extracted_code
+
+    # If no explicit code blocks, look for common Rust patterns
+    rust_patterns = [
+        # Common Rust structure patterns
+        (r"(?:pub\s+)?(?:struct|enum|trait|impl|fn|mod)\s+\w+.*?{.*?}", re.DOTALL),
+        # Verus specific patterns
+        (r"(?:pub\s+)?(?:spec|proof|closed\s+spec)\s+fn\s+\w+.*?{.*?}", re.DOTALL),
+        # Use/import statements
+        (r"(?:^|\n)use\s+[\w:]+(?:;|\s*{.*?})", re.DOTALL),
+        # Verus block
+        (r"verus!\s*{.*?}", re.DOTALL),
+    ]
+
+    # Try each pattern and collect matches
+    rust_code_parts = []
+    for pattern, flags in rust_patterns:
+        matches = re.findall(pattern, response, flags)
+        rust_code_parts.extend(matches)
+
+    if rust_code_parts:
+        # Join all matching Rust code parts
+        extracted_code = "\n".join(part.strip() for part in rust_code_parts)
+        if logger:
+            logger.info(f"Extracted {len(rust_code_parts)} Rust code structures")
+        return extracted_code
+
+    # If we haven't found explicit Rust code, check if the entire response might be code
+    # by looking for key Rust language constructs
+    rust_keywords = [
+        "fn ",
+        "struct ",
+        "impl ",
+        "pub ",
+        "let ",
+        "use ",
+        "mod ",
+        "trait ",
+        "enum ",
+        "match ",
+    ]
+    verus_keywords = [
+        "proof ",
+        "spec ",
+        "requires",
+        "ensures",
+        "invariant",
+        "View for",
+        "verus!",
+    ]
+
+    keyword_count = sum(
+        1 for keyword in rust_keywords + verus_keywords if keyword in response
+    )
+
+    # If the response has multiple Rust/Verus keywords, it might be direct code
+    if keyword_count >= 3:
+        if logger:
+            logger.info(
+                f"Response appears to be direct code with {keyword_count} Rust/Verus keywords"
+            )
+        return response
+
+    # If we couldn't find any code, return empty string
+    if logger:
+        logger.warning("Could not extract Rust/Verus code from response")
+    return ""
