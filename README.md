@@ -1,6 +1,8 @@
-# VeruSyth
+# VerusAgent
 
-## Class Info
+VerusAgent is an AI-powered assistant for Verus formal verification. It helps develop, debug, and refine Rust code with formal specifications.
+
+## Architecture Overview
 
 ```python
 class Trial:
@@ -17,7 +19,7 @@ class BaseModule:
     hdn # houdini algorithm
     example # examples here
     default_system # default system prompt
-    ... # Something that you might want oto add
+    ... # Something that you might want to add
 
 # Including generate/fix/inference tools, and doc reader
 class Module1(BaseModule):
@@ -30,58 +32,91 @@ class Module1(BaseModule):
 
 ## Algorithm Flow
 
-Algorithm Flow
-
 1. Planner given context, output Module
    - Module: repair, inference, generate, doc reader
    - Planner can refer to the implementation in https://github.com/henryalps/OpenManus/blob/main/src/prompts/planner.md
 
-2. Execute Module (which may invoke llm) to produce new trial
+2. Execute Module (which may invoke LLM) to produce new trial
 
 3. Add trial to context
 
-## Implementation Details:
+## Implementation Details
 
-- Implement `Trial`, `Context`
-- Implement planner
-- Implement `BaseModule` and each specific Module (Livia)
-- Implement complete algorithm flow
+- Implements `Trial`, `Context`
+- Implements planner
+- Implements `BaseModule` and each specific Module
+- Implements complete algorithm flow
 
-## File Tree
+## File Structure
 
 ```text
-archive # the original -verusyth stuffs
-examples # rb example here
-benchmarks # all vstd benchmarks here
-utils # lynette rust implementation
-src
-- __init__.py # in case you do not want long import name, edit this file
-- configs # configs here
-  - config-*.json
-- main.py # implement the algorithm workflow
-- context.py # implement trial and context
-- planner.py # implement planner
-- infer.py # LLM inference infrastructure
-- prompts
-  - markdown files used my each module
-- modules
-  - base.py # implement base module
-  - lynette.py
-  - houdini.py
-  - veval.py # 3 utils that the module may rely on
-  - each module corresponds to a file # implement each module
+.
+├── README.md                     # Main documentation
+├── MIGRATION_PLAN.md             # Migration plan documentation
+├── README_modules.md             # Module-specific documentation
+├── README_progress_logger.md     # Documentation for progress logging
+├── run.sh                        # Main execution script (with fish shell)
+├── run_with_options.sh           # Execution script with additional options
+├── disable_llm_run.sh            # Run in dummy mode without LLM API calls
+├── customize.fish                # Environment customization script
+├── .gitignore                    # Git ignore file
+├── .pre-commit-config.yaml       # Pre-commit hook configuration
+├── archive/                      # Archive of older files
+├── benchmarks/                   # Verus benchmark files
+├── examples/                     # Example files for testing
+│   ├── input-view-refine/        # Input examples for view refinement
+│   └── output-view-refine/       # Expected outputs for view refinement
+├── llm_cache/                    # LLM response cache storage
+├── output/                       # Output directory for results
+├── prompt_cache/                 # Cache for prompts
+├── prompts/                      # Additional prompt files
+├── scripts/                      # Utility scripts
+├── src/                          # Source code directory
+│   ├── main.py                   # Main workflow implementation
+│   ├── context.py                # Implements Trial and Context classes
+│   ├── planner.py                # Implements the planner module
+│   ├── infer.py                  # LLM inference infrastructure
+│   ├── llm_cache.py              # LLM caching system
+│   ├── configs/                  # Configuration files
+│   │   ├── config-azure.json     # Azure-specific configuration
+│   │   └── sconfig.py            # Config management
+│   ├── doc/                      # Documentation files
+│   ├── examples/                 # Source-specific examples
+│   ├── lemmas/                   # Lemma files for verification
+│   ├── lynette/                  # Lynette implementation
+│   ├── modules/                  # Module implementations
+│   │   ├── base.py               # Base module implementation
+│   │   ├── baserepair.py         # Base repair module
+│   │   ├── houdini.py            # Houdini algorithm implementation
+│   │   ├── inv_inference.py      # Invariant inference module
+│   │   ├── lynette.py            # Lynette module
+│   │   ├── progress_logger.py    # Progress logging functionality
+│   │   ├── repair_*.py           # Various repair modules for different errors
+│   │   ├── spec_inference.py     # Specification inference module
+│   │   ├── utils.py              # Utility functions
+│   │   ├── veval.py              # Verus evaluation utilities
+│   │   ├── view_inference.py     # View inference module
+│   │   └── view_refinement.py    # View refinement module
+│   └── prompts/                  # Prompt templates
+├── tests/                        # Test files
+├── tmp/                          # Temporary files
+└── utils/                        # Utility code directory
 ```
 
-VerusAgent
-  --> pass --> Clover
-  --> fail --> repair --> Clover
+## Workflow
 
-  formal spec: assertions written in logical language
-  ?testing: too many to try (infinite input space), mathematically proven for all inputs
+VerusAgent follows this workflow:
+```
+VerusAgent
+  --> pass --> Clover (code verification successful)
+  --> fail --> repair --> Clover
+```
+
+The system works with formal specifications (assertions written in logical language) rather than testing. This approach mathematically proves correctness for all inputs, rather than just testing a subset of possible inputs.
 
 ## LLM Caching
 
-VerusAgent now includes LLM caching functionality to improve performance and reduce API costs. The cache stores LLM responses based on the query parameters and can be used for subsequent identical requests.
+VerusAgent includes LLM caching functionality to improve performance and reduce API costs. The cache stores LLM responses based on the query parameters and can be used for subsequent identical requests.
 
 ### Configuration
 
@@ -120,3 +155,76 @@ Cache files are stored as JSON in the specified cache directory and include:
 - Original query parameters
 - Response from the LLM
 - Timestamp for cache expiration
+
+## Environment Customization
+
+VerusAgent can be customized for different development environments using environment variables. This is particularly useful for settings that vary between machines, such as project directories and Verus executable paths.
+
+### Using the Customization Script
+
+The repository includes a `customize.fish` script that you can edit for your specific environment:
+
+1. Edit `customize.fish` and set your preferred values:
+   ```fish
+   # Set your project directory
+   set -x VERUS_PROJECT_DIR "/path/to/your/project"
+   
+   # Set your Verus executable path
+   set -x VERUS_PATH "/path/to/your/verus/executable"
+   
+   # Optionally set a custom test file
+   set -x VERUS_TEST_FILE "/path/to/your/test_file.rs"
+   ```
+
+2. Run the agent with your custom settings:
+   ```bash
+   source customize.fish && ./run.sh
+   ```
+
+### Available Environment Variables
+
+- `VERUS_PROJECT_DIR`: Base directory for finding benchmarks, examples, and other resources
+- `VERUS_PATH`: Path to your Verus executable
+- `VERUS_TEST_FILE`: Optional custom test file to use instead of the default
+
+These settings can also be set directly in your shell before running the agent:
+
+```bash
+export VERUS_PROJECT_DIR="/path/to/your/project"
+export VERUS_PATH="/path/to/your/verus/executable"
+./run.sh
+```
+
+### Default Behavior
+
+If not explicitly set:
+- `VERUS_PROJECT_DIR` defaults to the VerusAgent repository root directory
+- `VERUS_PATH` is read from the configuration file
+- The default test file specified in `main.py` is used
+
+## Getting Started
+
+1. Clone the repository
+2. Configure your environment (edit `customize.fish` or set environment variables)
+3. Run `./run.sh` to start the agent
+
+## Modules
+
+VerusAgent includes multiple specialized modules for different tasks:
+
+- **View Inference**: Generates a View function for a data structure (mathematical abstraction)
+- **View Refinement**: Improves the mathematical abstraction for data structures
+- **Invariant Inference**: Generates invariants that capture data structure properties
+- **Error Repair Modules**:
+  - Assertion Repair
+  - Arithmetic Repair
+  - Decrease Repair
+  - Invariant Repair
+  - Missing Implementation Repair
+  - Mode Repair
+  - Postcondition Repair
+  - Precondition Repair
+  - Syntax Repair
+  - Type Repair
+- **Specification Inference**: Generates specifications for code
+- **Progress Logger**: Tracks and reports on verification progress
