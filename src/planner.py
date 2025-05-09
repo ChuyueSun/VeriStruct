@@ -19,14 +19,32 @@ task_overview = task_overview_path.read_text() if task_overview_path.exists() el
 
 
 class Planner:
+    """
+    The Planner class is responsible for determining the verification workflow to use.
+    It analyzes the code and decides which sequence of modules would be most effective
+    for verification.
+    """
+    
     def __init__(self, logger):
+        """Initialize the planner with a logger."""
         self.logger = logger
 
     def exec(self, ctx: Context):
+        """
+        Execute the planner to determine the verification workflow.
+        
+        Args:
+            ctx: The context containing the code to analyze
+            
+        Returns:
+            The LLM's response detailing the chosen workflow
+        """
+        # Create a list of available modules for the system prompt
         modules = ""
         for module in ctx.modules.values():
             modules += f"- **{module.name}**: {module.desc}\n"
             
+        # Define the workflow options
         workflow_options = """
 ## Workflow Options
 There are exactly two possible workflows for verifying Verus code:
@@ -44,6 +62,7 @@ Your task is to decide which workflow is most appropriate for the given Verus co
 Choose the Specification-Only workflow only if the code has no data structures needing a View implementation.
         """
 
+        # Create the system prompt using the template
         system = fill_template(
             "plan_system",
             {
@@ -53,8 +72,9 @@ Choose the Specification-Only workflow only if the code has no data structures n
             },
         )
 
+        # Create the user prompt with a normalized task description for better caching
         prompt = f"""
-{ctx.gen_task_desc()}
+{self.get_normalized_task_desc(ctx)}
 
 Analyze the code and decide which of the two possible workflows is most appropriate:
 1. Full Sequence Workflow (view_inference → view_refinement → inv_inference → spec_inference)
@@ -62,7 +82,8 @@ Analyze the code and decide which of the two possible workflows is most appropri
 
 Explain your choice in 2-3 sentences, then specify the exact workflow to use.
 """
-
+        
+        # Call the LLM to make the decision
         return ctx.llm.infer_llm(
             "",
             instruction=None,
@@ -73,4 +94,42 @@ Explain your choice in 2-3 sentences, then specify the exact workflow to use.
             max_tokens=100000,
             json=False,
             return_msg=True,
+        )
+
+    def get_normalized_task_desc(self, ctx: Context) -> str:
+        """
+        Generate a normalized task description without rustc_out to improve cache consistency.
+        
+        Args:
+            ctx: The context containing the code to analyze
+            
+        Returns:
+            A normalized task description with empty rustc_out for consistent caching
+        """
+        if ctx.params.trial_fetch_mode == "naive":
+            # Naive mode: use the last trial
+            trial = ctx.trials[-1]
+            prevs = ctx.trials[-1 - ctx.params.max_prev_trial : -1]
+        else:
+            # Other mode: TODO
+            trial = None
+            prevs = []
+
+        rloc = ctx.raw_code_loc
+        verus_code = trial.code
+        # Skip rustc_out to improve cache consistency
+        knowledge = ctx.gen_knowledge()
+        prev_descs = [
+            f"### Failure {i}\n\n{ptrail.desc(rloc, output_rustc_out=False)}" for i, ptrail in enumerate(prevs)
+        ]
+
+        # Create the normalized description using the same template as Context.gen_task_desc()
+        return fill_template(
+            "task_desc",
+            {
+                "verus_code": verus_code,
+                "rustc_out": "",  # Empty rustc_out for consistent caching
+                "knowledge": knowledge,
+                "failures": "\n\n".join(prev_descs),
+            },
         )

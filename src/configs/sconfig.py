@@ -35,9 +35,9 @@ except FileNotFoundError:
         "tmp_dir": "tmp",
     }
 
-# Default Set to our verusagent config or fallback to any config
-if "config-yican" in configs:
-    config = configs["config-yican"]
+# Default to config-azure instead of config-yican
+if "config-azure" in configs:
+    config = configs["config-azure"]
 else:
     # Use the first config found or the default
     config = (
@@ -49,15 +49,37 @@ config["example_path"] = Path(__file__).parent.parent / "examples"
 config["lemma_path"] = Path(__file__).parent.parent / "lemmas"
 config["util_path"] = Path(__file__).parent.parent.parent / "utils"
 
-
-def reset_config(name: str):
+def reset_config(config_name="config"):
     """
-    Reset the config to the specified name.
-    :param name: The name of the config to reset to.
+    Reset the global config by loading the specified config file.
+    
+    Args:
+        config_name: Name of the config file (without extension)
     """
     global config
-    if name in configs:
-        config = configs[name]
-    else:
-        print(f"Config {name} not found. Available configs: {list(configs.keys())}")
-        print("Using current config instead.")
+    
+    # Determine config file path
+    config_dir = Path(__file__).parent.absolute()
+    config_file = config_dir / f"{config_name}.json"
+    
+    # Load default configuration
+    with open(config_file, "r") as f:
+        config = json.load(f)
+    
+    # Allow environment variable overrides for key settings
+    # Project directory can be customized per machine via environment variable
+    env_project_dir = os.environ.get("VERUS_PROJECT_DIR")
+    if env_project_dir:
+        config["project_dir"] = env_project_dir
+        print(f"Using project directory from environment: {env_project_dir}")
+    elif "project_dir" not in config:
+        # Default to current directory if not specified
+        config["project_dir"] = "."
+        
+    # Allow verus path override via environment variable as well
+    env_verus_path = os.environ.get("VERUS_PATH")
+    if env_verus_path:
+        config["verus_path"] = env_verus_path
+        print(f"Using Verus path from environment: {env_verus_path}")
+    
+    return config

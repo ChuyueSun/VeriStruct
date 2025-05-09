@@ -183,7 +183,7 @@ def check_and_handle_success(code: str, logger: logging.Logger) -> bool:
     return score.is_correct()
 
 
-def update_global_best(
+def update_checkpoint_best(
     cand_code: str,
     best_score_of_all: EvalScore,
     best_code_of_all: str,
@@ -191,8 +191,8 @@ def update_global_best(
     logger: logging.Logger,
 ) -> Tuple[EvalScore, str]:
     """
-    Compares cand_code's score with the global best. If cand_code is better,
-    update the global best and write it to a file.
+    Compares cand_code's score with the checkpoint best. If cand_code is better,
+    update the checkpoint best and write it to a file.
 
     Args:
         cand_code: Candidate code to compare
@@ -208,9 +208,9 @@ def update_global_best(
     score = veval.eval_and_get_score()
 
     # Debug logging
-    logger.debug(f"update_global_best - Candidate score: {score}")
-    logger.debug(f"update_global_best - Current best score: {best_score_of_all}")
-    logger.debug(f"update_global_best - Has best code: {best_code_of_all is not None}")
+    logger.debug(f"update_checkpoint_best - Candidate score: {score}")
+    logger.debug(f"update_checkpoint_best - Current best score: {best_score_of_all}")
+    logger.debug(f"update_checkpoint_best - Has best code: {best_code_of_all is not None}")
 
     # Make sure the directory exists
     if not temp_dir.exists():
@@ -218,13 +218,13 @@ def update_global_best(
 
     # If best_score_of_all is None, set it to current score
     if best_score_of_all is None:
-        logger.info(f"Initializing global best with score: {score}")
+        logger.info(f"Initializing checkpoint best with score: {score}")
         best_score_of_all = score
         best_code_of_all = cand_code
 
         # Write to best.rs file
         best_path = temp_dir / "best.rs"
-        sample_with_score = f"{best_code_of_all}\n\n// VEval Score: {score}"
+        sample_with_score = f"{best_code_of_all}\n\n// Checkpoint Best Score: {score}"
         best_path.write_text(sample_with_score)
         return best_score_of_all, best_code_of_all
 
@@ -232,7 +232,7 @@ def update_global_best(
     try:
         is_better = score > best_score_of_all
         logger.debug(
-            f"update_global_best - Candidate is better than current best: {is_better}"
+            f"update_checkpoint_best - Candidate is better than current best: {is_better}"
         )
     except Exception as e:
         logger.error(f"Error comparing scores: {e}")
@@ -244,19 +244,19 @@ def update_global_best(
 
         # Write to best.rs file
         best_path = temp_dir / "best.rs"
-        sample_with_score = f"{best_code_of_all}\n\n// VEval Score: {score}"
+        sample_with_score = f"{best_code_of_all}\n\n// Checkpoint Best Score: {score}"
         best_path.write_text(sample_with_score)
-        logger.info(f"Updated global best with score: {score}")
+        logger.info(f"Updated checkpoint best with score: {score}")
     else:
         # Even if not better, ensure the best.rs file exists with the current best
         best_path = temp_dir / "best.rs"
         if not best_path.exists() and best_code_of_all is not None:
             sample_with_score = (
-                f"{best_code_of_all}\n\n// VEval Score: {best_score_of_all}"
+                f"{best_code_of_all}\n\n// Checkpoint Best Score: {best_score_of_all}"
             )
             best_path.write_text(sample_with_score)
             logger.info(
-                f"Created best.rs file with existing best score: {best_score_of_all}"
+                f"Created best.rs file with existing checkpoint best score: {best_score_of_all}"
             )
 
     return best_score_of_all, best_code_of_all

@@ -13,7 +13,7 @@ from src.modules.utils import (
     debug_type_error,
     evaluate_samples,
     save_selection_info,
-    update_global_best,
+    update_checkpoint_best,
     write_candidate_code,
 )
 from modules.veval import VEval
@@ -191,7 +191,7 @@ class InvInferenceModule(BaseModule):
         global_best_code = context.get_best_code()
 
         # Update global best if current best is better, but don't use it for the current step
-        updated_global_best_score, updated_global_best_code = update_global_best(
+        updated_global_best_score, updated_global_best_code = update_checkpoint_best(
             best_code, global_best_score, global_best_code, global_dir, self.logger
         )
 

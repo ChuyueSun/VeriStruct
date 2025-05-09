@@ -30,7 +30,7 @@ def write_and_verify_file(file_path: Path, content: str, logger) -> bool:
     file_path.write_text(content)
     if file_path.exists():
         logger.info(
-            f"Verified: File was successfully written (size: {file_path.stat().st_size} bytes)"
+            f"Verified: File successfully written to {file_path} (size: {file_path.stat().st_size} bytes)"
         )
         return True
     else:
@@ -38,62 +38,66 @@ def write_and_verify_file(file_path: Path, content: str, logger) -> bool:
         return False
 
 
-def handle_global_best(context, output_dir, file_id, progress_logger, logger):
-    """Handle the global best code and score logic."""
-    global_best_code = context.get_best_code()
-    logger.debug(f"Main - Final global_best_code is None: {global_best_code is None}")
+def handle_checkpoint_best(context, output_dir, file_id, progress_logger, logger):
+    """Handle the checkpoint best code and score logic."""
+    checkpoint_best_code = context.get_best_code()
+    logger.debug(f"Main - Final checkpoint_best_code is None: {checkpoint_best_code is None}")
 
-    if not global_best_code:
+    if not checkpoint_best_code:
         final_score = context.trials[-1].eval.get_score()
         progress_logger.record_final_result(final_score)
         logger.warning(
-            "No global best code available. Check if global best tracking is working correctly."
+            "No checkpoint best code available. Check if checkpoint best tracking is working correctly."
         )
         return
 
-    global_best_score = context.get_best_score()
-    logger.debug(f"Main - Final global_best_score: {global_best_score}")
+    checkpoint_best_score = context.get_best_score()
+    logger.debug(f"Main - Final checkpoint_best_score: {checkpoint_best_score}")
 
     # Save to output directory with timestamp
-    global_best_path = output_dir / f"global_best_result_{file_id}.rs"
-    global_best_with_score = (
-        f"{global_best_code}\n\n// VEval Score: {global_best_score}"
+    checkpoint_best_path = output_dir / f"checkpoint_best_{file_id}.rs"
+    # Add detailed score information at the end of the file
+    checkpoint_best_with_score = (
+        f"{checkpoint_best_code}\n\n"
+        f"// Checkpoint Best VEval Score: {checkpoint_best_score}\n"
+        f"// Verified: {checkpoint_best_score.verified}, Errors: {checkpoint_best_score.errors}, Verus Errors: {checkpoint_best_score.verus_errors}\n"
+        f"// Compilation Error: {checkpoint_best_score.compilation_error}"
     )
-    write_and_verify_file(global_best_path, global_best_with_score, logger)
-    logger.info(f"Saved global best result with score: {global_best_score}")
+    write_and_verify_file(checkpoint_best_path, checkpoint_best_with_score, logger)
+    logger.info(f"Saved checkpoint best result to {checkpoint_best_path} with score: {checkpoint_best_score}")
 
     # Save to best directory
     best_dir = Path("output/best")
     best_dir.mkdir(exist_ok=True, parents=True)
     best_file = best_dir / f"best_{file_id}.rs"
-    write_and_verify_file(best_file, global_best_with_score, logger)
-    write_and_verify_file(best_dir / "best.rs", global_best_with_score, logger)
-    logger.info(f"Saved global best to {best_file}")
+    write_and_verify_file(best_file, checkpoint_best_with_score, logger)
+    write_and_verify_file(best_dir / "best.rs", checkpoint_best_with_score, logger)
+    logger.info(f"Saved checkpoint best to {best_file}")
 
     # Compare with final result
     final_score = context.trials[-1].eval.get_score()
     logger.debug(f"Main - Final trial score: {final_score}")
     progress_logger.record_final_result(final_score)
 
-    should_use_global_best = global_best_score > final_score or (
-        not global_best_score.compilation_error and final_score.compilation_error
+    should_use_checkpoint_best = checkpoint_best_score > final_score or (
+        not checkpoint_best_score.compilation_error and final_score.compilation_error
     )
 
-    if should_use_global_best:
+    if should_use_checkpoint_best:
         reason = (
-            f"Global best score ({global_best_score}) is better than final result ({final_score})"
-            if global_best_score > final_score
-            else "Global best compiles while final result has compilation errors"
+            f"Checkpoint best score ({checkpoint_best_score}) is better than final result ({final_score})"
+            if checkpoint_best_score > final_score
+            else "Checkpoint best compiles while final result has compilation errors"
         )
-        logger.info(f"{reason}. Overwriting final result with global best.")
+        logger.info(f"{reason}. Overwriting final result with checkpoint best.")
 
         write_and_verify_file(
-            output_dir / f"final_result_{file_id}.rs", global_best_with_score, logger
+            output_dir / f"final_result_{file_id}.rs", checkpoint_best_with_score, logger
         )
         write_and_verify_file(
-            output_dir / "final_result.rs", global_best_with_score, logger
+            output_dir / "final_result.rs", checkpoint_best_with_score, logger
         )
-        progress_logger.record_final_result(global_best_score)
+        progress_logger.record_final_result(checkpoint_best_score)
     else:
         write_and_verify_file(
             output_dir / "final_result.rs", context.trials[-1].code, logger
@@ -113,7 +117,12 @@ def main():
         logger.info("Using config-azure configuration")
 
         # Set the verus path from the configuration
-        if "verus_path" in config:
+        if os.environ.get("VERUS_PATH"):
+            verus_path = os.environ.get("VERUS_PATH")
+            verus.set_verus_path(verus_path)
+            logger.info(f"Verus path set to: {verus.verus_path}")
+            logger.info(f"VERUS_PATH environment variable used: {verus_path}")
+        elif "verus_path" in config:
             verus.set_verus_path(config["verus_path"])
             logger.info(f"Verus path set to: {verus.verus_path}")
             # Also set as environment variable for modules to access
@@ -132,7 +141,7 @@ def main():
         logger.info(f"Using custom test file from environment: {test_file_path}")
     else:
         # Default test file if no custom one specified
-        test_file_path = Path(f"{config['project_dir']}/benchmarks/even_cell_todo.rs")
+        test_file_path = Path("tests/rb_type_invariant_todo.rs")
         logger.info(f"Using default test file: {test_file_path}")
 
     if not test_file_path.exists():
@@ -159,10 +168,40 @@ def main():
 
     # Extract input file base name (without extension) for output files
     input_file_base = test_file_path.stem
-
-    # Combine file identifiers for unique output filenames
-    file_id = f"{input_file_base}_{run_timestamp}"
-    logger.info(f"Output file identifier: {file_id}")
+    
+    # Extract verification type information by analyzing the file name
+    verification_type = ""
+    if "type_invariant" in input_file_base:
+        verification_type = "TypeInv"
+    elif "postcond" in input_file_base:
+        verification_type = "PostCond" 
+    elif "precond" in input_file_base:
+        verification_type = "PreCond"
+    elif "invariant" in input_file_base:
+        verification_type = "Invariant"
+    elif "assertion" in input_file_base:
+        verification_type = "Assert"
+    elif "decrease" in input_file_base:
+        verification_type = "Decrease"
+    else:
+        verification_type = "General"
+        
+    # For additional context, check for specific data structures in the filename
+    data_structure = ""
+    if "rb" in input_file_base:
+        data_structure = "RB"  # Red-Black tree
+    elif "vec" in input_file_base:
+        data_structure = "Vec"  # Vector
+    elif "list" in input_file_base:
+        data_structure = "List"  # Linked list
+    elif "map" in input_file_base:
+        data_structure = "Map"  # Map/Dictionary
+    elif "tree" in input_file_base:
+        data_structure = "Tree"  # Tree structure
+    
+    # Combine file identifiers for unique and informative output filenames
+    file_id = f"{data_structure}_{verification_type}_{run_timestamp}"
+    logger.info(f"Output file identifier: {file_id} (from {input_file_base})")
 
     # Set identifiers as environment variables for other modules to use
     os.environ["VERUS_RUN_TIMESTAMP"] = run_timestamp
@@ -266,9 +305,21 @@ def main():
         logger.info(f"{module_name} completed with result length: {len(step_result)} in {step_time:.2f}s")
         
         # Save the intermediate result with timestamp
-        write_and_verify_file(
-            output_dir / f"{step_number:02}_{module_name}_{file_id}.rs", step_result, logger
-        )
+        step_output_path = output_dir / f"{step_number:02}_{module_name}_{file_id}.rs"
+        
+        # Add score information if available
+        if context.trials and context.trials[-1].eval:
+            step_score = context.trials[-1].eval.get_score()
+            step_result_with_score = (
+                f"{step_result}\n\n"
+                f"// Step {step_number} ({module_name}) VEval Score: {step_score}\n"
+                f"// Verified: {step_score.verified}, Errors: {step_score.errors}, Verus Errors: {step_score.verus_errors}"
+            )
+            write_and_verify_file(step_output_path, step_result_with_score, logger)
+        else:
+            write_and_verify_file(step_output_path, step_result, logger)
+            
+        logger.info(f"Step {step_number} output saved to {step_output_path}")
         
         # Log step progress
         if context.trials and context.trials[-1].eval:
@@ -290,6 +341,13 @@ def main():
         previous_non_other_failures = sum(
             1 for failure in failures if failure.error.name != "Other"
         )
+        
+        # Track rounds where repair made things worse for fallback logic
+        rounds_without_improvement = 0
+        best_repair_score = last_trial.eval.get_score()
+        best_repair_code = last_trial.code
+        original_score = last_trial.eval.get_score()
+        original_code = last_trial.code
 
         while failures and current_round <= max_repair_rounds:
             # Start repair round tracking
@@ -329,11 +387,22 @@ def main():
             failures = last_trial.eval.get_failures()
             current_failure_count = len(failures)
             current_verified_count = last_trial.eval.get_verified_count()
+            current_score = last_trial.eval.get_score()
 
             # Count failures excluding "Other" errors
             current_non_other_failures = sum(
                 1 for failure in failures if failure.error.name != "Other"
             )
+
+            # Check if the current score is better than our best repair score
+            if current_score > best_repair_score:
+                best_repair_score = current_score
+                best_repair_code = last_trial.code
+                rounds_without_improvement = 0
+                logger.info(f"Round {current_round}: Found better repair with score: {best_repair_score}")
+            else:
+                rounds_without_improvement += 1
+                logger.info(f"Round {current_round}: No improvement in score. Rounds without improvement: {rounds_without_improvement}")
 
             # Check if we made progress (excluding "Other" errors from the comparison)
             if (
@@ -358,11 +427,69 @@ def main():
 
             # Save intermediate results after each round with timestamp
             round_result = context.trials[-1].code
-            write_and_verify_file(
-                output_dir / f"repair_round_{current_round-1}_{file_id}.rs",
-                round_result,
-                logger,
+            round_score = context.trials[-1].eval.get_score()
+            
+            # Add the score as a comment at the end of the file
+            round_result_with_score = (
+                f"{round_result}\n\n"
+                f"// Repair Round {current_round-1} VEval Score: {round_score}\n"
+                f"// Verified: {round_score.verified}, Errors: {round_score.errors}, Verus Errors: {round_score.verus_errors}"
             )
+            
+            repair_round_path = output_dir / f"repair_round_{current_round-1}_{file_id}.rs"
+            write_and_verify_file(repair_round_path, round_result_with_score, logger)
+            logger.info(f"Repair round {current_round-1} result saved to {repair_round_path}")
+
+            # After three consecutive rounds with no improvement and score worse than original,
+            # fallback to the best repair we've seen
+            if rounds_without_improvement >= 3 and best_repair_score < original_score:
+                logger.info(
+                    f"No improvement for {rounds_without_improvement} consecutive rounds and score ({best_repair_score}) "
+                    f"is worse than original ({original_score}). Reverting to best repair found."
+                )
+                
+                # Create a VEval object first
+                v_eval = VEval(best_repair_code, logger)
+
+                # Create the fallback trial
+                trial_id = len(context.trials)
+                tmp_dir = config.get("tmp_dir", "tmp")
+                path = os.path.join(tmp_dir, f"trial_{trial_id}_fallback.rs")
+
+                # Write the code to file
+                write_and_verify_file(Path(path), best_repair_code, logger)
+
+                # Create the Trial object with the correct parameters
+                fallback_trial = Trial(trial_id, v_eval, path, logger)
+
+                # Add to context
+                context.trials.append(fallback_trial)
+
+                # Update failures for next round
+                failures = fallback_trial.eval.get_failures()
+
+                # Log the fallback
+                logger.info(
+                    f"Fallback complete. New failure count: {len(failures)}"
+                )
+
+                # Save the fallback result
+                fallback_code = fallback_trial.code
+                fallback_score = fallback_trial.eval.get_score()
+                
+                # Add the score as a comment at the end of the file
+                fallback_with_score = (
+                    f"{fallback_code}\n\n"
+                    f"// Fallback VEval Score: {fallback_score}\n"
+                    f"// Verified: {fallback_score.verified}, Errors: {fallback_score.errors}, Verus Errors: {fallback_score.verus_errors}"
+                )
+                
+                fallback_path = output_dir / f"fallback_result_{current_round-1}_{file_id}.rs"
+                write_and_verify_file(fallback_path, fallback_with_score, logger)
+                logger.info(f"Fallback result saved to {fallback_path}")
+                
+                # Reset the rounds without improvement counter
+                rounds_without_improvement = 0
 
             # Special handling for "Other" errors
             if (
@@ -417,11 +544,19 @@ def main():
                     )
 
                     # Save the fallback result
-                    write_and_verify_file(
-                        output_dir / f"fallback_result_{current_round-1}_{file_id}.rs",
-                        fallback_trial.code,
-                        logger,
+                    fallback_code = fallback_trial.code
+                    fallback_score = fallback_trial.eval.get_score()
+                    
+                    # Add the score as a comment at the end of the file
+                    fallback_with_score = (
+                        f"{fallback_code}\n\n"
+                        f"// Fallback VEval Score: {fallback_score}\n"
+                        f"// Verified: {fallback_score.verified}, Errors: {fallback_score.errors}, Verus Errors: {fallback_score.verus_errors}"
                     )
+                    
+                    fallback_path = output_dir / f"fallback_result_{current_round-1}_{file_id}.rs"
+                    write_and_verify_file(fallback_path, fallback_with_score, logger)
+                    logger.info(f"Fallback result saved to {fallback_path}")
 
         if failures:
             logger.warning(
@@ -434,13 +569,21 @@ def main():
 
     # Save the final result with timestamp and to a consistent file
     final_result = context.trials[-1].code
-    write_and_verify_file(
-        output_dir / f"final_result_{file_id}.rs", final_result, logger
-    )
-    write_and_verify_file(output_dir / "final_result.rs", final_result, logger)
+    final_score = context.trials[-1].eval.get_score()
+    
+    # Add the score as a comment at the end of the file
+    final_result_with_score = f"{final_result}\n\n// Final VEval Score: {final_score}\n// Verified: {final_score.verified}, Errors: {final_score.errors}, Verus Errors: {final_score.verus_errors}"
+    
+    final_result_path = output_dir / f"final_result_{file_id}.rs"
+    write_and_verify_file(final_result_path, final_result_with_score, logger)
+    logger.info(f"Final verification result saved to {final_result_path}")
+    
+    consistent_result_path = output_dir / "final_result.rs"
+    write_and_verify_file(consistent_result_path, final_result_with_score, logger)
+    logger.info(f"Latest result also saved to {consistent_result_path}")
 
-    # Handle global best code and score
-    handle_global_best(context, output_dir, file_id, progress_logger, logger)
+    # Handle checkpoint best code and score
+    handle_checkpoint_best(context, output_dir, file_id, progress_logger, logger)
 
     total_time = time.time() - start_time
     logger.info(

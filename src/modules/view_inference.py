@@ -10,7 +10,7 @@ from modules.utils import (
     evaluate_samples,
     parse_llm_response,
     save_selection_info,
-    update_global_best,
+    update_checkpoint_best,
 )
 from modules.veval import VEval
 from prompts.template import build_instruction
@@ -218,27 +218,27 @@ impl<T: Copy> View for RingBuffer<T> {
         )
 
         # Initialize and update global best
-        global_best_score = (
+        checkpoint_best_score = (
             context.get_best_score() if hasattr(context, "get_best_score") else None
         )
-        global_best_code = (
+        checkpoint_best_code = (
             context.get_best_code() if hasattr(context, "get_best_code") else None
         )
 
-        # If this is the first global_best_code, initialize it
-        if global_best_code is None:
+        # If this is the first checkpoint_best_code, initialize it
+        if checkpoint_best_code is None:
             self.logger.debug(
-                f"ViewInference - Initial global_best_code is None: {global_best_code is None}"
+                f"ViewInference - Initial checkpoint_best_code is None: {checkpoint_best_code is None}"
             )
             self.logger.debug(
-                f"ViewInference - Initial global_best_score: {global_best_score}"
+                f"ViewInference - Initial checkpoint_best_score: {checkpoint_best_score}"
             )
             self.logger.debug(f"ViewInference - Current best_score: {best_score}")
             self.logger.info(
-                "ViewInference - Initializing global best with current best"
+                "ViewInference - Initializing checkpoint best with current best"
             )
-            global_best_code = best_code
-            global_best_score = best_score
+            checkpoint_best_code = best_code
+            checkpoint_best_score = best_score
 
         # Save the module-specific best from this step
         module_best_path = output_dir / "01_view_inference_global_best.rs"
@@ -250,11 +250,11 @@ impl<T: Copy> View for RingBuffer<T> {
             self.logger.error(f"Error saving best view inference: {e}")
 
         # Update context's global best tracking
-        context.set_best_code(global_best_code)
-        context.set_best_score(global_best_score)
+        context.set_best_code(checkpoint_best_code)
+        context.set_best_score(checkpoint_best_score)
 
         self.logger.debug(
-            f"ViewInference - Stored global best in context with score: {global_best_score}"
+            f"ViewInference - Stored checkpoint best in context with score: {checkpoint_best_score}"
         )
 
         # Add the best sample from current step to context

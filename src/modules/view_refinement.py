@@ -8,7 +8,7 @@ from modules.utils import (
     debug_type_error,
     evaluate_samples,
     save_selection_info,
-    update_global_best,
+    update_checkpoint_best,
 )
 from modules.veval import VEval
 from prompts.template import build_instruction
@@ -60,7 +60,7 @@ Please provide only the complete Rust code of the refined file with no additiona
             context: Context object containing trial information
 
         Returns:
-            Generated code with refined View function
+            Generated code with refined View implementation
         """
         self.logger.info("View Refinement ...")
 
@@ -71,9 +71,8 @@ Please provide only the complete Rust code of the refined file with no additiona
         instruction = build_instruction(
             base_instruction=self.refinement_instruction,
             add_common=True,
-            add_view=True,  # Include View refinement guidelines
-            code=code,
-            context=context
+            add_view=True,  # Include view refinement guidelines
+            code=code
         )
 
         # Load examples
@@ -148,7 +147,7 @@ Please provide only the complete Rust code of the refined file with no additiona
         global_best_code = context.get_best_code()
 
         # Update global best if current best is better, but don't use it for the current step
-        updated_global_best_score, updated_global_best_code = update_global_best(
+        updated_global_best_score, updated_global_best_code = update_checkpoint_best(
             best_code, global_best_score, global_best_code, global_dir, self.logger
         )
 

@@ -300,11 +300,10 @@ class LLM:
             engine, instruction, query, max_tokens, exemplars, system_info
         )
         
-        # Create a prompt directory next to the cache directory
-        prompt_dir = Path(self.cache.cache_dir).parent / "prompt_cache"
-        prompt_dir.mkdir(exist_ok=True, parents=True)
+        # Save prompts in the same directory as the cache responses
+        prompt_dir = Path(self.cache.cache_dir)
         
-        # Create the prompt file path using the same MD5
+        # Create the prompt file path using the same MD5 but with a .md extension
         prompt_file = prompt_dir / f"{cache_key}.md"
         
         # Format the prompt components

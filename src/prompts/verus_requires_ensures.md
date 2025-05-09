@@ -12,9 +12,11 @@ fn func(arg) -> rettype
         ENSUREMENT1,
         ENSUREMENT2,
         if COND {
-        ENSUREMENT3
+            &&& ENSUREMENT3_1
+            &&& ENSUREMENT3_2
         } else {
-        ENSUREMENT4
+            &&& ENSUREMENT4_1
+            &&& ENSUREMENT4_2
         }
         ...
 ```
@@ -25,3 +27,6 @@ fn func(arg) -> rettype
 ```rust
 fn func(arg) -> (retname: rettype)
 ```
+
+- When using if-else blocks in ensures clauses, always use `&&&` instead of `&&` to connect multiple conditions, as shown in the example above.
+

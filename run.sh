@@ -7,6 +7,14 @@ set SCRIPT_DIR (cd $SCRIPT_DIR && pwd)
 # Set PYTHONPATH to include the project root
 set -x PYTHONPATH "$SCRIPT_DIR:$PYTHONPATH"
 
+# Set project directory (default to script directory)
+if not set -q VERUS_PROJECT_DIR
+    set -x VERUS_PROJECT_DIR "$SCRIPT_DIR"
+    echo "VERUS_PROJECT_DIR not set, using: $VERUS_PROJECT_DIR"
+else
+    echo "Using custom project directory: $VERUS_PROJECT_DIR"
+end
+
 # Enable LLM inference
 set -x ENABLE_LLM_INFERENCE 1
 
@@ -18,6 +26,7 @@ set -x LLM_CACHE_MAX_AGE_DAYS 7
 
 echo "=== Running VerusAgent with Azure Configuration ==="
 echo "Python path: $PYTHONPATH"
+echo "Project directory: $VERUS_PROJECT_DIR"
 echo "LLM inference enabled: $ENABLE_LLM_INFERENCE"
 echo "LLM caching enabled: $ENABLE_LLM_CACHE"
 echo "LLM cache directory: $LLM_CACHE_DIR"

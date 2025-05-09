@@ -66,40 +66,13 @@ class Module1(BaseModule):
 ├── examples/                     # Example files for testing
 │   ├── input-view-refine/        # Input examples for view refinement
 │   └── output-view-refine/       # Expected outputs for view refinement
-├── llm_cache/                    # LLM response cache storage
-├── output/                       # Output directory for results
-├── prompt_cache/                 # Cache for prompts
-├── prompts/                      # Additional prompt files
-├── scripts/                      # Utility scripts
-├── src/                          # Source code directory
-│   ├── main.py                   # Main workflow implementation
-│   ├── context.py                # Implements Trial and Context classes
-│   ├── planner.py                # Implements the planner module
-│   ├── infer.py                  # LLM inference infrastructure
-│   ├── llm_cache.py              # LLM caching system
-│   ├── configs/                  # Configuration files
-│   │   ├── config-azure.json     # Azure-specific configuration
-│   │   └── sconfig.py            # Config management
-│   ├── doc/                      # Documentation files
-│   ├── examples/                 # Source-specific examples
-│   ├── lemmas/                   # Lemma files for verification
-│   ├── lynette/                  # Lynette implementation
-│   ├── modules/                  # Module implementations
-│   │   ├── base.py               # Base module implementation
-│   │   ├── baserepair.py         # Base repair module
-│   │   ├── houdini.py            # Houdini algorithm implementation
-│   │   ├── inv_inference.py      # Invariant inference module
-│   │   ├── lynette.py            # Lynette module
-│   │   ├── progress_logger.py    # Progress logging functionality
-│   │   ├── repair_*.py           # Various repair modules for different errors
-│   │   ├── spec_inference.py     # Specification inference module
-│   │   ├── utils.py              # Utility functions
-│   │   ├── veval.py              # Verus evaluation utilities
-│   │   ├── view_inference.py     # View inference module
-│   │   └── view_refinement.py    # View refinement module
-│   └── prompts/                  # Prompt templates
-├── tests/                        # Test files
-├── tmp/                          # Temporary files
+├── output/                       # Output directory for generated files
+│   ├── best/                    # Best verification results
+│   ├── debug/                   # Debug information
+│   ├── progress_logs/           # Progress logs
+│   └── samples/                 # Intermediate samples
+├── llm_cache/                   # LLM response cache storage (.json files) and prompts (.md files)
+├── tmp/                         # Temporary files directory
 └── utils/                        # Utility code directory
 ```
 
@@ -151,10 +124,11 @@ The first run with a fixed query will cache the response, and subsequent runs wi
 
 ### Cache Files
 
-Cache files are stored as JSON in the specified cache directory and include:
-- Original query parameters
-- Response from the LLM
-- Timestamp for cache expiration
+Cache files are stored in the specified cache directory:
+- JSON files (.json): Contain the LLM responses, original query parameters, and cache timestamp
+- Markdown files (.md): Contain the full prompts sent to the LLM with the same base filename as the corresponding JSON response
+
+This dual storage provides transparency in debugging by allowing you to examine both the exact prompt sent to the LLM and its response.
 
 ## Environment Customization
 
