@@ -6,10 +6,10 @@ from typing import Dict, List, Optional
 from src.configs.sconfig import config
 from src.infer import LLM
 from src.modules.base import BaseModule
-from modules.veval import EvalScore, VEval
+from src.modules.veval import EvalScore, VEval
 
-from prompts.template import fill_template
-from doc.naive_reader import get_content
+from src.prompts.template import fill_template
+from src.doc.naive_reader import get_content
 
 
 class Trial:

@@ -1,9 +1,9 @@
 import os
 from pathlib import Path
 
-from configs.sconfig import config
-from context import Context
-from prompts.template import fill_template
+from src.configs.sconfig import config
+from src.context import Context
+from src.prompts.template import fill_template
 
 # Fix the file loading bug and make path resolution more robust
 # Use the current script directory as a fallback if project_dir is not in config

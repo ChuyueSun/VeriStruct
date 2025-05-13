@@ -6,7 +6,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from modules.veval import EvalScore
+from src.modules.veval import EvalScore
 
 
 class ProgressLogger:

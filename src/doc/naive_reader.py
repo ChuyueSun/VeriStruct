@@ -3,7 +3,7 @@ import sys
 
 if __name__ == "__main__":
     sys.path[0] = "/Users/syc/Desktop/-verusyth/src"
-from configs.sconfig import config
+from src.configs.sconfig import config
 
 external_dir = os.path.join(config["project_dir"], "external")
 vstd_dir = os.path.join(external_dir, "vstd")

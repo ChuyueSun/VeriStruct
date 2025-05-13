@@ -21,7 +21,7 @@ from loguru import logger
 import glob
 
 # Import VEval from modules.veval rather than src.modules.veval
-from modules.veval import VerusErrorType, VEval, EvalScore
+from src.modules.veval import VerusErrorType, VEval, EvalScore
 
 
 def write_candidate_code(
@@ -466,7 +466,7 @@ def debug_type_error(code: str, verus_error=None, num=1, logger=None) -> tuple:
     max_rnd = 10
 
     # Import the needed class here to avoid circular imports
-    from modules.veval import VerusErrorType, VEval
+    from src.modules.veval import VerusErrorType, VEval
 
     # Handle dummy mode - if verus_error is a string rather than a VerusError object
     if isinstance(verus_error, str):
@@ -1163,7 +1163,9 @@ def parse_plan_execution_order(plan_text: str, available_modules: List[str], log
         "no need for view",
         "focus on spec",
         "specification is sufficient",
-        "specification alone"
+        "specification alone",
+        "specification-only workflow", 
+        "spec-only workflow"
     ]
     
     use_spec_only = any(indicator.lower() in plan_text.lower() for indicator in spec_only_indicators)

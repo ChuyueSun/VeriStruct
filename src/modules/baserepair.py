@@ -5,9 +5,9 @@ Base class for Repair modules in VerusAgent.
 import logging
 from typing import Any, Dict, List, Optional
 
-from infer import LLM
-from modules.base import BaseModule
-from modules.veval import VerusError, VerusErrorType, VEval
+from src.infer import LLM
+from src.modules.base import BaseModule
+from src.modules.veval import VerusError, VerusErrorType, VEval
 
 
 class BaseRepairModule(BaseModule):

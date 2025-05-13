@@ -16,7 +16,7 @@ from src.modules.utils import (
     update_checkpoint_best,
     write_candidate_code,
 )
-from modules.veval import VEval
+from src.modules.veval import VEval
 from src.prompts.template import build_instruction
 
 

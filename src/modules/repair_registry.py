@@ -9,8 +9,8 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Type
 
-from modules.baserepair import BaseRepairModule
-from modules.veval import VerusError, VerusErrorType
+from src.modules.baserepair import BaseRepairModule
+from src.modules.veval import VerusError, VerusErrorType
 
 
 class RepairRegistry:
@@ -62,16 +62,16 @@ class RepairRegistry:
             Fully initialized RepairRegistry with all repair modules registered
         """
         # Import here to avoid circular imports
-        from modules.repair_arithmetic import RepairArithmeticModule
-        from modules.repair_assertion import RepairAssertionModule
-        from modules.repair_decrease import RepairDecreaseModule
-        from modules.repair_invariant import RepairInvariantModule
-        from modules.repair_missing import RepairMissingModule
-        from modules.repair_mode import RepairModeModule
-        from modules.repair_postcond import RepairPostcondModule
-        from modules.repair_precond import RepairPrecondModule
-        from modules.repair_syntax import RepairSyntaxModule
-        from modules.repair_type import RepairTypeModule
+        from src.modules.repair_arithmetic import RepairArithmeticModule
+        from src.modules.repair_assertion import RepairAssertionModule
+        from src.modules.repair_decrease import RepairDecreaseModule
+        from src.modules.repair_invariant import RepairInvariantModule
+        from src.modules.repair_missing import RepairMissingModule
+        from src.modules.repair_mode import RepairModeModule
+        from src.modules.repair_postcond import RepairPostcondModule
+        from src.modules.repair_precond import RepairPrecondModule
+        from src.modules.repair_syntax import RepairSyntaxModule
+        from src.modules.repair_type import RepairTypeModule
 
         # Create registry instance
         registry = cls(config, logger, immutable_funcs)
@@ -379,7 +379,7 @@ class RepairRegistry:
 
             if compilation_result:
                 # Evaluate the repaired code before adding it to context
-                from modules.veval import VEval
+                from src.modules.veval import VEval
 
                 veval = VEval(compilation_result, self.logger)
                 after_score = veval.eval_and_get_score()

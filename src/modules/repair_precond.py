@@ -6,14 +6,14 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from infer import LLM
-from modules.baserepair import BaseRepairModule
-from modules.utils import (  # Import necessary utilities
+from src.infer import LLM
+from src.modules.baserepair import BaseRepairModule
+from src.modules.utils import (  # Import necessary utilities
     clean_code,
     evaluate_samples,
     get_examples,
 )
-from modules.veval import VerusError, VerusErrorLabel, VerusErrorType, VEval
+from src.modules.veval import VerusError, VerusErrorLabel, VerusErrorType, VEval
 
 
 class RepairPrecondModule(BaseRepairModule):

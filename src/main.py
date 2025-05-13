@@ -14,7 +14,7 @@ from src.modules.repair_postcond import RepairPostcondModule
 from src.modules.repair_precond import RepairPrecondModule
 from src.modules.repair_registry import RepairRegistry
 from src.modules.spec_inference import SpecInferenceModule
-from modules.veval import VerusErrorType, VEval, verus
+from src.modules.veval import VerusErrorType, VEval, verus
 from src.modules.utils import parse_plan_execution_order
 from src.modules.view_inference import ViewInferenceModule
 from src.modules.view_refinement import ViewRefinementModule
