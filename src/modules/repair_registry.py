@@ -193,7 +193,7 @@ class RepairRegistry:
             context: The execution context
         """
         for name, module in self.repair_modules.items():
-            context.register_modoule(name, module)
+            context.register_module(name, module)
 
         self.logger.info(
             f"Registered repair modules: {list(self.repair_modules.keys())}"
