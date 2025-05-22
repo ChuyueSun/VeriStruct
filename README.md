@@ -23,7 +23,7 @@ class BaseModule:
 
 # Including generate/fix/inference tools, and doc reader
 class Module1(BaseModule):
-    system (markdown follows some tempalte)
+    system (markdown follows some template)
     instruction (markdown follows some template)
     important note
 
