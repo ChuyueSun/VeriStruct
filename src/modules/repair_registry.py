@@ -70,6 +70,7 @@ class RepairRegistry:
         from src.modules.repair_mode import RepairModeModule
         from src.modules.repair_postcond import RepairPostcondModule
         from src.modules.repair_precond import RepairPrecondModule
+        from src.modules.repair_privacy import RepairPrivacyModule
         from src.modules.repair_syntax import RepairSyntaxModule
         from src.modules.repair_type import RepairTypeModule
 
@@ -104,9 +105,17 @@ class RepairRegistry:
                 VerusErrorType.PreCondFail,
                 VerusErrorType.PreCondFailVecLen,
                 VerusErrorType.SplitPreFail,
-                VerusErrorType.require_private,
             ],
             "05_repair_precond.rs",
+        )
+
+        # Initialize and register privacy repair module
+        privacy_repair = RepairPrivacyModule(config, logger, immutable_funcs)
+        registry.register_module(
+            "repair_privacy",
+            privacy_repair,
+            [VerusErrorType.require_private, VerusErrorType.ensure_private],
+            "13_repair_privacy.rs",
         )
 
         # Initialize and register postcondition repair module
@@ -117,7 +126,6 @@ class RepairRegistry:
             [
                 VerusErrorType.PostCondFail,
                 VerusErrorType.SplitPostFail,
-                VerusErrorType.ensure_private,
             ],
             "06_repair_postcond.rs",
         )
