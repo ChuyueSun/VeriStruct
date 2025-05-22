@@ -57,12 +57,12 @@ Mathematical types in Verus include:
 
 Steps:
     1. Infer the information should be contained in the return type of the `View` function. It could be any of the mathematical types mentioned above or a combination (tuple) of them.
-    2. Generate the view function based on the inferred information. Return it as part of the input file.
+    2. Generate the view function based on the inferred information.
+    3. Return the ENTIRE file with your changes, not just the View implementation.
 
 
-Format:
+Format for the View implementation:
 ```verus
-
 impl<T: Copy> View for RingBuffer<T> {
     type V = // your inferred View return type here that contain the minimal information to represent the class
 
@@ -70,7 +70,9 @@ impl<T: Copy> View for RingBuffer<T> {
         ... // your implementation here
     }
 }
-```"""
+```
+
+IMPORTANT: Return the complete file with your changes integrated into the original code."""
 
     def parse_view_response(self, response: str) -> str:
         """

@@ -112,6 +112,7 @@ def build_instruction(
     add_view: bool = False,
     add_invariant: bool = False,
     add_requires_ensures: bool = False,
+    add_match: bool = False,
     code: Optional[str] = None,
     knowledge: Optional[str] = None
 ) -> str:
@@ -124,7 +125,9 @@ def build_instruction(
         add_view: Whether to add View refinement guidelines
         add_invariant: Whether to add invariant guidelines
         add_requires_ensures: Whether to add requires/ensures formatting info
+        add_match: Whether to add match syntax guidelines
         code: The Verus code to analyze for Seq usage
+        knowledge: Additional knowledge to append to the instruction
 
     Returns:
         Complete instruction with all requested components
@@ -142,6 +145,9 @@ def build_instruction(
 
     if add_requires_ensures:
         instruction += f"\n\n{load_prompt('verus_requires_ensures')}"
+        
+    if add_match:
+        instruction += f"\n\n{load_prompt('verus_match')}"
 
     # Add Seq knowledge if needed and code is provided
     if code:

@@ -44,15 +44,28 @@ class SpecInferenceModule(BaseModule):
         self.immutable_funcs = immutable_funcs if immutable_funcs else []
 
         # Main instruction for requires/ensures inference
-        self.inference_instruction = """You are an expert in Verus (verifier for rust). Your task is **Add `requires` and `ensures` to public functions**:
-   - Please change the return type of the function if it doesn't have a return type to `-> (retname: rettype)`.
-   - Analyze the semantics of the functions and append appropriate `requires` and `ensures` clauses to the method implementations.
-   - DO NOT just copy the implementation code. You may use `self.view().XXX` or `self@XXX` in the `ensures` clauses. If `self.view()` is a tuple, you can use `self@.i` to access the i-th element (zero index).
-   - DO NOT use `old` without consideration: "only a variable binding is allowed as the argument to old".
-   - DO NOT use `match` or `let` in the `ensures` clause.
-   - DO NOT add anything to `fn main`.
-   - You do not need to add `self.inv()` to the pre- and post-conditions of if `#[verifier::type_invariant]` is used before the `inv` definition.
-   - spec functions like View cannot have requires/ensures."""
+        self.inference_instruction = """You are an expert in Verus (verifier for rust). You have two main tasks:
+
+TASK 1: Add `requires` and `ensures` to public functions
+   - Analyze the semantics of functions and add appropriate preconditions and postconditions
+   - Change function signatures to `-> (retname: rettype)` format when adding return value specifications
+   - Use precise, mathematical specifications that capture the function's behavior
+
+TASK 2: Fill in `spec fn` implementations where you see "TODO: add specification"
+   - Implement the specification function based on the context and function name
+
+IMPORTANT GUIDELINES:
+   - DO NOT just copy the implementation code in specifications
+   - You may use `self.view().XXX` or `self@XXX` in `ensures` clauses
+   - If `self.view()` is a tuple, you can use `self@.i` to access the i-th element (zero-indexed)
+   - DO NOT use `old` without consideration: "only a variable binding is allowed as the argument to old"
+   - DO NOT use `match` or `let` in the `ensures` clause, but you can use `match` within `spec fn` bodies
+   - DO NOT modify anything in `fn main()`
+   - You do not need to add `self.inv()` to pre/post-conditions if `#[verifier::type_invariant]` is used
+   - Spec functions (like View) cannot have their own requires/ensures clauses
+   
+RETURN FORMAT:
+   - Return the ENTIRE file with your changes integrated into the original code, not just the parts you modified"""
 
     def exec(self, context) -> str:
         """
@@ -74,6 +87,7 @@ class SpecInferenceModule(BaseModule):
             base_instruction=self.inference_instruction,
             add_common=True,
             add_requires_ensures=True,  # Include requires/ensures formatting
+            add_match=True,  # Include match syntax guidelines
             code=code,
         )
 

@@ -22,7 +22,12 @@ from src.planner import Planner
 
 # Set the logging level to DEBUG to see more detailed information
 logger.remove()
-logger.add(lambda msg: print(msg, end=""), level="DEBUG")
+logger.add(
+    lambda msg: print(msg, end=""),
+    format="<blue>{time:YYYY-MM-DD HH:mm:ss}</blue> | <level>{level: <8}</level> | <cyan>{name}:{function}:{line}</cyan> - <level>{message}</level>",
+    colorize=True,
+    level="DEBUG"
+)
 
 
 def write_and_verify_file(file_path: Path, content: str, logger) -> bool:
