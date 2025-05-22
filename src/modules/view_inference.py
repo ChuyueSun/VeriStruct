@@ -181,7 +181,7 @@ IMPORTANT: Return the complete file with your changes integrated into the origin
                 code,
                 system_info="You are a helpful AI assistant specialized in Verus formal verification.",
                 answer_num=3,
-                max_tokens=self.config.get("max_token", 8192),
+                max_tokens=self.config.get("max_token", 20000),
                 temp=1.0,
             )
         except Exception as e:
@@ -193,7 +193,7 @@ IMPORTANT: Return the complete file with your changes integrated into the origin
         processed_responses = []
         for response in responses:
             # First parse the response to extract the View implementation
-            parsed_response = self.parse_view_response(response)
+            parsed_response = parse_llm_response(response)
 
             # Then apply debug_type_error to fix any type errors
             fixed_response, _ = debug_type_error(parsed_response, logger=self.logger)

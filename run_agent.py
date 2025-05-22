@@ -10,6 +10,7 @@ def main():
     parser.add_argument('--test-file', help='Path to the Rust file to verify', default=None)
     parser.add_argument('--verus-path', help='Path to the Verus executable', default=None)
     parser.add_argument('--config', help='Config file to use (default: config-azure)', default='config-azure')
+    parser.add_argument('--no-cache-read', action='store_true', help='Disable reading from LLM cache')
     args = parser.parse_args()
     
     # Set environment variables if arguments are provided
@@ -24,6 +25,11 @@ def main():
     # Set config environment variable
     os.environ['VERUS_CONFIG'] = args.config
     print(f"Using config: {args.config}")
+    
+    # Set cache read flag if specified
+    if args.no_cache_read:
+        os.environ['ENABLE_LLM_CACHE'] = '0'
+        print("LLM cache reading disabled")
     
     # Add the project root to Python path
     project_root = Path(__file__).parent

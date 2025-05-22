@@ -1024,6 +1024,7 @@ def clean_code(code):
 def parse_llm_response(response: str, logger=None) -> str:
     """
     General utility to parse and extract Rust/Verus code from any LLM response.
+    Uses simple string operations instead of regex.
 
     Args:
         response: The raw LLM response text
@@ -1041,85 +1042,51 @@ def parse_llm_response(response: str, logger=None) -> str:
             logger.warning("Empty response received from LLM")
         return ""
 
-    # First try to extract code blocks with explicit language markers
-    code_block_patterns = [
-        r"```rust(.*?)```",  # Standard rust code blocks
-        r"```verus(.*?)```",  # Verus code blocks
-        r"```rs(.*?)```",  # Sometimes used for Rust
-        r"```(?:code|Code)(.*?)```",  # Generic code blocks
-        r"```(.*?)```",  # Any code blocks as fallback
-    ]
-
-    for pattern in code_block_patterns:
-        code_blocks = re.findall(pattern, response, re.DOTALL)
-        if code_blocks:
-            # Join all matching code blocks
-            extracted_code = "\n".join(block.strip() for block in code_blocks)
+    # Look for code blocks with ```
+    if "```" in response:
+        blocks = []
+        lines = response.split("\n")
+        in_code_block = False
+        current_block = []
+        
+        for line in lines:
+            if line.strip().startswith("```"):
+                if in_code_block:
+                    # End of code block
+                    in_code_block = False
+                    if current_block:
+                        blocks.append("\n".join(current_block))
+                    current_block = []
+                else:
+                    # Start of code block
+                    in_code_block = True
+                    # Skip the opening ```rust, ```verus, etc.
+                    continue
+            elif in_code_block:
+                current_block.append(line)
+        
+        if blocks:
             if logger:
-                logger.info(
-                    f"Extracted {len(code_blocks)} code block(s) using pattern: {pattern}"
-                )
-            return extracted_code
+                logger.info(f"Extracted {len(blocks)} code block(s)")
+            return "\n".join(blocks)
 
-    # If no explicit code blocks, look for common Rust patterns
-    rust_patterns = [
-        # Common Rust structure patterns
-        (r"(?:pub\s+)?(?:struct|enum|trait|impl|fn|mod)\s+\w+.*?{.*?}", re.DOTALL),
-        # Verus specific patterns
-        (r"(?:pub\s+)?(?:spec|proof|closed\s+spec)\s+fn\s+\w+.*?{.*?}", re.DOTALL),
-        # Use/import statements
-        (r"(?:^|\n)use\s+[\w:]+(?:;|\s*{.*?})", re.DOTALL),
-        # Verus block
-        (r"verus!\s*{.*?}", re.DOTALL),
-    ]
-
-    # Try each pattern and collect matches
-    rust_code_parts = []
-    for pattern, flags in rust_patterns:
-        matches = re.findall(pattern, response, flags)
-        rust_code_parts.extend(matches)
-
-    if rust_code_parts:
-        # Join all matching Rust code parts
-        extracted_code = "\n".join(part.strip() for part in rust_code_parts)
-        if logger:
-            logger.info(f"Extracted {len(rust_code_parts)} Rust code structures")
-        return extracted_code
-
-    # If we haven't found explicit Rust code, check if the entire response might be code
-    # by looking for key Rust language constructs
+    # Check if the response itself looks like Rust/Verus code
+    # by counting keyword occurrences
     rust_keywords = [
-        "fn ",
-        "struct ",
-        "impl ",
-        "pub ",
-        "let ",
-        "use ",
-        "mod ",
-        "trait ",
-        "enum ",
-        "match ",
+        "fn ", "struct ", "impl ", "pub ", "let ", "use ", "mod ", 
+        "trait ", "enum ", "match ", "proof ", "spec ", "requires", 
+        "ensures", "invariant", "View for", "verus!"
     ]
-    verus_keywords = [
-        "proof ",
-        "spec ",
-        "requires",
-        "ensures",
-        "invariant",
-        "View for",
-        "verus!",
-    ]
-
-    keyword_count = sum(
-        1 for keyword in rust_keywords + verus_keywords if keyword in response
-    )
-
-    # If the response has multiple Rust/Verus keywords, it might be direct code
+    
+    keyword_count = 0
+    for keyword in rust_keywords:
+        if keyword in response:
+            keyword_count += 1
+    
+    # If the response has several Rust/Verus keywords, it's likely code
     if keyword_count >= 3:
         if logger:
-            logger.info(
-                f"Response appears to be direct code with {keyword_count} Rust/Verus keywords"
-            )
+            logger.info(f"Response contains {keyword_count} Rust/Verus keywords - treating as direct code")
         return response
 
     # If we couldn't find any code, return empty string

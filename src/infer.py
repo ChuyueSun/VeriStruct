@@ -313,7 +313,12 @@ class LLM:
         if instruction:
             prompt_content += f"## Instruction\n{instruction}\n\n"
         if exemplars:
-            prompt_content += f"## Exemplars\n```json\n{json_lib.dumps(exemplars, indent=2)}\n```\n\n"
+            exemplar_content = "## Exemplars\n\n"
+            for i, exemplar in enumerate(exemplars):
+                exemplar_content += f"### Example {i+1}\n\n"
+                exemplar_content += f"## Query\n{exemplar['query']}\n\n"
+                exemplar_content += f"## Answer\n{exemplar['answer']}\n\n"
+            prompt_content += exemplar_content
         if query:
             prompt_content += f"## Query\n{query}\n\n"
         
