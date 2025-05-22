@@ -61,7 +61,7 @@ IMPORTANT GUIDELINES:
    - DO NOT use `old` without consideration: "only a variable binding is allowed as the argument to old"
    - DO NOT use `match` or `let` in the `ensures` clause, but you can use `match` within `spec fn` bodies
    - DO NOT modify anything in `fn main()`
-   - You do not need to add `self.inv()` to pre/post-conditions if `#[verifier::type_invariant]` is used
+   - DO NOT add `self.inv()` to pre/post-conditions if `#[verifier::type_invariant]` is used
    - Spec functions (like View) cannot have their own requires/ensures clauses
    
 RETURN FORMAT:

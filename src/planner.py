@@ -91,7 +91,7 @@ Explain your choice in 2-3 sentences, then specify the exact workflow to use.
             query=prompt,
             system_info=system,
             answer_num=1,
-            max_tokens=100000,
+            max_tokens=8192,
             json=False,
             return_msg=True,
         )

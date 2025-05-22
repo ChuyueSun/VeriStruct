@@ -1064,7 +1064,7 @@ def parse_llm_response(response: str, logger=None) -> str:
                     continue
             elif in_code_block:
                 current_block.append(line)
-        
+
         if blocks:
             if logger:
                 logger.info(f"Extracted {len(blocks)} code block(s)")
@@ -1077,12 +1077,12 @@ def parse_llm_response(response: str, logger=None) -> str:
         "trait ", "enum ", "match ", "proof ", "spec ", "requires", 
         "ensures", "invariant", "View for", "verus!"
     ]
-    
+
     keyword_count = 0
     for keyword in rust_keywords:
         if keyword in response:
             keyword_count += 1
-    
+
     # If the response has several Rust/Verus keywords, it's likely code
     if keyword_count >= 3:
         if logger:
