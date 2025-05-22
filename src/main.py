@@ -224,10 +224,10 @@ def main():
     inv_inference = InvInferenceModule(config, logger)
     spec_inference = SpecInferenceModule(config, logger)
 
-    context.register_modoule("view_inference", view_inference)
-    context.register_modoule("view_refinement", view_refinement)
-    context.register_modoule("inv_inference", inv_inference)
-    context.register_modoule("spec_inference", spec_inference)
+    context.register_module("view_inference", view_inference)
+    context.register_module("view_refinement", view_refinement)
+    context.register_module("inv_inference", inv_inference)
+    context.register_module("spec_inference", spec_inference)
 
     # Register all repair modules with the context
     repair_registry.register_with_context(context)

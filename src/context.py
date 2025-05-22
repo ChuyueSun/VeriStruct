@@ -1,5 +1,6 @@
 import os
 import subprocess
+import warnings
 from dataclasses import dataclass
 from typing import Dict, List, Optional
 
@@ -140,11 +141,18 @@ class Context:
         """Set the global best score."""
         self.best_score = score
 
-    def register_modoule(self, name: str, module: BaseModule) -> None:
-        """
-        Register a module to the context.
-        """
+    def register_module(self, name: str, module: BaseModule) -> None:
+        """Register a module with the context."""
         self.modules[name] = module
+
+    def register_modoule(self, name: str, module: BaseModule) -> None:
+        """Deprecated. Use :meth:`register_module` instead."""
+        warnings.warn(
+            "register_modoule is deprecated; use register_module instead",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        self.register_module(name, module)
 
     def get_knowledge(self, id: str):
         return self.knowledge.get(id, "")
