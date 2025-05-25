@@ -34,6 +34,9 @@ output/
 *.swp
 *.swo
 
+# Ignore Rust compiler temporary files for long type names
+tmp*.long-type-*.txt
+
 # Ignore build artifacts
 /dist/
 /out/
