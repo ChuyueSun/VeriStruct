@@ -101,14 +101,46 @@ class Context:
 
         self.add_trial(raw_code)
 
+        # Process use statements and add knowledge
+        print("=" * 60)
+        print("CONTEXT INITIALIZATION - PROCESSING KNOWLEDGE")
+        print("=" * 60)
+        
+        knowledge_added = False
         for line in raw_code.split("\n"):
             if line.startswith('use'):
                 lib_name = line.split(" ")[1].strip()
-                print(lib_name)
+                print(f"Found use statement: {line.strip()}")
+                print(f"Extracting library name: {lib_name}")
                 content = get_content(lib_name)
                 if len(content) > 0:
                     self.add_knowledge(lib_name, content, append=False)
+                    print(f"✓ Added knowledge for '{lib_name}' ({len(content)} characters)")
+                    knowledge_added = True
+                else:
+                    print(f"✗ No content found for '{lib_name}'")
         
+        if knowledge_added:
+            print("\n" + "=" * 60)
+            print("FINAL KNOWLEDGE SUMMARY")
+            print("=" * 60)
+            total_knowledge = self.gen_knowledge()
+            print(f"Total knowledge entries: {len(self.knowledge)}")
+            print(f"Total knowledge length: {len(total_knowledge)} characters")
+            print("\nFormatted knowledge preview:")
+            print("-" * 40)
+            # Print first 500 characters of the formatted knowledge
+            preview = total_knowledge[:500]
+            print(preview)
+            print(self.knowledge.keys())
+            if len(total_knowledge) > 500:
+                print(f"... (truncated, showing first 500 of {len(total_knowledge)} characters)")
+            print("-" * 40)
+        else:
+            print("No knowledge was added during initialization.")
+        
+        print("=" * 60)
+
     def add_trial(self, code: str) -> None:
         """
         Add a result generate by LLM to the context.

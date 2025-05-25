@@ -76,7 +76,16 @@ def handle_checkpoint_best(context, output_dir, file_id, progress_logger, logger
     best_dir.mkdir(exist_ok=True, parents=True)
     best_file = best_dir / f"best_{file_id}.rs"
     write_and_verify_file(best_file, checkpoint_best_with_score, logger)
+    
+    # Use a more descriptive name for the consistent best file that includes the input file name
+    input_file_base = os.environ.get("VERUS_INPUT_FILE", "unknown")
+    consistent_best_file = best_dir / f"best_{input_file_base}.rs"
+    write_and_verify_file(consistent_best_file, checkpoint_best_with_score, logger)
+    logger.info(f"Latest best result also saved to {consistent_best_file}")
+    
+    # Also maintain the standard best.rs for backward compatibility
     write_and_verify_file(best_dir / "best.rs", checkpoint_best_with_score, logger)
+    
     logger.info(f"Saved checkpoint best to {best_file}")
 
     # Compare with final result
@@ -107,6 +116,9 @@ def handle_checkpoint_best(context, output_dir, file_id, progress_logger, logger
         write_and_verify_file(
             output_dir / "final_result.rs", context.trials[-1].code, logger
         )
+        
+    # Record final result in progress logger
+    progress_logger.record_final_result(final_score)
 
 
 def main():
@@ -155,6 +167,17 @@ def main():
 
     sample_code = test_file_path.read_text()
     logger.info(f"Loaded test file: {test_file_path}")
+    
+    # Update logger format to include input file name
+    input_file_name = test_file_path.name
+    logger.remove()
+    logger.add(
+        lambda msg: print(msg, end=""),
+        format=f"<blue>{{time:YYYY-MM-DD HH:mm:ss}}</blue> | <level>{{level: <8}}</level> | <magenta>[{input_file_name}]</magenta> | <cyan>{{name}}:{{function}}:{{line}}</cyan> - <level>{{message}}</level>",
+        colorize=True,
+        level="DEBUG"
+    )
+    logger.info(f"Logger updated to include input file name: {input_file_name}")
 
     # Create output directory if it doesn't exist
     output_dir = Path("output")
@@ -205,8 +228,8 @@ def main():
         data_structure = "Tree"  # Tree structure
     
     # Combine file identifiers for unique and informative output filenames
-    file_id = f"{data_structure}_{verification_type}_{run_timestamp}"
-    logger.info(f"Output file identifier: {file_id} (from {input_file_base})")
+    file_id = f"{input_file_base}__{data_structure}_{verification_type}_{run_timestamp}"
+    logger.info(f"Output file identifier: {file_id} (from {test_file_path.name})")
 
     # Set identifiers as environment variables for other modules to use
     os.environ["VERUS_RUN_TIMESTAMP"] = run_timestamp
@@ -583,9 +606,15 @@ def main():
     write_and_verify_file(final_result_path, final_result_with_score, logger)
     logger.info(f"Final verification result saved to {final_result_path}")
     
-    consistent_result_path = output_dir / "final_result.rs"
+    # Use a more descriptive name for the consistent result file that includes the input file name
+    consistent_result_path = output_dir / f"final_result_{input_file_base}.rs"
     write_and_verify_file(consistent_result_path, final_result_with_score, logger)
     logger.info(f"Latest result also saved to {consistent_result_path}")
+    
+    # Also maintain the standard final_result.rs for backward compatibility
+    standard_result_path = output_dir / "final_result.rs"
+    write_and_verify_file(standard_result_path, final_result_with_score, logger)
+    logger.info(f"Standard result saved to {standard_result_path}")
 
     # Handle checkpoint best code and score
     handle_checkpoint_best(context, output_dir, file_id, progress_logger, logger)
@@ -594,6 +623,27 @@ def main():
     logger.info(
         f"VerusAgent completed in {total_time:.2f}s! Results saved to {output_dir.absolute()}"
     )
+    
+    # Define best_dir for the summary
+    best_dir = Path("output/best")
+    
+    # Display a summary of important file paths for easy reference
+    logger.info("=" * 70)
+    logger.info(f"{'OUTPUT FILE SUMMARY':^70}")
+    logger.info("=" * 70)
+    logger.info(f"Input File: {test_file_path.absolute()}")
+    logger.info(f"Final Result (with timestamp): {output_dir / f'final_result_{file_id}.rs'}")
+    logger.info(f"Final Result (by input name): {output_dir / f'final_result_{input_file_base}.rs'}")
+    logger.info(f"Checkpoint Best: {output_dir / f'checkpoint_best_{file_id}.rs'}")
+    logger.info(f"Latest Best: {best_dir / f'best_{input_file_base}.rs'}")
+    
+    # Show verification plan
+    logger.info(f"Verification Plan: {plan_file_path}")
+    
+    # Show progress logs
+    logger.info(f"Progress Logs: {progress_logger.log_file}")
+    logger.info(f"Summary: {progress_logger.log_dir / f'summary_{progress_logger.file_id}.txt'}")
+    logger.info("=" * 70)
 
 
 if __name__ == "__main__":

@@ -59,7 +59,7 @@ IMPORTANT GUIDELINES:
    - You may use `self.view().XXX` or `self@XXX` in `ensures` clauses
    - If `self.view()` is a tuple, you can use `self@.i` to access the i-th element (zero-indexed)
    - DO NOT use `old` without consideration: "only a variable binding is allowed as the argument to old"
-   - DO NOT use `match` or `let` in the `ensures` clause, but you can use `match` within `spec fn` bodies
+   - DO NOT use `match` or `let` in the `ensures` clause or `requires` clause, but you can use `match` within `spec fn` bodies
    - DO NOT modify anything in `fn main()`
    - DO NOT add `self.inv()` to pre/post-conditions if `#[verifier::type_invariant]` is used
    - Spec functions (like View) cannot have their own requires/ensures clauses
@@ -89,6 +89,7 @@ RETURN FORMAT:
             add_requires_ensures=True,  # Include requires/ensures formatting
             add_match=True,  # Include match syntax guidelines
             code=code,
+            knowledge=context.gen_knowledge(),
         )
 
         # Load examples for spec inference

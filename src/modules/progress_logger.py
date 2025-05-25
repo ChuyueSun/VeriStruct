@@ -57,6 +57,24 @@ class ProgressLogger:
         self.logger.info(
             f"Progress logger initialized. Logs will be saved to {self.log_file}"
         )
+        
+        # Display file identification summary
+        self.display_file_info()
+
+    def display_file_info(self) -> None:
+        """Display a summary of input and output file information for reference."""
+        input_file = os.environ.get("VERUS_INPUT_FILE", "Unknown")
+        file_id = os.environ.get("VERUS_FILE_ID", self.file_id)
+        
+        self.logger.info("=" * 50)
+        self.logger.info("FILE IDENTIFICATION SUMMARY")
+        self.logger.info("-" * 50)
+        self.logger.info(f"Input File: {input_file}")
+        self.logger.info(f"File ID for outputs: {file_id}")
+        self.logger.info(f"Timestamp: {self.timestamp}")
+        self.logger.info(f"Progress Log: {self.log_file}")
+        self.logger.info(f"Output Directory: {self.output_dir.absolute()}")
+        self.logger.info("=" * 50)
 
     def start_step(self, step_name: str, step_number: int) -> None:
         """
@@ -291,9 +309,23 @@ class ProgressLogger:
                 sum(repair_times) / len(repair_times) if repair_times else 0
             )
 
+            # Get input file info
+            input_file = os.environ.get("VERUS_TEST_FILE", "Unknown")
+            input_file_name = os.path.basename(input_file) if input_file != "Unknown" else "Unknown"
+            file_id = os.environ.get("VERUS_FILE_ID", self.file_id)
+
             # Write summary
             with open(summary_file, "w") as f:
                 f.write("# VerusAgent Execution Summary\n\n")
+                
+                # Add input file information
+                f.write("## Input and Output Files\n\n")
+                f.write(f"Input File: {input_file}\n")
+                f.write(f"Input File Name: {input_file_name}\n")
+                f.write(f"File ID: {file_id}\n")
+                f.write(f"Output Directory: {self.output_dir.absolute()}\n")
+                f.write(f"Progress Log: {self.log_file}\n")
+                f.write(f"Summary File: {summary_file}\n\n")
 
                 f.write(f"Start time: {self.progress['start_time']}\n")
                 if "end_time" in self.progress:

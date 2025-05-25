@@ -3,6 +3,25 @@ import os
 import sys
 import argparse
 from pathlib import Path
+from datetime import datetime
+
+def display_banner(file_path=None):
+    """Display a prominent banner with the input file name"""
+    file_name = Path(file_path).name if file_path else "DEFAULT FILE"
+    file_path_str = str(Path(file_path).absolute()) if file_path else "DEFAULT PATH"
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    output_dir = Path("output").absolute()
+    banner_width = max(80, len(file_path_str) + 20)
+    
+    print("\n" + "=" * banner_width)
+    print(f"{'VERUS AGENT':^{banner_width}}")
+    print(f"{'PROCESSING FILE:':^{banner_width}}")
+    print(f"{file_name:^{banner_width}}")
+    print(f"{file_path_str:^{banner_width}}")
+    print("-" * banner_width)
+    print(f"{'Start Time: ' + timestamp:^{banner_width}}")
+    print(f"{'Output Directory: ' + str(output_dir):^{banner_width}}")
+    print("=" * banner_width + "\n")
 
 def main():
     # Parse command line arguments
@@ -30,6 +49,9 @@ def main():
     if args.no_cache_read:
         os.environ['ENABLE_LLM_CACHE'] = '0'
         print("LLM cache reading disabled")
+    
+    # Display banner with file name
+    display_banner(args.test_file)
     
     # Add the project root to Python path
     project_root = Path(__file__).parent
