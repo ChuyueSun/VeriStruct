@@ -200,7 +200,7 @@ class LLM:
         exemplars: list,
         query: str,
         system_info: str = None,
-        answer_num: int = 3,
+        answer_num: int = 5,
         max_tokens: int = 8192,
         temp: float = 0.7,
         json: bool = False,
