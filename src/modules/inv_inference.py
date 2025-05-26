@@ -1,22 +1,9 @@
-import json
-import os
 import re
-import tempfile
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
-
-from loguru import logger
 
 from src.infer import LLM
 from src.modules.base import BaseModule
-from src.modules.utils import (
-    debug_type_error,
-    evaluate_samples,
-    save_selection_info,
-    update_checkpoint_best,
-    write_candidate_code,
-)
-from src.modules.veval import VEval
+from src.modules.utils import debug_type_error, evaluate_samples, update_checkpoint_best
 from src.prompts.template import build_instruction
 
 

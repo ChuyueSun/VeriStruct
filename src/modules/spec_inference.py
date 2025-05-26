@@ -2,18 +2,11 @@
 Module for inferring requires and ensures clauses in Verus code.
 """
 
-import os
 from pathlib import Path
-from typing import Any, Dict, List, Optional
 
 from src.infer import LLM
 from src.modules.base import BaseModule
-from src.modules.utils import (
-    debug_type_error,
-    evaluate_samples,
-    update_checkpoint_best,
-)
-from src.modules.veval import VEval
+from src.modules.utils import debug_type_error, evaluate_samples, update_checkpoint_best
 from src.prompts.template import build_instruction
 
 
