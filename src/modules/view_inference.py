@@ -1,20 +1,11 @@
-import os
 import re
 from pathlib import Path
-from typing import Any, Dict, List, Optional
 
+from src.context import Context
 from src.infer import LLM
 from src.modules.base import BaseModule
-from src.modules.utils import (
-    debug_type_error,
-    evaluate_samples,
-    parse_llm_response,
-    save_selection_info,
-    update_checkpoint_best,
-)
-from src.modules.veval import VEval
+from src.modules.utils import debug_type_error, evaluate_samples, parse_llm_response
 from src.prompts.template import build_instruction
-from src.context import Context
 
 
 class ViewInferenceModule(BaseModule):
