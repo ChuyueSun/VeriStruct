@@ -39,7 +39,7 @@ class SpecInferenceModule(BaseModule):
         # Main instruction for requires/ensures inference
         self.inference_instruction = """You are an expert in Verus (verifier for rust). You have two main tasks:
 
-TASK 1: Add `requires` and `ensures` to public functions
+TASK 1: Add `requires` and `ensures` to public functions where you see "// TODO: add requires and ensures"
    - Analyze the semantics of functions and add appropriate preconditions and postconditions
    - Change function signatures to `-> (retname: rettype)` format when adding return value specifications
    - Use precise, mathematical specifications that capture the function's behavior

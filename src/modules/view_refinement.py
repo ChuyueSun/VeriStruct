@@ -42,14 +42,16 @@ class ViewRefinementModule(BaseModule):
         self.refinement_instruction = """
 You are a highly experienced expert in Verus (the verifier for Rust). Your task is to refine the "View" function within the given Verus file. The "View" function is the mathematical abstraction for a data structure, capturing the minimal information needed for its specification in Verus.
 
+It is perfectly acceptable to leave the code unchanged if the current abstraction is already appropriate; modify the "View" function only when necessary.
+
 Your responsibilities:
   1. Analyze the current "View" function to determine if its tuple (or other structure) adequately represents the module.
   2. Evaluate whether the abstraction can be improved. (Hint: If the tuple is identical to the internal fields, that is likely not an ideal abstraction.)
   3. Modify only the "View" function to improve its abstraction while leaving all other parts of the file unchanged.
-  4. Use a flattened tuple.
-  5. Return the **entire updated Verus file** with your refined "View" function.
+  4. Any refined view must convey at least the same amount of information while being more succinct. Aim to use a flattened tuple that is shorter than the original.
+  5. Return the **entire updated Verus file** with your refined "View" function (or the original file if no changes were necessary) and nothing else changed.
 
-Please provide only the complete Rust code of the refined file with no additional commentary.
+Please provide only the complete Rust code of the file with no additional commentary.
 """
 
     def exec(self, context) -> str:

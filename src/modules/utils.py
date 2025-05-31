@@ -387,10 +387,32 @@ def fix_one_type_error_in_code(code, err_trace, verbose=True):
     """
     # note that linenum, cstart, cend indices all start from 0
     err_label = err_trace.strlabel
-    if err_label is None or not "`" in err_label:
-        sys.stderr.write("Fatal error: err_trace does not have a label")
+
+    # Special-case: mutability mismatch (e.g., "types differ in mutability").
+    # For this error the simplest automatic fix is to remove the entire line;
+    # the LLM-based repair pipeline can then try a different approach later.
+    if err_label is not None and "types differ in mutability" in err_label:
+        err_lnum = err_trace.get_lines()[0]
+        linenum = err_lnum - 1
+
+        # Drop that line from the source.
+        new_code_lines = [
+            line for idx, line in enumerate(code.split("\n")) if idx != linenum
+        ]
+        if verbose:
+            sys.stderr.write(
+                f"[fix_one_type_error_in_code] removed line {err_lnum} due to mutability mismatch.\n"
+            )
+        return "\n".join(new_code_lines) + "\n"
+
+    # Default path: expect a `...` label so we can perform a cast/rewrite.
+    if err_label is None or "`" not in err_label:
+        sys.stderr.write(f"err_label: {err_label}\n")
+        sys.stderr.write(f"err_trace: {err_trace}\n")
+        sys.stderr.write("Fatal error: err_trace does not have a label\n")
         sys.stderr.write(code)
         return code
+
     newtype = err_label.split("`")[1]
 
     err_lnum = err_trace.get_lines()[0]

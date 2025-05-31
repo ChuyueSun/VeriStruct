@@ -37,7 +37,8 @@ class ViewInferenceModule(BaseModule):
 You are an expert in Verus (verifier for rust). Your task is to generate a View function for the given module. View is the mathematical abstraction for the given data structure. It contains the minimal information to completely represent it. View is used strictly in Verus spec.
     - Add a `View` spec function that provides a mathematical abstraction for types used in the executable code.
     - For `Vec` type variables in the `View`, append "@" to their names.
-    - Fill in `/* TODO: part of view */`.
+    - Fill in only `/* TODO: part of view */`.
+    - Do NOT use `reveal` keyword in the View implementation.
 Mathematical types in Verus include:
     - bool
     - int
