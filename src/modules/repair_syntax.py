@@ -39,12 +39,13 @@ class RepairSyntaxModule(BaseRepairModule):
             The potentially repaired code string.
         """
         self.logger.info("Attempting to repair syntax error...")
-        code = context.trials[-1].code
+        # Always reference the latest trial; needed later even if failure_to_fix is provided
+        last_trial = context.trials[-1]
+        code = last_trial.code
 
         # Syntax errors don't have a specific VerusErrorType, so we can't directly filter by error type
         # Instead, look for compilation errors that might be syntax-related
         if failure_to_fix is None:
-            last_trial = context.trials[-1]
             if last_trial.eval.compilation_error:
                 # For syntax errors, we need to look at the raw output rather than parsed errors
                 if "error[E0433]: failed to resolve" in last_trial.eval.rustc_out:
@@ -244,6 +245,9 @@ Fix ONLY the part of the code with the syntax error, and leave the rest unchange
 Response with the Rust code only, do not include any explanation."""
         instruction += "\n\n" + self.general_knowledge
 
+        # Append contextual knowledge
+        instruction += "\n\n### Project Knowledge\n" + context.gen_knowledge()
+
         # Load examples
         examples = get_examples(self.config, "syntax", self.logger)
 
@@ -271,6 +275,17 @@ Response with the Rust code only, do not include any explanation."""
             error_info += "\n" + "\n".join(error_lines[:20])  # Limit to first 20 lines
 
         query = query_template.format(error_info, code)
+        # Cache-busting nonce
+        query += f"\n// nonce: {len(context.trials)}"
+
+        # Ensure debug directory exists for prompt saving
+        debug_dir = Path("output/debug")
+        debug_dir.mkdir(parents=True, exist_ok=True)
+
+        # Save prompt for debugging
+        prompt_path2 = debug_dir / f"repair_general_syntax_prompt_{len(context.trials)}.txt"
+        prompt_path2.write_text(instruction + "\n\n---\n\n" + query)
+        self.logger.info(f"Saved syntax repair prompt to {prompt_path2}")
 
         # Use the llm instance from the base class
         responses = self.llm.infer_llm(

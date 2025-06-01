@@ -20,13 +20,17 @@ from src.modules.view_inference import ViewInferenceModule
 from src.modules.view_refinement import ViewRefinementModule
 from src.planner import Planner
 
-# Set the logging level to DEBUG to see more detailed information
+# Simplified logging configuration: shorter format and controllable level
+log_level = os.getenv("LOG_LEVEL", "INFO").upper()
+
+# Remove default handlers and add a concise output format
 logger.remove()
 logger.add(
     lambda msg: print(msg, end=""),
-    format="<blue>{time:YYYY-MM-DD HH:mm:ss}</blue> | <level>{level: <8}</level> | <cyan>{name}:{function}:{line}</cyan> - <level>{message}</level>",
+    # Example: 12:34:56 | INFO | A concise log message
+    format="<green>{time:HH:mm:ss}</green> | <level>{level}</level> - <level>{message}</level>",
     colorize=True,
-    level="DEBUG"
+    level=log_level,
 )
 
 
@@ -35,7 +39,7 @@ def write_and_verify_file(file_path: Path, content: str, logger) -> bool:
     file_path.write_text(content)
     if file_path.exists():
         logger.info(
-            f"Verified: File successfully written to {file_path} (size: {file_path.stat().st_size} bytes)"
+            f"Saved file to {file_path} (size: {file_path.stat().st_size} bytes)"
         )
         return True
     else:
@@ -168,14 +172,14 @@ def main():
     sample_code = test_file_path.read_text()
     logger.info(f"Loaded test file: {test_file_path}")
     
-    # Update logger format to include input file name
+    # Update logger format to include input file name (still concise)
     input_file_name = test_file_path.name
     logger.remove()
     logger.add(
         lambda msg: print(msg, end=""),
-        format=f"<blue>{{time:YYYY-MM-DD HH:mm:ss}}</blue> | <level>{{level: <8}}</level> | <magenta>[{input_file_name}]</magenta> | <cyan>{{name}}:{{function}}:{{line}}</cyan> - <level>{{message}}</level>",
+        format=f"<green>{{time:HH:mm:ss}}</green> | <level>{{level}}</level> | <magenta>[{input_file_name}]</magenta> - <level>{{message}}</level>",
         colorize=True,
-        level="DEBUG"
+        level=log_level,
     )
     logger.info(f"Logger updated to include input file name: {input_file_name}")
 

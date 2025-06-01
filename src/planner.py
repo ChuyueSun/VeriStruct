@@ -59,7 +59,7 @@ There are exactly two possible workflows for verifying Verus code:
    - Step 1: Specification Inference - Generate function specifications without implementing a View
 
 Your task is to decide which workflow is most appropriate for the given Verus code.
-Choose the Specification-Only workflow only if the code has no data structures needing a View implementation.
+Choose the Specification-Only workflow if (a) the code has no data structures needing a View implementation, or (b) the input file placeholders only ask to "add requires or ensures" or "add specification", or (c) there is no placeholder ("TODO"/blank) indicating that a View function needs to be filled.
         """
 
         # Create the system prompt using the template

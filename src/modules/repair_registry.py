@@ -83,7 +83,7 @@ class RepairRegistry:
         registry.register_module(
             "repair_syntax",
             syntax_repair,
-            [],  # No specific VerusErrorType for syntax errors
+            [VerusErrorType.Other],
             "03_repair_syntax.rs",
         )
 

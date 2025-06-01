@@ -56,6 +56,7 @@ IMPORTANT GUIDELINES:
    - DO NOT modify anything in `fn main()`
    - DO NOT add `self.inv()` to pre/post-conditions if `#[verifier::type_invariant]` is used
    - Spec functions (like View) cannot have their own requires/ensures clauses
+   - The final code you return MUST compile under Verus; double-check matching braces, parentheses, macro delimiters and remove any remaining "TODO" placeholders
    
 RETURN FORMAT:
    - Return the ENTIRE file with your changes integrated into the original code, not just the parts you modified"""
