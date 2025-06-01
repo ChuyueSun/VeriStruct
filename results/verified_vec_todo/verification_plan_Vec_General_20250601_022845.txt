@@ -1,0 +1,8 @@
+### Step 1: Analyze the task
+
+The code defines a custom Vector type that stores elements in memory via a pointer (PPtr), along with bookkeeping fields for length and capacity. There's a skeletal "view" function indicating that the structure needs a mathematical abstraction, and many details of the data structure’s logic (like invariants around capacity, pointer correctness, etc.) require a formal model. Hence, a proper View function is needed to describe the abstract content of the vector, followed by invariants ensuring consistent pointer usage and capacity accounting, and finally function-level specifications (requires/ensures). This points to the Full Sequence Workflow.
+
+### Step 2: Choose the Workflow
+
+**Workflow:** Full Sequence Workflow  
+**Explanation:** A nontrivial data structure “Vector” is present and requires a View function to capture its logical contents. Afterwards, we need structural invariants before writing function specifications. Hence, we will use the view_inference → view_refinement → inv_inference → spec_inference sequence.

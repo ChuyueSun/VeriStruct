@@ -1,0 +1,63 @@
+use crate::executable_model::{object_map::ObjectMap, object_ref_set::ObjectRefSet};
+use crate::kubernetes_api_objects::exec::dynamic::DynamicObject;
+use crate::kubernetes_api_objects::spec::{
+    common::{Kind, ObjectRef},
+    dynamic::{DynamicObjectView, StoredState},
+};
+use crate::kubernetes_cluster::spec::api_server::types as model_types;
+use vstd::prelude::*;
+use vstd::string::*;
+
+verus! {
+
+// This is the exec version of crate::kubernetes_cluster::spec::api_server::types::ApiServerState
+// and is used as the "state" of the exec API server model.
+pub struct ApiServerState {
+    pub resources: ObjectMap,
+    pub uid_counter: i64,
+    pub resource_version_counter: i64,
+    pub stable_resources: ObjectRefSet,
+}
+
+impl ApiServerState {
+    pub fn new() -> ApiServerState {
+        ApiServerState {
+            resources: ObjectMap::new(),
+            uid_counter: 0,
+            resource_version_counter: 0,
+            stable_resources: ObjectRefSet::new(),
+        }
+    }
+
+    pub closed spec fn inv(&self) -> bool {
+        &&& self.uid_counter >= 0
+        &&& self.resource_version_counter >= 0
+        &&& forall |r: ObjectRef|
+            #![trigger self.stable_resources.contains(r)]
+            self.stable_resources.contains(r) ==> self.resources.contains_key(r)
+    }
+}
+
+impl View for ApiServerState {
+    type V = model_types::ApiServerState;
+
+    open spec fn view(&self) -> model_types::ApiServerState {
+        let flatten = (
+            self.resources@,
+            self.uid_counter as int,
+            self.resource_version_counter as int,
+            self.stable_resources@
+        );
+        model_types::ApiServerState {
+            resources: flatten.0,
+            uid_counter: flatten.1 + flatten.2,
+            resource_version_counter: flatten.1 + flatten.2,
+            stable_resources: flatten.3,
+        }
+    }
+}
+
+}
+
+// Step 3 (inv_inference) VEval Score: Compilation Error: True, Verified: -1, Errors: 999, Verus Errors: 4
+// Verified: -1, Errors: 999, Verus Errors: 4

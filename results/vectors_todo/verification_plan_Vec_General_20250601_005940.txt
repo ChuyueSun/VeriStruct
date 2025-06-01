@@ -1,0 +1,8 @@
+### Step 1: Analyze the task
+
+The code primarily operates on Verus’s built-in Vec data structure and does not introduce any new custom data structure. The existing loop invariants in “binary_search”, “reverse”, and their “_no_spinoff” variants rely on properties of the built-in vector. Because Vec already has its own specification in the standard library, there is no need to create and refine a custom View. Instead, the missing parts are function specifications (requires/ensures clauses) that outline the assumptions (preconditions) and guarantees (postconditions) for these functions. Therefore, no additional View functions are required.
+
+### Step 2: Choose the Workflow
+
+**Workflow:** Specification-Only Workflow  
+**Explanation:** Since the code relies on the built-in Vec data type and does not define any new data structures needing a custom View, we only need to add or refine the function specifications (requires/ensures). Hence, the Specification-Only Workflow (spec_inference) is most appropriate here.

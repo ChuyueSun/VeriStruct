@@ -1,0 +1,8 @@
+### Step 1: Analyze the task
+
+This code defines a non-trivial data structure, OneShotResource, backed by a PCM. It has a “view” function placeholder (view(self) -> OneShotResourceValue) and a corresponding enum OneShotResourceValue to represent possible states. Because we have an actual data structure that we need to reason about (its underlying PCM properties, splitting/joining logic, resource invariants, etc.), we need a proper mathematical abstraction for the resource. That means we indeed need to synthesize a view function for OneShotResource, refine it, infer invariants about its usage (e.g., validity, splitting/combining properties), and finally specify the requires/ensures of the various proof functions. The code is incomplete in multiple places, including the PCM trait methods (valid, op, unit) and the specification of OneShotResource’s methods, so a systematic, multi-step approach is required.
+
+### Step 2: Choose the Workflow
+
+**Workflow:** Full Sequence Workflow  
+**Explanation:** The code involves a custom resource data structure (OneShotResource) with a PCM-based abstraction. We must define and refine its view, establish any necessary invariants, and then finalize the function specifications. Hence, the full four-step workflow (view_inference → view_refinement → inv_inference → spec_inference) is the most appropriate.

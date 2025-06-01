@@ -1,0 +1,80 @@
+# VerusAgent Execution Summary
+
+Start time: 2025-05-31T22:18:29.705836
+End time: 2025-05-31T22:19:29.742726
+Total execution time: 60.04s
+
+## Final Result
+
+Verified: -1
+Errors: 999
+Verus Errors: 1
+Compilation Error: True
+Is Correct: False
+
+## Statistics
+
+Total steps: 1
+Total repair rounds: 7
+Total repairs attempted: 7
+Successful repairs: 0
+Average step time: 44.38s
+Average repair time: 0.00s
+
+## Steps
+
+Step 1: spec_inference
+  Time: 44.38s
+  Score: Verified=-1, Errors=999, Verus Errors=1
+
+## Repair Rounds
+
+Round 1
+  Time: 0.11s
+  repair_syntax for CompilationError
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 0.00s
+
+Round 2
+  Time: 0.11s
+  repair_syntax for CompilationError
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 0.00s
+
+Round 3
+  Time: 0.11s
+  repair_syntax for CompilationError
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 0.00s
+
+Round 4
+  Time: 0.11s
+  repair_syntax for CompilationError
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 0.00s
+
+Round 5
+  Time: 0.11s
+  repair_syntax for CompilationError
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 0.00s
+
+Round 6
+  Time: 0.11s
+  repair_syntax for CompilationError
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 0.00s
+
+Round 7
+  Time: 0.11s
+  repair_syntax for CompilationError
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 0.00s
+

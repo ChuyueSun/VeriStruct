@@ -1,0 +1,89 @@
+# VerusAgent Execution Summary
+
+Start time: 2025-05-31T22:19:30.970291
+End time: 2025-05-31T22:31:01.373722
+Total execution time: 690.40s
+
+## Final Result
+
+Verified: -1
+Errors: 999
+Verus Errors: 1
+Compilation Error: True
+Is Correct: False
+
+## Statistics
+
+Total steps: 4
+Total repair rounds: 7
+Total repairs attempted: 7
+Successful repairs: 0
+Average step time: 68.14s
+Average repair time: 58.46s
+
+## Steps
+
+Step 1: view_inference
+  Time: 87.10s
+  Score: Verified=-1, Errors=999, Verus Errors=1
+Step 2: view_refinement
+  Time: 76.95s
+  Score: Verified=-1, Errors=999, Verus Errors=1
+Step 3: inv_inference
+  Time: 87.48s
+  Score: Verified=-1, Errors=999, Verus Errors=1
+Step 4: spec_inference
+  Time: 21.01s
+  Score: Verified=-1, Errors=999, Verus Errors=1
+
+## Repair Rounds
+
+Round 1
+  Time: 24.87s
+  repair_syntax for CompilationError
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 24.85s
+
+Round 2
+  Time: 68.70s
+  repair_syntax for CompilationError
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 68.67s
+
+Round 3
+  Time: 60.70s
+  repair_syntax for CompilationError
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 60.67s
+
+Round 4
+  Time: 64.89s
+  repair_syntax for CompilationError
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 64.86s
+
+Round 5
+  Time: 58.76s
+  repair_syntax for CompilationError
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 58.73s
+
+Round 6
+  Time: 60.80s
+  repair_syntax for CompilationError
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 60.77s
+
+Round 7
+  Time: 70.74s
+  repair_syntax for CompilationError
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 70.71s
+

@@ -106,6 +106,7 @@ class InvInferenceModule(BaseModule):
             add_common=True,
             add_invariant=True,  # Include invariant guidelines
             code=code,
+            knowledge=context.gen_knowledge(),
         )
 
         # Load examples

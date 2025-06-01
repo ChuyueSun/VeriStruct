@@ -89,6 +89,7 @@ RETURN FORMAT:
             add_requires_ensures=True,  # Include requires/ensures formatting
             add_match=True,  # Include match syntax guidelines
             code=code,
+            knowledge=context.gen_knowledge(),
         )
 
         # Load examples for spec inference

@@ -1,0 +1,8 @@
+### Step 1: Analyze the task
+
+In this code, the user is defining a simple ModPredicate implementing InvariantPredicate<int, u32>, but the code only uses basic integer types (u32) within AtomicInvariant. There is no custom composite data structure that would benefit from a separate view function; instead, the core need is to fill in the spec function of ModPredicate and possibly strengthen the function specifications for main. Since we do not have a complex data structure requiring a refined mathematical model, we do not need the full sequence of view inference and refinement.
+
+### Step 2: Choose the Workflow
+
+**Workflow:** Specification-Only Workflow  
+**Explanation:** Because the code only manages a simple integer (u32) within the invariant (rather than a more complex data structure), it does not require a custom view function abstraction. Therefore, the specification-only workflow, focusing on adding the necessary requires/ensures clauses and completing the ModPredicate::inv specification, is sufficient.

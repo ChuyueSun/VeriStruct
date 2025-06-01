@@ -1,0 +1,7 @@
+### Step 1: Analyze the task
+
+We have a data structure (Concrete) that implements a View trait, but its view function is not yet defined. This indicates we need to generate and refine a “view” that describes how Concrete maps to its abstract representation, Abstract. Because there is a custom data structure requiring a view implementation, we also need to consider invariants that ensure correctness of this abstraction. Finally, we can add any missing specifications (requires/ensures) to functions. Therefore, a full sequence workflow with view inference, view refinement, invariant inference, and specification inference is most appropriate.
+
+### Step 2: Choose the Workflow
+**Workflow:** Full Sequence Workflow  
+**Explanation:** Since we have a data structure that explicitly needs its view function defined (and likely further refinement/invariants to maintain correct relationships between Concrete and Abstract), the full sequence workflow is necessary.

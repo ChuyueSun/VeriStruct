@@ -157,7 +157,7 @@ def main():
     logger.info(f"Loaded test file: {test_file_path}")
 
     # Create output directory if it doesn't exist
-    output_dir = Path("output")
+    output_dir = Path(os.environ.get('output_dir', 'output'))
     output_dir.mkdir(exist_ok=True)
 
     # Create samples directory for intermediate results

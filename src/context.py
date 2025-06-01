@@ -1,4 +1,4 @@
-import os
+import os, sys
 import subprocess
 import warnings
 from dataclasses import dataclass
@@ -103,8 +103,9 @@ class Context:
 
         for line in raw_code.split("\n"):
             if line.startswith('use'):
+                if line.strip() == 'use vstd::prelude::*;':
+                    continue
                 lib_name = line.split(" ")[1].strip()
-                print(lib_name)
                 content = get_content(lib_name)
                 if len(content) > 0:
                     self.add_knowledge(lib_name, content, append=False)

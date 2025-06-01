@@ -1,0 +1,8 @@
+### Step 1: Analyze the task
+
+In this code, "EvenCell" is a ghost structure implementing the InvariantPredicate trait, and "add_2" is a function operating on a PCell<u8> under an invariant that the contents must always be even. The "EvenCell" itself is not really a complex data structure with multiple fields needing a dedicated mathematical model (View function). Rather, we just need to supply its invariant predicate (the portion of the code marked TODO in EvenCell::inv), along with any necessary requires/ensures clauses for "add_2". This suggests we do not need a multi-step view-based workflow. Instead, we only need to add a direct specification for the function and the trait in question.
+
+### Step 2: Choose the Workflow
+
+**Workflow:** Specification-Only Workflow  
+**Explanation:** The code has no multi-field data structure requiring a full “view_inference → view_refinement → inv_inference → spec_inference” sequence. We only need to define the EvenCell::inv property and function specifications (requires/ensures) without introducing a separate View function.

@@ -1,0 +1,8 @@
+### Step 1: Analyze the task
+
+The code defines a variety of data structures (e.g., KubeObjectRef, SimpleCR, etc.) that implement or should implement the View trait. In particular, KubeObjectRef has a “TODO” placeholder in its view() function. This indicates that the code needs a proper mathematical abstraction for these data structures. Therefore, in addition to specifying function pre- and postconditions (requires/ensures), the verification must address the missing or incomplete view() implementations for these data structures. We also notice potential invariants that might govern some of these data structures (e.g., loop invariants in the Role state_validation function). Hence, a specification-only approach is not sufficient, because these data structures require a refined view function and possibly invariants.
+
+### Step 2: Choose the Workflow
+
+**Workflow:** Full Sequence Workflow  
+**Explanation:** Since there are data structures that require a properly implemented view() function (e.g., KubeObjectRef), and additional invariants may be needed, we should follow the full sequence workflow: view_inference → view_refinement → inv_inference → spec_inference.

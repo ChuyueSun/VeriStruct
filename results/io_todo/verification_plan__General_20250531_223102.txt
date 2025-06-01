@@ -1,0 +1,8 @@
+### Step 1: Analyze the task
+
+This code defines the “Request” and “Response” data structures, both parameterized by a type implementing the “View” trait. Each has an associated “view” function awaiting a proper specification (the code includes “TODO” notes for their implementation). This indicates we do indeed need a mathematical abstraction (View) for these data structures. Hence we must generate and refine a View, infer invariants, and ultimately add proper requires/ensures clauses.
+
+### Step 2: Choose the Workflow
+
+**Workflow:** Full Sequence Workflow  
+**Explanation:** Because the code defines data structures (Request, Response, etc.) needing the “view” function and an appropriate mathematical abstraction, the Full Sequence Workflow (view_inference → view_refinement → inv_inference → spec_inference) is the best approach.

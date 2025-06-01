@@ -1,0 +1,108 @@
+# VerusAgent Execution Summary
+
+Start time: 2025-06-01T02:37:31.283326
+End time: 2025-06-01T02:48:20.140152
+Total execution time: 648.86s
+
+## Final Result
+
+Verified: -1
+Errors: 999
+Verus Errors: 2
+Compilation Error: True
+Is Correct: False
+
+## Statistics
+
+Total steps: 1
+Total repair rounds: 7
+Total repairs attempted: 14
+Successful repairs: 5
+Average step time: 52.49s
+Average repair time: 41.57s
+
+## Steps
+
+Step 1: spec_inference
+  Time: 52.49s
+  Score: Verified=-1, Errors=999, Verus Errors=3
+
+## Repair Rounds
+
+Round 1
+  Time: 46.67s
+  repair_syntax for CompilationError
+    Before: Verified=-1, Errors=999, Verus Errors=3
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 46.36s
+  repair_type for MismatchedType
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 0.10s
+
+Round 2
+  Time: 100.78s
+  repair_syntax for CompilationError
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=2
+    Time: 44.76s
+  repair_type for MismatchedType
+    Before: Verified=-1, Errors=999, Verus Errors=2
+    After: Verified=-1, Errors=999, Verus Errors=2
+    Time: 55.92s
+
+Round 3
+  Time: 149.00s
+  repair_syntax for CompilationError
+    Before: Verified=-1, Errors=999, Verus Errors=2
+    After: Verified=-1, Errors=999, Verus Errors=8
+    Time: 67.28s
+  repair_type for MismatchedType
+    Before: Verified=-1, Errors=999, Verus Errors=8
+    After: Verified=-1, Errors=999, Verus Errors=9
+    Time: 0.11s
+  repair_type for TypeAnnotation
+    Before: Verified=-1, Errors=999, Verus Errors=9
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 81.51s
+
+Round 4
+  Time: 39.16s
+  repair_syntax for CompilationError
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=9
+    Time: 39.05s
+
+Round 5
+  Time: 119.84s
+  repair_syntax for CompilationError
+    Before: Verified=-1, Errors=999, Verus Errors=9
+    After: Verified=-1, Errors=999, Verus Errors=4
+    Time: 63.52s
+  repair_type for MismatchedType
+    Before: Verified=-1, Errors=999, Verus Errors=4
+    After: Verified=-1, Errors=999, Verus Errors=5
+    Time: 0.11s
+  repair_type for TypeAnnotation
+    Before: Verified=-1, Errors=999, Verus Errors=5
+    After: Verified=-1, Errors=999, Verus Errors=4
+    Time: 56.01s
+
+Round 6
+  Time: 100.55s
+  repair_syntax for CompilationError
+    Before: Verified=-1, Errors=999, Verus Errors=4
+    After: Verified=-1, Errors=999, Verus Errors=2
+    Time: 100.50s
+
+Round 7
+  Time: 26.93s
+  repair_syntax for CompilationError
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=2
+    Time: 26.41s
+  repair_type for MismatchedType
+    Before: Verified=-1, Errors=999, Verus Errors=2
+    After: Verified=-1, Errors=999, Verus Errors=2
+    Time: 0.42s
+

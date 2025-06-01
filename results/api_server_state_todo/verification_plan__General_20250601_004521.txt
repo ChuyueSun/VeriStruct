@@ -1,0 +1,8 @@
+### Step 1: Analyze the task
+
+The code defines a data structure (ApiServerState) and provides an empty placeholder for its View implementation, which is critical for formal verification in Verus. Specifically, the open spec fn view(&self) that maps ApiServerState to model_types::ApiServerState is missing a body. Because this data structure requires a proper mathematical abstraction (View function) for verification, we need to generate and refine this View function. Only after we complete that can we infer invariants (if needed) and specify pre- and post-conditions for functions. Therefore, we must proceed with the full sequence workflow.
+
+### Step 2: Choose the Workflow
+
+**Workflow:** Full Sequence Workflow  
+**Explanation:** The code contains a data structure (ApiServerState) requiring an explicit View implementation, so we need to generate (view_inference), refine (view_refinement), infer invariants (inv_inference), and then specify function contracts (spec_inference).

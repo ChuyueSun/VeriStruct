@@ -86,7 +86,7 @@ class RepairRemoveInv(BaseRepairModule):
         instruction = """DO NOT add `self.inv()` to pre/post-conditions if `#[verifier::type_invariant]` is used
 
 Respond with the full corrected code only."""
-        instruction += "\n\n" + self.general_knowledge
+        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
 
         # Load examples
         examples = get_examples(self.config, "inv", self.logger)

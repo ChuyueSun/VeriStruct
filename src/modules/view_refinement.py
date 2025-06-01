@@ -72,7 +72,8 @@ Please provide only the complete Rust code of the refined file with no additiona
             base_instruction=self.refinement_instruction,
             add_common=True,
             add_view=True,  # Include view refinement guidelines
-            code=code
+            code=code,
+            knowledge=context.gen_knowledge(),
         )
 
         # Load examples

@@ -1,0 +1,8 @@
+### Step 1: Analyze the task
+
+Within this code, "Lock<T>" is a data structure that uses an atomic boolean and a ghost invariant to manage concurrency. The "LockInv" predicate indicates that we have a nontrivial data-structure-level abstraction. Hence, we need to define a formal View for "Lock" to capture the state of the atomic boolean and the contents of the cell in a mathematical manner, which will then allow us to infer and refine invariants and function specifications. Merely adding requires/ensures clauses is insufficient because of the underlying concurrency aspects and the custom “LockInv” structure.
+
+### Step 2: Choose the Workflow
+
+**Workflow:** Full Sequence Workflow  
+**Explanation:** Since "Lock<T>" uses an atomic invariant and we must specify its abstract state and its internal invariants, it is most effective to generate a physics-style View function first, refine it, capture invariants, and then let that guide specification inference. This concurrency code clearly goes beyond a basic specification-only approach, requiring the Full Sequence Workflow.

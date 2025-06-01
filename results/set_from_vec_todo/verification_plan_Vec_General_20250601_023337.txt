@@ -1,0 +1,8 @@
+### Step 1: Analyze the task
+
+We have a custom data structure VecSet requiring a “view” function that returns a mathematical Set<u64> representing its contents. Since the code explicitly includes a placeholder for this view (and there are also invariants to verify in its methods), a complete approach is needed to generate a correct abstraction and subsequent invariants. The function specifications (requires/ensures) and data structure invariants should align with the “view” to ensure internal consistency of methods like insert and contains.
+
+### Step 2: Choose the Workflow
+
+**Workflow:** Full Sequence Workflow  
+**Explanation:** Because VecSet is a custom data structure that explicitly includes a placeholder view function, we need to define and refine this view, generate appropriate invariants, and then add the necessary method specifications.

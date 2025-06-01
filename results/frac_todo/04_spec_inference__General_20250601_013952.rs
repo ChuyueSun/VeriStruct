@@ -1,0 +1,241 @@
+use builtin::*;
+use vstd::pcm::*;
+use vstd::prelude::*;
+
+// This implements a resource for fractional ownership of a ghost variable.
+// The fractions are represented as some number out of a compile-time const
+// Total value; you can have any fractions from 1 up to Total, and if you
+// have Total, you can update the ghost variable.
+
+verus! {
+    pub enum Fractional<T, const Total: u64> {
+        Value { v: T, n: int },
+        Empty,
+        Invalid,
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    // View Abstraction for Fractional<T, Total>
+    ////////////////////////////////////////////////////////////////////////////////////
+
+    /// A spec-level enum to represent the Fractional variants at the specification level.
+    pub spec enum FractionalViewOf<T> {
+        Value { v: T, n: int },
+        Empty,
+        Invalid,
+    }
+
+    impl<T, const Total: u64> View for Fractional<T, Total> {
+        type V = (Option<T>, int, bool);
+
+        closed spec fn view(&self) -> Self::V {
+            match self {
+                Fractional::Value { v, n } => (Some(*v), *n, false),
+                Fractional::Empty => (None, 0, false),
+                Fractional::Invalid => (None, 0, true),
+            }
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    // Fractional PCM Implementation
+    ////////////////////////////////////////////////////////////////////////////////////
+
+    impl<T, const Total: u64> Fractional<T, Total> {
+        /// Create a new Fractional holding the entire fraction.
+        pub open spec fn new(v: T) -> Self {
+            Fractional::Value { v, n: Total as int }
+        }
+    }
+
+    impl<T, const Total: u64> PCM for Fractional<T, Total> {
+        open spec fn valid(self) -> bool {
+            match self {
+                Fractional::Value { n, .. } => 0 <= n && n <= Total as int,
+                Fractional::Empty => true,
+                Fractional::Invalid => false,
+            }
+        }
+
+        open spec fn op(self, other: Self) -> Self {
+            match self {
+                Fractional::Invalid => Fractional::Invalid,
+                Fractional::Value { v, n } => match other {
+                    Fractional::Invalid => Fractional::Invalid,
+                    Fractional::Value { v: v2, n: n2 } =>
+                        if v == v2 && n + n2 <= Total as int {
+                            Fractional::Value { v, n: n + n2 }
+                        } else {
+                            Fractional::Invalid
+                        },
+                    Fractional::Empty => self,
+                },
+                Fractional::Empty => match other {
+                    Fractional::Invalid => Fractional::Invalid,
+                    _ => other,
+                },
+            }
+        }
+
+        open spec fn unit() -> Self {
+            Fractional::Empty
+        }
+
+        proof fn closed_under_incl(a: Self, b: Self) {
+            // no-op
+        }
+
+        proof fn commutative(a: Self, b: Self) {
+            // no-op
+        }
+
+        proof fn associative(a: Self, b: Self, c: Self) {
+            // no-op
+        }
+
+        proof fn op_unit(a: Self) {
+            // no-op
+        }
+
+        proof fn unit_valid() {
+            // no-op
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    // FractionalResource
+    ////////////////////////////////////////////////////////////////////////////////////
+
+    pub struct FractionalResource<T, const Total: u64> {
+        r: Resource<Fractional<T, Total>>,
+    }
+
+    impl<T, const Total: u64> FractionalResource<T, Total> {
+        pub closed spec fn inv(self) -> bool {
+            let f = self.r@@.value();
+            self.r@@.valid()
+            && match f {
+                Fractional::Value { v, n } => 0 <= n && n <= Total as int,
+                Fractional::Empty => true,
+                Fractional::Invalid => false,
+            }
+        }
+
+        // ID for this resource (placeholder)
+        pub closed spec fn id(self) -> Loc {
+            arbitrary()
+        }
+
+        // Extract the value. If Fractional is Value, return v; otherwise arbitrary().
+        pub closed spec fn val(self) -> T {
+            match self.r@@.value() {
+                Fractional::Value { v, n } => v,
+                Fractional::Empty => arbitrary(),
+                Fractional::Invalid => arbitrary(),
+            }
+        }
+
+        // Extract the fraction. If Fractional is Value, return n; else 0.
+        pub closed spec fn frac(self) -> int {
+            match self.r@@.value() {
+                Fractional::Value { v, n } => n,
+                Fractional::Empty => 0,
+                Fractional::Invalid => 0,
+            }
+        }
+
+        pub proof fn alloc(v: T) -> (tracked result: FractionalResource<T, Total>)
+            requires
+                true,
+            ensures
+                result.inv(),
+                result.val() == v,
+                result.frac() == Total,
+        {
+            let f = Fractional::<T, Total>::new(v);
+            let tracked r = Resource::alloc(f);
+            FractionalResource { r }
+        }
+
+        pub proof fn agree(tracked self: &mut FractionalResource<T, Total>, tracked other: &FractionalResource<T, Total>)
+            requires
+                self.inv(),
+                other.inv(),
+            ensures
+                self.inv(),
+                other.inv(),
+        {
+            self.r.validate_2(&other.r)
+        }
+
+        pub proof fn split(tracked self, n: int)
+            -> (tracked result: (FractionalResource<T, Total>, FractionalResource<T, Total>))
+            requires
+                self.inv(),
+                0 <= n <= self.frac(),
+            ensures
+                result.0.inv(),
+                result.1.inv(),
+        {
+            let tracked (r1, r2) = self.r.split(
+                Fractional::Value {
+                    v: self.r.value().v,
+                    n: self.r.value().n - n
+                },
+                Fractional::Value {
+                    v: self.r.value().v,
+                    n: n
+                }
+            );
+            (FractionalResource { r: r1 }, FractionalResource { r: r2 })
+        }
+
+        pub proof fn combine(tracked self, tracked other: FractionalResource<T, Total>)
+            -> (tracked result: FractionalResource<T, Total>)
+            requires
+                self.inv(),
+                other.inv(),
+            ensures
+                result.inv(),
+        {
+            let tracked mut mself = self;
+            mself.r.validate_2(&other.r);
+            let tracked r = mself.r.join(other.r);
+            FractionalResource { r: r }
+        }
+
+        pub proof fn update(tracked self, v: T) -> (tracked result: FractionalResource<T, Total>)
+            requires
+                self.inv(),
+                self.frac() == Total,
+            ensures
+                result.inv(),
+                result.val() == v,
+                result.frac() == Total,
+        {
+            let f = Fractional::<T, Total>::Value { v: v, n: Total as int };
+            let tracked r = self.r.update(f);
+            FractionalResource { r: r }
+        }
+    }
+
+    fn main()
+    {
+        let tracked r = FractionalResource::<u64, 3>::alloc(123);
+        assert(r.val() == 123);
+        assert(r.frac() == 3);
+        let tracked (r1, r2) = r.split(2);
+        assert(r1.val() == 123);
+        assert(r2.val() == 123);
+        assert(r1.frac() == 1);
+        assert(r2.frac() == 2);
+        let tracked r3 = r1.combine(r2);
+        let tracked r4 = r3.update(456);
+        assert(r4.val() == 456);
+        assert(r4.frac() == 3);
+        ()
+    }
+}
+
+// Step 4 (spec_inference) VEval Score: Compilation Error: True, Verified: -1, Errors: 999, Verus Errors: 1
+// Verified: -1, Errors: 999, Verus Errors: 1

@@ -1,0 +1,8 @@
+### Step 1: Analyze the task
+
+The code defines a "Lock" struct that uses an atomic boolean and a cell, protected by an atomic invariant (“AtomicInvariant”). It includes a custom trait implementation ("LockInv" implementing InvariantPredicate) intended to specify how the atomic permission bool and cell permission relate. Because this lock is a data structure that stores ghost state (the tuple of (atomic::PermissionBool, Option<cell::PointsTo<T>>)), the verification strategy will need a detailed logical abstraction (a View) and invariants that connect the atomic state to the cell state. Then, each function (new, acquire, release) should have appropriate requires/ensures clauses based on that logical abstraction. Consequently, this code requires a full sequence approach: first generating a View function to describe the abstract lock state, then refining that view, then including the invariants, and finally specifying each function’s requires/ensures.
+
+### Step 2: Choose the Workflow
+
+Workflow: Full Sequence Workflow  
+Explanation: The lock is a data structure combining atomic operations with ghost invariants, so it needs a formal View abstraction first. Once the View is in place, we can refine it, infer invariants, and then finalize the function specifications.
