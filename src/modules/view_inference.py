@@ -138,6 +138,7 @@ IMPORTANT: Return the complete file with your changes integrated into the origin
             add_common=True,
             add_view=True,  # Include View guidelines
             code=code,
+            knowledge=context.gen_knowledge(),
         )
 
         # Load examples
