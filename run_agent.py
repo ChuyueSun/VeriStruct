@@ -30,6 +30,7 @@ def main():
     parser.add_argument('--verus-path', help='Path to the Verus executable', default=None)
     parser.add_argument('--config', help='Config file to use (default: config-azure)', default='config-azure')
     parser.add_argument('--no-cache-read', action='store_true', help='Disable reading from LLM cache')
+    parser.add_argument('--output-dir', help='Directory to store output files', default='output')
     args = parser.parse_args()
     
     # Set environment variables if arguments are provided
@@ -40,6 +41,12 @@ def main():
     if args.verus_path:
         os.environ['VERUS_PATH'] = str(Path(args.verus_path).absolute())
         print(f"Using Verus path: {os.environ['VERUS_PATH']}")
+
+    if args.output_dir:
+        os.environ['output_dir'] = str(Path(args.output_dir).absolute())
+        os.system('rm -rf ' + os.environ['output_dir'])
+        os.makedirs(os.environ['output_dir'], exist_ok=True)
+        print(f"Using output directory: {os.environ['output_dir']}")
     
     # Set config environment variable
     os.environ['VERUS_CONFIG'] = args.config

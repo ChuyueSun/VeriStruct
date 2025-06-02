@@ -371,11 +371,17 @@ class EvalScore:
 # Don't use dummy mode by default
 DUMMY_MODE = False
 
+def fix_trivial_error(code: str) -> str:
+    code = code.replace('/!', '//!')
+    code = code.replace('!/', '//!')
+    code = code.replace('//!', '//')
+    return code
+
 
 class VEval:
     def __init__(self, code: str, logger=None):
         self.logger = logger
-        self.code = code
+        self.code = fix_trivial_error(code)
         # JSON reported by verus, does not include detailed erros(which is reported from rustc)
         self.verus_result = None
         # JSON reported by rustc, including any compliatoin errors and verus verification errors.

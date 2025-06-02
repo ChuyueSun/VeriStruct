@@ -107,7 +107,7 @@ Please think twice about which way is the best to fix the error!
 Response with the Rust code only, do not include any explanation."""
         instruction += "\n\n" + self.proof_block_info
         instruction = self.add_seq_knowledge(code, instruction)
-        instruction += "\n\n" + self.general_knowledge
+        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
 
         # Load examples
         examples = get_examples(self.config, "inv-front", self.logger)
@@ -163,7 +163,7 @@ Response with the Rust code only, do not include any explanation."""
 Response with the Rust code only, do not include any explanation."""
         instruction += "\n\n" + self.proof_block_info
         instruction = self.add_seq_knowledge(code, instruction)
-        instruction += "\n\n" + self.general_knowledge
+        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
 
         # Load examples
         examples = get_examples(self.config, "inv-end", self.logger)

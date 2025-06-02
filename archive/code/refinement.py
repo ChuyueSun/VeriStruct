@@ -477,7 +477,8 @@ Please check the given program, and add nonlinear_arith assertion for the follow
         )
 
     def repair_test_assertion_error(
-        self, code: str, verus_error: VerusError, num=1, temp=1.0
+        self, code: str, verus_error: VerusError, num=1, temp=1.0,
+        lib_knowledge=""
     ) -> str:
 
         # Normal route of assertion fixing

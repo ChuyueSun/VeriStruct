@@ -95,7 +95,7 @@ You need to make one of these changes:
 
 Make sure to preserve the overall functionality of the code.
 Respond with the full corrected Rust code only, with no extra explanations."""
-        instruction += "\n\n" + self.general_knowledge
+        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
 
         # Load examples
         examples = get_examples(self.config, "mode", self.logger)

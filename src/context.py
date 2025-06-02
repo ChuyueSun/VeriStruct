@@ -1,4 +1,4 @@
-import os
+import os, sys
 import subprocess
 import warnings
 from dataclasses import dataclass
@@ -109,6 +109,8 @@ class Context:
         knowledge_added = False
         for line in raw_code.split("\n"):
             if line.startswith('use'):
+                if line.strip() == 'use vstd::prelude::*;':
+                    continue
                 lib_name = line.split(" ")[1].strip()
                 print(f"Found use statement: {line.strip()}")
                 print(f"Extracting library name: {lib_name}")
@@ -202,9 +204,9 @@ class Context:
         """
         Generate the knowledge for the context.
         """
-        knowledge = ""
+        knowledge = "\n\n# relevant vstd lib knowledge\n\n"
         for name, desc in self.knowledge.items():
-            knowledge += f"### {name}\n\n"
+            knowledge += f"## {name}\n\n"
             knowledge += desc
             knowledge += "\n\n"
         return knowledge

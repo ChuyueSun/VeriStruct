@@ -114,7 +114,7 @@ If you are not sure about the correctness of the post-condition, you may weaken 
 Response with the Rust code only, do not include any explanation."""
         instruction += "\n\n" + self.proof_block_info
         instruction = self.add_seq_knowledge(code, instruction)
-        instruction += "\n\n" + self.general_knowledge
+        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
 
         examples = get_examples(self.config, "postcond", self.logger)
         query_template = "Failed post-condition\n```\n{}```\n"
@@ -189,7 +189,7 @@ If you are not sure about the correctness of the post-condition, you may weaken 
 Response with the Rust code only, do not include any explanation."""
         instruction += "\n\n" + self.proof_block_info
         instruction = self.add_seq_knowledge(code, instruction)
-        instruction += "\n\n" + self.general_knowledge
+        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
 
         examples = get_examples(self.config, "postcond", self.logger)
         query_template = "Failed post-condition\n```\n{}```\n"
@@ -264,7 +264,7 @@ Common fixes include:
 
 Response with the Rust code only, do not include any explanation."""
         instruction = self.add_seq_knowledge(code, instruction)
-        instruction += "\n\n" + self.general_knowledge
+        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
 
         examples = get_examples(self.config, "postcond", self.logger)
         query_template = "Failed post-condition\n```\n{}```\n"

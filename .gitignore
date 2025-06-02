@@ -15,6 +15,8 @@ yarn-error.log*
 llm_cache/
 results/
 
+results/
+
 # Ignore tmp
 tmp/
 
@@ -81,3 +83,5 @@ target/
 
 # Ignore temporary files from editing
 ~*
+
+log
