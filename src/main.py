@@ -2,6 +2,7 @@ import os
 import time
 from datetime import datetime
 from pathlib import Path
+from typing import Optional
 
 from loguru import logger
 
@@ -315,6 +316,15 @@ def main():
     context.add_knowledge("verification_plan", plan_text)
     logger.info("Added verification plan to context knowledge")
 
+    # Track where the trials produced by the `spec_inference` stage begin so that
+    # later fallback logic can ignore incomplete trials produced by earlier
+    # inference stages (view_inference, view_refinement, inv_inference).  This
+    # value is set **before** we execute the spec_inference module so any Trial
+    # appended during that stage – including internal sampling iterations – has
+    # an index ≥ `spec_trial_start_index`.
+
+    spec_trial_start_index: Optional[int] = None
+
     # Parse the plan to determine execution order using the new utility function
     available_modules = list(context.modules.keys())
     execution_order = parse_plan_execution_order(plan_text, available_modules, logger)
@@ -329,6 +339,12 @@ def main():
             continue
             
         module = context.modules[module_name]
+        
+        # Record the index **before** running spec_inference so that every Trial
+        # produced inside that module (it may create several while searching for
+        # the best sample) will have an id ≥ this value.
+        if module_name == "spec_inference" and spec_trial_start_index is None:
+            spec_trial_start_index = len(context.trials)
         
         # Start step tracking
         progress_logger.start_step(module_name, step_number)
@@ -537,11 +553,14 @@ def main():
                     "Only 'Other' type errors remain. Attempting fallback strategy..."
                 )
 
-                # Find the best trial so far
+                # Find the best trial **among trials generated in the\n+                # spec_inference stage or later**. Earlier trials are often\n+                # structurally incomplete and should not be candidates for\n+                # fallback.
+
                 best_trial = None
                 best_score = None
 
-                for trial in context.trials:
+                search_start = spec_trial_start_index or 0
+
+                for trial in context.trials[search_start:]:
                     if trial.eval and (
                         best_score is None or trial.eval.get_score() > best_score
                     ):
