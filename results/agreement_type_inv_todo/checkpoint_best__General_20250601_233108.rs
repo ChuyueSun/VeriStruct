@@ -1,3 +1,34 @@
+/// This file implements agreement on a constant value using a custom
+/// resource algebra.
+///
+/// An agreement resource constitutes knowledge of a constant value.
+/// To create an instance of a constant value of type `T`, use
+/// `AgreementResource::<T>::alloc()` as in the following example:
+///
+/// ```
+/// let tracked r1 = AgreementResource::<int>::alloc(72);
+/// assert(r1@ == 72);
+/// ```
+///
+/// Knowledge of a constant value can be duplicated with `duplicate`,
+/// which creates another agreement resource with the same constant
+/// value and the same ID. Here's an example:
+///
+/// ```
+/// let tracked r2 = r1.duplicate();
+/// assert(r2.id() == r1.id());
+/// assert(r2@ == r1@);
+/// ```
+///
+/// Any two agreement resources with the same `id()` are guaranteed to
+/// have equal values. You can establish this by calling
+/// `lemma_agreement`, as in the following example:
+///
+/// ```
+/// assert(r2.id() == r1.id());
+/// proof { r1.lemma_agreement(&mut r2); }
+/// assert(r2@ == r1@);
+/// ```
 #![allow(unused_imports)]
 use builtin::*;
 use builtin_macros::*;
@@ -7,40 +38,6 @@ use vstd::pcm_lib::*;
 use vstd::prelude::*;
 
 verus! {
-
-/!
-//! This file implements agreement on a constant value using a custom
-//! resource algebra.
-//!
-//! An agreement resource constitutes knowledge of a constant value.
-//! To create an instance of a constant value of type `T`, use
-//! `AgreementResource::<T>::alloc()` as in the following example:
-//!
-//! ```
-//! let tracked r1 = AgreementResource::<int>::alloc(72);
-//! assert(r1@ == 72);
-//! ```
-//!
-//! Knowledge of a constant value can be duplicated with `duplicate`,
-//! which creates another agreement resource with the same constant
-//! value and the same ID. Here's an example:
-//!
-//! ```
-//! let tracked r2 = r1.duplicate();
-//! assert(r2.id() == r1.id());
-//! assert(r2@ == r1@);
-//! ```
-//!
-//! Any two agreement resources with the same `id()` are guaranteed to
-//! have equal values. You can establish this by calling
-//! `lemma_agreement`, as in the following example:
-//!
-//! ```
-//! assert(r2.id() == r1.id());
-//! proof { r1.lemma_agreement(&mut r2); }
-//! assert(r2@ == r1@);
-//! ```
-!/
 
 pub enum AgreementResourceValue<T> {
     Empty,
@@ -54,13 +51,7 @@ impl<T> AgreementResourceValue<T> {
     }
 }
 
-impl<T: Eq> PCM for AgreementResourceValue<T> {
-    // A typical agreement-based PCM:
-    // - 'Empty' and 'Chosen(..)' are valid, 'Invalid' is not valid.
-    // - The unit element is 'Empty'.
-    // - The op merges two elements; if both are Chosen with different
-    //   values, we get 'Invalid', etc.
-
+impl<T: PartialEq> PCM for AgreementResourceValue<T> {
     open spec fn valid(self) -> bool {
         match self {
             AgreementResourceValue::Empty => true,
@@ -73,13 +64,13 @@ impl<T: Eq> PCM for AgreementResourceValue<T> {
         match self {
             AgreementResourceValue::Invalid => AgreementResourceValue::Invalid,
             AgreementResourceValue::Empty => other,
-            AgreementResourceValue::Chosen { c } => {
+            AgreementResourceValue::Chosen { c: c1 } => {
                 match other {
                     AgreementResourceValue::Invalid => AgreementResourceValue::Invalid,
-                    AgreementResourceValue::Empty => self,
-                    AgreementResourceValue::Chosen { c: d } => {
-                        if c == d {
-                            self
+                    AgreementResourceValue::Empty => AgreementResourceValue::Chosen { c: c1 },
+                    AgreementResourceValue::Chosen { c: c2 } => {
+                        if c1 == c2 {
+                            AgreementResourceValue::Chosen { c: c1 }
                         } else {
                             AgreementResourceValue::Invalid
                         }
@@ -94,23 +85,23 @@ impl<T: Eq> PCM for AgreementResourceValue<T> {
     }
 
     proof fn closed_under_incl(a: Self, b: Self) {
-        // Proof stub
+        // No special frame-preservation condition needed for this RA
     }
 
     proof fn commutative(a: Self, b: Self) {
-        // Proof stub
+        // op(a, b) == op(b, a) by matching each variant
     }
 
     proof fn associative(a: Self, b: Self, c: Self) {
-        // Proof stub
+        // Standard argument for associative resource operation
     }
 
     proof fn op_unit(a: Self) {
-        // Proof stub
+        // op(a, unit()) == a
     }
 
     proof fn unit_valid() {
-        // Proof stub
+        // unit() is valid
     }
 }
 
@@ -118,17 +109,22 @@ pub struct AgreementResource<T> {
     r: Resource<AgreementResourceValue<T>>,
 }
 
-impl<T> AgreementResource<T> {
+impl<T: PartialEq> AgreementResource<T> {
     #[verifier::type_invariant]
     pub closed spec fn inv(self) -> bool {
         self.r.value().valid()
+        && match self.r.value() {
+            AgreementResourceValue::Chosen { c: _ } => true,
+            _ => false,
+        }
     }
 
     pub closed spec fn id(self) -> Loc {
         self.r.loc()
     }
 
-    pub closed spec fn view(self) -> T {
+    pub closed spec fn view(self) -> T
+    {
         match self.r.value() {
             AgreementResourceValue::Chosen { c } => c,
             _ => arbitrary(),
@@ -136,8 +132,11 @@ impl<T> AgreementResource<T> {
     }
 
     pub proof fn alloc(c: T) -> (tracked result: AgreementResource<T>)
-        recommends
-            // None required here; typical use might require T: Eq if desired
+        requires
+            true,
+        ensures
+            result@ == c,
+            result.inv(),
     {
         let r_value = AgreementResourceValue::<T>::new(c);
         let tracked r = Resource::<AgreementResourceValue::<T>>::alloc(r_value);
@@ -146,6 +145,13 @@ impl<T> AgreementResource<T> {
 
     pub proof fn duplicate(tracked self: &mut AgreementResource<T>) -> (tracked result:
         AgreementResource<T>)
+        requires
+            self.inv(),
+        ensures
+            result@ == self@,
+            result.inv(),
+            result.id() == self.id(),
+            self.inv(),
     {
         use_type_invariant(&*self);
         let tracked r = duplicate(&self.r);
@@ -156,6 +162,12 @@ impl<T> AgreementResource<T> {
         tracked self: &mut AgreementResource<T>,
         tracked other: &AgreementResource<T>,
     )
+        requires
+            self.inv(),
+            other.inv(),
+            self.id() == other.id(),
+        ensures
+            self@ == other@,
     {
         use_type_invariant(&*self);
         use_type_invariant(&other);

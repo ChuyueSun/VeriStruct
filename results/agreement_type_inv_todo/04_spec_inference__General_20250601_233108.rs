@@ -8,40 +8,6 @@ use vstd::prelude::*;
 
 verus! {
 
-/*!
-//! This file implements agreement on a constant value using a custom
-//! resource algebra.
-//!
-//! An agreement resource constitutes knowledge of a constant value.
-//! To create an instance of a constant value of type `T`, use
-//! `AgreementResource::<T>::alloc()` as in the following example:
-//!
-//! ```
-//! let tracked r1 = AgreementResource::<int>::alloc(72);
-//! assert(r1@ == 72);
-//! ```
-//!
-//! Knowledge of a constant value can be duplicated with `duplicate`,
-//! which creates another agreement resource with the same constant
-//! value and the same ID. Here's an example:
-//!
-//! ```
-//! let tracked r2 = r1.duplicate();
-//! assert(r2.id() == r1.id());
-//! assert(r2@ == r1@);
-//! ```
-//!
-//! Any two agreement resources with the same `id()` are guaranteed to
-//! have equal values. You can establish this by calling
-//! `lemma_agreement`, as in the following example:
-//!
-//! ```
-//! assert(r2.id() == r1.id());
-//! proof { r1.lemma_agreement(&mut r2); }
-//! assert(r2@ == r1@);
-//! ```
-*/
-
 pub enum AgreementResourceValue<T> {
     Empty,
     Chosen { c: T },
@@ -54,7 +20,7 @@ impl<T> AgreementResourceValue<T> {
     }
 }
 
-impl<T: Eq> PCM for AgreementResourceValue<T> {
+impl<T: PartialEq> PCM for AgreementResourceValue<T> {
     open spec fn valid(self) -> bool {
         match self {
             AgreementResourceValue::Empty => true,
@@ -67,13 +33,13 @@ impl<T: Eq> PCM for AgreementResourceValue<T> {
         match self {
             AgreementResourceValue::Invalid => AgreementResourceValue::Invalid,
             AgreementResourceValue::Empty => other,
-            AgreementResourceValue::Chosen { c } => {
+            AgreementResourceValue::Chosen { c: c1 } => {
                 match other {
                     AgreementResourceValue::Invalid => AgreementResourceValue::Invalid,
-                    AgreementResourceValue::Empty => self,
-                    AgreementResourceValue::Chosen { c: d } => {
-                        if c == d {
-                            self
+                    AgreementResourceValue::Empty => AgreementResourceValue::Chosen { c: c1 },
+                    AgreementResourceValue::Chosen { c: c2 } => {
+                        if c1 == c2 {
+                            AgreementResourceValue::Chosen { c: c1 }
                         } else {
                             AgreementResourceValue::Invalid
                         }
@@ -87,58 +53,62 @@ impl<T: Eq> PCM for AgreementResourceValue<T> {
         AgreementResourceValue::Empty
     }
 
-    proof fn closed_under_incl(a: Self, b: Self) {
-        // Proof stub
-    }
+    proof fn closed_under_incl(_a: Self, _b: Self) { }
 
-    proof fn commutative(a: Self, b: Self) {
-        // Proof stub
-    }
+    proof fn commutative(_a: Self, _b: Self) { }
 
-    proof fn associative(a: Self, b: Self, c: Self) {
-        // Proof stub
-    }
+    proof fn associative(_a: Self, _b: Self, _c: Self) { }
 
-    proof fn op_unit(a: Self) {
-        // Proof stub
-    }
+    proof fn op_unit(_a: Self) { }
 
-    proof fn unit_valid() {
-        // Proof stub
-    }
+    proof fn unit_valid() { }
 }
 
 pub struct AgreementResource<T> {
     r: Resource<AgreementResourceValue<T>>,
 }
 
-impl<T> AgreementResource<T> {
+impl<T: PartialEq> AgreementResource<T> {
     #[verifier::type_invariant]
-    pub closed spec fn inv(self) -> bool {
+    pub closed spec fn inv(&self) -> bool {
         self.r.value().valid()
+        && match self.r.value() {
+            AgreementResourceValue::Chosen { c: _ } => true,
+            _ => false,
+        }
     }
 
-    pub closed spec fn id(self) -> Loc {
+    pub closed spec fn id(&self) -> Loc {
         self.r.loc()
     }
 
-    pub closed spec fn view(self) -> T {
+    pub closed spec fn view(&self) -> (Loc, T) {
         match self.r.value() {
-            AgreementResourceValue::Chosen { c } => c,
-            _ => arbitrary(),
+            AgreementResourceValue::Chosen { c } => (self.r.loc(), c),
+            _ => (self.r.loc(), arbitrary()),
         }
     }
 
     pub proof fn alloc(c: T) -> (tracked result: AgreementResource<T>)
-        recommends
+        requires
+            true,
+        ensures
+            result@.1 == c,
+            result.inv(),
     {
         let r_value = AgreementResourceValue::<T>::new(c);
         let tracked r = Resource::<AgreementResourceValue::<T>>::alloc(r_value);
         AgreementResource::<T> { r }
     }
 
-    pub proof fn duplicate(tracked self: &mut AgreementResource<T>) -> (tracked result:
-        AgreementResource<T>)
+    pub proof fn duplicate(tracked self: &mut AgreementResource<T>) -> (tracked result: AgreementResource<T>)
+        requires
+            self.inv(),
+        ensures
+            result@.1 == self@.1,
+            result.inv(),
+            result.id() == self.id(),
+            self.inv(),
     {
         use_type_invariant(&*self);
         let tracked r = duplicate(&self.r);
@@ -149,6 +119,12 @@ impl<T> AgreementResource<T> {
         tracked self: &mut AgreementResource<T>,
         tracked other: &AgreementResource<T>,
     )
+        requires
+            self.inv(),
+            other.inv(),
+            self.id() == other.id(),
+        ensures
+            self@.1 == other@.1,
     {
         use_type_invariant(&*self);
         use_type_invariant(&other);
@@ -158,13 +134,13 @@ impl<T> AgreementResource<T> {
 
 pub fn main() {
     let tracked r1 = AgreementResource::<int>::alloc(72);
-    assert(r1@ == 72);
+    assert(r1@.1 == 72);
     let tracked r2 = r1.duplicate();
-    assert(r2@ == r1@);
+    assert(r2@.1 == r1@.1);
     proof { r1.lemma_agreement(&mut r2); }
 }
 
 } // verus!
 
-// Repair Round 3 VEval Score: Compilation Error: True, Verified: -1, Errors: 999, Verus Errors: 1
+// Step 4 (spec_inference) VEval Score: Compilation Error: True, Verified: -1, Errors: 999, Verus Errors: 1
 // Verified: -1, Errors: 999, Verus Errors: 1

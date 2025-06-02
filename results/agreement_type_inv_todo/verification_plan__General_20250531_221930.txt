@@ -1,8 +1,0 @@
-### Step 1: Analyze the task
-
-The code defines a data structure, AgreementResource, wrapping a Resource<AgreementResourceValue<T>>. It clearly has a “view” that returns T, plus we also need a type invariant and a PCM definition. Since there is a custom type whose behavior we want to specify in a functional/mathematical way (the AgreementResource with underlying AgreementResourceValue), we need to define a View function to characterize this resource’s abstract content. After that, we will refine or adjust the View (if needed), add invariants capturing Resource properties, and finally specify function requirements (requires) and outcomes (ensures). Therefore, this code would benefit from the full sequence approach.
-
-### Step 2: Choose the Workflow
-
-**Workflow:** Full Sequence Workflow  
-**Explanation:** The AgreementResource data structure needs a View function and associated invariants. We will begin by inferring a View function, refine it if necessary, then capture the resource invariants, and finally synthesize the function specifications.

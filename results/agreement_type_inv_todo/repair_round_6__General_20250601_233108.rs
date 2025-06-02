@@ -1,14 +1,3 @@
-#![allow(unused_imports)]
-use builtin::*;
-use builtin_macros::*;
-use std::result::*;
-use vstd::pcm::*;
-use vstd::pcm_lib::*;
-use vstd::prelude::*;
-
-verus! {
-
-//
 /// This file implements agreement on a constant value using a custom
 /// resource algebra.
 ///
@@ -40,6 +29,15 @@ verus! {
 /// proof { r1.lemma_agreement(&mut r2); }
 /// assert(r2@ == r1@);
 /// ```
+#![allow(unused_imports)]
+use builtin::*;
+use builtin_macros::*;
+use std::result::*;
+use vstd::pcm::*;
+use vstd::pcm_lib::*;
+use vstd::prelude::*;
+
+verus! {
 
 pub enum AgreementResourceValue<T> {
     Empty,
@@ -53,63 +51,32 @@ impl<T> AgreementResourceValue<T> {
     }
 }
 
-impl<T: Eq> PCM for AgreementResourceValue<T> {
-    // A typical agreement-based PCM:
-    // - 'Empty' and 'Chosen(..)' are valid, 'Invalid' is not valid.
-    // - The unit element is 'Empty'.
-    // - The op merges two elements; if both are Chosen with different
-    //   values, we get 'Invalid', etc.
-
+impl<T> PCM for AgreementResourceValue<T> {
     open spec fn valid(self) -> bool {
-        match self {
-            AgreementResourceValue::Empty => true,
-            AgreementResourceValue::Chosen { c: _ } => true,
-            AgreementResourceValue::Invalid => false,
-        }
+        // TODO: add specification
     }
 
     open spec fn op(self, other: Self) -> Self {
-        match self {
-            AgreementResourceValue::Invalid => AgreementResourceValue::Invalid,
-            AgreementResourceValue::Empty => other,
-            AgreementResourceValue::Chosen { c } => {
-                match other {
-                    AgreementResourceValue::Invalid => AgreementResourceValue::Invalid,
-                    AgreementResourceValue::Empty => self,
-                    AgreementResourceValue::Chosen { c: d } => {
-                        if c == d {
-                            self
-                        } else {
-                            AgreementResourceValue::Invalid
-                        }
-                    }
-                }
-            }
-        }
+        // TODO: add specification
     }
 
     open spec fn unit() -> Self {
-        AgreementResourceValue::Empty
+        // TODO: add specification
     }
 
     proof fn closed_under_incl(a: Self, b: Self) {
-        // Proof stub
     }
 
     proof fn commutative(a: Self, b: Self) {
-        // Proof stub
     }
 
     proof fn associative(a: Self, b: Self, c: Self) {
-        // Proof stub
     }
 
     proof fn op_unit(a: Self) {
-        // Proof stub
     }
 
     proof fn unit_valid() {
-        // Proof stub
     }
 }
 
@@ -120,23 +87,21 @@ pub struct AgreementResource<T> {
 impl<T> AgreementResource<T> {
     #[verifier::type_invariant]
     pub closed spec fn inv(self) -> bool {
-        self.r.value().valid()
+        // TODO: add type invariant
     }
 
     pub closed spec fn id(self) -> Loc {
-        self.r.loc()
+        // TODO: add specification
+
     }
 
-    pub closed spec fn view(self) -> T {
-        match self.r.value() {
-            AgreementResourceValue::Chosen { c } => c,
-            _ => arbitrary(),
-        }
+    pub closed spec fn view(self) -> T
+    {
+        // TODO: add view
     }
 
     pub proof fn alloc(c: T) -> (tracked result: AgreementResource<T>)
-        recommends
-            // None required here; typical use might require T: Eq if desired
+    // TODO: add requires and ensures
     {
         let r_value = AgreementResourceValue::<T>::new(c);
         let tracked r = Resource::<AgreementResourceValue::<T>>::alloc(r_value);
@@ -145,6 +110,7 @@ impl<T> AgreementResource<T> {
 
     pub proof fn duplicate(tracked self: &mut AgreementResource<T>) -> (tracked result:
         AgreementResource<T>)
+    // TODO: add requires and ensures
     {
         use_type_invariant(&*self);
         let tracked r = duplicate(&self.r);
@@ -155,6 +121,7 @@ impl<T> AgreementResource<T> {
         tracked self: &mut AgreementResource<T>,
         tracked other: &AgreementResource<T>,
     )
+    // TODO: add requires and ensures
     {
         use_type_invariant(&*self);
         use_type_invariant(&other);
@@ -172,5 +139,6 @@ pub fn main() {
 
 } // verus!
 
-// Fallback VEval Score: Compilation Error: True, Verified: -1, Errors: 999, Verus Errors: 1
+
+// Repair Round 6 VEval Score: Compilation Error: True, Verified: -1, Errors: 999, Verus Errors: 1
 // Verified: -1, Errors: 999, Verus Errors: 1
