@@ -1,8 +1,0 @@
-### Step 1: Analyze the task
-
-This code defines a custom resource algebra (MonotonicCounterResourceValue) and a wrapper structure (MonotonicCounterResource). It includes functions like alloc, split, increment, etc., which operate on that underlying resource. The code clearly needs a well-defined view function so that these operations can be verified against a mathematical model of the resource’s state. For instance, there’s a “view” method in MonotonicCounterResource that remains to be implemented and a “n()” method in MonotonicCounterResourceValue that is similarly incomplete. Given that these data structures need a solid specification of their logical state, we’ll need to define (and refine) a view function, then define the necessary invariants capturing the resource’s correctness, and finally add the function specifications.
-
-### Step 2: Choose the Workflow
-
-**Workflow:** Full Sequence Workflow  
-**Explanation:** Because the code features a custom data structure (MonotonicCounterResourceValue) with an unfinished “view” function and incomplete invariants, we need the entire series of steps: generating the view function, refining it, inferring invariants, and then adding function specifications. This will ensure a complete, rigorous verification of the resource algebra implementation.

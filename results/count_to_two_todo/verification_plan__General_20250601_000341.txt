@@ -1,8 +1,0 @@
-### Step 1: Analyze the task
-
-This code defines a concurrency-oriented data structure (with a tracked state, an invariant predicate, and atomic operations) that enforces thread coordination using one-shot resources. The data structure and the invariant predicate are nontrivial: we have to show that certain conditions (e.g., the values of x_perm, oneshot0_inv_half, and oneshot1_inv_half) remain consistent under atomic operations and threading. Because it involves carefully tracking mathematical relationships between atomic state, one-shot resources, and concurrency behavior, we will need to define a View function (to capture the abstract model), refine it, set up the invariants for the tracked state and the loops, and then finish with proper function specifications. 
-
-### Step 2: Choose the Workflow
-
-**Workflow:** Full Sequence Workflow  
-**Explanation:** Since we have a custom data structure (CounterTrackedState) with a shared state and concurrency invariants, we need a mathematical abstraction capturing the dynamic behavior of the atomic integer and one-shot resources. Hence, a View is needed, followed by refining that View, inferring invariants that capture the concurrency protocols, and finally specifying the function contracts.

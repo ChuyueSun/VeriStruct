@@ -1,8 +1,0 @@
-### Step 1: Analyze the task
-
-The code defines a data structure “AgreementResourceValue<T>” implementing PCM, together with “AgreementResource<T>.” The AgreementResource type includes functions like alloc, duplicate, and lemma_agreement, each requiring well-defined specifications (requires/ensures) and a supporting invariant (inv) that explains how resource values map to a logical view (view). Because this code uses a custom data structure that needs a clear mathematical representation (including how to interpret “Chosen { c: T },” “Empty,” and “Invalid” states) and a corresponding invariant, it is important to define a View function and then refine it, along with generating appropriate invariants. Finally, the functions (alloc, duplicate, lemma_agreement) will need their specifications.
-
-### Step 2: Choose the Workflow
-
-**Workflow:** Full Sequence Workflow  
-**Explanation:** The code introduces a new data structure (AgreementResourceValue<T> and AgreementResource<T>) needing a clear View function, an accompanying invariant, and function specs. Therefore, the full workflow (view_inference → view_refinement → inv_inference → spec_inference) is most suitable.

@@ -1,8 +1,0 @@
-**Step 1: Analyze the task**
-
-This code introduces a custom data structure (Fractional and FractionalResource) for fractional ownership, which forms a PCM and integrates with the Resource type from vstd::pcm. It needs a systematic way to capture its abstract state (the fraction and the owned value) and establish correctness criteria such as valid fractions and ownership invariants. Because we have a non-trivial data structure that requires a mathematical abstraction (how “Fractional” and “FractionalResource” behavior is modeled and verified), it is most appropriate to start by defining a View function for Fractional. Then, we can refine that view, specify invariants for both the Fractional type and the FractionalResource struct, and finally generate the function specifications.
-
-**Step 2: Choose the Workflow**
-
-**Workflow:** Full Sequence Workflow  
-**Explanation:** The code contains a custom data structure Fractional (and a wrapper FractionalResource) that needs to be formally described. Therefore, we must generate a View abstraction, refine it, infer invariants, and conclude with the function specifications.

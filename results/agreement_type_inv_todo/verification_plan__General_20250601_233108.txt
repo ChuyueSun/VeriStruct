@@ -1,8 +1,0 @@
-### Step 1: Analyze the task
-
-The code defines a data structure (AgreementResource<T>) that wraps Resource<AgreementResourceValue<T>>. It also declares a dedicated spec function “view(self) -> T” and a type invariant “inv(self) -> bool,” both of which are left to be completed. In addition, the AgreementResourceValue<T> type implements the PCM trait and needs its spec details (valid, op, unit). This clearly indicates that the code is built around a custom data structure requiring a proper mathematical abstraction (its “view” function) and invariants (“inv”). Hence, we need the full verification pipeline: inferring and refining the view, adding invariants, and specifying function pre/postconditions.
-
-### Step 2: Choose the Workflow
-
-**Workflow:** Full Sequence Workflow  
-**Explanation:** The code includes a custom data structure (AgreementResource<T> / AgreementResourceValue<T>) that needs a well-defined view (to capture the underlying value abstraction) and an invariant to characterize its resource semantics. Therefore, we must perform view_inference, view_refinement, inv_inference, and then spec_inference.
