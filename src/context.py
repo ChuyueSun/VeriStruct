@@ -171,9 +171,9 @@ class Context:
         """
         Generate the knowledge for the context.
         """
-        knowledge = ""
+        knowledge = "\n\n# relevant vstd lib knowledge\n\n"
         for name, desc in self.knowledge.items():
-            knowledge += f"### {name}\n\n"
+            knowledge += f"## {name}\n\n"
             knowledge += desc
             knowledge += "\n\n"
         return knowledge

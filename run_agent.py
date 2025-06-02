@@ -25,6 +25,8 @@ def main():
 
     if args.output_dir:
         os.environ['output_dir'] = str(Path(args.output_dir).absolute())
+        os.system('rm -rf ' + os.environ['output_dir'])
+        os.makedirs(os.environ['output_dir'], exist_ok=True)
         print(f"Using output directory: {os.environ['output_dir']}")
     
     # Set config environment variable
