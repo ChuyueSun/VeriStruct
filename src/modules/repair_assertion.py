@@ -109,7 +109,7 @@ Provide only the modified Rust code—no explanations.
 
         instruction = self.add_seq_knowledge(code, instruction)
         instruction += "\n\n" + self.proof_block_info
-        instruction += "\n\n" + self.general_knowledge
+        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
 
         # Load examples using the utility function
         examples = get_examples(self.config, "assert", self.logger)
@@ -194,7 +194,7 @@ Provide only the modified Rust code—no explanations."""
 
         instruction = self.add_seq_knowledge(code, instruction)
         instruction += "\n\n" + self.proof_block_info
-        instruction += "\n\n" + self.general_knowledge
+        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
 
         # Load examples
         examples = get_examples(self.config, "assert", self.logger)

@@ -189,7 +189,7 @@ def main():
     logger.info(f"Logger updated to include input file name: {input_file_name}")
 
     # Create output directory if it doesn't exist
-    output_dir = Path("output")
+    output_dir = Path(os.environ.get('output_dir', 'output'))
     output_dir.mkdir(exist_ok=True)
 
     # Create samples directory for intermediate results
