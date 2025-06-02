@@ -4,11 +4,11 @@
     ],
     "aoai_api_version": "2023-12-01-preview",
     "aoai_api_key": [
-        "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"
+        "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"
     ],
     "aoai_max_retries": 5,
     "max_token": 8192,
-    "aoai_generation_model": "o1",
+    "aoai_generation_model": "o3",
     "aoai_debug_model": "o1",
     "verus_path": "/home/chuyue/verus/source/target-verus/release/verus",
     "example_path": "/home/chuyue/-verusyth/code/examples",

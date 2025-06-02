@@ -1,0 +1,16 @@
+{
+    "aoai_api_base": [
+        "https://api.x.ai/v1"
+    ],
+    "aoai_api_version": "2023-12-01-preview",
+    "aoai_api_key": [
+        "xai-9zEgtXPe4k5Wo8F8HwWiYR48xUlLq8sC8VjNxauLG1zhHQqUarPI1u6qjuyBR0I4nQM3NTewnTtMgbH6"
+    ],
+    "aoai_max_retries": 5,
+    "max_token": 8192,
+    "aoai_generation_model": "grok-3",
+    "aoai_debug_model": "grok-3",
+    "verus_path": "/home/chuyue/verus/source/target-verus/release/verus",
+    "platform": "xai",
+    "project_dir": "."
+} 

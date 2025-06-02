@@ -108,26 +108,36 @@ class LLM:
         )
 
         # Log config for debugging
-        self.logger.info(f"Config: {self.config.get('aoai_api_base')}")
+        platform_type_log = self.config.get('platform', 'openai')
+        if platform_type_log in ['openai', 'xai', 'azure']:
+            self.logger.info(f"Config base URLs: {self.config.get('aoai_api_base')}")
+        else:
+            self.logger.info("Config: using non-OpenAI platform; base URL list not applicable")
 
         # Prepare a list of potential SGL backends
         self.backends = []
+
+        # Log which platform we are going to initialize
+        self.logger.info(f"LLM initializing for platform: {self.config.get('platform', 'openai')}")
 
         if self.dummy_mode:
             self.logger.warning("LLM in dummy mode. Will return placeholder responses.")
             return
 
         try:
-            if self.config.get("platform", "openai") == "openai":
+            platform_type = self.config.get("platform", "openai")
+
+            # Treat both standard OpenAI and XAI endpoints similarly (OpenAI-compatible API)
+            if platform_type in ["openai", "xai"]:
                 for i in range(len(self.config["aoai_api_key"])):
                     self.backends.append(
                         sgl.OpenAI(
-                            model_name=self.config["aoai_generation_model"],
+                            model_name=self.config.get("aoai_generation_model", "gpt-4o"),
                             api_key=self.config["aoai_api_key"][i],
                             base_url=self.config["aoai_api_base"][i],
                         )
                     )
-            elif self.config.get("platform", "openai") == "azure":
+            elif platform_type == "azure":
                 for i in range(len(self.config["aoai_api_key"])):
                     self.backends.append(
                         sgl.OpenAI(
@@ -138,7 +148,7 @@ class LLM:
                             is_azure=True,
                         )
                     )
-            elif self.config.get("platform", "openai") == "anthropic":
+            elif platform_type == "anthropic":
                 for i in range(len(self.config["anthropic_api_key"])):
                     self.backends.append(
                         sgl.Anthropic(
@@ -147,7 +157,9 @@ class LLM:
                         )
                     )
             else:
-                raise ValueError("Unknown platform")
+                raise ValueError(f"Unknown platform: {platform_type}")
+
+            self.logger.info(f"LLM backend initialization complete. Backends count: {len(self.backends)} for platform {platform_type}")
         except Exception as e:
             self.logger.error(f"Error initializing LLM backends: {e}")
             self.dummy_mode = True

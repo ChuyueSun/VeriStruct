@@ -134,8 +134,10 @@ def main():
 
     # Use our custom config
     try:
-        reset_config("config-azure")
-        logger.info("Using config-azure configuration")
+        # Use configuration specified by the VERUS_CONFIG env variable if set, otherwise default to 'config-azure'
+        config_name = os.environ.get("VERUS_CONFIG", "config-azure")
+        config = reset_config(config_name)
+        logger.info(f"Using {config_name} configuration")
 
         # Set the verus path from the configuration
         if os.environ.get("VERUS_PATH"):
@@ -154,6 +156,8 @@ def main():
     except Exception as e:
         logger.warning(f"Could not load config-azure or initialize verus path: {e}")
         logger.warning("Using default configuration")
+        from src.configs import sconfig as _sconfig_module
+        config = getattr(_sconfig_module, "config", {})
 
     # Check for custom test file from environment variable
     custom_test_file = os.environ.get("VERUS_TEST_FILE")

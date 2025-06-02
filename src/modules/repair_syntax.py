@@ -245,9 +245,6 @@ Fix ONLY the part of the code with the syntax error, and leave the rest unchange
 Response with the Rust code only, do not include any explanation."""
         instruction += "\n\n" + self.general_knowledge
 
-        # Append contextual knowledge
-        instruction += "\n\n### Project Knowledge\n" + context.gen_knowledge()
-
         # Load examples
         examples = get_examples(self.config, "syntax", self.logger)
 
@@ -278,13 +275,22 @@ Response with the Rust code only, do not include any explanation."""
         # Cache-busting nonce
         query += f"\n// nonce: {len(context.trials)}"
 
+        # Append project knowledge
+        filtered_knowledge = "\n".join([
+            f"### {k}\n\n{v}" for k, v in context.knowledge.items() if k != "verification_plan"
+        ])
+        if filtered_knowledge:
+            query_with_knowledge = query + "\n\n### Project Knowledge\n" + filtered_knowledge
+        else:
+            query_with_knowledge = query
+
         # Ensure debug directory exists for prompt saving
         debug_dir = Path("output/debug")
         debug_dir.mkdir(parents=True, exist_ok=True)
 
         # Save prompt for debugging
         prompt_path2 = debug_dir / f"repair_general_syntax_prompt_{len(context.trials)}.txt"
-        prompt_path2.write_text(instruction + "\n\n---\n\n" + query)
+        prompt_path2.write_text(instruction + "\n\n---\n\n" + query_with_knowledge)
         self.logger.info(f"Saved syntax repair prompt to {prompt_path2}")
 
         # Use the llm instance from the base class
@@ -292,7 +298,7 @@ Response with the Rust code only, do not include any explanation."""
             engine=self.config.get("aoai_debug_model", "gpt-4"),
             instruction=instruction,
             exemplars=examples,
-            query=query,
+            query=query_with_knowledge,
             system_info=self.default_system,
             answer_num=3,
             max_tokens=8192,

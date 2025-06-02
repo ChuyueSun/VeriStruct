@@ -62,9 +62,18 @@ def reset_config(config_name="config"):
     config_dir = Path(__file__).parent.absolute()
     config_file = config_dir / f"{config_name}.json"
     
-    # Load default configuration
+    # Load the requested configuration
     with open(config_file, "r") as f:
-        config = json.load(f)
+        new_conf = json.load(f)
+
+    # Mutate the existing config dict in-place so that references held by other
+    # modules (imported before this call) still see the updated values.
+    if isinstance(config, dict):
+        config.clear()
+        config.update(new_conf)
+    else:
+        # If for some reason `config` isn't a dict yet, just replace it.
+        config = new_conf
     
     # Allow environment variable overrides for key settings
     # Project directory can be customized per machine via environment variable
