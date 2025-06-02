@@ -13,6 +13,7 @@ yarn-error.log*
 
 # Ignore cache
 llm_cache/
+results/
 
 # Ignore tmp
 tmp/
