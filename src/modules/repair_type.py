@@ -15,6 +15,7 @@ from src.modules.utils import (
     get_examples,
 )
 from src.modules.veval import VerusError, VerusErrorLabel, VerusErrorType, VEval
+from src.utils.path_utils import samples_dir, best_dir, debug_dir
 
 
 class RepairTypeModule(BaseRepairModule):
@@ -158,7 +159,7 @@ Response with the Rust code only, do not include any explanation."""
         )
 
         # Evaluate samples and get the best one
-        output_dir = Path("output/samples")
+        output_dir = samples_dir()
         best_code, _, _ = evaluate_samples(
             samples=responses if responses else [code],
             output_dir=output_dir,
@@ -220,7 +221,7 @@ Respond with the **fixed Rust code only** and do not include any explanation."""
         )
 
         # Evaluate samples and get the best one
-        output_dir = Path("output/samples")
+        output_dir = samples_dir()
         best_code, _, _ = evaluate_samples(
             samples=responses if responses else [code],
             output_dir=output_dir,
@@ -280,7 +281,7 @@ Respond with the **fixed Rust code only** and do not include any explanation."""
         )
 
         # Evaluate samples and get the best one
-        output_dir = Path("output/samples")
+        output_dir = samples_dir()
         best_code, _, _ = evaluate_samples(
             samples=responses if responses else [code],
             output_dir=output_dir,
@@ -335,7 +336,7 @@ Respond with the Rust code only, do not include any explanation."""
         )
 
         # Evaluate samples and get the best one
-        output_dir = Path("output/samples")
+        output_dir = samples_dir()
         best_code, _, _ = evaluate_samples(
             samples=responses if responses else [code],
             output_dir=output_dir,

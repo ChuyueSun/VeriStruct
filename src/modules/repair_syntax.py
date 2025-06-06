@@ -5,11 +5,13 @@ Module for repairing syntax errors in Verus code.
 import logging
 from pathlib import Path
 from typing import Any, Dict, List, Optional
+import re
 
 from src.infer import LLM
 from src.modules.baserepair import BaseRepairModule
 from src.modules.utils import clean_code, evaluate_samples, get_examples
 from src.modules.veval import VerusError, VerusErrorLabel, VerusErrorType, VEval
+from src.utils.path_utils import samples_dir, best_dir, debug_dir
 
 
 class RepairSyntaxModule(BaseRepairModule):
@@ -202,7 +204,7 @@ Please make sure to change that wrong expression and do not change any other par
         )
 
         # Evaluate samples and get the best one
-        output_dir = Path("output/samples")
+        output_dir = samples_dir()
         best_code, _, _ = evaluate_samples(
             samples=responses if responses else [code],
             output_dir=output_dir,
@@ -271,9 +273,10 @@ Response with the Rust code only, do not include any explanation."""
         if error_lines:
             error_info += "\n" + "\n".join(error_lines[:20])  # Limit to first 20 lines
 
-        query = query_template.format(error_info, code)
-        # Cache-busting nonce
-        query += f"\n// nonce: {len(context.trials)}"
+        # Normalize variable tmp paths to a stable placeholder so prompts are identical across runs
+        normalized_error_info = re.sub(r"/tmp/tmp[0-9A-Za-z_\-]+", "<TMP_PATH>", error_info)
+
+        query = query_template.format(normalized_error_info, code)
 
         # Append project knowledge
         filtered_knowledge = "\n".join([
@@ -285,11 +288,8 @@ Response with the Rust code only, do not include any explanation."""
             query_with_knowledge = query
 
         # Ensure debug directory exists for prompt saving
-        debug_dir = Path("output/debug")
-        debug_dir.mkdir(parents=True, exist_ok=True)
-
-        # Save prompt for debugging
-        prompt_path2 = debug_dir / f"repair_general_syntax_prompt_{len(context.trials)}.txt"
+        dbg_dir = debug_dir()
+        prompt_path2 = dbg_dir / f"repair_general_syntax_prompt_{len(context.trials)}.txt"
         prompt_path2.write_text(instruction + "\n\n---\n\n" + query_with_knowledge)
         self.logger.info(f"Saved syntax repair prompt to {prompt_path2}")
 
@@ -306,7 +306,7 @@ Response with the Rust code only, do not include any explanation."""
         )
 
         # Evaluate samples and get the best one
-        output_dir = Path("output/samples")
+        output_dir = samples_dir()
         best_code, _, _ = evaluate_samples(
             samples=responses if responses else [code],
             output_dir=output_dir,

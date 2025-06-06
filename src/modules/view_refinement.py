@@ -12,6 +12,7 @@ from src.modules.utils import (
 )
 from src.modules.veval import VEval
 from src.prompts.template import build_instruction
+from src.utils.path_utils import samples_dir, best_dir
 
 
 class ViewRefinementModule(BaseModule):
@@ -130,12 +131,10 @@ Please provide only the complete Rust code of the file with no additional commen
                 processed_responses.append(response)
 
         # Save all generated samples
-        output_dir = Path("output/samples")
-        output_dir.mkdir(exist_ok=True, parents=True)
+        output_dir = samples_dir()
 
         # Create a directory for tracking global best samples
-        global_dir = Path("output/best")
-        global_dir.mkdir(exist_ok=True, parents=True)
+        global_dir = best_dir()
 
         # Evaluate the samples and get the best one
         best_code, best_score, _ = evaluate_samples(

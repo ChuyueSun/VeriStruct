@@ -30,7 +30,7 @@ def main():
     parser.add_argument('--verus-path', help='Path to the Verus executable', default=None)
     parser.add_argument('--config', help='Config file to use (default: config-azure)', default='config-azure')
     parser.add_argument('--no-cache-read', action='store_true', help='Disable reading from LLM cache')
-    parser.add_argument('--output-dir', help='Directory to store output files', default='output')
+    parser.add_argument('--output-dir', help='Directory to store output artifacts', default='output')
     args = parser.parse_args()
     
     # Set environment variables if arguments are provided
@@ -43,10 +43,13 @@ def main():
         print(f"Using Verus path: {os.environ['VERUS_PATH']}")
 
     if args.output_dir:
-        os.environ['output_dir'] = str(Path(args.output_dir).absolute())
-        os.system('rm -rf ' + os.environ['output_dir'])
-        os.makedirs(os.environ['output_dir'], exist_ok=True)
-        print(f"Using output directory: {os.environ['output_dir']}")
+        target_dir = Path(args.output_dir).absolute()
+        target_dir.mkdir(parents=True, exist_ok=True)
+
+        # Expose the chosen output directory via environment variables for
+        # downstream modules/helpers.
+        os.environ['output_dir'] = str(target_dir)
+        print(f"Using output directory: {target_dir}")
     
     # Set config environment variable
     os.environ['VERUS_CONFIG'] = args.config
@@ -56,6 +59,10 @@ def main():
     if args.no_cache_read:
         os.environ['ENABLE_LLM_CACHE'] = '0'
         print("LLM cache reading disabled")
+    
+    # Set output directory env variable
+    os.environ['VERUS_OUTPUT_DIR'] = str(Path(args.output_dir).absolute())
+    print(f"Using output directory: {os.environ['VERUS_OUTPUT_DIR']}")
     
     # Display banner with file name
     display_banner(args.test_file)

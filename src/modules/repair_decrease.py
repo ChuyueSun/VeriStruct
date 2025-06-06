@@ -10,6 +10,7 @@ from src.infer import LLM
 from src.modules.baserepair import BaseRepairModule
 from src.modules.utils import clean_code, evaluate_samples, get_examples
 from src.modules.veval import VerusError, VerusErrorLabel, VerusErrorType, VEval
+from src.utils.path_utils import samples_dir, best_dir, debug_dir
 
 
 class RepairDecreaseModule(BaseRepairModule):
@@ -130,7 +131,7 @@ Response with the Rust code only, do not include any explanation."""
         )
 
         # Evaluate samples and get the best one
-        output_dir = Path("output/samples")
+        output_dir = samples_dir()
         best_code, _, _ = evaluate_samples(
             samples=responses if responses else [code],
             output_dir=output_dir,
@@ -195,7 +196,7 @@ Response with the Rust code only, do not include any explanation."""
         )
 
         # Evaluate samples and get the best one
-        output_dir = Path("output/samples")
+        output_dir = samples_dir()
         best_code, _, _ = evaluate_samples(
             samples=responses if responses else [code],
             output_dir=output_dir,

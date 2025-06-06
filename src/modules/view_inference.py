@@ -6,6 +6,7 @@ from src.infer import LLM
 from src.modules.base import BaseModule
 from src.modules.utils import debug_type_error, evaluate_samples, parse_llm_response
 from src.prompts.template import build_instruction
+from src.utils.path_utils import samples_dir, best_dir
 
 
 class ViewInferenceModule(BaseModule):
@@ -197,11 +198,11 @@ IMPORTANT: Return the complete file with your changes integrated into the origin
                 processed_responses.append(parsed_response)
 
         # Save all generated samples
-        output_dir = Path("output/samples")
+        output_dir = samples_dir()
         output_dir.mkdir(exist_ok=True, parents=True)
 
         # Create a directory for tracking global best samples
-        global_dir = Path("output/best")
+        global_dir = best_dir()
         global_dir.mkdir(exist_ok=True, parents=True)
 
         # Evaluate processed samples and get the best one

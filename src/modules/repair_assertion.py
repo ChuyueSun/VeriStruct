@@ -13,6 +13,7 @@ from src.modules.utils import (  # Import necessary utilities
     get_examples,
 )
 from src.modules.veval import VerusError, VerusErrorLabel, VerusErrorType, VEval
+from src.utils.path_utils import samples_dir, best_dir, debug_dir
 
 
 class RepairAssertionModule(BaseRepairModule):
@@ -125,9 +126,8 @@ Provide only the modified Rust code—no explanations.
         query = query_template.format(assertion_info, code)
 
         # Save query for debugging (optional)
-        debug_dir = Path("output/debug")
-        debug_dir.mkdir(exist_ok=True, parents=True)
-        debug_file = debug_dir / "assert-query.txt"
+        dbg_dir = debug_dir()
+        debug_file = dbg_dir / "assert-query.txt"
         debug_file.write_text(query)
         self.logger.info(f"Saved assertion query to {debug_file}")
 
@@ -144,7 +144,7 @@ Provide only the modified Rust code—no explanations.
         )
 
         # Evaluate samples and get the best one
-        output_dir = Path("output/samples")
+        output_dir = samples_dir()
         best_code, best_score, _ = evaluate_samples(
             samples=responses if responses else [code],
             output_dir=output_dir,
@@ -210,9 +210,8 @@ Provide only the modified Rust code—no explanations."""
         query = query_template.format(assertion_info, code)
 
         # Save query for debugging
-        debug_dir = Path("output/debug")
-        debug_dir.mkdir(exist_ok=True, parents=True)
-        debug_file = debug_dir / "split-assert-query.txt"
+        dbg_dir = debug_dir()
+        debug_file = dbg_dir / "split-assert-query.txt"
         debug_file.write_text(query)
         self.logger.info(f"Saved split assertion query to {debug_file}")
 
@@ -229,7 +228,7 @@ Provide only the modified Rust code—no explanations."""
         )
 
         # Evaluate samples and get the best one
-        output_dir = Path("output/samples")
+        output_dir = samples_dir()
         best_code, best_score, _ = evaluate_samples(
             samples=responses if responses else [code],
             output_dir=output_dir,

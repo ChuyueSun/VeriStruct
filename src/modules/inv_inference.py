@@ -5,6 +5,7 @@ from src.infer import LLM
 from src.modules.base import BaseModule
 from src.modules.utils import debug_type_error, evaluate_samples, update_checkpoint_best
 from src.prompts.template import build_instruction
+from src.utils.path_utils import samples_dir, best_dir
 
 
 class InvInferenceModule(BaseModule):
@@ -138,12 +139,10 @@ class InvInferenceModule(BaseModule):
             return code
 
         # Save all generated samples (raw responses before processing)
-        output_dir = Path("output/samples")
-        output_dir.mkdir(exist_ok=True, parents=True)
+        output_dir = samples_dir()
 
         # Create a directory for tracking global best samples
-        global_dir = Path("output/best")
-        global_dir.mkdir(exist_ok=True, parents=True)
+        global_dir = best_dir()
 
         for i, sample in enumerate(responses):
             sample_path = output_dir / f"03_inv_inference_raw_sample_{i+1}.rs"

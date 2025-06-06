@@ -77,7 +77,7 @@ def handle_checkpoint_best(context, output_dir, file_id, progress_logger, logger
     logger.info(f"Saved checkpoint best result to {checkpoint_best_path} with score: {checkpoint_best_score}")
 
     # Save to best directory
-    best_dir = Path("output/best")
+    best_dir = output_dir / "best"
     best_dir.mkdir(exist_ok=True, parents=True)
     best_file = best_dir / f"best_{file_id}.rs"
     write_and_verify_file(best_file, checkpoint_best_with_score, logger)
@@ -188,8 +188,8 @@ def main():
     )
     logger.info(f"Logger updated to include input file name: {input_file_name}")
 
-    # Create output directory if it doesn't exist
-    output_dir = Path(os.environ.get('output_dir', 'output'))
+    # Determine output directory (can be overridden via env set by run_agent)
+    output_dir = Path(os.environ.get("VERUS_OUTPUT_DIR", "output"))
     output_dir.mkdir(exist_ok=True)
 
     # Create samples directory for intermediate results
@@ -646,13 +646,14 @@ def main():
     # Handle checkpoint best code and score
     handle_checkpoint_best(context, output_dir, file_id, progress_logger, logger)
 
+    # Directory to store global best results for this output directory
+    best_dir = output_dir / "best"
+    best_dir.mkdir(exist_ok=True, parents=True)
+
     total_time = time.time() - start_time
     logger.info(
         f"VerusAgent completed in {total_time:.2f}s! Results saved to {output_dir.absolute()}"
     )
-    
-    # Define best_dir for the summary
-    best_dir = Path("output/best")
     
     # Display a summary of important file paths for easy reference
     logger.info("=" * 70)

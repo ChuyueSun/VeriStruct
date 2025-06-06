@@ -15,6 +15,7 @@ from src.modules.utils import (
     get_nonlinear_lines,
 )
 from src.modules.veval import VerusError, VerusErrorLabel, VerusErrorType, VEval
+from src.utils.path_utils import samples_dir, best_dir, debug_dir
 
 
 class RepairArithmeticModule(BaseRepairModule):
@@ -161,7 +162,7 @@ Please check the given program, and add nonlinear_arith assertion for the follow
         )
 
         # Evaluate samples and get the best one
-        output_dir = Path("output/samples")
+        output_dir = samples_dir()
         best_code, _, _ = evaluate_samples(
             samples=responses if responses else [code],
             output_dir=output_dir,
@@ -236,7 +237,7 @@ Hint for the upper bound:
         )
 
         # Evaluate samples and get the best one
-        output_dir = Path("output/samples")
+        output_dir = samples_dir()
         best_code, _, _ = evaluate_samples(
             samples=responses if responses else [code],
             output_dir=output_dir,

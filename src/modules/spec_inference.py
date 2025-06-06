@@ -3,6 +3,7 @@ Module for inferring requires and ensures clauses in Verus code.
 """
 
 from pathlib import Path
+from src.utils.path_utils import samples_dir, best_dir
 
 from src.infer import LLM
 from src.modules.base import BaseModule
@@ -138,11 +139,11 @@ RETURN FORMAT:
                 processed_responses.append(response)
 
         # Save all generated samples
-        output_dir = Path("output/samples")
+        output_dir = samples_dir()
         output_dir.mkdir(exist_ok=True, parents=True)
 
         # Create a directory for tracking global best samples
-        global_dir = Path("output/best")
+        global_dir = best_dir()
         global_dir.mkdir(exist_ok=True, parents=True)
 
         # Evaluate processed samples and get the best one
