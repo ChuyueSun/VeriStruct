@@ -242,19 +242,6 @@ impl OneShotResource {
         let tracked r = duplicate(&self.r);
         Self { r }
     }
-
-    pub proof fn lemma_is_complete_if_other_is(tracked &mut self, tracked other: &Self)
-        requires
-            other.id() == old(self).id(),
-            other@ is Complete,
-            !(old(self)@ is Empty),
-        ensures
-            self.id() == old(self).id(),
-            self@ == old(self)@,
-            self@ is Complete,
-    {
-        self.r.validate_2(&other.r);
-    }
 }
 
 // This example illustrates some uses of the one-shot functions.

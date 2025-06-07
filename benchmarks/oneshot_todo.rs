@@ -95,15 +95,15 @@ pub enum OneShotResourceValue {
 // `PCM`, showing how to use it in a resource algebra.
 impl PCM for OneShotResourceValue {
     open spec fn valid(self) -> bool {
-        // TODO: implement specification.
+        // TODO: add specification function
     }
 
     open spec fn op(self, other: Self) -> Self {
-        // TODO: implement specification.
+        // TODO: add specification function
     }
 
     open spec fn unit() -> Self {
-        // TODO: implement specification.
+        OneShotResourceValue::Empty {  }
     }
 
     proof fn closed_under_incl(a: Self, b: Self) {
@@ -128,11 +128,11 @@ pub struct OneShotResource {
 
 impl OneShotResource {
     pub closed spec fn id(self) -> Loc {
-        // TODO: implement specification.
+    // TODO: add specification function
     }
 
     pub closed spec fn view(self) -> OneShotResourceValue {
-        // TODO: implement specification.
+    // TODO: add view function
     }
 
     // This function creates a one-shot and returns a resource
@@ -187,8 +187,12 @@ impl OneShotResource {
     {
         self.r.validate();
         other.r.validate();
+        // A `HalfRightToComplete` doesn't combine validly with a
+        // `Complete`, so validating them together proves that
+        // `other.r.value()` is `HalfRightToComplete`.
         self.r.validate_2(&other.r);
-        assert(other@ is HalfRightToComplete);
+        // Knowing they're both `HalfRightToComplete` allows them to
+        // be combined and transformed into `Complete` resources.
         let v = OneShotResourceValue::Complete {  };
         update_and_redistribute(&mut self.r, &mut other.r, v, v);
     }
@@ -201,13 +205,9 @@ impl OneShotResource {
         let tracked r = duplicate(&self.r);
         Self { r }
     }
-
-    pub proof fn lemma_is_complete_if_other_is(tracked &mut self, tracked other: &Self)
-    // TODO: add requires and ensures
-    {
-        self.r.validate_2(&other.r);
-    }
 }
+
+/* TEST CODE BELOW */
 
 // This example illustrates some uses of the one-shot functions.
 fn main() {
