@@ -47,30 +47,17 @@ pub enum AgreementResourceValue<T> {
 
 impl<T> AgreementResourceValue<T> {
     pub open spec fn new(c: T) -> Self {
-        AgreementResourceValue::<T>::Chosen { c }
+        // TODO: implement specification.
     }
 }
 
 impl<T> PCM for AgreementResourceValue<T> {
     open spec fn valid(self) -> bool {
-        !(self is Invalid)
+        // TODO: implement specification.
     }
 
     open spec fn op(self, other: Self) -> Self {
-        match (self, other) {
-            (AgreementResourceValue::<T>::Empty, _) => other,
-            (_, AgreementResourceValue::<T>::Empty) => self,
-            (AgreementResourceValue::<T>::Invalid, _) => AgreementResourceValue::<T>::Invalid {  },
-            (_, AgreementResourceValue::<T>::Invalid) => AgreementResourceValue::<T>::Invalid {  },
-            (
-                AgreementResourceValue::<T>::Chosen { c: c1 },
-                AgreementResourceValue::<T>::Chosen { c: c2 },
-            ) => if c1 == c2 {
-                self
-            } else {
-                AgreementResourceValue::<T>::Invalid {  }
-            },
-        }
+       // TODO: implement specification.
     }
 
     open spec fn unit() -> Self {
@@ -99,37 +86,31 @@ pub struct AgreementResource<T> {
 }
 
 impl<T> AgreementResource<T> {
-    #[verifier::type_invariant]
     pub closed spec fn inv(self) -> bool {
-        self.r.value() is Chosen
+        // TODO: implement specification.
     }
 
     pub closed spec fn id(self) -> Loc {
-        self.r.loc()
+        // TODO: implement specification.
     }
 
     pub closed spec fn view(self) -> T
+        recommends
+            self.inv(),
     {
-        self.r.value()->c
+        // TODO: implement specification.
     }
 
     pub proof fn alloc(c: T) -> (tracked result: AgreementResource<T>)
-        ensures
-            result@ == c,
+    // TODO: add requires and ensures
     {
-        let r_value = AgreementResourceValue::<T>::new(c);
-        let tracked r = Resource::<AgreementResourceValue::<T>>::alloc(r_value);
-        AgreementResource::<T> { r }
+        // TODO: add proof 
     }
 
     pub proof fn duplicate(tracked self: &mut AgreementResource<T>) -> (tracked result:
         AgreementResource<T>)
-        ensures
-            self.id() == result.id() == old(self).id(),
-            self@ == result@,
-            self@ == old(self)@,
+    // TODO: add requires and ensures
     {
-        use_type_invariant(&*self);
         let tracked r = duplicate(&self.r);
         AgreementResource::<T> { r }
     }
@@ -138,15 +119,9 @@ impl<T> AgreementResource<T> {
         tracked self: &mut AgreementResource<T>,
         tracked other: &AgreementResource<T>,
     )
-        requires
-            old(self).id() == other.id(),
-        ensures
-            self.id() == old(self).id(),
-            self@ == other@,
+    // TODO: add requires and ensures
     {
-        use_type_invariant(&*self);
-        use_type_invariant(&other);
-        self.r.validate_2(&other.r);
+        // TODO: add proof 
     }
 }
 
