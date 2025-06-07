@@ -244,6 +244,8 @@ impl OneShotResource {
     }
 }
 
+/* TEST CODE BELOW */
+
 // This example illustrates some uses of the one-shot functions.
 fn main() {
     let tracked full = OneShotResource::alloc();
@@ -266,6 +268,43 @@ fn main() {
     let tracked knowledge = half1.duplicate();
     assert(knowledge.id() == half1.id() == id);
     assert(knowledge@ is Complete);
+
+    // Additional tests for the PCM `op` function
+    proof {
+        // `Empty` is the unit element
+        assert(OneShotResourceValue::unit().op(OneShotResourceValue::HalfRightToComplete)
+            == OneShotResourceValue::HalfRightToComplete);
+        assert(OneShotResourceValue::HalfRightToComplete
+            .op(OneShotResourceValue::unit())
+            == OneShotResourceValue::HalfRightToComplete);
+
+        // Two halves combine into full authority
+        assert(OneShotResourceValue::HalfRightToComplete
+            .op(OneShotResourceValue::HalfRightToComplete)
+            == OneShotResourceValue::FullRightToComplete);
+
+        // `Complete` is idempotent
+        assert(OneShotResourceValue::Complete
+            .op(OneShotResourceValue::Complete)
+            == OneShotResourceValue::Complete);
+
+        // Invalid combinations
+        assert(OneShotResourceValue::FullRightToComplete
+            .op(OneShotResourceValue::FullRightToComplete)
+            == OneShotResourceValue::Invalid);
+        assert(OneShotResourceValue::Complete
+            .op(OneShotResourceValue::HalfRightToComplete)
+            == OneShotResourceValue::Invalid);
+
+        // Commutativity
+        let a = OneShotResourceValue::HalfRightToComplete;
+        let b = OneShotResourceValue::Complete;
+        assert(a.op(b) == b.op(a));
+
+        // Associativity
+        let c = OneShotResourceValue::Empty;
+        assert((a.op(c)).op(b) == a.op(c.op(b)));
+    }
 }
 
 } // verus!
