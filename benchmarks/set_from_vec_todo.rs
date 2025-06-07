@@ -8,7 +8,7 @@ struct VecSet {
 
 impl VecSet {
     pub closed spec fn view(&self) -> Set<u64> {
-        // TODO: add specification
+        // TODO: add requires and ensures
     }
 
     pub fn new() -> (s: Self)
