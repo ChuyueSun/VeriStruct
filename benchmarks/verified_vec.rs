@@ -6,7 +6,9 @@ use builtin_macros::*;
 use vstd::layout::*;
 use vstd::modes::*;
 use vstd::prelude::*;
-use vstd::ptr::*;
+use vstd::simple_pptr::PPtr;
+use vstd::raw_ptr::PointsToRaw;
+use vstd::raw_ptr::PointsTo;
 use vstd::*;
 
 verus! {
@@ -163,6 +165,16 @@ impl<V> Vector<V> {
             assert_seqs_equal!(self@, old(self)@.push(v));
         }
     }
+}
+
+fn test_vector(t: Vector<u64>)
+requires 
+    t.well_formed(),
+{
+    for i in 0 .. t.len()
+    {
+
+    }   
 }
 
 fn main() {
