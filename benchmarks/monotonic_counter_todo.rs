@@ -84,15 +84,27 @@ pub enum MonotonicCounterResourceValue {
 // `PCM`, showing how to use it in a resource algebra.
 impl PCM for MonotonicCounterResourceValue {
     open spec fn valid(self) -> bool {
-        // TODO: implement specification.
+        !(self is Invalid)
     }
 
+    // Two lower bounds can be combined into a lower bound
+    // that's the maximum of the two lower bounds.
+    // A lower bound can be combined with a right to
+    // advance as long as the lower bound doesn't exceed
+    // the value in the right to advance.
+    // A lower bound can be combined with a half right to
+    // advance as long as the lower bound doesn't exceed
+    // the value in the half right to advance.
+    // Two half rights to advance can be combined to make
+    // a whole right to advance, as long as the two values
+    // agree with each other.
+    // Any other combination is invalid
     open spec fn op(self, other: Self) -> Self {
-        // TODO: implement specification.
+        // TODO: add specification function
     }
 
     open spec fn unit() -> Self {
-        // TODO: implement specification.
+        // TODO: add specification function
     }
 
     proof fn closed_under_incl(a: Self, b: Self) {
@@ -113,7 +125,7 @@ impl PCM for MonotonicCounterResourceValue {
 
 impl MonotonicCounterResourceValue {
     pub open spec fn n(self) -> nat {
-        // TODO: implement specification.
+        // TODO: add specification function
     }
 }
 
@@ -123,11 +135,11 @@ pub struct MonotonicCounterResource {
 
 impl MonotonicCounterResource {
     pub closed spec fn id(self) -> Loc {
-        // TODO: implement specification.
+        // TODO: add specification function
     }
 
     pub closed spec fn view(self) -> MonotonicCounterResourceValue {
-        // TODO: implement specification.
+        // TODO: add specification function
     }
 
     // This function creates a monotonic counter and returns a
@@ -189,6 +201,8 @@ impl MonotonicCounterResource {
         Self { r }
     }
 }
+
+/* TEST CODE BELOW */
 
 // This example illustrates some uses of the monotonic counter.
 fn main() {

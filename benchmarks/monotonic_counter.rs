@@ -87,10 +87,20 @@ impl PCM for MonotonicCounterResourceValue {
         !(self is Invalid)
     }
 
+    // Two lower bounds can be combined into a lower bound
+    // that's the maximum of the two lower bounds.
+    // A lower bound can be combined with a right to
+    // advance as long as the lower bound doesn't exceed
+    // the value in the right to advance.
+    // A lower bound can be combined with a half right to
+    // advance as long as the lower bound doesn't exceed
+    // the value in the half right to advance.
+    // Two half rights to advance can be combined to make
+    // a whole right to advance, as long as the two values
+    // agree with each other.
+    // Any other combination is invalid
     open spec fn op(self, other: Self) -> Self {
         match (self, other) {
-            // Two lower bounds can be combined into a lower bound
-            // that's the maximum of the two lower bounds.
             (
                 MonotonicCounterResourceValue::LowerBound { lower_bound: lower_bound1 },
                 MonotonicCounterResourceValue::LowerBound { lower_bound: lower_bound2 },
@@ -102,9 +112,6 @@ impl PCM for MonotonicCounterResourceValue {
                 };
                 MonotonicCounterResourceValue::LowerBound { lower_bound: max_lower_bound }
             },
-            // A lower bound can be combined with a right to
-            // advance as long as the lower bound doesn't exceed
-            // the value in the right to advance.
             (
                 MonotonicCounterResourceValue::LowerBound { lower_bound },
                 MonotonicCounterResourceValue::FullRightToAdvance { value },
@@ -121,9 +128,6 @@ impl PCM for MonotonicCounterResourceValue {
             } else {
                 MonotonicCounterResourceValue::Invalid {  }
             },
-            // A lower bound can be combined with a half right to
-            // advance as long as the lower bound doesn't exceed
-            // the value in the half right to advance.
             (
                 MonotonicCounterResourceValue::LowerBound { lower_bound },
                 MonotonicCounterResourceValue::HalfRightToAdvance { value },
@@ -140,9 +144,6 @@ impl PCM for MonotonicCounterResourceValue {
             } else {
                 MonotonicCounterResourceValue::Invalid {  }
             },
-            // Two half rights to advance can be combined to make
-            // a whole right to advance, as long as the two values
-            // agree with each other.
             (
                 MonotonicCounterResourceValue::HalfRightToAdvance { value: value1 },
                 MonotonicCounterResourceValue::HalfRightToAdvance { value: value2 },
@@ -151,7 +152,6 @@ impl PCM for MonotonicCounterResourceValue {
             } else {
                 MonotonicCounterResourceValue::Invalid {  }
             },
-            // Any other combination is invalid
             (_, _) => MonotonicCounterResourceValue::Invalid {  },
         }
     }
@@ -288,6 +288,8 @@ impl MonotonicCounterResource {
         Self { r }
     }
 }
+
+/* TEST CODE BELOW */
 
 // This example illustrates some uses of the monotonic counter.
 fn main() {
