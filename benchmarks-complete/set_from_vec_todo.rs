@@ -8,7 +8,7 @@ struct VecSet {
 
 impl VecSet {
     pub closed spec fn view(&self) -> Set<u64> {
-        // TODO: add specification
+        // TODO: add requires and ensures
     }
 
     pub fn new() -> (s: Self)
@@ -21,18 +21,12 @@ impl VecSet {
         // TODO: add requires and ensures
     {
         self.vt.push(v);
-        proof {
-            broadcast use vstd::seq_lib::group_seq_properties;
-        }
-        assert(self.vt@ =~= old(self).vt@ + seq![v]);
     }
 
     pub fn contains(&self, v: u64) -> (contained: bool)
         // TODO: add requires and ensures
     {
         for i in iter: 0..self.vt.len()
-            invariant
-                forall|j: nat| j < i ==> self.vt[j as int] != v,
         {
             if self.vt[i] == v {
                 return true;

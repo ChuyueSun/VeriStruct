@@ -102,28 +102,18 @@ impl<A> MyOption<A> {
             MyOption::None => unreached(),
         }
     }
-
-    pub proof fn tracked_unwrap(tracked self) -> (tracked a: A)
-        requires
-            is_Some(self),
-        ensures
-            a == get_Some_0(self),
-    {
-        match self {
-            MyOption::Some(a) => a,
-            MyOption::None => proof_from_false(),
-        }
-    }
 }
 
-fn test_option_generic() {
+/* TEST CODE BELOW */
+
+fn test_option_generic(n: i32) {
     let opt: MyOption<i32> = MyOption::None;
     let is_none = opt.is_none();
     let is_some = opt.is_some();
     assert(is_none);
     assert(!is_some);
 
-    let opt2: MyOption<i32> = MyOption::Some(42);
+    let opt2: MyOption<i32> = MyOption::Some(n);
     let is_none = opt2.is_none();
     let is_some = opt2.is_some();
     assert(!is_none);
@@ -133,19 +123,31 @@ fn test_option_generic() {
     let is_some = opt3.is_some();
     let val = opt3.unwrap();
     assert(is_some);
-    assert(val == 42);
+    assert(val == n);
 
     let opt4 = opt2.or(opt);
     let is_some = opt4.is_some();
     let val = opt4.unwrap();
     assert(is_some);
-    assert(val == 42);
+    assert(val == n);
 
     let opt5 = opt.or(MyOption::None);
     let is_none = opt5.is_none();
     let is_some = opt5.is_some();
     assert(is_none);
     assert(!is_some);
+
+    let opt_some: MyOption<i32> = MyOption::Some(n);
+    let opt_ref = opt_some.as_ref();
+    let ref_some = opt_ref.is_some();
+    let val = *opt_ref.unwrap();
+    assert(ref_some);
+    assert(val == n);
+
+    let opt_none: MyOption<i32> = MyOption::None;
+    let opt_ref_none = opt_none.as_ref();
+    let ref_none = opt_none.is_none();
+    assert(ref_none);
 }
 
 } // verus!

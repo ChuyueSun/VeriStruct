@@ -79,10 +79,27 @@ fn binary_search_no_spinoff(v: &Vec<u64>, k: u64) -> (r: usize)
     i1
 }
 
-/*
-TEST CODE BELOW
-*/
-
+#[verifier::loop_isolation(false)]
+fn reverse_no_spinoff(v: &mut Vec<u64>)
+    ensures
+        v.len() == old(v).len(),
+        forall|i: int| 0 <= i < old(v).len() ==> v[i] == old(v)[old(v).len() - i - 1],
+{
+    let length = v.len();
+    let ghost v1 = v@;
+    for n in 0..(length / 2)
+        invariant
+            length == v.len(),
+            forall|i: int| 0 <= i < n ==> v[i] == v1[length - i - 1],
+            forall|i: int| 0 <= i < n ==> v1[i] == v[length - i - 1],
+            forall|i: int| n <= i && i + n < length ==> #[trigger] v[i] == v1[i],
+    {
+        let x = v[n];
+        let y = v[length - 1 - n];
+        v.set(n, y);
+        v.set(length - 1 - n, x);
+    }
+}
 
 fn pusher() -> Vec<u64> {
     let mut v = Vec::new();
@@ -123,38 +140,18 @@ fn push_test(t: Vec<u64>, y: u64)
     assert(forall|i: int| #![auto] 0 <= i < t.len() ==> uninterp_fn(t[i]));
 }
 
-fn binary_search_test(t: Vec<u64>)
-requires
-    t.len() > 0,
-    t.len() < u64::MAX - 1 as usize,
-    forall|i: int, j: int| 0 <= i <= j < t.len() ==> t[i] <= t[j],
-{
-    for i in 0 .. t.len()
-    invariant
-        forall|i: int, j: int| 0 <= i <= j < t.len() ==> t[i] <= t[j],
-    {
-        let k = t[i];
-        let r = binary_search(&t, k);
-        assert(r < t.len());
-        assert(t[r as int] == k);
-        let r = binary_search_no_spinoff(&t, k);
-        assert(r < t.len());
-        assert(t[r as int] == k);
-    }
-}
-
-fn reverse_test(t: &mut Vec<u64>)
-requires
-    old(t).len() > 0,
-    old(t).len() < u64::MAX - 1 as usize,
-{
-    let ghost t1 = t@;
-    reverse(t);
-    assert(t.len() == t1.len());
-    assert(forall|i: int| 0 <= i < t1.len() ==> t[i] == t1[t1.len() - i - 1]);
-}
-
-
 } // verus!
 fn main() {
+    let mut v = vec![0, 10, 20, 30, 40, 50, 60, 70, 80, 90];
+    println!("{}", binary_search(&v, 70));
+    println!();
+    reverse(&mut v);
+    for x in v {
+        println!("{}", x);
+    }
+
+    println!("Pushed 5 values:");
+    for x in pusher() {
+        println!("{}", x);
+    }
 }

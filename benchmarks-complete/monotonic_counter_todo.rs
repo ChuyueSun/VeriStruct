@@ -84,15 +84,27 @@ pub enum MonotonicCounterResourceValue {
 // `PCM`, showing how to use it in a resource algebra.
 impl PCM for MonotonicCounterResourceValue {
     open spec fn valid(self) -> bool {
-        // TODO: implement specification.
+        !(self is Invalid)
     }
 
+    // Two lower bounds can be combined into a lower bound
+    // that's the maximum of the two lower bounds.
+    // A lower bound can be combined with a right to
+    // advance as long as the lower bound doesn't exceed
+    // the value in the right to advance.
+    // A lower bound can be combined with a half right to
+    // advance as long as the lower bound doesn't exceed
+    // the value in the half right to advance.
+    // Two half rights to advance can be combined to make
+    // a whole right to advance, as long as the two values
+    // agree with each other.
+    // Any other combination is invalid
     open spec fn op(self, other: Self) -> Self {
-        // TODO: implement specification.
+        // TODO: add specification function
     }
 
     open spec fn unit() -> Self {
-        // TODO: implement specification.
+        // TODO: add specification function
     }
 
     proof fn closed_under_incl(a: Self, b: Self) {
@@ -113,7 +125,7 @@ impl PCM for MonotonicCounterResourceValue {
 
 impl MonotonicCounterResourceValue {
     pub open spec fn n(self) -> nat {
-        // TODO: implement specification.
+        // TODO: add specification function
     }
 }
 
@@ -123,11 +135,11 @@ pub struct MonotonicCounterResource {
 
 impl MonotonicCounterResource {
     pub closed spec fn id(self) -> Loc {
-        // TODO: implement specification.
+        // TODO: add specification function
     }
 
     pub closed spec fn view(self) -> MonotonicCounterResourceValue {
-        // TODO: implement specification.
+        // TODO: add specification function
     }
 
     // This function creates a monotonic counter and returns a
@@ -190,6 +202,8 @@ impl MonotonicCounterResource {
     }
 }
 
+/* TEST CODE BELOW */
+
 // This example illustrates some uses of the monotonic counter.
 fn main() {
     let tracked full = MonotonicCounterResource::alloc();
@@ -216,6 +230,80 @@ fn main() {
     assert(lower_bound@.n() == 1);
     let tracked lower_bound_duplicate = lower_bound.extract_lower_bound();
     assert(lower_bound_duplicate@.n() == 1);
+
+    // Test combining two lower bounds
+    proof {
+        let lb1 = MonotonicCounterResourceValue::LowerBound { lower_bound: 2 };
+        let lb2 = MonotonicCounterResourceValue::LowerBound { lower_bound: 5 };
+        let combined = lb1.op(lb2);
+        assert(combined == MonotonicCounterResourceValue::LowerBound { lower_bound: 5 });
+    }
+
+    // Test combining lower bound and full right to advance (valid)
+    proof {
+        let lb = MonotonicCounterResourceValue::LowerBound { lower_bound: 3 };
+        let full = MonotonicCounterResourceValue::FullRightToAdvance { value: 5 };
+        let combined = lb.op(full);
+        assert(combined == MonotonicCounterResourceValue::FullRightToAdvance { value: 5 });
+    }
+
+    // Test combining lower bound and full right to advance (invalid)
+    proof {
+        let lb = MonotonicCounterResourceValue::LowerBound { lower_bound: 7 };
+        let full = MonotonicCounterResourceValue::FullRightToAdvance { value: 5 };
+        let combined = lb.op(full);
+        assert(combined == MonotonicCounterResourceValue::Invalid);
+    }
+
+    // Test combining two half rights to advance (valid)
+    proof {
+        let half1 = MonotonicCounterResourceValue::HalfRightToAdvance { value: 4 };
+        let half2 = MonotonicCounterResourceValue::HalfRightToAdvance { value: 4 };
+        let combined = half1.op(half2);
+        assert(combined == MonotonicCounterResourceValue::FullRightToAdvance { value: 4 });
+    }
+
+    // Test combining two half rights to advance (invalid)
+    proof {
+        let half1 = MonotonicCounterResourceValue::HalfRightToAdvance { value: 4 };
+        let half2 = MonotonicCounterResourceValue::HalfRightToAdvance { value: 5 };
+        let combined = half1.op(half2);
+        assert(combined == MonotonicCounterResourceValue::Invalid);
+    }
+
+    // Test combining lower bound and half right to advance (valid)
+    proof {
+        let lb = MonotonicCounterResourceValue::LowerBound { lower_bound: 2 };
+        let half = MonotonicCounterResourceValue::HalfRightToAdvance { value: 3 };
+        let combined = lb.op(half);
+        assert(combined == MonotonicCounterResourceValue::HalfRightToAdvance { value: 3 });
+    }
+
+    // Test combining lower bound and half right to advance (invalid)
+    proof {
+        let lb = MonotonicCounterResourceValue::LowerBound { lower_bound: 5 };
+        let half = MonotonicCounterResourceValue::HalfRightToAdvance { value: 3 };
+        let combined = lb.op(half);
+        assert(combined == MonotonicCounterResourceValue::Invalid);
+    }
+
+    // Test combining full right to advance and half right to advance (should be invalid)
+    proof {
+        let full = MonotonicCounterResourceValue::FullRightToAdvance { value: 2 };
+        let half = MonotonicCounterResourceValue::HalfRightToAdvance { value: 2 };
+        let combined = full.op(half);
+        assert(combined == MonotonicCounterResourceValue::Invalid);
+    }
+
+    // Test unit element
+    proof {
+        let unit = MonotonicCounterResourceValue::unit();
+        let lb = MonotonicCounterResourceValue::LowerBound { lower_bound: 3 };
+        let combined = unit.op(lb);
+        assert(combined == MonotonicCounterResourceValue::LowerBound { lower_bound: 3 });
+        let combined2 = lb.op(unit);
+        assert(combined2 == MonotonicCounterResourceValue::LowerBound { lower_bound: 3 });
+    }
 }
 
 } // verus!

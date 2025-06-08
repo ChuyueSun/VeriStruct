@@ -113,6 +113,10 @@ impl<T: Copy> RingBuffer<T> {
     pub fn len(&self) -> (ret: usize)
         // TODO: add requires and ensures
     {
+        proof {
+            use_type_invariant(&self);
+            lemma_mod_auto(self@.1 as int);
+        }
         if self.tail > self.head {
             self.tail - self.head
         } else if self.tail < self.head {
@@ -126,6 +130,9 @@ impl<T: Copy> RingBuffer<T> {
     pub fn has_elements(&self) -> (ret: bool)
         // TODO: add requires and ensures
     {
+        proof {
+            use_type_invariant(&self);
+        }
         self.head != self.tail
     }
 
@@ -135,6 +142,10 @@ impl<T: Copy> RingBuffer<T> {
     pub fn is_full(&self) -> (ret: bool)
         // TODO: add requires and ensures
     {
+        proof {
+            use_type_invariant(&self);
+            lemma_mod_auto(self@.1 as int);
+        }
         self.head == ((self.tail + 1) % self.ring.len())
     }
 
@@ -158,6 +169,10 @@ impl<T: Copy> RingBuffer<T> {
         if self.is_full() {
             false
         } else {
+            proof {
+                use_type_invariant(&*self);
+                lemma_mod_auto(self@.1 as int);
+            }
             my_set(&mut self.ring, self.tail, val);
             self.tail = (self.tail + 1) % self.ring.len();
             true
@@ -168,6 +183,11 @@ impl<T: Copy> RingBuffer<T> {
     pub fn dequeue(&mut self) -> (ret: Option<T>)
         // TODO: add requires and ensures
     {
+        proof {
+            use_type_invariant(&*self);
+            lemma_mod_auto(self@.1 as int);
+        }
+
         if self.has_elements() {
             let val = self.ring[self.head];
             self.head = (self.head + 1) % self.ring.len();
@@ -183,11 +203,12 @@ impl<T: Copy> RingBuffer<T> {
     pub fn available_len(&self) -> (ret: usize)
         // TODO: add requires and ensures
     {
+        proof {
+            use_type_invariant(&self);
+        }
         self.ring.len().saturating_sub(1 + self.len())
     }
 }
-
-/* TEST CODE BELOW */
 
 #[verifier::loop_isolation(false)]
 fn test_enqueue_dequeue_generic(len: usize, value: i32, iterations: usize)

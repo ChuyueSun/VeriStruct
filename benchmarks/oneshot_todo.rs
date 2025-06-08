@@ -95,15 +95,15 @@ pub enum OneShotResourceValue {
 // `PCM`, showing how to use it in a resource algebra.
 impl PCM for OneShotResourceValue {
     open spec fn valid(self) -> bool {
-        // TODO: add specification function
+        // TODO: implement specification.
     }
 
     open spec fn op(self, other: Self) -> Self {
-        // TODO: add specification function
+        // TODO: implement specification.
     }
 
     open spec fn unit() -> Self {
-        OneShotResourceValue::Empty {  }
+        // TODO: implement specification.
     }
 
     proof fn closed_under_incl(a: Self, b: Self) {
@@ -128,11 +128,11 @@ pub struct OneShotResource {
 
 impl OneShotResource {
     pub closed spec fn id(self) -> Loc {
-    // TODO: add specification function
+        // TODO: implement specification.
     }
 
     pub closed spec fn view(self) -> OneShotResourceValue {
-    // TODO: add view function
+        // TODO: implement specification.
     }
 
     // This function creates a one-shot and returns a resource
@@ -187,12 +187,8 @@ impl OneShotResource {
     {
         self.r.validate();
         other.r.validate();
-        // A `HalfRightToComplete` doesn't combine validly with a
-        // `Complete`, so validating them together proves that
-        // `other.r.value()` is `HalfRightToComplete`.
         self.r.validate_2(&other.r);
-        // Knowing they're both `HalfRightToComplete` allows them to
-        // be combined and transformed into `Complete` resources.
+        assert(other@ is HalfRightToComplete);
         let v = OneShotResourceValue::Complete {  };
         update_and_redistribute(&mut self.r, &mut other.r, v, v);
     }
@@ -205,9 +201,13 @@ impl OneShotResource {
         let tracked r = duplicate(&self.r);
         Self { r }
     }
-}
 
-/* TEST CODE BELOW */
+    pub proof fn lemma_is_complete_if_other_is(tracked &mut self, tracked other: &Self)
+    // TODO: add requires and ensures
+    {
+        self.r.validate_2(&other.r);
+    }
+}
 
 // This example illustrates some uses of the one-shot functions.
 fn main() {
@@ -231,43 +231,6 @@ fn main() {
     let tracked knowledge = half1.duplicate();
     assert(knowledge.id() == half1.id() == id);
     assert(knowledge@ is Complete);
-
-    // Additional tests for the PCM `op` function
-    proof {
-        // `Empty` is the unit element
-        assert(OneShotResourceValue::unit().op(OneShotResourceValue::HalfRightToComplete)
-            == OneShotResourceValue::HalfRightToComplete);
-        assert(OneShotResourceValue::HalfRightToComplete
-            .op(OneShotResourceValue::unit())
-            == OneShotResourceValue::HalfRightToComplete);
-
-        // Two halves combine into full authority
-        assert(OneShotResourceValue::HalfRightToComplete
-            .op(OneShotResourceValue::HalfRightToComplete)
-            == OneShotResourceValue::FullRightToComplete);
-
-        // `Complete` is idempotent
-        assert(OneShotResourceValue::Complete
-            .op(OneShotResourceValue::Complete)
-            == OneShotResourceValue::Complete);
-
-        // Invalid combinations
-        assert(OneShotResourceValue::FullRightToComplete
-            .op(OneShotResourceValue::FullRightToComplete)
-            == OneShotResourceValue::Invalid);
-        assert(OneShotResourceValue::Complete
-            .op(OneShotResourceValue::HalfRightToComplete)
-            == OneShotResourceValue::Invalid);
-
-        // Commutativity
-        let a = OneShotResourceValue::HalfRightToComplete;
-        let b = OneShotResourceValue::Complete;
-        assert(a.op(b) == b.op(a));
-
-        // Associativity
-        let c = OneShotResourceValue::Empty;
-        assert((a.op(c)).op(b) == a.op(c.op(b)));
-    }
 }
 
 } // verus!
