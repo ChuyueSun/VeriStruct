@@ -125,47 +125,37 @@ impl<T> LogResource<T> {
     pub proof fn alloc() -> (tracked result: LogResource<T>)
     // TODO: add requires and ensures
     {
-        let v = LogResourceValue::<T>::FullAuthority { log: Seq::<T>::empty() };
-        let tracked r = Resource::<LogResourceValue::<T>>::alloc(v);
-        Self { r }
+        // TODO: implement proof code
     }
 
     pub proof fn split(tracked self) -> (tracked halves: (Self, Self))
     // TODO: add requires and ensures
     {
-        let half_value = LogResourceValue::<T>::HalfAuthority { log: self@.log() };
-        let tracked (half1, half2) = self.r.split(half_value, half_value);
-        (Self { r: half1 }, Self { r: half2 })
+        // TODO: implement proof code
     }
 
     pub proof fn append(tracked &mut self, v: T)
     // TODO: add requires and ensures
     {
-        let value = LogResourceValue::<T>::FullAuthority { log: self@.log() + seq![v] };
-        update_mut(&mut self.r, value);
+        // TODO: implement proof code
     }
 
     pub proof fn append_using_two_halves(tracked &mut self, tracked other: &mut Self, v: T)
     // TODO: add requires and ensures
     {
-        self.r.validate_2(&other.r);
-        let new_log = self@.log() + seq![v];
-        let new_value = LogResourceValue::<T>::HalfAuthority { log: new_log };
-        update_and_redistribute(&mut self.r, &mut other.r, new_value, new_value);
+        // TODO: implement proof code
     }
 
     pub proof fn extract_prefix_knowledge(tracked &self) -> (tracked out: Self)
     // TODO: add requires and ensures
     {
-        let v = LogResourceValue::<T>::PrefixKnowledge { prefix: self@.log() };
-        let tracked r = copy_duplicable_part(&self.r, v);
-        Self { r }
+        // TODO: implement proof code
     }
 
     pub proof fn deduce_prefix_relation(tracked &mut self, tracked other: &Self)
     // TODO: add requires and ensures
     {
-        self.r.validate_2(&other.r)
+        // TODO: implement proof code
     }
 }
 

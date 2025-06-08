@@ -148,9 +148,7 @@ impl MonotonicCounterResource {
     pub proof fn alloc() -> (tracked result: Self)
     // TODO: add requires and ensures
     {
-        let v = MonotonicCounterResourceValue::FullRightToAdvance { value: 0 };
-        let tracked mut r = Resource::<MonotonicCounterResourceValue>::alloc(v);
-        Self { r }
+        // TODO: implement proof code
     }
 
     // This function splits a resource granting full authority to
@@ -160,10 +158,7 @@ impl MonotonicCounterResource {
     pub proof fn split(tracked self) -> (tracked return_value: (Self, Self))
     // TODO: add requires and ensures
     {
-        let value = self@->FullRightToAdvance_value;
-        let v_half = MonotonicCounterResourceValue::HalfRightToAdvance { value };
-        let tracked (r1, r2) = self.r.split(v_half, v_half);
-        (Self { r: r1 }, Self { r: r2 })
+        // TODO: implement proof code
     }
 
     // This function uses a resource granting full authority to
@@ -171,9 +166,7 @@ impl MonotonicCounterResource {
     pub proof fn increment(tracked &mut self)
     // TODO: add requires and ensures
     {
-        let v = self@->FullRightToAdvance_value;
-        let r = MonotonicCounterResourceValue::FullRightToAdvance { value: v + 1 };
-        update_mut(&mut self.r, r);
+        // TODO: implement proof code
     }
 
     // This function uses two tracked resources, each granting half
@@ -186,19 +179,13 @@ impl MonotonicCounterResource {
     pub proof fn increment_using_two_halves(tracked &mut self, tracked other: &mut Self)
     // TODO: add requires and ensures
     {
-        self.r.validate_2(&other.r);
-        let v = self@->HalfRightToAdvance_value;
-        let r = MonotonicCounterResourceValue::HalfRightToAdvance { value: v + 1 };
-        update_and_redistribute(&mut self.r, &mut other.r, r, r);
+        // TODO: implement proof code
     }
 
     pub proof fn extract_lower_bound(tracked &self) -> (tracked out: Self)
     // TODO: add requires and ensures
     {
-        self.r.validate();
-        let v = MonotonicCounterResourceValue::LowerBound { lower_bound: self@.n() };
-        let tracked r = copy_duplicable_part(&self.r, v);
-        Self { r }
+        // TODO: implement proof code
     }
 }
 

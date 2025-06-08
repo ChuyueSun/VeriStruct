@@ -141,9 +141,7 @@ impl OneShotResource {
     pub proof fn alloc() -> (tracked resource: Self)
     // TODO: add requires and ensures
     {
-        let v = OneShotResourceValue::FullRightToComplete {  };
-        let tracked mut r = Resource::<OneShotResourceValue>::alloc(v);
-        OneShotResource { r }
+        // TODO: implement proof code
     }
 
     // This function splits full authority to perform a one-shot
@@ -151,9 +149,7 @@ impl OneShotResource {
     pub proof fn split(tracked self) -> (tracked return_value: (Self, Self))
     // TODO: add requires and ensures
     {
-        let half = OneShotResourceValue::HalfRightToComplete {  };
-        let tracked (r1, r2) = self.r.split(half, half);
-        (OneShotResource { r: r1 }, OneShotResource { r: r2 })
+        // TODO: implement proof code
     }
 
     // This function performs a one-shot given a resource representing
@@ -164,8 +160,7 @@ impl OneShotResource {
     pub proof fn perform(tracked &mut self)
     // TODO: add requires and ensures
     {
-        let v = OneShotResourceValue::Complete {  };
-        update_mut(&mut self.r, v);
+        // TODO: implement proof code
     }
 
     // This function performs a one-shot given two resources, the
@@ -185,16 +180,13 @@ impl OneShotResource {
     pub proof fn perform_using_two_halves(tracked &mut self, tracked other: &mut Self)
     // TODO: add requires and ensures
     {
-        self.r.validate();
-        other.r.validate();
         // A `HalfRightToComplete` doesn't combine validly with a
         // `Complete`, so validating them together proves that
         // `other.r.value()` is `HalfRightToComplete`.
-        self.r.validate_2(&other.r);
         // Knowing they're both `HalfRightToComplete` allows them to
         // be combined and transformed into `Complete` resources.
-        let v = OneShotResourceValue::Complete {  };
-        update_and_redistribute(&mut self.r, &mut other.r, v, v);
+
+        // TODO: implement proof code
     }
 
     // This function duplicates a one-shot resource representing
@@ -202,8 +194,7 @@ impl OneShotResource {
     pub proof fn duplicate(tracked &self) -> (tracked other: Self)
     // TODO: add requires and ensures
     {
-        let tracked r = duplicate(&self.r);
-        Self { r }
+        // TODO: implement proof code
     }
 }
 

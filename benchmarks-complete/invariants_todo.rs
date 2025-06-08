@@ -13,6 +13,8 @@ impl InvariantPredicate<int, u32> for ModPredicate {
     }
 }
 
+/* TEST CODE BEGINS */
+
 pub fn main() {
     let tracked u: u32 = 5u32;
     let tracked i: AtomicInvariant<int, u32, ModPredicate> = AtomicInvariant::new(1, u, 0);
