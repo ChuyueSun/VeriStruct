@@ -126,6 +126,8 @@ impl<T> AgreementResource<T> {
     }
 }
 
+/* TEST CODE BELOW */
+
 pub fn main() {
     // ── int payload ─────────────────────────────────────────────
     let tracked r1 = AgreementResource::<int>::alloc(72);

@@ -124,6 +124,7 @@ impl<T> AgreementResource<T> {
         // TODO: add proof 
     }
 }
+/* TEST CODE BELOW */
 
 pub fn main() {
     // ── int payload ─────────────────────────────────────────────
