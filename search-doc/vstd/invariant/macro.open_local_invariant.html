@@ -1,0 +1,71 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Macro used to temporarily “open” a `LocalInvariant` object, obtaining the stored value within."><title>open_local_invariant in vstd::invariant - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../static.files/rustdoc-46132b98.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="vstd" data-themes="" data-resource-suffix="" data-rustdoc-version="1.85.1 (4eb161250 2025-03-15)" data-channel="1.85.1" data-search-js="search-75f5ac3e.js" data-settings-js="settings-0f613d39.js" ><script src="../../static.files/storage-59e33391.js"></script><script defer src="sidebar-items.js"></script><script defer src="../../static.files/main-5f194d8c.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-044be391.svg"></head><body class="rustdoc macro"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../vstd/index.html">vstd</a></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">open_<wbr>local_<wbr>invariant</a></h2><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#usage" title="Usage">Usage</a></li><li><a href="#avoiding-reentrancy" title="Avoiding Reentrancy">Avoiding Reentrancy</a></li><li><a href="#example" title="Example">Example</a></li><li><a href="#more-examples" title="More Examples">More Examples</a></li></ul></section><div id="rustdoc-modnav"><h2><a href="index.html">In vstd::<wbr>invariant</a></h2></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><span class="rustdoc-breadcrumbs"><a href="../index.html">vstd</a>::<wbr><a href="index.html">invariant</a></span><h1>Macro <span class="macro">open_local_invariant</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../../src/vstd/invariant.rs.html#542-549">Source</a> </span></div><pre class="rust item-decl"><code>macro_rules! open_local_invariant {
+    [$($tail:tt)*] =&gt; { ... };
+}</code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Macro used to temporarily “open” a <a href="struct.LocalInvariant.html" title="struct vstd::invariant::LocalInvariant"><code>LocalInvariant</code></a> object, obtaining the stored
+value within.</p>
+<h4 id="usage"><a class="doc-anchor" href="#usage">§</a>Usage</h4>
+<p>The form of the macro looks like,</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code>open_local_invariant(<span class="macro-nonterminal">$inv </span>=&gt; <span class="macro-nonterminal">$id </span>=&gt; {
+    <span class="comment">// Inner scope
+</span>});</code></pre></div>
+<p>The operation of opening an invariant is a ghost one; however, the inner code block
+may contain arbitrary <code>exec</code>-mode code. The invariant remains “open” for the duration
+of the inner code block, and it is closed again of the end of the block.</p>
+<p>The <code>$inv</code> parameter should be an expression of type <code>&amp;LocalInvariant&lt;K, V, Pred&gt;</code>,
+the invariant object to be opened. The <code>$id</code> is an identifier which is bound within
+the code block as a <code>mut</code> variable of type <code>V</code>. This gives the user ownership over
+the <code>V</code> value, which they may manipulate freely within the code block. At the end
+of the code block, the variable <code>$id</code> is consumed.</p>
+<p>The obtained object <code>v: V</code>, will satisfy the <code>LocalInvariant</code>’s invariant predicate
+<a href="struct.LocalInvariant.html#method.inv" title="method vstd::invariant::LocalInvariant::inv"><code>$inv.inv(v)</code></a>. Furthermore, the user must prove that this
+invariant still holds at the end. In other words, the macro usage is
+roughly equivalent to the following:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code>{
+    <span class="kw">let </span><span class="macro-nonterminal">$id</span>: V = <span class="comment">/* an arbitrary value */</span>;
+    assume(<span class="macro-nonterminal">$inv</span>.inv(<span class="macro-nonterminal">$id</span>));
+    <span class="comment">/* user code block here */
+    </span>assert(<span class="macro-nonterminal">$inv</span>.inv(<span class="macro-nonterminal">$id</span>));
+    consume(<span class="macro-nonterminal">$id</span>);
+}</code></pre></div>
+<h4 id="avoiding-reentrancy"><a class="doc-anchor" href="#avoiding-reentrancy">§</a>Avoiding Reentrancy</h4>
+<p>Verus adds additional checks to ensure that an invariant is never opened
+more than once at the same time. For example, suppose that you attempt to nest
+the use of <code>open_invariant</code>, supplying the same argument <code>inv</code> to each:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code>open_local_invariant(inv =&gt; id1 =&gt; {
+    open_local_invariant(inv =&gt; id2 =&gt; {
+    });
+});</code></pre></div>
+<p>In this situation, Verus would produce an error:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code>error: possible invariant collision
+  |
+  |   <span class="macro">open_local_invariant!</span>(<span class="kw-2">&amp;</span>inv =&gt; id1 =&gt; {
+  |                           ^ this invariant
+  |       <span class="macro">open_local_invariant!</span>(<span class="kw-2">&amp;</span>inv =&gt; id2 =&gt; {
+  |                               ^ might be the same <span class="kw">as </span>this invariant
+  ...
+  |       }
+  |   }</code></pre></div>
+<p>When generating these conditions, Verus compares invariants via their
+<a href="struct.LocalInvariant.html#method.namespace" title="method vstd::invariant::LocalInvariant::namespace"><code>namespace()</code></a> values.
+An invariant’s namespace (represented simply as an integer)
+is specified upon the call to <a href="struct.LocalInvariant.html#method.new" title="associated function vstd::invariant::LocalInvariant::new"><code>LocalInvariant::new</code></a>.
+If you have the need to open multiple invariants at once, make sure to given
+them different namespaces.</p>
+<p>So that Verus can ensure that there are no nested invariant accesses across function
+boundaries, every <code>proof</code> and <code>exec</code> function has, as part of its specification,
+the set of invariant namespaces that it might open.</p>
+<p>The invariant set of a function can be specified via the <a href="https://verus-lang.github.io/verus/guide/reference-opens-invariants.html"><code>opens_invariants</code> clause</a>.
+The default for an <code>exec</code>-mode function is to open any, while the default
+for a <code>proof</code>-mode function is to open none.</p>
+<p>It’s not legal to use <code>open_local_invariant!</code> in proof mode. In proof mode, you need
+to use <code>open_local_invariant_in_proof!</code> instead. This takes one extra parameter,
+an open-invariant credit, which you can get by calling
+<code>create_open_invariant_credit()</code> before you enter proof mode.</p>
+<h4 id="example"><a class="doc-anchor" href="#example">§</a>Example</h4>
+<p>TODO fill this in</p>
+<h4 id="more-examples"><a class="doc-anchor" href="#more-examples">§</a>More Examples</h4>
+<p>TODO fill this in</p>
+</div></details></section></div></main></body></html>

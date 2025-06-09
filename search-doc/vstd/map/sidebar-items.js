@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["axiom_map_empty","axiom_map_ext_equal","axiom_map_ext_equal_deep","axiom_map_index_decreases_finite","axiom_map_index_decreases_infinite","axiom_map_insert_different","axiom_map_insert_domain","axiom_map_insert_same","axiom_map_remove_different","axiom_map_remove_domain","group_map_axioms"],"macro":["assert_maps_equal","map"],"struct":["Map"]};

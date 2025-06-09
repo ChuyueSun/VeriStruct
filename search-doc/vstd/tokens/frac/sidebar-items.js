@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["Empty","Frac","FracGhost","GhostVar","GhostVarAuth"]};

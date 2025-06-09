@@ -1,0 +1,54 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="rustdoc" name="generator"><meta content="API documentation for the Rust `spawn` fn in crate `vstd`." name="description"><title>spawn in vstd::thread - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link href="../../static.files/normalize-9960930a.css" rel="stylesheet"><link href="../../static.files/rustdoc-46132b98.css" rel="stylesheet"><meta data-channel="1.85.1" data-current-crate="vstd" data-resource-suffix="" data-root-path="../../" data-rustdoc-version="1.85.1 (4eb161250 2025-03-15)" data-search-js="search-75f5ac3e.js" data-settings-js="settings-0f613d39.js" data-static-root-path="../../static.files/" data-themes="" name="rustdoc-vars"><script src="../../static.files/storage-59e33391.js"></script><script defer="" src="sidebar-items.js"></script><script defer="" src="../../static.files/main-5f194d8c.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-893ab5e7.css"></noscript><link href="../../static.files/favicon-32x32-6580c154.png" rel="alternate icon" type="image/png"><link href="../../static.files/favicon-044be391.svg" rel="icon" type="image/svg+xml"></head><body class="rustdoc fn"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../vstd/index.html">vstd</a></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">spawn</a></h2><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#example" title="Example">Example</a></li></ul></section><div id="rustdoc-modnav"><h2><a href="index.html">In vstd::<wbr>thread</a></h2></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section class="content" id="main-content"><div class="main-heading"><span class="rustdoc-breadcrumbs"><a href="../index.html">vstd</a>::<wbr><a href="index.html">thread</a></span><h1>Function <span class="fn">spawn</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../../src/vstd/thread.rs.html#107-133">Source</a> </span></div><pre class="rust item-decl"><code>pub <span class="verus-sig-keyword">exec </span>fn spawn&lt;F, Ret&gt;(f: F) -&gt; <span class="verus-ret-name">handle : </span><a class="struct" href="struct.JoinHandle.html" title="struct vstd::thread::JoinHandle">JoinHandle</a>&lt;Ret&gt;<div class="where">where
+    F: <a class="trait" href="https://doc.rust-lang.org/1.85.1/core/ops/function/trait.FnOnce.html" title="trait core::ops::function::FnOnce">FnOnce</a>() -&gt; Ret + <a class="trait" href="https://doc.rust-lang.org/1.85.1/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'static,
+    Ret: <a class="trait" href="https://doc.rust-lang.org/1.85.1/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'static,</div></code></pre><details class="toggle top-doc" open=""><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code>f.requires(()),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code>forall |ret: Ret| <span class="attr">#[trigger] </span>handle.predicate(ret) ==&gt; f.ensures((), ret),</code></pre></div>
+
+
+
+
+
+<p>Spawns a thread. (Wrapper around <a href="https://doc.rust-lang.org/std/thread/fn.spawn.html"><code>std::thread::spawn</code></a>.)</p>
+<p>This takes as input a <code>FnOnce</code> closure with no arguments.
+The <code>spawn</code> returns a <a href="struct.JoinHandle.html" title="struct vstd::thread::JoinHandle"><code>JoinHandle</code></a>, on which the client can call
+<a href="struct.JoinHandle.html#method.join" title="method vstd::thread::JoinHandle::join"><code>join()</code></a> to wait
+for the thread to complete. The return value of the closure is returned via <code>join()</code>.</p>
+<p>The closure must be callable (i.e., its precondition must be satisfied)
+but it may have an arbitrary postcondition. The postcondition is passed through
+the <code>JoinHandle</code> via <a href="struct.JoinHandle.html#method.predicate" title="method vstd::thread::JoinHandle::predicate"><code>JoinHandle::predicate()</code></a>.</p>
+<h4 id="example"><a class="doc-anchor" href="#example">§</a>Example</h4>
+<div class="example-wrap ignore"><a class="tooltip" href="#" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">struct </span>MyInteger {
+    u: u64,
+}
+
+<span class="kw">fn </span>main() {
+    <span class="comment">// Construct an object to pass into the thread.
+    </span><span class="kw">let </span>my_int = MyInteger { u: <span class="number">5 </span>};
+
+    <span class="comment">// Spawn a new thread.
+    </span><span class="kw">let </span>join_handle = spawn(<span class="kw">move </span>|| {
+        ensures(|return_value: MyInteger|
+            return_value.u == <span class="number">20</span>);
+
+        <span class="comment">// Move the `my_int` object into the closure.
+        </span><span class="kw">let </span><span class="kw-2">mut </span>my_int_on_another_thread = my_int;
+
+        <span class="comment">// Update its value.
+        </span>my_int_on_another_thread.u = <span class="number">20</span>;
+
+        <span class="comment">// Return it.
+        </span>my_int_on_another_thread
+    });
+
+    <span class="comment">// Wait for the thread to finish its work.
+    </span><span class="kw">let </span>result_my_int = join_handle.join();
+
+    <span class="kw">match </span>result_my_int {
+        Result::Ok(my_int) =&gt; {
+            <span class="comment">// Obtain the `MyInteger` object that was passed
+            // back from the spawned thread.
+            // Assert that it has the right value.
+            </span>assert(my_int.u == <span class="number">20</span>);
+        }
+        Result::Err(<span class="kw">_</span>) =&gt; { }
+    }
+}</code></pre></div>
+</div></details></section></div></main></body></html>

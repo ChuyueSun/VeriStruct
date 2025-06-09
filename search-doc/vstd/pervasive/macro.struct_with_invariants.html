@@ -1,0 +1,110 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Macro to help set up boilerplate for specifying invariants when using invariant-based datatypes."><title>struct_with_invariants in vstd::pervasive - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../static.files/rustdoc-46132b98.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="vstd" data-themes="" data-resource-suffix="" data-rustdoc-version="1.85.1 (4eb161250 2025-03-15)" data-channel="1.85.1" data-search-js="search-75f5ac3e.js" data-settings-js="settings-0f613d39.js" ><script src="../../static.files/storage-59e33391.js"></script><script defer src="sidebar-items.js"></script><script defer src="../../static.files/main-5f194d8c.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-044be391.svg"></head><body class="rustdoc macro"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../vstd/index.html">vstd</a></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">struct_<wbr>with_<wbr>invariants</a></h2><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#usage" title="Usage">Usage</a></li><li><a href="#example-todo" title="Example (TODO)">Example (TODO)</a></li><li><a href="#example-using-a-container-type-todo" title="Example using a container type (TODO)">Example using a container type (TODO)</a></li><li><a href="#macro-expansion-todo" title="Macro Expansion (TODO)">Macro Expansion (TODO)</a></li></ul></section><div id="rustdoc-modnav"><h2><a href="index.html">In vstd::<wbr>pervasive</a></h2></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><span class="rustdoc-breadcrumbs"><a href="../index.html">vstd</a>::<wbr><a href="index.html">pervasive</a></span><h1>Macro <span class="macro">struct_with_invariants</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"></span></div><pre class="rust item-decl"><code>struct_with_invariants!() { <span class="comment">/* proc-macro */</span> }</code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Macro to help set up boilerplate for specifying invariants when using
+invariant-based datatypes.</p>
+<p>This currently supports the <code>AtomicInvariant</code> and <code>LocalInvariant</code>
+types, as well as all the <code>atomic_ghost</code> types (e.g., <code>AtomicU64</code>, <code>AtomicBool</code>, and so on).
+It is important to first understand how these types work.
+In particular, <code>LocalInvariant</code> (for example) takes three type parameters,
+<code>K</code>, <code>V</code>, and <code>Pred: InvariantPredicate</code>.
+The <code>InvariantPredicate</code> trait lets the user specify an invariant at the static type
+level, while <code>K</code> allows the user to configure the invariant upon construction.
+<code>AtomicInvariant</code> uses the same system, and the <code>atomic_ghost</code> types are similar
+but use a different trait (<code>AtomicInvariantPredicate</code>).</p>
+<p>However, setting all this up in a typical application tends to involve a bit
+of boilerplate. That’s where this macro comes in.</p>
+<h2 id="usage"><a class="doc-anchor" href="#usage">§</a>Usage</h2>
+<p>The <code>struct_with_invariants!</code> macro is used at the item level, and it should contains
+a single struct declaration followed by a single declaration of a <code>spec</code> function
+returning <code>bool</code>. However, this spec function should not contain a boolean predicate
+as usual, but instead a series of <em>invariant declarations</em>.
+Each invariant declaration applies to a single field of the struct.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="macro">struct_with_invariants!</span>{
+    (<span class="kw">pub</span>)<span class="question-mark">? </span><span class="kw">struct </span><span class="macro-nonterminal">$struct_name </span>(&lt;...&gt;)<span class="question-mark">? </span>(<span class="kw">where </span>...)<span class="question-mark">? </span>{
+        ( (<span class="kw">pub</span>)<span class="question-mark">? </span><span class="macro-nonterminal">$field_name</span>: <span class="macro-nonterminal">$</span><span class="kw">type</span>, )*
+    }
+
+    (<span class="kw">pub</span>)<span class="question-mark">? </span>(<span class="macro-nonterminal">open</span>|closed)<span class="question-mark">? </span>spec <span class="kw">fn</span>(<span class="kw-2">&amp;</span><span class="self">self </span>(, ...)<span class="question-mark">?</span>) <span class="macro-nonterminal">$fn_name </span>{
+        ( InvariantDecl | BoolPredicateDecl )*
+    }
+}</code></pre></div>
+<p>A field of the struct, if it uses a supported type, may leave the type <em>incomplete</em> by
+omitting some of its type parameters.
+The following are valid incomplete types:</p>
+<ul>
+<li><code>LocalInvariant&lt;_, V, _&gt;</code></li>
+<li><code>AtomicInvariant&lt;_, V, _&gt;</code></li>
+<li><code>AtomicBool&lt;_, G, _&gt;</code></li>
+<li><code>AtomicU64&lt;_, G, _&gt;</code>
+<ul>
+<li>… and so on for the other <code>atomic_ghost</code> types.</li>
+</ul>
+</li>
+</ul>
+<p>There must be exactly one invariant declaration for each incomplete type used in the
+struct declaration. The macro uses invariant declarations to fill in the type parameters.</p>
+<p>The user can also provide boolean predicate declarations, which are copied verbatim
+into the <code>$fn_name</code> definition. This is a convenience, since it is common to want
+to add extra conditions, and it is fairly straightforward.
+The complex part of the macro expansion in the invariant declarations.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code>BoolPredicateDecl  :=  predicate { <span class="macro-nonterminal">$bool_expr </span>}
+
+InvariantDecl  :=
+    invariant on <span class="macro-nonterminal">$field_name
+        </span>( with (<span class="macro-nonterminal">$dependencies</span>) )<span class="question-mark">?
+        </span>( forall | (<span class="macro-nonterminal">$ident</span>: <span class="macro-nonterminal">$</span><span class="kw">type</span>, )* | )<span class="question-mark">?
+        </span>( <span class="kw">where </span>(<span class="macro-nonterminal">$where_expr</span>) )<span class="question-mark">?
+        </span>( specifically (<span class="macro-nonterminal">$specifically_expr</span>) )<span class="question-mark">?
+        </span>is (<span class="macro-nonterminal">$params</span>) {
+            <span class="macro-nonterminal">$bool_expr
+        </span>}</code></pre></div>
+<p>In the <code>InvariantDecl</code>, the user always needs to provide the following data:</p>
+<ul>
+<li>The <code>$field_name</code> is the field that this invariant applies to
+(which must have an incomplete type as described above)</li>
+<li>The <code>$params</code> are the values constrained by the invariant.
+<ul>
+<li>For a <code>LocalInvariant&lt;V&gt;</code> or <code>AtomicInvariant&lt;V&gt;</code>, this should be a single
+parameter of type <code>V</code>.</li>
+<li>For an <code>atomic_ghost</code> type, this should consist of two parameters,
+first the primitive type stored by the atomic, and secondly one of the ghost type, <code>G</code>.
+(For example, the type <code>AtomicBool&lt;_, G, _&gt;</code> should have two parameters
+here, <code>b: bool, g: G</code>.)</li>
+</ul>
+</li>
+<li>Finally, the <code>$bool_expr</code> is the invariant predicate, which may reference any of
+the fields declared in <code>$dependencies</code>, or any of the params.</li>
+</ul>
+<p>The other input clauses handle additional complexities that often comes up.
+For example, it is often necessary for the invariant to refer to the values of other fields
+in the struct.</p>
+<ul>
+<li>The <code>with</code> input gives the list of field names (other fields
+from the struct definition) that may be referenced from
+the body of this invariant.
+The graph of dependencies across all fields must be acyclic.</li>
+</ul>
+<p>Finally, when the field is a <em>container</em> type, e.g., <code>vec: Vec&lt;AtomicU64&lt;_, G, _&gt;&gt;</code> or
+<code>opt: Option&lt;AtomicU64&lt;_, G, _&gt;&gt;</code>, there are some additional complexities.
+We might need the invariant to be conditional (e.g., for an optional, the invariant would only
+exist if <code>opt.is_Some()</code>).
+We might need to quantify over a variable (e.g., in a vector, we want to specify an invariant
+for each element, element <code>i</code> where <code>0 &lt;= i &lt; vec.len()</code>).
+Finally, we need to indicate the value actually getting the invariant (e.g., <code>self.vec[i]</code>).</p>
+<ul>
+<li>The <code>forall</code> lets you specify additional bound variables. Everything after the <code>forall</code>—the
+<code>where</code>, the <code>specifically</code>, and finally the <code>$bool_expr$</code>—can all reference these bound variables.</li>
+<li>The <code>where</code> lets you specify an additional hypothesis that the invariant is dependent on.</li>
+<li>The <code>specifically</code> lets you indicate the value getting the invariant.</li>
+</ul>
+<p>This all roughly means, “forall instantiations of the quantified variables, if the condition <code>$where_expr</code> holds,
+then the value given by <code>$specifically_expr</code> has the invariant given by <code>$bool_expr</code>.
+See the detailed information on the macro-expansion below for more details.</p>
+<p>Given all the information from the <code>InvariantDecl</code>, the macro fills in the <code>_</code> placeholders as follows:</p>
+<ul>
+<li>The macro fills in the <code>K</code> type as the types of the fields marked as dependencies and
+the quantified variables in the forall (packing all these types into a tuple if necessary).</li>
+<li>The macro fills in the <code>Pred</code> type by creating a new type and implementing the appropriate
+trait with the user-provided predicate.</li>
+</ul>
+<h2 id="example-todo"><a class="doc-anchor" href="#example-todo">§</a>Example (TODO)</h2><h2 id="example-using-a-container-type-todo"><a class="doc-anchor" href="#example-using-a-container-type-todo">§</a>Example using a container type (TODO)</h2><h2 id="macro-expansion-todo"><a class="doc-anchor" href="#macro-expansion-todo">§</a>Macro Expansion (TODO)</h2></div></details></section></div></main></body></html>

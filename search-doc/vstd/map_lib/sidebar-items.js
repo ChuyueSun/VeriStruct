@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["group_map_properties","group_map_union","lemma_disjoint_union_size","lemma_map_new_domain","lemma_map_new_values","lemma_map_properties","lemma_submap_of_trans","lemma_union_dom","lemma_union_insert_left","lemma_union_insert_right","lemma_union_remove_left","lemma_union_remove_right","lemma_values_finite"]};

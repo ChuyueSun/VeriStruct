@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["deposits","exchanges","exchanges_nondeterministic","guards","incl","set_op","updates","withdraws"],"struct":["StorageResource"],"trait":["Protocol"]};

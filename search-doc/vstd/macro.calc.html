@@ -1,0 +1,34 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="The `calc!` macro supports structured proofs through calculations."><title>calc in vstd - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-46132b98.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="vstd" data-themes="" data-resource-suffix="" data-rustdoc-version="1.85.1 (4eb161250 2025-03-15)" data-channel="1.85.1" data-search-js="search-75f5ac3e.js" data-settings-js="settings-0f613d39.js" ><script src="../static.files/storage-59e33391.js"></script><script defer src="sidebar-items.js"></script><script defer src="../static.files/main-5f194d8c.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc macro"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../vstd/index.html">vstd</a></h2></div><div class="sidebar-elems"><div id="rustdoc-modnav"></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><span class="rustdoc-breadcrumbs"><a href="index.html">vstd</a></span><h1>Macro <span class="macro">calc</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/vstd/calc_macro.rs.html#50-54">Source</a> </span></div><pre class="rust item-decl"><code>macro_rules! calc {
+    ($($tt:tt)*) =&gt; { ... };
+}</code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>The <code>calc!</code> macro supports structured proofs through calculations.</p>
+<p>In particular, one can show <code>a_1 R a_n</code> for some transitive relation <code>R</code> by performing a series
+of steps <code>a_1 R a_2</code>, <code>a_2 R a_3</code>, … <code>a_{n-1} R a_n</code>. The calc macro provides both convenient
+syntax sugar to perform such a proof conveniently, without repeating oneself too often, or
+exposing the internal steps to the outside context.</p>
+<p>The expected usage looks like:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="macro">calc!</span> {
+  (R)
+  a_1; { <span class="comment">/* proof that a_1 R a_2 */ </span>}
+  a_2; { <span class="comment">/* proof that a_2 R a_3 */ </span>}
+   ...
+  a_n;
+}</code></pre></div>
+<p>Currently, the <code>calc!</code> macro supports common transitive relations for <code>R</code>, and this set of
+relations may be extended in the future.</p>
+<p>Note that <code>calc!</code> also supports stating intermediate relations, as long as they are consistent
+with the main relation <code>R</code>. If consistency cannot be immediately shown, Verus will give a
+helpful message about this. Intermediate relations can be specified by placing them right before
+the proof block of that step.</p>
+<p>A simple example of using intermediate relations looks like:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span>x: int = <span class="number">2</span>;
+<span class="kw">let </span>y: int = <span class="number">5</span>;
+<span class="macro">calc!</span> {
+  (&lt;=)
+  x; (==) {}
+  <span class="number">5 </span>- <span class="number">3</span>; (&lt;) {}
+  <span class="number">5</span>; {} <span class="comment">// Notice that no intermediate relation is specified here, so `calc!` will consider the top-level relation `R`; here `&lt;=`.
+  </span>y;
+}</code></pre></div>
+</div></details></section></div></main></body></html>

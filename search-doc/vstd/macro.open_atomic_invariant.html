@@ -1,0 +1,38 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Macro used to temporarily “open” an `AtomicInvariant` object, obtaining the stored value within."><title>open_atomic_invariant in vstd - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-46132b98.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="vstd" data-themes="" data-resource-suffix="" data-rustdoc-version="1.85.1 (4eb161250 2025-03-15)" data-channel="1.85.1" data-search-js="search-75f5ac3e.js" data-settings-js="settings-0f613d39.js" ><script src="../static.files/storage-59e33391.js"></script><script defer src="sidebar-items.js"></script><script defer src="../static.files/main-5f194d8c.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc macro"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../vstd/index.html">vstd</a></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">open_<wbr>atomic_<wbr>invariant</a></h2><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#usage" title="Usage">Usage</a></li><li><a href="#example" title="Example">Example</a></li></ul></section><div id="rustdoc-modnav"><h2 class="in-crate"><a href="index.html">In crate vstd</a></h2></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><span class="rustdoc-breadcrumbs"><a href="index.html">vstd</a></span><h1>Macro <span class="macro">open_atomic_invariant</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/vstd/invariant.rs.html#392-400">Source</a> </span></div><pre class="rust item-decl"><code>macro_rules! open_atomic_invariant {
+    [$($tail:tt)*] =&gt; { ... };
+}</code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Macro used to temporarily “open” an <a href="invariant/struct.AtomicInvariant.html" title="struct vstd::invariant::AtomicInvariant"><code>AtomicInvariant</code></a> object, obtaining the stored
+value within.</p>
+<h4 id="usage"><a class="doc-anchor" href="#usage">§</a>Usage</h4>
+<p>The form of the macro looks like,</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code>open_atomic_invariant(<span class="macro-nonterminal">$inv </span>=&gt; <span class="macro-nonterminal">$id </span>=&gt; {
+    <span class="comment">// Inner scope
+</span>});</code></pre></div>
+<p>This operation is very similar to <a href="macro.open_local_invariant.html" title="macro vstd::open_local_invariant"><code>open_local_invariant!</code></a>, so we refer to its
+documentation for the basics. There is only one difference, besides
+the fact that <code>$inv</code> should be an <a href="invariant/struct.AtomicInvariant.html" title="struct vstd::invariant::AtomicInvariant"><code>&amp;AtomicInvariant</code></a>
+rather than a <a href="invariant/struct.LocalInvariant.html" title="struct vstd::invariant::LocalInvariant"><code>&amp;LocalInvariant</code></a>.
+The difference is that <code>open_atomic_invariant!</code> has an additional <em>atomicity constraint</em>:</p>
+<ul>
+<li><strong>Atomicity constraint</strong>: The code body of an <code>open_atomic_invariant!</code> block
+cannot contain any <code>exec</code>-mode code with the exception of a <em>single</em> atomic operation.</li>
+</ul>
+<p>(Of course, the code block can still contain an arbitrary amount of ghost code.)</p>
+<p>The atomicity constraint is needed because an <code>AtomicInvariant</code> must be thread-safe;
+that is, it can be shared across threads. In order for the ghost state to be shared
+safely, it must be restored after each atomic operation.</p>
+<p>The atomic operations may be found in the <a href="atomic/index.html" title="mod vstd::atomic"><code>PAtomic</code></a> library.
+The user can also mark their own functions as “atomic operations” using
+<code>#[verifier::atomic)]</code>; however, this is not useful for very much other than defining
+wrappers around the existing atomic operations from <a href="atomic/index.html" title="mod vstd::atomic"><code>PAtomic</code></a>.
+Note that reading and writing through a <a href="cell/struct.PCell.html" title="struct vstd::cell::PCell"><code>PCell</code></a>
+or a <a href="simple_pptr/struct.PPtr.html" title="struct vstd::simple_pptr::PPtr"><code>PPtr</code></a> are <em>not</em> atomic operations.</p>
+<p><strong>Note:</strong> Rather than using <code>open_atomic_invariant!</code> directly, we generally recommend
+using the <a href="atomic_ghost/index.html" title="mod vstd::atomic_ghost"><code>atomic_ghost</code> APIs</a>.</p>
+<p>It’s not legal to use <code>open_atomic_invariant!</code> in proof mode. In proof mode, you need
+to use <code>open_atomic_invariant_in_proof!</code> instead. This takes one extra parameter,
+an open-invariant credit, which you can get by calling
+<code>create_open_invariant_credit()</code> before you enter proof mode.</p>
+<h4 id="example"><a class="doc-anchor" href="#example">§</a>Example</h4>
+<p>TODO fill this in</p>
+</div></details></section></div></main></body></html>

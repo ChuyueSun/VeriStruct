@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["acquire_exc_end","acquire_exc_start","acquire_read_abandon","acquire_read_end","acquire_read_start","initialize_full","release_exc","release_shared"]};

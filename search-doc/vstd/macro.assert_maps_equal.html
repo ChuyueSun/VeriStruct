@@ -1,0 +1,42 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Prove two maps `map1` and `map2` are equal by proving that their values are equal at each key."><title>assert_maps_equal in vstd - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../static.files/rustdoc-46132b98.css"><meta name="rustdoc-vars" data-root-path="../" data-static-root-path="../static.files/" data-current-crate="vstd" data-themes="" data-resource-suffix="" data-rustdoc-version="1.85.1 (4eb161250 2025-03-15)" data-channel="1.85.1" data-search-js="search-75f5ac3e.js" data-settings-js="settings-0f613d39.js" ><script src="../static.files/storage-59e33391.js"></script><script defer src="sidebar-items.js"></script><script defer src="../static.files/main-5f194d8c.js"></script><noscript><link rel="stylesheet" href="../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../static.files/favicon-044be391.svg"></head><body class="rustdoc macro"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../vstd/index.html">vstd</a></h2></div><div class="sidebar-elems"><div id="rustdoc-modnav"></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><span class="rustdoc-breadcrumbs"><a href="index.html">vstd</a></span><h1>Macro <span class="macro">assert_maps_equal</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../src/vstd/map.rs.html#390-394">Source</a> </span></div><pre class="rust item-decl"><code>macro_rules! assert_maps_equal {
+    [$($tail:tt)*] =&gt; { ... };
+}</code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Prove two maps <code>map1</code> and <code>map2</code> are equal by proving that their values are equal at each key.</p>
+<p>More precisely, <code>assert_maps_equal!</code> requires that for each key <code>k</code>:</p>
+<ul>
+<li><code>map1</code> contains <code>k</code> in its domain if and only if <code>map2</code> does (<code>map1.dom().contains(k) &lt;==&gt; map2.dom().contains(k)</code>)</li>
+<li>If they contain <code>k</code> in their domains, then their values are equal (<code>map1.dom().contains(k) &amp;&amp; map2.dom().contains(k) ==&gt; map1[k] == map2[k]</code>)</li>
+</ul>
+<p>The property that equality follows from these facts is often called <em>extensionality</em>.</p>
+<p><code>assert_maps_equal!</code> can handle many trivial-looking
+identities without any additional help:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code>proof <span class="kw">fn </span>insert_remove(m: Map&lt;int, int&gt;, k: int, v: int)
+    requires !m.dom().contains(k)
+    ensures m.insert(k, v).remove(k) == m
+{
+    <span class="kw">let </span>m2 = m.insert(k, v).remove(k);
+    <span class="macro">assert_maps_equal!</span>(m == m2);
+    assert(m == m2);
+}</code></pre></div>
+<p>For more complex cases, a proof may be required for each key:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code>proof <span class="kw">fn </span>bitvector_maps() {
+    <span class="kw">let </span>m1 = Map::&lt;u64, u64&gt;::new(
+        |key: u64| key &amp; <span class="number">31 </span>== key,
+        |key: u64| key | <span class="number">5</span>);
+
+    <span class="kw">let </span>m2 = Map::&lt;u64, u64&gt;::new(
+        |key: u64| key &lt; <span class="number">32</span>,
+        |key: u64| <span class="number">5 </span>| key);
+
+    <span class="macro">assert_maps_equal!</span>(m1 == m2, key =&gt; {
+        <span class="comment">// Show that the domains of m1 and m2 are the same by showing their predicates
+        // are equivalent.
+        </span>assert_bit_vector((key &amp; <span class="number">31 </span>== key) &lt;==&gt; (key &lt; <span class="number">32</span>));
+
+        <span class="comment">// Show that the values are the same by showing that these expressions
+        // are equivalent.
+        </span>assert_bit_vector(key | <span class="number">5 </span>== <span class="number">5 </span>| key);
+    });
+}</code></pre></div>
+</div></details></section></div></main></body></html>
