@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["lemma2_to64","lemma2_to64_rest","lemma_pow2","lemma_pow2_adds","lemma_pow2_pos","lemma_pow2_strictly_increases","lemma_pow2_unfold","pow2"]};

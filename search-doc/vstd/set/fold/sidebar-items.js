@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["is_fun_commutative","lemma_finite_set_induct","lemma_fold_empty","lemma_fold_insert"]};

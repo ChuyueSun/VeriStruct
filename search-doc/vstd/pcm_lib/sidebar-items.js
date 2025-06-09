@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["combine_values","copy_duplicable_part","duplicate","extract","incorporate","lemma_pcm_properties","redistribute","split_mut","update_and_redistribute","update_mut","validate_3","validate_4","validate_5","validate_multiple"]};

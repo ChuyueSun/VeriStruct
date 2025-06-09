@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["lemma_log0","lemma_log_is_ordered","lemma_log_nonnegative","lemma_log_pow","lemma_log_s","log"]};

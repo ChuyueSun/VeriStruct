@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["create_open_invariant_credit"],"macro":["open_atomic_invariant","open_atomic_invariant_in_proof","open_local_invariant","open_local_invariant_in_proof"],"struct":["AtomicInvariant","LocalInvariant"],"trait":["InvariantPredicate"]};

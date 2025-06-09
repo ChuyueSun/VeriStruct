@@ -1,0 +1,879 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="rustdoc" name="generator"><meta content="`Seq<A>` is a sequence type for specifications. To use a “sequence” in compiled code, use an `exec` type like `vec::Vec` that has `Seq<A>` as its specification type." name="description"><title>Seq in vstd::seq - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link href="../../static.files/normalize-9960930a.css" rel="stylesheet"><link href="../../static.files/rustdoc-46132b98.css" rel="stylesheet"><meta data-channel="1.85.1" data-current-crate="vstd" data-resource-suffix="" data-root-path="../../" data-rustdoc-version="1.85.1 (4eb161250 2025-03-15)" data-search-js="search-75f5ac3e.js" data-settings-js="settings-0f613d39.js" data-static-root-path="../../static.files/" data-themes="" name="rustdoc-vars"><script src="../../static.files/storage-59e33391.js"></script><script defer="" src="sidebar-items.js"></script><script defer="" src="../../static.files/main-5f194d8c.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-893ab5e7.css"></noscript><link href="../../static.files/favicon-32x32-6580c154.png" rel="alternate icon" type="image/png"><link href="../../static.files/favicon-044be391.svg" rel="icon" type="image/svg+xml"></head><body class="rustdoc struct"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../vstd/index.html">vstd</a></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">Seq</a></h2><h3><a href="#implementations">Methods</a></h3><ul class="block method"><li><a href="#method.add" title="add">add</a></li><li><a href="#method.add_empty_left" title="add_empty_left">add_empty_left</a></li><li><a href="#method.add_empty_right" title="add_empty_right">add_empty_right</a></li><li><a href="#method.contains" title="contains">contains</a></li><li><a href="#method.disjoint" title="disjoint">disjoint</a></li><li><a href="#method.drop_first" title="drop_first">drop_first</a></li><li><a href="#method.drop_last" title="drop_last">drop_last</a></li><li><a href="#method.drop_last_distributes_over_add" title="drop_last_distributes_over_add">drop_last_distributes_over_add</a></li><li><a href="#method.empty" title="empty">empty</a></li><li><a href="#method.filter" title="filter">filter</a></li><li><a href="#method.filter_distributes_over_add" title="filter_distributes_over_add">filter_distributes_over_add</a></li><li><a href="#method.filter_lemma" title="filter_lemma">filter_lemma</a></li><li><a href="#method.first" title="first">first</a></li><li><a href="#method.flatten" title="flatten">flatten</a></li><li><a href="#method.flatten_alt" title="flatten_alt">flatten_alt</a></li><li><a href="#method.fold_left" title="fold_left">fold_left</a></li><li><a href="#method.fold_left_alt" title="fold_left_alt">fold_left_alt</a></li><li><a href="#method.fold_right" title="fold_right">fold_right</a></li><li><a href="#method.fold_right_alt" title="fold_right_alt">fold_right_alt</a></li><li><a href="#method.index" title="index">index</a></li><li><a href="#method.index_of" title="index_of">index_of</a></li><li><a href="#method.index_of_first" title="index_of_first">index_of_first</a></li><li><a href="#method.index_of_first_ensures" title="index_of_first_ensures">index_of_first_ensures</a></li><li><a href="#method.index_of_last" title="index_of_last">index_of_last</a></li><li><a href="#method.index_of_last_ensures" title="index_of_last_ensures">index_of_last_ensures</a></li><li><a href="#method.insert" title="insert">insert</a></li><li><a href="#method.insert_ensures" title="insert_ensures">insert_ensures</a></li><li><a href="#method.is_prefix_of" title="is_prefix_of">is_prefix_of</a></li><li><a href="#method.is_suffix_of" title="is_suffix_of">is_suffix_of</a></li><li><a href="#method.last" title="last">last</a></li><li><a href="#method.lemma_add_last_back" title="lemma_add_last_back">lemma_add_last_back</a></li><li><a href="#method.lemma_cardinality_of_empty_set_is_0" title="lemma_cardinality_of_empty_set_is_0">lemma_cardinality_of_empty_set_is_0</a></li><li><a href="#method.lemma_cardinality_of_set" title="lemma_cardinality_of_set">lemma_cardinality_of_set</a></li><li><a href="#method.lemma_element_from_slice" title="lemma_element_from_slice">lemma_element_from_slice</a></li><li><a href="#method.lemma_filter_contains" title="lemma_filter_contains">lemma_filter_contains</a></li><li><a href="#method.lemma_filter_len" title="lemma_filter_len">lemma_filter_len</a></li><li><a href="#method.lemma_filter_pred" title="lemma_filter_pred">lemma_filter_pred</a></li><li><a href="#method.lemma_flatten_and_flatten_alt_are_equivalent" title="lemma_flatten_and_flatten_alt_are_equivalent">lemma_flatten_and_flatten_alt_are_equivalent</a></li><li><a href="#method.lemma_flatten_length_ge_single_element_length" title="lemma_flatten_length_ge_single_element_length">lemma_flatten_length_ge_single_element_length</a></li><li><a href="#method.lemma_flatten_length_le_mul" title="lemma_flatten_length_le_mul">lemma_flatten_length_le_mul</a></li><li><a href="#method.lemma_flatten_one_element" title="lemma_flatten_one_element">lemma_flatten_one_element</a></li><li><a href="#method.lemma_fold_left_alt" title="lemma_fold_left_alt">lemma_fold_left_alt</a></li><li><a href="#method.lemma_fold_left_split" title="lemma_fold_left_split">lemma_fold_left_split</a></li><li><a href="#method.lemma_fold_right_alt" title="lemma_fold_right_alt">lemma_fold_right_alt</a></li><li><a href="#method.lemma_fold_right_commute_one" title="lemma_fold_right_commute_one">lemma_fold_right_commute_one</a></li><li><a href="#method.lemma_fold_right_split" title="lemma_fold_right_split">lemma_fold_right_split</a></li><li><a href="#method.lemma_indexing_implies_membership" title="lemma_indexing_implies_membership">lemma_indexing_implies_membership</a></li><li><a href="#method.lemma_membership_implies_indexing" title="lemma_membership_implies_indexing">lemma_membership_implies_indexing</a></li><li><a href="#method.lemma_multiset_has_no_duplicates" title="lemma_multiset_has_no_duplicates">lemma_multiset_has_no_duplicates</a></li><li><a href="#method.lemma_multiset_has_no_duplicates_conv" title="lemma_multiset_has_no_duplicates_conv">lemma_multiset_has_no_duplicates_conv</a></li><li><a href="#method.lemma_no_dup_set_cardinality" title="lemma_no_dup_set_cardinality">lemma_no_dup_set_cardinality</a></li><li><a href="#method.lemma_slice_of_slice" title="lemma_slice_of_slice">lemma_slice_of_slice</a></li><li><a href="#method.lemma_sort_by_ensures" title="lemma_sort_by_ensures">lemma_sort_by_ensures</a></li><li><a href="#method.lemma_sort_ensures" title="lemma_sort_ensures">lemma_sort_ensures</a></li><li><a href="#method.lemma_split_at" title="lemma_split_at">lemma_split_at</a></li><li><a href="#method.lemma_subrange_max" title="lemma_subrange_max">lemma_subrange_max</a></li><li><a href="#method.lemma_subrange_min" title="lemma_subrange_min">lemma_subrange_min</a></li><li><a href="#method.lemma_to_set_insert_commutes" title="lemma_to_set_insert_commutes">lemma_to_set_insert_commutes</a></li><li><a href="#method.lemma_to_set_map_commutes" title="lemma_to_set_map_commutes">lemma_to_set_map_commutes</a></li><li><a href="#method.lemma_zip_of_unzip" title="lemma_zip_of_unzip">lemma_zip_of_unzip</a></li><li><a href="#method.len" title="len">len</a></li><li><a href="#method.map" title="map">map</a></li><li><a href="#method.map_values" title="map_values">map_values</a></li><li><a href="#method.max" title="max">max</a></li><li><a href="#method.max_ensures" title="max_ensures">max_ensures</a></li><li><a href="#method.max_via" title="max_via">max_via</a></li><li><a href="#method.min" title="min">min</a></li><li><a href="#method.min_ensures" title="min_ensures">min_ensures</a></li><li><a href="#method.min_via" title="min_via">min_via</a></li><li><a href="#method.new" title="new">new</a></li><li><a href="#method.no_duplicates" title="no_duplicates">no_duplicates</a></li><li><a href="#method.push" title="push">push</a></li><li><a href="#method.push_distributes_over_add" title="push_distributes_over_add">push_distributes_over_add</a></li><li><a href="#method.remove" title="remove">remove</a></li><li><a href="#method.remove_ensures" title="remove_ensures">remove_ensures</a></li><li><a href="#method.remove_value" title="remove_value">remove_value</a></li><li><a href="#method.reverse" title="reverse">reverse</a></li><li><a href="#method.skip" title="skip">skip</a></li><li><a href="#method.sort" title="sort">sort</a></li><li><a href="#method.sort_by" title="sort_by">sort_by</a></li><li><a href="#method.spec_add" title="spec_add">spec_add</a></li><li><a href="#method.spec_index" title="spec_index">spec_index</a></li><li><a href="#method.subrange" title="subrange">subrange</a></li><li><a href="#method.take" title="take">take</a></li><li><a href="#method.to_multiset" title="to_multiset">to_multiset</a></li><li><a href="#method.to_multiset_ensures" title="to_multiset_ensures">to_multiset_ensures</a></li><li><a href="#method.to_set" title="to_set">to_set</a></li><li><a href="#method.tracked_borrow" title="tracked_borrow">tracked_borrow</a></li><li><a href="#method.tracked_empty" title="tracked_empty">tracked_empty</a></li><li><a href="#method.tracked_insert" title="tracked_insert">tracked_insert</a></li><li><a href="#method.tracked_pop" title="tracked_pop">tracked_pop</a></li><li><a href="#method.tracked_pop_front" title="tracked_pop_front">tracked_pop_front</a></li><li><a href="#method.tracked_push" title="tracked_push">tracked_push</a></li><li><a href="#method.tracked_remove" title="tracked_remove">tracked_remove</a></li><li><a href="#method.unique_seq_to_set" title="unique_seq_to_set">unique_seq_to_set</a></li><li><a href="#method.unzip" title="unzip">unzip</a></li><li><a href="#method.unzip_ensures" title="unzip_ensures">unzip_ensures</a></li><li><a href="#method.update" title="update">update</a></li><li><a href="#method.zip_with" title="zip_with">zip_with</a></li></ul><h3><a href="#synthetic-implementations">Auto Trait Implementations</a></h3><ul class="block synthetic-implementation"><li><a href="#impl-Freeze-for-Seq%3CA%3E" title="Freeze">Freeze</a></li><li><a href="#impl-RefUnwindSafe-for-Seq%3CA%3E" title="RefUnwindSafe">RefUnwindSafe</a></li><li><a href="#impl-Send-for-Seq%3CA%3E" title="Send">Send</a></li><li><a href="#impl-Sync-for-Seq%3CA%3E" title="Sync">Sync</a></li><li><a href="#impl-Unpin-for-Seq%3CA%3E" title="Unpin">Unpin</a></li><li><a href="#impl-UnwindSafe-for-Seq%3CA%3E" title="UnwindSafe">UnwindSafe</a></li></ul><h3><a href="#blanket-implementations">Blanket Implementations</a></h3><ul class="block blanket-implementation"><li><a href="#impl-Any-for-T" title="Any">Any</a></li><li><a href="#impl-Borrow%3CT%3E-for-T" title="Borrow<T>">Borrow&lt;T&gt;</a></li><li><a href="#impl-BorrowMut%3CT%3E-for-T" title="BorrowMut<T>">BorrowMut&lt;T&gt;</a></li><li><a href="#impl-From%3CT%3E-for-T" title="From<T>">From&lt;T&gt;</a></li><li><a href="#impl-Into%3CU%3E-for-T" title="Into<U>">Into&lt;U&gt;</a></li><li><a href="#impl-TryFrom%3CU%3E-for-T" title="TryFrom<U>">TryFrom&lt;U&gt;</a></li><li><a href="#impl-TryInto%3CU%3E-for-T" title="TryInto<U>">TryInto&lt;U&gt;</a></li></ul></section><div id="rustdoc-modnav"><h2><a href="index.html">In vstd::<wbr>seq</a></h2></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section class="content" id="main-content"><div class="main-heading"><span class="rustdoc-breadcrumbs"><a href="../index.html">vstd</a>::<wbr><a href="index.html">seq</a></span><h1>Struct <span class="struct">Seq</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../../src/vstd/seq.rs.html#31-33">Source</a> </span></div><pre class="rust item-decl"><code>pub struct Seq&lt;A&gt; { <span class="comment">/* private fields */</span> }</code></pre><details class="toggle top-doc" open=""><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p><code>Seq&lt;A&gt;</code> is a sequence type for specifications.
+To use a “sequence” in compiled code, use an <code>exec</code> type like <code>vec::Vec</code>
+that has <code>Seq&lt;A&gt;</code> as its specification type.</p>
+<p>An object <code>seq: Seq&lt;A&gt;</code> has a length, given by <a href="struct.Seq.html#method.len" title="method vstd::seq::Seq::len"><code>seq.len()</code></a>,
+and a value at each <code>i</code> for <code>0 &lt;= i &lt; seq.len()</code>, given by <a href="struct.Seq.html#method.index" title="method vstd::seq::Seq::index"><code>seq[i]</code></a>.</p>
+<p>Sequences can be constructed in a few different ways:</p>
+<ul>
+<li><a href="struct.Seq.html#method.empty" title="associated function vstd::seq::Seq::empty"><code>Seq::empty</code></a> construct an empty sequence (<code>len() == 0</code>)</li>
+<li><a href="struct.Seq.html#method.new" title="associated function vstd::seq::Seq::new"><code>Seq::new</code></a> construct a sequence of a given length, initialized according
+to a given function mapping indices <code>i</code> to values <code>A</code>.</li>
+<li>The <a href="../macro.seq.html" title="macro vstd::seq"><code>seq!</code></a> macro, to construct small sequences of a fixed size (analagous to the
+<a href="https://doc.rust-lang.org/1.85.1/alloc/macro.vec.html" title="macro alloc::vec"><code>std::vec!</code></a> macro).</li>
+<li>By manipulating an existing sequence with <a href="struct.Seq.html#method.push" title="method vstd::seq::Seq::push"><code>Seq::push</code></a>, <a href="struct.Seq.html#method.update" title="method vstd::seq::Seq::update"><code>Seq::update</code></a>,
+or <a href="struct.Seq.html#method.add" title="method vstd::seq::Seq::add"><code>Seq::add</code></a>.</li>
+</ul>
+<p>To prove that two sequences are equal, it is usually easiest to use the
+extensional equality operator <code>=~=</code>.</p>
+</div></details><h2 class="section-header" id="implementations">Implementations<a class="anchor" href="#implementations">§</a></h2><div id="implementations-list"><details class="toggle implementors-toggle" open=""><summary><section class="impl" id="impl-Seq%3CA%3E"><a class="src rightside" href="../../src/vstd/seq.rs.html#35-247">Source</a><a class="anchor" href="#impl-Seq%3CA%3E">§</a><h3 class="code-header">impl&lt;A&gt; <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;</h3></section></summary><div class="impl-items"><details class="toggle method-toggle" open=""><summary><section class="method" id="method.empty"><a class="src rightside" href="../../src/vstd/seq.rs.html#38">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">uninterp </span>fn <a class="fn" href="#method.empty">empty</a>() -&gt; <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;</h4></section></summary><div class="docblock">
+
+<p>An empty sequence (i.e., a sequence of length 0).</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.new"><a class="src rightside" href="../../src/vstd/seq.rs.html#42">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">uninterp </span>fn <a class="fn" href="#method.new">new</a>(len: <a class="struct" href="../prelude/struct.nat.html" title="struct vstd::prelude::nat">nat</a>, f: impl <a class="trait" href="https://doc.rust-lang.org/1.85.1/core/ops/function/trait.Fn.html" title="trait core::ops::function::Fn">Fn</a>(<a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>) -&gt; A) -&gt; <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;</h4></section></summary><div class="docblock">
+
+<p>Construct a sequence <code>s</code> of length <code>len</code> where entry <code>s[i]</code> is given by <code>f(i)</code>.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.len"><a class="src rightside" href="../../src/vstd/seq.rs.html#46">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">uninterp </span>fn <a class="fn" href="#method.len">len</a>(self) -&gt; <a class="struct" href="../prelude/struct.nat.html" title="struct vstd::prelude::nat">nat</a></h4></section></summary><div class="docblock">
+
+<p>The length of a sequence.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.index"><a class="src rightside" href="../../src/vstd/seq.rs.html#53">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">uninterp </span>fn <a class="fn" href="#method.index">index</a>(self, i: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>) -&gt; A</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">recommends</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="number">0 </span>&lt;= i &lt; <span class="self">self</span>.len(),</code></pre></div>
+
+
+
+<p>Gets the value at the given index <code>i</code>.</p>
+<p>If <code>i</code> is not in the range <code>[0, self.len())</code>, then the resulting value
+is meaningless and arbitrary.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.spec_index"><a class="src rightside" href="../../src/vstd/seq.rs.html#60-65">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.spec_index">spec_index</a>(self, i: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>) -&gt; A</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">recommends</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="number">0 </span>&lt;= i &lt; <span class="self">self</span>.len(),</code></pre><pre class="rust rest-example-rendered verus-body-code"><code>{ <span class="self">self</span>.index(i) }</code></pre></div>
+
+
+
+
+
+<p><code>[]</code> operator, synonymous with <code>index</code></p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.push"><a class="src rightside" href="../../src/vstd/seq.rs.html#80">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">uninterp </span>fn <a class="fn" href="#method.push">push</a>(self, a: A) -&gt; <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;</h4></section></summary><div class="docblock">
+
+<p>Appends the value <code>a</code> to the end of the sequence.
+This always increases the length of the sequence by 1.
+This often requires annotating the type of the element literal in the sequence,
+e.g., <code>10int</code>.</p>
+<h6 id="example"><a class="doc-anchor" href="#example">§</a>Example</h6>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code>proof <span class="kw">fn </span>push_test() {
+    assert(<span class="macro">seq!</span>[<span class="number">10int</span>, <span class="number">11</span>, <span class="number">12</span>].push(<span class="number">13</span>) =~= <span class="macro">seq!</span>[<span class="number">10</span>, <span class="number">11</span>, <span class="number">12</span>, <span class="number">13</span>]);
+}</code></pre></div>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.update"><a class="src rightside" href="../../src/vstd/seq.rs.html#95">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">uninterp </span>fn <a class="fn" href="#method.update">update</a>(self, i: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>, a: A) -&gt; <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">recommends</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="number">0 </span>&lt;= i &lt; <span class="self">self</span>.len(),</code></pre></div>
+
+
+
+<p>Updates the sequence at the given index, replacing the element with the given
+value, and leaves all other entries unchanged.</p>
+<h6 id="example-1"><a class="doc-anchor" href="#example-1">§</a>Example</h6>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code>proof <span class="kw">fn </span>update_test() {
+    <span class="kw">let </span>s = <span class="macro">seq!</span>[<span class="number">10</span>, <span class="number">11</span>, <span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>];
+    <span class="kw">let </span>t = s.update(<span class="number">2</span>, -<span class="number">5</span>);
+    assert(t =~= <span class="macro">seq!</span>[<span class="number">10</span>, <span class="number">11</span>, -<span class="number">5</span>, <span class="number">13</span>, <span class="number">14</span>]);
+}</code></pre></div>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.subrange"><a class="src rightside" href="../../src/vstd/seq.rs.html#114">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">uninterp </span>fn <a class="fn" href="#method.subrange">subrange</a>(self, start_inclusive: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>, end_exclusive: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>) -&gt; <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">recommends</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="number">0 </span>&lt;= start_inclusive &lt;= end_exclusive &lt;= <span class="self">self</span>.len(),</code></pre></div>
+
+
+
+<p>Returns a sequence for the given subrange.</p>
+<h6 id="example-2"><a class="doc-anchor" href="#example-2">§</a>Example</h6>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code>proof <span class="kw">fn </span>subrange_test() {
+    <span class="kw">let </span>s = <span class="macro">seq!</span>[<span class="number">10int</span>, <span class="number">11</span>, <span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>];
+    <span class="comment">//                      ^-------^
+    //           0      1   2   3   4   5
+    </span><span class="kw">let </span>sub = s.subrange(<span class="number">2</span>, <span class="number">4</span>);
+    assert(sub =~= <span class="macro">seq!</span>[<span class="number">12</span>, <span class="number">13</span>]);
+}</code></pre></div>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.take"><a class="src rightside" href="../../src/vstd/seq.rs.html#121-123">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.take">take</a>(self, n: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>) -&gt; <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;</h4></section></summary><div class="docblock"><div class="verus-spec"><pre class="rust rest-example-rendered verus-body-code"><code>{ <span class="self">self</span>.subrange(<span class="number">0</span>, n) }</code></pre></div>
+
+
+
+<p>Returns a sequence containing only the first n elements of the original sequence</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.skip"><a class="src rightside" href="../../src/vstd/seq.rs.html#127-129">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.skip">skip</a>(self, n: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>) -&gt; <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;</h4></section></summary><div class="docblock"><div class="verus-spec"><pre class="rust rest-example-rendered verus-body-code"><code>{ <span class="self">self</span>.subrange(n, <span class="self">self</span>.len() <span class="kw">as </span>int) }</code></pre></div>
+
+
+
+<p>Returns a sequence without the first n elements of the original sequence</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.add"><a class="src rightside" href="../../src/vstd/seq.rs.html#142">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">uninterp </span>fn <a class="fn" href="#method.add">add</a>(self, rhs: <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;) -&gt; <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;</h4></section></summary><div class="docblock">
+
+<p>Concatenates the sequences.</p>
+<h6 id="example-3"><a class="doc-anchor" href="#example-3">§</a>Example</h6>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code>proof <span class="kw">fn </span>add_test() {
+    assert(<span class="macro">seq!</span>[<span class="number">10int</span>, <span class="number">11</span>].add(<span class="macro">seq!</span>[<span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>])
+            =~= <span class="macro">seq!</span>[<span class="number">10</span>, <span class="number">11</span>, <span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>]);
+}</code></pre></div>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.spec_add"><a class="src rightside" href="../../src/vstd/seq.rs.html#146-148">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.spec_add">spec_add</a>(self, rhs: <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;) -&gt; <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;</h4></section></summary><div class="docblock"><div class="verus-spec"><pre class="rust rest-example-rendered verus-body-code"><code>{ <span class="self">self</span>.add(rhs) }</code></pre></div>
+
+
+
+<p><code>+</code> operator, synonymous with <code>add</code></p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.last"><a class="src rightside" href="../../src/vstd/seq.rs.html#152-157">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.last">last</a>(self) -&gt; A</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">recommends</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="number">0 </span>&lt; <span class="self">self</span>.len(),</code></pre><pre class="rust rest-example-rendered verus-body-code"><code>{ <span class="self">self</span>[<span class="self">self</span>.len() <span class="kw">as </span>int - <span class="number">1</span>] }</code></pre></div>
+
+
+
+
+
+<p>Returns the last element of the sequence.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.first"><a class="src rightside" href="../../src/vstd/seq.rs.html#161-166">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.first">first</a>(self) -&gt; A</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">recommends</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="number">0 </span>&lt; <span class="self">self</span>.len(),</code></pre><pre class="rust rest-example-rendered verus-body-code"><code>{ <span class="self">self</span>[<span class="number">0</span>] }</code></pre></div>
+
+
+
+
+
+<p>Returns the first element of the sequence.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.tracked_empty"><a class="src rightside" href="../../src/vstd/seq.rs.html#169-174">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.tracked_empty">tracked_empty</a>() -&gt; <span class="verus-sig-keyword">tracked </span><span class="verus-ret-name">ret : </span>Self</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code>ret === Seq::empty(),</code></pre></div>
+
+
+
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.tracked_remove"><a class="src rightside" href="../../src/vstd/seq.rs.html#177-186">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.tracked_remove">tracked_remove</a>(<span class="verus-sig-keyword">tracked </span>&amp;mut self, i: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>) -&gt; <span class="verus-sig-keyword">tracked </span><span class="verus-ret-name">ret : </span>A</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="number">0 </span>&lt;= i &lt; old(<span class="self">self</span>).len(),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code>ret === old(<span class="self">self</span>)[i],</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.len() == old(<span class="self">self</span>).len() - <span class="number">1</span>,</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self </span>== old(<span class="self">self</span>).remove(i),</code></pre></div>
+
+
+
+
+
+
+
+
+
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.tracked_insert"><a class="src rightside" href="../../src/vstd/seq.rs.html#189-197">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.tracked_insert">tracked_insert</a>(<span class="verus-sig-keyword">tracked </span>&amp;mut self, i: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>, <span class="verus-sig-keyword">tracked </span>v: A)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="number">0 </span>&lt;= i &lt;= old(<span class="self">self</span>).len(),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.len() == old(<span class="self">self</span>).len() + <span class="number">1</span>,</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self </span>== old(<span class="self">self</span>).insert(i, v),</code></pre></div>
+
+
+
+
+
+
+
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.tracked_borrow"><a class="src rightside" href="../../src/vstd/seq.rs.html#200-207">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.tracked_borrow">tracked_borrow</a>(<span class="verus-sig-keyword">tracked </span>&amp;self, i: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>) -&gt; <span class="verus-sig-keyword">tracked </span><span class="verus-ret-name">ret : </span><a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.reference.html">&amp;A</a></h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="number">0 </span>&lt;= i &lt; <span class="self">self</span>.len(),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="kw-2">*</span>ret === <span class="self">self</span>[i],</code></pre></div>
+
+
+
+
+
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.tracked_push"><a class="src rightside" href="../../src/vstd/seq.rs.html#209-218">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.tracked_push">tracked_push</a>(<span class="verus-sig-keyword">tracked </span>&amp;mut self, <span class="verus-sig-keyword">tracked </span>v: A)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="kw-2">*</span><span class="self">self </span>== old(<span class="self">self</span>).push(v),</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.len() == old(<span class="self">self</span>).len() + <span class="number">1</span>,</code></pre></div>
+
+
+
+
+
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.tracked_pop"><a class="src rightside" href="../../src/vstd/seq.rs.html#220-232">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.tracked_pop">tracked_pop</a>(<span class="verus-sig-keyword">tracked </span>&amp;mut self) -&gt; <span class="verus-sig-keyword">tracked </span><span class="verus-ret-name">ret : </span>A</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code>old(<span class="self">self</span>).len() &gt; <span class="number">0</span>,</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code>ret === old(<span class="self">self</span>).last(),</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.len() == old(<span class="self">self</span>).len() - <span class="number">1</span>,</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code><span class="kw-2">*</span><span class="self">self </span>== old(<span class="self">self</span>).take(old(<span class="self">self</span>).len() - <span class="number">1</span>),</code></pre></div>
+
+
+
+
+
+
+
+
+
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.tracked_pop_front"><a class="src rightside" href="../../src/vstd/seq.rs.html#234-246">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.tracked_pop_front">tracked_pop_front</a>(<span class="verus-sig-keyword">tracked </span>&amp;mut self) -&gt; <span class="verus-sig-keyword">tracked </span><span class="verus-ret-name">ret : </span>A</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code>old(<span class="self">self</span>).len() &gt; <span class="number">0</span>,</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code>ret === old(<span class="self">self</span>).first(),</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.len() == old(<span class="self">self</span>).len() - <span class="number">1</span>,</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code><span class="kw-2">*</span><span class="self">self </span>== old(<span class="self">self</span>).drop_first(),</code></pre></div>
+
+
+
+
+
+
+
+
+
+</div></details></div></details><details class="toggle implementors-toggle" open=""><summary><section class="impl" id="impl-Seq%3CA%3E-1"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#18-1037">Source</a><a class="anchor" href="#impl-Seq%3CA%3E-1">§</a><h3 class="code-header">impl&lt;A&gt; <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;</h3></section></summary><div class="impl-items"><details class="toggle method-toggle" open=""><summary><section class="method" id="method.map"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#23-25">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.map">map</a>&lt;B&gt;(self, f: <a class="struct" href="../prelude/struct.FnSpec.html" title="struct vstd::prelude::FnSpec">FnSpec</a>&lt;(<a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>, A), B&gt;) -&gt; <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;B&gt;</h4></section></summary><div class="docblock"><div class="verus-spec"><pre class="rust rest-example-rendered verus-body-code"><code>{ Seq::new(<span class="self">self</span>.len(), |i: int| f(i, <span class="self">self</span>[i])) }</code></pre></div>
+
+
+
+<p>Applies the function <code>f</code> to each element of the sequence, and returns
+the resulting sequence.
+The <code>int</code> parameter of <code>f</code> is the index of the element being mapped.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.map_values"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#30-32">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.map_values">map_values</a>&lt;B&gt;(self, f: <a class="struct" href="../prelude/struct.FnSpec.html" title="struct vstd::prelude::FnSpec">FnSpec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.tuple.html">(A,)</a>, B&gt;) -&gt; <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;B&gt;</h4></section></summary><div class="docblock"><div class="verus-spec"><pre class="rust rest-example-rendered verus-body-code"><code>{ Seq::new(<span class="self">self</span>.len(), |i: int| f(<span class="self">self</span>[i])) }</code></pre></div>
+
+
+
+<p>Applies the function <code>f</code> to each element of the sequence, and returns
+the resulting sequence.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.is_prefix_of"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#45-47">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.is_prefix_of">is_prefix_of</a>(self, other: Self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.bool.html">bool</a></h4></section></summary><div class="docblock"><div class="verus-spec"><pre class="rust rest-example-rendered verus-body-code"><code>{ <span class="self">self</span>.len() &lt;= other.len() &amp;&amp; (<span class="self">self </span>=~= other.subrange(<span class="number">0</span>, <span class="self">self</span>.len() <span class="kw">as </span>int)) }</code></pre></div>
+
+
+
+<p>Is true if the calling sequence is a prefix of the given sequence ‘other’.</p>
+<h6 id="example-4"><a class="doc-anchor" href="#example-4">§</a>Example</h6>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code>proof <span class="kw">fn </span>prefix_test() {
+    <span class="kw">let </span>pre: Seq&lt;int&gt; = <span class="macro">seq!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];
+    <span class="kw">let </span>whole: Seq&lt;int&gt; = <span class="macro">seq!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];
+    assert(pre.is_prefix_of(whole));
+}</code></pre></div>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.is_suffix_of"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#60-65">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.is_suffix_of">is_suffix_of</a>(self, other: Self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.bool.html">bool</a></h4></section></summary><div class="docblock"><div class="verus-spec"><pre class="rust rest-example-rendered verus-body-code"><code>{
+    <span class="self">self</span>.len() &lt;= other.len()
+        &amp;&amp; (<span class="self">self
+            </span>=~= other.subrange((other.len() - <span class="self">self</span>.len()) <span class="kw">as </span>int, other.len() <span class="kw">as </span>int))
+}</code></pre></div>
+
+
+
+<p>Is true if the calling sequence is a suffix of the given sequence ‘other’.</p>
+<h6 id="example-5"><a class="doc-anchor" href="#example-5">§</a>Example</h6>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code>proof <span class="kw">fn </span>suffix_test() {
+    <span class="kw">let </span>end: Seq&lt;int&gt; = <span class="macro">seq!</span>[<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];
+    <span class="kw">let </span>whole: Seq&lt;int&gt; = <span class="macro">seq!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];
+    assert(end.is_suffix_of(whole));
+}</code></pre></div>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.sort_by"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#74-89">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">closed spec </span>fn <a class="fn" href="#method.sort_by">sort_by</a>(self, leq: <a class="struct" href="../prelude/struct.FnSpec.html" title="struct vstd::prelude::FnSpec">FnSpec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.tuple.html">(A, A)</a>, <a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.bool.html">bool</a>&gt;) -&gt; <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">recommends</span><pre class="rust rest-example-rendered verus-spec-code"><code>total_ordering(leq),</code></pre></div>
+
+
+
+<p>Sorts the sequence according to the given leq function</p>
+<h6 id="example-6"><a class="doc-anchor" href="#example-6">§</a>Example</h6>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code>{{#include ../../../../examples/multiset.rs:sorted_by_leq}}</code></pre></div>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.lemma_sort_by_ensures"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#91-121">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.lemma_sort_by_ensures">lemma_sort_by_ensures</a>(self, leq: <a class="struct" href="../prelude/struct.FnSpec.html" title="struct vstd::prelude::FnSpec">FnSpec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.tuple.html">(A, A)</a>, <a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.bool.html">bool</a>&gt;)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code>total_ordering(leq),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.to_multiset() =~= <span class="self">self</span>.sort_by(leq).to_multiset(),</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>sorted_by(<span class="self">self</span>.sort_by(leq), leq),</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>forall |x: A| !<span class="self">self</span>.contains(x) ==&gt; !(<span class="attr">#[trigger] </span><span class="self">self</span>.sort_by(leq).contains(x)),</code></pre></div>
+
+
+
+
+
+
+
+
+
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.filter"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#137-150">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.filter">filter</a>(self, pred: <a class="struct" href="../prelude/struct.FnSpec.html" title="struct vstd::prelude::FnSpec">FnSpec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.tuple.html">(A,)</a>, <a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.bool.html">bool</a>&gt;) -&gt; Self</h4></section></summary><div class="docblock"><div class="verus-spec"><pre class="rust rest-example-rendered verus-body-code"><code>{
+    <span class="kw">if </span><span class="self">self</span>.len() == <span class="number">0 </span>{
+        <span class="self">self
+    </span>} <span class="kw">else </span>{
+        <span class="kw">let </span>subseq = <span class="self">self</span>.drop_last().filter(pred);
+        <span class="kw">if </span>pred(<span class="self">self</span>.last()) { subseq.push(<span class="self">self</span>.last()) } <span class="kw">else </span>{ subseq }
+    }
+}</code></pre></div>
+
+
+
+<p>Returns the sequence containing only the elements of the original sequence
+such that pred(element) is true.</p>
+<h6 id="example-7"><a class="doc-anchor" href="#example-7">§</a>Example</h6>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code>proof <span class="kw">fn </span>filter_test() {
+   <span class="kw">let </span>seq: Seq&lt;int&gt; = <span class="macro">seq!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];
+   <span class="kw">let </span>even: Seq&lt;int&gt; = seq.filter(|x| x % <span class="number">2 </span>== <span class="number">0</span>);
+   reveal_with_fuel(Seq::&lt;int&gt;::filter, <span class="number">6</span>); <span class="comment">//Needed for Verus to unfold the recursive definition of filter
+   </span>assert(even =~= <span class="macro">seq!</span>[<span class="number">2</span>, <span class="number">4</span>]);
+}</code></pre></div>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.lemma_filter_len"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#152-164">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">broadcast proof </span>fn <a class="fn" href="#method.lemma_filter_len">lemma_filter_len</a>(self, pred: <a class="struct" href="../prelude/struct.FnSpec.html" title="struct vstd::prelude::FnSpec">FnSpec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.tuple.html">(A,)</a>, <a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.bool.html">bool</a>&gt;)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="attr">#[trigger] </span><span class="self">self</span>.filter(pred).len() &lt;= <span class="self">self</span>.len(),</code></pre></div>
+
+
+
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.lemma_filter_pred"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#166-175">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">broadcast proof </span>fn <a class="fn" href="#method.lemma_filter_pred">lemma_filter_pred</a>(self, pred: <a class="struct" href="../prelude/struct.FnSpec.html" title="struct vstd::prelude::FnSpec">FnSpec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.tuple.html">(A,)</a>, <a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.bool.html">bool</a>&gt;, i: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="number">0 </span>&lt;= i &lt; <span class="self">self</span>.filter(pred).len(),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code>pred(<span class="attr">#[trigger] </span><span class="self">self</span>.filter(pred)[i]),</code></pre></div>
+
+
+
+
+
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.lemma_filter_contains"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#177-186">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">broadcast proof </span>fn <a class="fn" href="#method.lemma_filter_contains">lemma_filter_contains</a>(self, pred: <a class="struct" href="../prelude/struct.FnSpec.html" title="struct vstd::prelude::FnSpec">FnSpec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.tuple.html">(A,)</a>, <a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.bool.html">bool</a>&gt;, i: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="number">0 </span>&lt;= i &lt; <span class="self">self</span>.len() &amp;&amp; pred(<span class="self">self</span>[i]),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="attr">#[trigger] </span><span class="self">self</span>.filter(pred).contains(<span class="self">self</span>[i]),</code></pre></div>
+
+
+
+
+
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.filter_lemma"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#190-230">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.filter_lemma">filter_lemma</a>(self, pred: <a class="struct" href="../prelude/struct.FnSpec.html" title="struct vstd::prelude::FnSpec">FnSpec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.tuple.html">(A,)</a>, <a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.bool.html">bool</a>&gt;)</h4></section><span class="item-info"><div class="stab deprecated"><span class="emoji">👎</span><span>Deprecated: Use <code>broadcast use group_filter_ensures</code> instead</span></div></span></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code>forall |i: int| {
+    <span class="number">0 </span>&lt;= i &lt; <span class="self">self</span>.filter(pred).len() ==&gt; pred(<span class="attr">#[trigger] </span><span class="self">self</span>.filter(pred)[i])
+},</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>forall |i: int| {
+    <span class="number">0 </span>&lt;= i &lt; <span class="self">self</span>.len() &amp;&amp; pred(<span class="self">self</span>[i]) ==&gt; <span class="attr">#[trigger]
+        </span><span class="self">self</span>.filter(pred).contains(<span class="self">self</span>[i])
+},</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code><span class="attr">#[trigger] </span><span class="self">self</span>.filter(pred).len() &lt;= <span class="self">self</span>.len(),</code></pre></div>
+
+
+
+
+
+
+
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.filter_distributes_over_add"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#232-252">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">broadcast proof </span>fn <a class="fn" href="#method.filter_distributes_over_add">filter_distributes_over_add</a>(a: Self, b: Self, pred: <a class="struct" href="../prelude/struct.FnSpec.html" title="struct vstd::prelude::FnSpec">FnSpec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.tuple.html">(A,)</a>, <a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.bool.html">bool</a>&gt;)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="attr">#[trigger] </span>(a + b).filter(pred) == a.filter(pred) + b.filter(pred),</code></pre></div>
+
+
+
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.add_empty_left"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#254-261">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">broadcast proof </span>fn <a class="fn" href="#method.add_empty_left">add_empty_left</a>(a: Self, b: Self)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code>a.len() == <span class="number">0</span>,</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="attr">#[trigger] </span>(a + b) == b,</code></pre></div>
+
+
+
+
+
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.add_empty_right"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#263-270">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">broadcast proof </span>fn <a class="fn" href="#method.add_empty_right">add_empty_right</a>(a: Self, b: Self)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code>b.len() == <span class="number">0</span>,</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="attr">#[trigger] </span>(a + b) == a,</code></pre></div>
+
+
+
+
+
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.push_distributes_over_add"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#272-277">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">broadcast proof </span>fn <a class="fn" href="#method.push_distributes_over_add">push_distributes_over_add</a>(a: Self, b: Self, elt: A)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="attr">#[trigger] </span>(a + b).push(elt) == a + b.push(elt),</code></pre></div>
+
+
+
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.max_via"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#280-294">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.max_via">max_via</a>(self, leq: <a class="struct" href="../prelude/struct.FnSpec.html" title="struct vstd::prelude::FnSpec">FnSpec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.tuple.html">(A, A)</a>, <a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.bool.html">bool</a>&gt;) -&gt; A</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">recommends</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.len() &gt; <span class="number">0</span>,</code></pre><pre class="rust rest-example-rendered verus-body-code"><code>{
+    <span class="kw">if </span><span class="self">self</span>.len() &gt; <span class="number">1 </span>{
+        <span class="kw">if </span>leq(<span class="self">self</span>[<span class="number">0</span>], <span class="self">self</span>.subrange(<span class="number">1</span>, <span class="self">self</span>.len() <span class="kw">as </span>int).max_via(leq)) {
+            <span class="self">self</span>.subrange(<span class="number">1</span>, <span class="self">self</span>.len() <span class="kw">as </span>int).max_via(leq)
+        } <span class="kw">else </span>{
+            <span class="self">self</span>[<span class="number">0</span>]
+        }
+    } <span class="kw">else </span>{
+        <span class="self">self</span>[<span class="number">0</span>]
+    }
+}</code></pre></div>
+
+
+
+
+
+<p>Returns the maximum value in a non-empty sequence, given sorting function leq</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.min_via"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#297-313">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.min_via">min_via</a>(self, leq: <a class="struct" href="../prelude/struct.FnSpec.html" title="struct vstd::prelude::FnSpec">FnSpec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.tuple.html">(A, A)</a>, <a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.bool.html">bool</a>&gt;) -&gt; A</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">recommends</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.len() &gt; <span class="number">0</span>,</code></pre><pre class="rust rest-example-rendered verus-body-code"><code>{
+    <span class="kw">if </span><span class="self">self</span>.len() &gt; <span class="number">1 </span>{
+        <span class="kw">let </span>subseq = <span class="self">self</span>.subrange(<span class="number">1</span>, <span class="self">self</span>.len() <span class="kw">as </span>int);
+        <span class="kw">let </span>elt = subseq.min_via(leq);
+        <span class="kw">if </span>leq(elt, <span class="self">self</span>[<span class="number">0</span>]) { elt } <span class="kw">else </span>{ <span class="self">self</span>[<span class="number">0</span>] }
+    } <span class="kw">else </span>{
+        <span class="self">self</span>[<span class="number">0</span>]
+    }
+}</code></pre></div>
+
+
+
+
+
+<p>Returns the minimum value in a non-empty sequence, given sorting function leq</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.contains"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#316-318">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.contains">contains</a>(self, needle: A) -&gt; <a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.bool.html">bool</a></h4></section></summary><div class="docblock"><div class="verus-spec"><pre class="rust rest-example-rendered verus-body-code"><code>{ exists |i: int| <span class="number">0 </span>&lt;= i &lt; <span class="self">self</span>.len() &amp;&amp; <span class="self">self</span>[i] == needle }</code></pre></div>
+
+
+
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.index_of"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#322-324">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.index_of">index_of</a>(self, needle: A) -&gt; <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a></h4></section></summary><div class="docblock"><div class="verus-spec"><pre class="rust rest-example-rendered verus-body-code"><code>{ choose |i: int| <span class="number">0 </span>&lt;= i &lt; <span class="self">self</span>.len() &amp;&amp; <span class="self">self</span>[i] == needle }</code></pre></div>
+
+
+
+<p>Returns an index where <code>needle</code> appears in the sequence.
+Returns an arbitrary value if the sequence does not contain the <code>needle</code>.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.index_of_first"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#328-334">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">closed spec </span>fn <a class="fn" href="#method.index_of_first">index_of_first</a>(self, needle: A) -&gt; <span class="verus-ret-name">result : </span><a class="enum" href="https://doc.rust-lang.org/1.85.1/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>&gt;</h4></section></summary><div class="docblock">
+
+<p>For an element that occurs at least once in a sequence, if its first occurence
+is at index i, Some(i) is returned. Otherwise, None is returned</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.index_of_first_ensures"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#352-374">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.index_of_first_ensures">index_of_first_ensures</a>(self, needle: A)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="kw">match </span><span class="self">self</span>.index_of_first(needle) {
+    <span class="prelude-val">Some</span>(index) =&gt; (
+        &amp;&amp;&amp; <span class="self">self</span>.contains(needle)
+        &amp;&amp;&amp; <span class="number">0 </span>&lt;= index &lt; <span class="self">self</span>.len()
+        &amp;&amp;&amp; <span class="self">self</span>[index] == needle
+        &amp;&amp;&amp; forall |j: int| <span class="number">0 </span>&lt;= j &lt; index &lt; <span class="self">self</span>.len() ==&gt; <span class="self">self</span>[j] != needle
+
+    ),
+    <span class="prelude-val">None </span>=&gt; !<span class="self">self</span>.contains(needle),
+},</code></pre></div>
+
+
+
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.index_of_last"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#378-384">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">closed spec </span>fn <a class="fn" href="#method.index_of_last">index_of_last</a>(self, needle: A) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.85.1/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>&gt;</h4></section></summary><div class="docblock">
+
+<p>For an element that occurs at least once in a sequence, if its last occurence
+is at index i, Some(i) is returned. Otherwise, None is returned</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.index_of_last_ensures"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#402-424">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.index_of_last_ensures">index_of_last_ensures</a>(self, needle: A)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="kw">match </span><span class="self">self</span>.index_of_last(needle) {
+    <span class="prelude-val">Some</span>(index) =&gt; (
+        &amp;&amp;&amp; <span class="self">self</span>.contains(needle)
+        &amp;&amp;&amp; <span class="number">0 </span>&lt;= index &lt; <span class="self">self</span>.len()
+        &amp;&amp;&amp; <span class="self">self</span>[index] == needle
+        &amp;&amp;&amp; forall |j: int| <span class="number">0 </span>&lt;= index &lt; j &lt; <span class="self">self</span>.len() ==&gt; <span class="self">self</span>[j] != needle
+
+    ),
+    <span class="prelude-val">None </span>=&gt; !<span class="self">self</span>.contains(needle),
+},</code></pre></div>
+
+
+
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.drop_last"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#430-435">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.drop_last">drop_last</a>(self) -&gt; <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">recommends</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.len() &gt;= <span class="number">1</span>,</code></pre><pre class="rust rest-example-rendered verus-body-code"><code>{ <span class="self">self</span>.subrange(<span class="number">0</span>, <span class="self">self</span>.len() <span class="kw">as </span>int - <span class="number">1</span>) }</code></pre></div>
+
+
+
+
+
+<p>Drops the last element of a sequence and returns a sequence whose length is
+thereby 1 smaller.</p>
+<p>If the input sequence is empty, the result is meaningless and arbitrary.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.drop_last_distributes_over_add"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#439-446">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.drop_last_distributes_over_add">drop_last_distributes_over_add</a>(a: Self, b: Self)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="number">0 </span>&lt; b.len(),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code>(a + b).drop_last() == a + b.drop_last(),</code></pre></div>
+
+
+
+
+
+<p>Dropping the last element of a concatenation of <code>a</code> and <code>b</code> is equivalent
+to skipping the last element of <code>b</code> and then concatenating <code>a</code> and <code>b</code></p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.drop_first"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#448-453">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.drop_first">drop_first</a>(self) -&gt; <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">recommends</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.len() &gt;= <span class="number">1</span>,</code></pre><pre class="rust rest-example-rendered verus-body-code"><code>{ <span class="self">self</span>.subrange(<span class="number">1</span>, <span class="self">self</span>.len() <span class="kw">as </span>int) }</code></pre></div>
+
+
+
+
+
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.no_duplicates"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#456-458">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.no_duplicates">no_duplicates</a>(self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.bool.html">bool</a></h4></section></summary><div class="docblock"><div class="verus-spec"><pre class="rust rest-example-rendered verus-body-code"><code>{
+    forall |i, j| {
+        (<span class="number">0 </span>&lt;= i &lt; <span class="self">self</span>.len() &amp;&amp; <span class="number">0 </span>&lt;= j &lt; <span class="self">self</span>.len() &amp;&amp; i != j) ==&gt; <span class="self">self</span>[i] != <span class="self">self</span>[j]
+    }
+}</code></pre></div>
+
+
+
+<p>returns <code>true</code> if the sequence has no duplicate elements</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.disjoint"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#461-463">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.disjoint">disjoint</a>(self, other: Self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.bool.html">bool</a></h4></section></summary><div class="docblock"><div class="verus-spec"><pre class="rust rest-example-rendered verus-body-code"><code>{
+    forall |i: int, j: int| {
+        <span class="number">0 </span>&lt;= i &lt; <span class="self">self</span>.len() &amp;&amp; <span class="number">0 </span>&lt;= j &lt; other.len() ==&gt; <span class="self">self</span>[i] != other[j]
+    }
+}</code></pre></div>
+
+
+
+<p>Returns <code>true</code> if two sequences are disjoint</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.to_set"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#466-468">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.to_set">to_set</a>(self) -&gt; <a class="struct" href="../set/struct.Set.html" title="struct vstd::set::Set">Set</a>&lt;A&gt;</h4></section></summary><div class="docblock"><div class="verus-spec"><pre class="rust rest-example-rendered verus-body-code"><code>{ Set::new(|a: A| <span class="self">self</span>.contains(a)) }</code></pre></div>
+
+
+
+<p>Converts a sequence into a set</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.to_multiset"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#471-479">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">closed spec </span>fn <a class="fn" href="#method.to_multiset">to_multiset</a>(self) -&gt; <a class="struct" href="../multiset/struct.Multiset.html" title="struct vstd::multiset::Multiset">Multiset</a>&lt;A&gt;</h4></section></summary><div class="docblock">
+
+<p>Converts a sequence into a multiset</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.to_multiset_ensures"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#484-497">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">broadcast proof </span>fn <a class="fn" href="#method.to_multiset_ensures">to_multiset_ensures</a>(self)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code>forall |a: A| <span class="attr">#[trigger] </span>(<span class="self">self</span>.push(a).to_multiset()) =~= <span class="self">self</span>.to_multiset().insert(a),</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>forall |i: int| {
+    <span class="number">0 </span>&lt;= i &lt; <span class="self">self</span>.len()
+        ==&gt; (<span class="attr">#[trigger] </span>(<span class="self">self</span>.remove(i).to_multiset())
+            =~= <span class="self">self</span>.to_multiset().remove(<span class="self">self</span>[i]))
+},</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.len() == <span class="attr">#[trigger] </span><span class="self">self</span>.to_multiset().len(),</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>forall |a: A| <span class="self">self</span>.contains(a) &lt;==&gt; <span class="attr">#[trigger] </span><span class="self">self</span>.to_multiset().count(a) &gt; <span class="number">0</span>,</code></pre></div>
+
+
+
+
+
+
+
+
+
+<p>Proof of function to_multiset() correctness</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.insert"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#500-505">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.insert">insert</a>(self, i: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>, a: A) -&gt; <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">recommends</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="number">0 </span>&lt;= i &lt;= <span class="self">self</span>.len(),</code></pre><pre class="rust rest-example-rendered verus-body-code"><code>{ <span class="self">self</span>.subrange(<span class="number">0</span>, i).push(a) + <span class="self">self</span>.subrange(i, <span class="self">self</span>.len() <span class="kw">as </span>int) }</code></pre></div>
+
+
+
+
+
+<p>Insert item a at index i, shifting remaining elements (if any) to the right</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.insert_ensures"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#508-517">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.insert_ensures">insert_ensures</a>(self, pos: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>, elt: A)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="number">0 </span>&lt;= pos &lt;= <span class="self">self</span>.len(),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.insert(pos, elt).len() == <span class="self">self</span>.len() + <span class="number">1</span>,</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>forall |i: int| <span class="number">0 </span>&lt;= i &lt; pos ==&gt; <span class="attr">#[trigger] </span><span class="self">self</span>.insert(pos, elt)[i] == <span class="self">self</span>[i],</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>forall |i: int| pos &lt;= i &lt; <span class="self">self</span>.len() ==&gt; <span class="self">self</span>.insert(pos, elt)[i + <span class="number">1</span>] == <span class="self">self</span>[i],</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.insert(pos, elt)[pos] == elt,</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+<p>Proof of correctness and expected properties of insert function</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.remove"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#520-525">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.remove">remove</a>(self, i: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>) -&gt; <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">recommends</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="number">0 </span>&lt;= i &lt; <span class="self">self</span>.len(),</code></pre><pre class="rust rest-example-rendered verus-body-code"><code>{ <span class="self">self</span>.subrange(<span class="number">0</span>, i) + <span class="self">self</span>.subrange(i + <span class="number">1</span>, <span class="self">self</span>.len() <span class="kw">as </span>int) }</code></pre></div>
+
+
+
+
+
+<p>Remove item at index i, shifting remaining elements to the left</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.remove_ensures"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#528-537">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.remove_ensures">remove_ensures</a>(self, i: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="number">0 </span>&lt;= i &lt; <span class="self">self</span>.len(),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.remove(i).len() == <span class="self">self</span>.len() - <span class="number">1</span>,</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>forall |index: int| <span class="number">0 </span>&lt;= index &lt; i ==&gt; <span class="attr">#[trigger] </span><span class="self">self</span>.remove(i)[index] == <span class="self">self</span>[index],</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>forall |index: int| {
+    i &lt;= index &lt; <span class="self">self</span>.len() - <span class="number">1 </span>==&gt; <span class="attr">#[trigger] </span><span class="self">self</span>.remove(i)[index] == <span class="self">self</span>[index + <span class="number">1</span>]
+},</code></pre></div>
+
+
+
+
+
+
+
+
+
+<p>Proof of function remove() correctness</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.remove_value"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#541-547">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.remove_value">remove_value</a>(self, val: A) -&gt; <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;</h4></section></summary><div class="docblock"><div class="verus-spec"><pre class="rust rest-example-rendered verus-body-code"><code>{
+    <span class="kw">let </span>index = <span class="self">self</span>.index_of_first(val);
+    <span class="kw">match </span>index {
+        <span class="prelude-val">Some</span>(i) =&gt; <span class="self">self</span>.remove(i),
+        <span class="prelude-val">None </span>=&gt; <span class="self">self</span>,
+    }
+}</code></pre></div>
+
+
+
+<p>If a given element occurs at least once in a sequence, the sequence without
+its first occurrence is returned. Otherwise the same sequence is returned.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.reverse"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#550-558">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.reverse">reverse</a>(self) -&gt; <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;</h4></section></summary><div class="docblock"><div class="verus-spec"><pre class="rust rest-example-rendered verus-body-code"><code>{
+    <span class="kw">if </span><span class="self">self</span>.len() == <span class="number">0 </span>{
+        Seq::empty()
+    } <span class="kw">else </span>{
+        Seq::new(<span class="self">self</span>.len(), |i: int| <span class="self">self</span>[<span class="self">self</span>.len() - <span class="number">1 </span>- i])
+    }
+}</code></pre></div>
+
+
+
+<p>Returns the sequence that is in reverse order to a given sequence.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.zip_with"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#562-574">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.zip_with">zip_with</a>&lt;B&gt;(self, other: <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;B&gt;) -&gt; <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.tuple.html">(A, B)</a>&gt;</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">recommends</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.len() == other.len(),</code></pre><pre class="rust rest-example-rendered verus-body-code"><code>{
+    <span class="kw">if </span><span class="self">self</span>.len() != other.len() {
+        Seq::empty()
+    } <span class="kw">else if </span><span class="self">self</span>.len() == <span class="number">0 </span>{
+        Seq::empty()
+    } <span class="kw">else </span>{
+        Seq::new(<span class="self">self</span>.len(), |i: int| (<span class="self">self</span>[i], other[i]))
+    }
+}</code></pre></div>
+
+
+
+
+
+<p>Zips two sequences of equal length into one sequence that consists of pairs.
+If the two sequences are different lengths, returns an empty sequence</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.fold_left"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#582-590">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.fold_left">fold_left</a>&lt;B&gt;(self, b: B, f: <a class="struct" href="../prelude/struct.FnSpec.html" title="struct vstd::prelude::FnSpec">FnSpec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.tuple.html">(B, A)</a>, B&gt;) -&gt; <span class="verus-ret-name">res : </span>B</h4></section></summary><div class="docblock"><div class="verus-spec"><pre class="rust rest-example-rendered verus-body-code"><code>{ <span class="kw">if </span><span class="self">self</span>.len() == <span class="number">0 </span>{ b } <span class="kw">else </span>{ f(<span class="self">self</span>.drop_last().fold_left(b, f), <span class="self">self</span>.last()) } }</code></pre></div>
+
+
+
+<p>Folds the sequence to the left, applying <code>f</code> to perform the fold.</p>
+<p>Equivalent to <code>Iterator::fold</code> in Rust.</p>
+<p>Given a sequence <code>s = [x0, x1, x2, ..., xn]</code>, applying this function <code>s.fold_left(b, f)</code>
+returns <code>f(...f(f(b, x0), x1), ..., xn)</code>.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.fold_left_alt"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#595-603">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.fold_left_alt">fold_left_alt</a>&lt;B&gt;(self, b: B, f: <a class="struct" href="../prelude/struct.FnSpec.html" title="struct vstd::prelude::FnSpec">FnSpec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.tuple.html">(B, A)</a>, B&gt;) -&gt; <span class="verus-ret-name">res : </span>B</h4></section></summary><div class="docblock"><div class="verus-spec"><pre class="rust rest-example-rendered verus-body-code"><code>{
+    <span class="kw">if </span><span class="self">self</span>.len() == <span class="number">0 </span>{
+        b
+    } <span class="kw">else </span>{
+        <span class="self">self</span>.subrange(<span class="number">1</span>, <span class="self">self</span>.len() <span class="kw">as </span>int).fold_left_alt(f(b, <span class="self">self</span>[<span class="number">0</span>]), f)
+    }
+}</code></pre></div>
+
+
+
+<p>Equivalent to <a href="struct.Seq.html#method.fold_left" title="method vstd::seq::Seq::fold_left"><code>Self::fold_left</code></a> but defined by breaking off the leftmost element when
+recursing, rather than the rightmost. See <a href="struct.Seq.html#method.lemma_fold_left_alt" title="method vstd::seq::Seq::lemma_fold_left_alt"><code>Self::lemma_fold_left_alt</code></a> that proves
+equivalence.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.lemma_fold_left_split"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#606-634">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">broadcast proof </span>fn <a class="fn" href="#method.lemma_fold_left_split">lemma_fold_left_split</a>&lt;B&gt;(self, b: B, f: <a class="struct" href="../prelude/struct.FnSpec.html" title="struct vstd::prelude::FnSpec">FnSpec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.tuple.html">(B, A)</a>, B&gt;, k: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="number">0 </span>&lt;= k &lt;= <span class="self">self</span>.len(),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self
+    </span>.subrange(k, <span class="self">self</span>.len() <span class="kw">as </span>int)
+    .fold_left((<span class="attr">#[trigger] </span><span class="self">self</span>.subrange(<span class="number">0</span>, k).fold_left(b, f)), f)
+    == <span class="self">self</span>.fold_left(b, f),</code></pre></div>
+
+
+
+
+
+<p>A lemma that proves how <a href="struct.Seq.html#method.fold_left" title="method vstd::seq::Seq::fold_left"><code>Self::fold_left</code></a> distributes over splitting a sequence.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.lemma_fold_left_alt"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#669-686">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.lemma_fold_left_alt">lemma_fold_left_alt</a>&lt;B&gt;(self, b: B, f: <a class="struct" href="../prelude/struct.FnSpec.html" title="struct vstd::prelude::FnSpec">FnSpec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.tuple.html">(B, A)</a>, B&gt;)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.fold_left(b, f) == <span class="self">self</span>.fold_left_alt(b, f),</code></pre></div>
+
+
+
+<p><a href="struct.Seq.html#method.fold_left" title="method vstd::seq::Seq::fold_left"><code>Self::fold_left</code></a> and <a href="struct.Seq.html#method.fold_left_alt" title="method vstd::seq::Seq::fold_left_alt"><code>Self::fold_left_alt</code></a> are equivalent.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.fold_right"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#694-702">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.fold_right">fold_right</a>&lt;B&gt;(self, f: <a class="struct" href="../prelude/struct.FnSpec.html" title="struct vstd::prelude::FnSpec">FnSpec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.tuple.html">(A, B)</a>, B&gt;, b: B) -&gt; <span class="verus-ret-name">res : </span>B</h4></section></summary><div class="docblock"><div class="verus-spec"><pre class="rust rest-example-rendered verus-body-code"><code>{ <span class="kw">if </span><span class="self">self</span>.len() == <span class="number">0 </span>{ b } <span class="kw">else </span>{ <span class="self">self</span>.drop_last().fold_right(f, f(<span class="self">self</span>.last(), b)) } }</code></pre></div>
+
+
+
+<p>Folds the sequence to the right, applying <code>f</code> to perform the fold.</p>
+<p>Equivalent to <code>DoubleEndedIterator::rfold</code> in Rust.</p>
+<p>Given a sequence <code>s = [x0, x1, x2, ..., xn]</code>, applying this function <code>s.fold_right(b, f)</code>
+returns <code>f(x0, f(x1, f(x2, ..., f(xn, b)...)))</code>.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.fold_right_alt"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#707-715">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.fold_right_alt">fold_right_alt</a>&lt;B&gt;(self, f: <a class="struct" href="../prelude/struct.FnSpec.html" title="struct vstd::prelude::FnSpec">FnSpec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.tuple.html">(A, B)</a>, B&gt;, b: B) -&gt; <span class="verus-ret-name">res : </span>B</h4></section></summary><div class="docblock"><div class="verus-spec"><pre class="rust rest-example-rendered verus-body-code"><code>{
+    <span class="kw">if </span><span class="self">self</span>.len() == <span class="number">0 </span>{
+        b
+    } <span class="kw">else </span>{
+        f(<span class="self">self</span>[<span class="number">0</span>], <span class="self">self</span>.subrange(<span class="number">1</span>, <span class="self">self</span>.len() <span class="kw">as </span>int).fold_right_alt(f, b))
+    }
+}</code></pre></div>
+
+
+
+<p>Equivalent to <a href="struct.Seq.html#method.fold_right" title="method vstd::seq::Seq::fold_right"><code>Self::fold_right</code></a> but defined by breaking off the leftmost element when
+recursing, rather than the rightmost. See <a href="struct.Seq.html#method.lemma_fold_right_alt" title="method vstd::seq::Seq::lemma_fold_right_alt"><code>Self::lemma_fold_right_alt</code></a> that proves
+equivalence.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.lemma_fold_right_split"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#718-748">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">broadcast proof </span>fn <a class="fn" href="#method.lemma_fold_right_split">lemma_fold_right_split</a>&lt;B&gt;(self, f: <a class="struct" href="../prelude/struct.FnSpec.html" title="struct vstd::prelude::FnSpec">FnSpec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.tuple.html">(A, B)</a>, B&gt;, b: B, k: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="number">0 </span>&lt;= k &lt;= <span class="self">self</span>.len(),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self
+    </span>.subrange(<span class="number">0</span>, k)
+    .fold_right(f, (<span class="attr">#[trigger] </span><span class="self">self</span>.subrange(k, <span class="self">self</span>.len() <span class="kw">as </span>int).fold_right(f, b)))
+    == <span class="self">self</span>.fold_right(f, b),</code></pre></div>
+
+
+
+
+
+<p>A lemma that proves how <a href="struct.Seq.html#method.fold_right" title="method vstd::seq::Seq::fold_right"><code>Self::fold_right</code></a> distributes over splitting a sequence.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.lemma_fold_right_commute_one"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#751-761">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.lemma_fold_right_commute_one">lemma_fold_right_commute_one</a>&lt;B&gt;(self, a: A, f: <a class="struct" href="../prelude/struct.FnSpec.html" title="struct vstd::prelude::FnSpec">FnSpec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.tuple.html">(A, B)</a>, B&gt;, v: B)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code>commutative_foldr(f),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.fold_right(f, f(a, v)) == f(a, <span class="self">self</span>.fold_right(f, v)),</code></pre></div>
+
+
+
+
+
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.lemma_fold_right_alt"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#764-777">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.lemma_fold_right_alt">lemma_fold_right_alt</a>&lt;B&gt;(self, f: <a class="struct" href="../prelude/struct.FnSpec.html" title="struct vstd::prelude::FnSpec">FnSpec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.tuple.html">(A, B)</a>, B&gt;, b: B)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.fold_right(f, b) == <span class="self">self</span>.fold_right_alt(f, b),</code></pre></div>
+
+
+
+<p><a href="struct.Seq.html#method.fold_right" title="method vstd::seq::Seq::fold_right"><code>Self::fold_right</code></a> and <a href="struct.Seq.html#method.fold_right_alt" title="method vstd::seq::Seq::fold_right_alt"><code>Self::fold_right_alt</code></a> are equivalent.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.lemma_multiset_has_no_duplicates"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#782-800">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.lemma_multiset_has_no_duplicates">lemma_multiset_has_no_duplicates</a>(self)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.no_duplicates(),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code>forall |x: A| <span class="self">self</span>.to_multiset().contains(x) ==&gt; <span class="self">self</span>.to_multiset().count(x) == <span class="number">1</span>,</code></pre></div>
+
+
+
+
+
+<p>Given a sequence with no duplicates, each element occurs only
+once in its conversion to a multiset</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.lemma_multiset_has_no_duplicates_conv"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#804-836">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.lemma_multiset_has_no_duplicates_conv">lemma_multiset_has_no_duplicates_conv</a>(self)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code>forall |x: A| <span class="self">self</span>.to_multiset().contains(x) ==&gt; <span class="self">self</span>.to_multiset().count(x) == <span class="number">1</span>,</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.no_duplicates(),</code></pre></div>
+
+
+
+
+
+<p>If, in a sequence’s conversion to a multiset, each element occurs only once,
+the sequence has no duplicates.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.lemma_add_last_back"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#841-847">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.lemma_add_last_back">lemma_add_last_back</a>(self)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="number">0 </span>&lt; <span class="self">self</span>.len(),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="attr">#[trigger] </span><span class="self">self</span>.drop_last().push(<span class="self">self</span>.last()) =~= <span class="self">self</span>,</code></pre></div>
+
+
+
+
+
+<p>The concatenation of two subsequences derived from a non-empty sequence,
+the first obtained from skipping the last element, the second consisting only
+of the last element, is the original sequence.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.lemma_indexing_implies_membership"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#853-860">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.lemma_indexing_implies_membership">lemma_indexing_implies_membership</a>(self, f: <a class="struct" href="../prelude/struct.FnSpec.html" title="struct vstd::prelude::FnSpec">FnSpec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.tuple.html">(A,)</a>, <a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.bool.html">bool</a>&gt;)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code>forall |i: int| <span class="number">0 </span>&lt;= i &lt; <span class="self">self</span>.len() ==&gt; <span class="attr">#[trigger] </span>f(<span class="attr">#[trigger] </span><span class="self">self</span>[i]),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code>forall |x: A| <span class="attr">#[trigger] </span><span class="self">self</span>.contains(x) ==&gt; <span class="attr">#[trigger] </span>f(x),</code></pre></div>
+
+
+
+
+
+<p>If a predicate is true at every index of a sequence,
+it is true for every member of the sequence as a collection.
+Useful for converting quantifiers between the two forms
+to satisfy a precondition in the latter form.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.lemma_membership_implies_indexing"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#866-875">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.lemma_membership_implies_indexing">lemma_membership_implies_indexing</a>(self, f: <a class="struct" href="../prelude/struct.FnSpec.html" title="struct vstd::prelude::FnSpec">FnSpec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.tuple.html">(A,)</a>, <a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.bool.html">bool</a>&gt;)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code>forall |x: A| <span class="attr">#[trigger] </span><span class="self">self</span>.contains(x) ==&gt; <span class="attr">#[trigger] </span>f(x),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code>forall |i: int| <span class="number">0 </span>&lt;= i &lt; <span class="self">self</span>.len() ==&gt; <span class="attr">#[trigger] </span>f(<span class="self">self</span>[i]),</code></pre></div>
+
+
+
+
+
+<p>If a predicate is true for every member of a sequence as a collection,
+it is true at every index of the sequence.
+Useful for converting quantifiers between the two forms
+to satisfy a precondition in the latter form.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.lemma_split_at"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#880-886">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.lemma_split_at">lemma_split_at</a>(self, pos: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="number">0 </span>&lt;= pos &lt;= <span class="self">self</span>.len(),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.subrange(<span class="number">0</span>, pos) + <span class="self">self</span>.subrange(pos, <span class="self">self</span>.len() <span class="kw">as </span>int) =~= <span class="self">self</span>,</code></pre></div>
+
+
+
+
+
+<p>A sequence that is sliced at the pos-th element, concatenated
+with that same sequence sliced from the pos-th element, is equal to the
+original unsliced sequence.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.lemma_element_from_slice"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#889-898">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.lemma_element_from_slice">lemma_element_from_slice</a>(self, new: <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;, a: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>, b: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>, pos: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="number">0 </span>&lt;= a &lt;= b &lt;= <span class="self">self</span>.len(),</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>new == <span class="self">self</span>.subrange(a, b),</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>a &lt;= pos &lt; b,</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code>pos - a &lt; new.len(),</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>new[pos - a] == <span class="self">self</span>[pos],</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+<p>Any element in a slice is included in the original sequence.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.lemma_slice_of_slice"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#902-909">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.lemma_slice_of_slice">lemma_slice_of_slice</a>(self, s1: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>, e1: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>, s2: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>, e2: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="number">0 </span>&lt;= s1 &lt;= e1 &lt;= <span class="self">self</span>.len(),</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code><span class="number">0 </span>&lt;= s2 &lt;= e2 &lt;= e1 - s1,</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.subrange(s1, e1).subrange(s2, e2) =~= <span class="self">self</span>.subrange(s1 + s2, s1 + e2),</code></pre></div>
+
+
+
+
+
+
+
+<p>A slice (from s2..e2) of a slice (from s1..e1) of a sequence is equal to just a
+slice (s1+s2..s1+e2) of the original sequence.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.unique_seq_to_set"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#912-932">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.unique_seq_to_set">unique_seq_to_set</a>(self)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.no_duplicates(),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.len() == <span class="self">self</span>.to_set().len(),</code></pre></div>
+
+
+
+
+
+<p>A sequence of unique items, when converted to a set, produces a set with matching length</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.lemma_cardinality_of_set"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#936-950">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.lemma_cardinality_of_set">lemma_cardinality_of_set</a>(self)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.to_set().len() &lt;= <span class="self">self</span>.len(),</code></pre></div>
+
+
+
+<p>The cardinality of a set of elements is always less than or
+equal to that of the full sequence of elements.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.lemma_cardinality_of_empty_set_is_0"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#954-967">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.lemma_cardinality_of_empty_set_is_0">lemma_cardinality_of_empty_set_is_0</a>(self)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.to_set().len() == <span class="number">0 </span>&lt;==&gt; <span class="self">self</span>.len() == <span class="number">0</span>,</code></pre></div>
+
+
+
+<p>A sequence is of length 0 if and only if its conversion to
+a set results in the empty set.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.lemma_no_dup_set_cardinality"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#971-996">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.lemma_no_dup_set_cardinality">lemma_no_dup_set_cardinality</a>(self)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.to_set().len() == <span class="self">self</span>.len(),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.no_duplicates(),</code></pre></div>
+
+
+
+
+
+<p>A sequence with cardinality equal to its set has no duplicates.
+Inverse property of that shown in lemma unique_seq_to_set</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.lemma_to_set_map_commutes"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#1000-1020">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">broadcast proof </span>fn <a class="fn" href="#method.lemma_to_set_map_commutes">lemma_to_set_map_commutes</a>&lt;B&gt;(self, f: <a class="struct" href="../prelude/struct.FnSpec.html" title="struct vstd::prelude::FnSpec">FnSpec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.tuple.html">(A,)</a>, B&gt;)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="attr">#[trigger] </span><span class="self">self</span>.to_set().map(f) =~= <span class="self">self</span>.map_values(f).to_set(),</code></pre></div>
+
+
+
+<p>Mapping a function over a sequence and converting to a set is the same
+as mapping it over the sequence converted to a set.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.lemma_to_set_insert_commutes"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#1024-1036">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">broadcast proof </span>fn <a class="fn" href="#method.lemma_to_set_insert_commutes">lemma_to_set_insert_commutes</a>(sq: <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;, elt: A)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="attr">#[trigger] </span>(sq + <span class="macro">seq!</span>[elt]).to_set() =~= sq.to_set().insert(elt),</code></pre></div>
+
+
+
+<p>Appending an element to a sequence and converting to set, is equal
+to converting to set and inserting it.</p>
+</div></details></div></details><details class="toggle implementors-toggle" open=""><summary><section class="impl" id="impl-Seq%3C(A,+B)%3E"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#1039-1068">Source</a><a class="anchor" href="#impl-Seq%3C(A,+B)%3E">§</a><h3 class="code-header">impl&lt;A, B&gt; <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.tuple.html">(A, B)</a>&gt;</h3></section></summary><div class="impl-items"><details class="toggle method-toggle" open=""><summary><section class="method" id="method.unzip"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#1041-1043">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">closed spec </span>fn <a class="fn" href="#method.unzip">unzip</a>(self) -&gt; (<a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;, <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;B&gt;)</h4></section></summary><div class="docblock">
+
+<p>Unzips a sequence that contains pairs into two separate sequences.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.unzip_ensures"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#1046-1059">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.unzip_ensures">unzip_ensures</a>(self)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.unzip().<span class="number">0</span>.len() == <span class="self">self</span>.unzip().<span class="number">1</span>.len(),</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.unzip().<span class="number">0</span>.len() == <span class="self">self</span>.len(),</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.unzip().<span class="number">1</span>.len() == <span class="self">self</span>.len(),</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>forall |i: int| {
+    <span class="number">0 </span>&lt;= i &lt; <span class="self">self</span>.len()
+        ==&gt; (<span class="attr">#[trigger] </span><span class="self">self</span>.unzip().<span class="number">0</span>[i], <span class="attr">#[trigger] </span><span class="self">self</span>.unzip().<span class="number">1</span>[i]) == <span class="self">self</span>[i]
+},</code></pre></div>
+
+
+
+
+
+
+
+
+
+<p>Proof of correctness and expected properties of unzip function</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.lemma_zip_of_unzip"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#1063-1067">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.lemma_zip_of_unzip">lemma_zip_of_unzip</a>(self)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.unzip().<span class="number">0</span>.zip_with(<span class="self">self</span>.unzip().<span class="number">1</span>) =~= <span class="self">self</span>,</code></pre></div>
+
+
+
+<p>Unzipping a sequence of sequences and then zipping the resulting two sequences
+back together results in the original sequence of sequences.</p>
+</div></details></div></details><details class="toggle implementors-toggle" open=""><summary><section class="impl" id="impl-Seq%3CSeq%3CA%3E%3E"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#1070-1182">Source</a><a class="anchor" href="#impl-Seq%3CSeq%3CA%3E%3E">§</a><h3 class="code-header">impl&lt;A&gt; <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;<a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;&gt;</h3></section></summary><div class="impl-items"><details class="toggle method-toggle" open=""><summary><section class="method" id="method.flatten"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#1084-1092">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.flatten">flatten</a>(self) -&gt; <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;</h4></section></summary><div class="docblock"><div class="verus-spec"><pre class="rust rest-example-rendered verus-body-code"><code>{
+    <span class="kw">if </span><span class="self">self</span>.len() == <span class="number">0 </span>{
+        Seq::empty()
+    } <span class="kw">else </span>{
+        <span class="self">self</span>.first().add(<span class="self">self</span>.drop_first().flatten())
+    }
+}</code></pre></div>
+
+
+
+<p>Flattens a sequence of sequences into a single sequence by concatenating
+subsequences, starting from the first element.</p>
+<h6 id="example-8"><a class="doc-anchor" href="#example-8">§</a>Example</h6>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code>proof <span class="kw">fn </span>flatten_test() {
+   <span class="kw">let </span>seq: Seq&lt;Seq&lt;int&gt;&gt; = <span class="macro">seq!</span>[<span class="macro">seq!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], <span class="macro">seq!</span>[<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>], <span class="macro">seq!</span>[<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>]];
+   <span class="kw">let </span>flat: Seq&lt;int&gt; = seq.flatten();
+   reveal_with_fuel(Seq::&lt;Seq&lt;int&gt;&gt;::flatten, <span class="number">5</span>); <span class="comment">//Needed for Verus to unfold the recursive definition of flatten
+   </span>assert(flat =~= <span class="macro">seq!</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>]);
+}</code></pre></div>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.flatten_alt"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#1098-1106">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.flatten_alt">flatten_alt</a>(self) -&gt; <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;</h4></section></summary><div class="docblock"><div class="verus-spec"><pre class="rust rest-example-rendered verus-body-code"><code>{
+    <span class="kw">if </span><span class="self">self</span>.len() == <span class="number">0 </span>{
+        Seq::empty()
+    } <span class="kw">else </span>{
+        <span class="self">self</span>.drop_last().flatten_alt().add(<span class="self">self</span>.last())
+    }
+}</code></pre></div>
+
+
+
+<p>Flattens a sequence of sequences into a single sequence by concatenating
+subsequences in reverse order, i.e. starting from the last element.
+This is equivalent to a call to <code>flatten</code>, but with concatenation operation
+applied along the oppositive associativity for the sake of proof reasoning in that direction.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.lemma_flatten_one_element"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#1110-1119">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.lemma_flatten_one_element">lemma_flatten_one_element</a>(self)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.len() == <span class="number">1 </span>==&gt; <span class="self">self</span>.flatten() == <span class="self">self</span>.first(),</code></pre></div>
+
+
+
+<p>Flattening a sequence of a sequence x, where x has length 1,
+results in a sequence equivalent to the single element of x</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.lemma_flatten_length_ge_single_element_length"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#1123-1138">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.lemma_flatten_length_ge_single_element_length">lemma_flatten_length_ge_single_element_length</a>(self, i: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="number">0 </span>&lt;= i &lt; <span class="self">self</span>.len(),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.flatten_alt().len() &gt;= <span class="self">self</span>[i].len(),</code></pre></div>
+
+
+
+
+
+<p>The length of a flattened sequence of sequences x is greater than or
+equal to any of the lengths of the elements of x.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.lemma_flatten_length_le_mul"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#1143-1157">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.lemma_flatten_length_le_mul">lemma_flatten_length_le_mul</a>(self, j: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code>forall |i: int| <span class="number">0 </span>&lt;= i &lt; <span class="self">self</span>.len() ==&gt; (<span class="attr">#[trigger] </span><span class="self">self</span>[i]).len() &lt;= j,</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.flatten_alt().len() &lt;= <span class="self">self</span>.len() * j,</code></pre></div>
+
+
+
+
+
+<p>The length of a flattened sequence of sequences x is less than or equal
+to the length of x multiplied by a number greater than or equal to the
+length of the longest sequence in x.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.lemma_flatten_and_flatten_alt_are_equivalent"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#1161-1181">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.lemma_flatten_and_flatten_alt_are_equivalent">lemma_flatten_and_flatten_alt_are_equivalent</a>(self)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.flatten() =~= <span class="self">self</span>.flatten_alt(),</code></pre></div>
+
+
+
+<p>Flattening sequences of sequences in order (starting from the beginning)
+and in reverse order (starting from the end) results in the same sequence.</p>
+</div></details></div></details><details class="toggle implementors-toggle" open=""><summary><section class="impl" id="impl-Seq%3Cint%3E"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#1186-1306">Source</a><a class="anchor" href="#impl-Seq%3Cint%3E">§</a><h3 class="code-header">impl <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;<a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>&gt;</h3></section></summary><div class="impl-items"><details class="toggle method-toggle" open=""><summary><section class="method" id="method.max"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#1188-1205">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.max">max</a>(self) -&gt; <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a></h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">recommends</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="number">0 </span>&lt; <span class="self">self</span>.len(),</code></pre><pre class="rust rest-example-rendered verus-body-code"><code>{
+    <span class="kw">if </span><span class="self">self</span>.len() == <span class="number">1 </span>{
+        <span class="self">self</span>[<span class="number">0</span>]
+    } <span class="kw">else if </span><span class="self">self</span>.len() == <span class="number">0 </span>{
+        <span class="number">0
+    </span>} <span class="kw">else </span>{
+        <span class="kw">let </span>later_max = <span class="self">self</span>.drop_first().max();
+        <span class="kw">if </span><span class="self">self</span>[<span class="number">0</span>] &gt;= later_max { <span class="self">self</span>[<span class="number">0</span>] } <span class="kw">else </span>{ later_max }
+    }
+}</code></pre></div>
+
+
+
+
+
+<p>Returns the maximum integer value in a non-empty sequence of integers.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.max_ensures"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#1208-1226">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.max_ensures">max_ensures</a>(self)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code>forall |x: int| <span class="self">self</span>.contains(x) ==&gt; x &lt;= <span class="self">self</span>.max(),</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>forall |i: int| <span class="number">0 </span>&lt;= i &lt; <span class="self">self</span>.len() ==&gt; <span class="self">self</span>[i] &lt;= <span class="self">self</span>.max(),</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.len() == <span class="number">0 </span>|| <span class="self">self</span>.contains(<span class="self">self</span>.max()),</code></pre></div>
+
+
+
+
+
+
+
+<p>Proof of correctness and expected properties for max function</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.min"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#1229-1246">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">open spec </span>fn <a class="fn" href="#method.min">min</a>(self) -&gt; <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a></h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">recommends</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="number">0 </span>&lt; <span class="self">self</span>.len(),</code></pre><pre class="rust rest-example-rendered verus-body-code"><code>{
+    <span class="kw">if </span><span class="self">self</span>.len() == <span class="number">1 </span>{
+        <span class="self">self</span>[<span class="number">0</span>]
+    } <span class="kw">else if </span><span class="self">self</span>.len() == <span class="number">0 </span>{
+        <span class="number">0
+    </span>} <span class="kw">else </span>{
+        <span class="kw">let </span>later_min = <span class="self">self</span>.drop_first().min();
+        <span class="kw">if </span><span class="self">self</span>[<span class="number">0</span>] &lt;= later_min { <span class="self">self</span>[<span class="number">0</span>] } <span class="kw">else </span>{ later_min }
+    }
+}</code></pre></div>
+
+
+
+
+
+<p>Returns the minimum integer value in a non-empty sequence of integers.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.min_ensures"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#1249-1269">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.min_ensures">min_ensures</a>(self)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code>forall |x: int| <span class="self">self</span>.contains(x) ==&gt; <span class="self">self</span>.min() &lt;= x,</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>forall |i: int| <span class="number">0 </span>&lt;= i &lt; <span class="self">self</span>.len() ==&gt; <span class="self">self</span>.min() &lt;= <span class="self">self</span>[i],</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.len() == <span class="number">0 </span>|| <span class="self">self</span>.contains(<span class="self">self</span>.min()),</code></pre></div>
+
+
+
+
+
+
+
+<p>Proof of correctness and expected properties for min function</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.sort"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#1271-1273">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">closed spec </span>fn <a class="fn" href="#method.sort">sort</a>(self) -&gt; Self</h4></section></summary><div class="docblock">
+
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.lemma_sort_ensures"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#1275-1281">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.lemma_sort_ensures">lemma_sort_ensures</a>(self)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.to_multiset() =~= <span class="self">self</span>.sort().to_multiset(),</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>sorted_by(<span class="self">self</span>.sort(), |x: int, y: int| x &lt;= y),</code></pre></div>
+
+
+
+
+
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.lemma_subrange_max"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#1285-1293">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.lemma_subrange_max">lemma_subrange_max</a>(self, from: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>, to: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="number">0 </span>&lt;= from &lt; to &lt;= <span class="self">self</span>.len(),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.subrange(from, to).max() &lt;= <span class="self">self</span>.max(),</code></pre></div>
+
+
+
+
+
+<p>The maximum element in a non-empty sequence is greater than or equal to
+the maxima of its non-empty subsequences.</p>
+</div></details><details class="toggle method-toggle" open=""><summary><section class="method" id="method.lemma_subrange_min"><a class="src rightside" href="../../src/vstd/seq_lib.rs.html#1297-1305">Source</a><h4 class="code-header">pub <span class="verus-sig-keyword">proof </span>fn <a class="fn" href="#method.lemma_subrange_min">lemma_subrange_min</a>(self, from: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>, to: <a class="struct" href="../prelude/struct.int.html" title="struct vstd::prelude::int">int</a>)</h4></section></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">requires</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="number">0 </span>&lt;= from &lt; to &lt;= <span class="self">self</span>.len(),</code></pre><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code><span class="self">self</span>.subrange(from, to).min() &gt;= <span class="self">self</span>.min(),</code></pre></div>
+
+
+
+
+
+<p>The minimum element in a non-empty sequence is less than or equal to
+the minima of its non-empty subsequences.</p>
+</div></details></div></details></div><h2 class="section-header" id="synthetic-implementations">Auto Trait Implementations<a class="anchor" href="#synthetic-implementations">§</a></h2><div id="synthetic-implementations-list"><section class="impl" id="impl-Freeze-for-Seq%3CA%3E"><a class="anchor" href="#impl-Freeze-for-Seq%3CA%3E">§</a><h3 class="code-header">impl&lt;A&gt; <a class="trait" href="https://doc.rust-lang.org/1.85.1/core/marker/trait.Freeze.html" title="trait core::marker::Freeze">Freeze</a> for <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;</h3></section><section class="impl" id="impl-RefUnwindSafe-for-Seq%3CA%3E"><a class="anchor" href="#impl-RefUnwindSafe-for-Seq%3CA%3E">§</a><h3 class="code-header">impl&lt;A&gt; <a class="trait" href="https://doc.rust-lang.org/1.85.1/core/panic/unwind_safe/trait.RefUnwindSafe.html" title="trait core::panic::unwind_safe::RefUnwindSafe">RefUnwindSafe</a> for <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;<div class="where">where
+    A: <a class="trait" href="https://doc.rust-lang.org/1.85.1/core/panic/unwind_safe/trait.RefUnwindSafe.html" title="trait core::panic::unwind_safe::RefUnwindSafe">RefUnwindSafe</a>,</div></h3></section><section class="impl" id="impl-Send-for-Seq%3CA%3E"><a class="anchor" href="#impl-Send-for-Seq%3CA%3E">§</a><h3 class="code-header">impl&lt;A&gt; <a class="trait" href="https://doc.rust-lang.org/1.85.1/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;<div class="where">where
+    A: <a class="trait" href="https://doc.rust-lang.org/1.85.1/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a>,</div></h3></section><section class="impl" id="impl-Sync-for-Seq%3CA%3E"><a class="anchor" href="#impl-Sync-for-Seq%3CA%3E">§</a><h3 class="code-header">impl&lt;A&gt; <a class="trait" href="https://doc.rust-lang.org/1.85.1/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;<div class="where">where
+    A: <a class="trait" href="https://doc.rust-lang.org/1.85.1/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a>,</div></h3></section><section class="impl" id="impl-Unpin-for-Seq%3CA%3E"><a class="anchor" href="#impl-Unpin-for-Seq%3CA%3E">§</a><h3 class="code-header">impl&lt;A&gt; <a class="trait" href="https://doc.rust-lang.org/1.85.1/core/marker/trait.Unpin.html" title="trait core::marker::Unpin">Unpin</a> for <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;<div class="where">where
+    A: <a class="trait" href="https://doc.rust-lang.org/1.85.1/core/marker/trait.Unpin.html" title="trait core::marker::Unpin">Unpin</a>,</div></h3></section><section class="impl" id="impl-UnwindSafe-for-Seq%3CA%3E"><a class="anchor" href="#impl-UnwindSafe-for-Seq%3CA%3E">§</a><h3 class="code-header">impl&lt;A&gt; <a class="trait" href="https://doc.rust-lang.org/1.85.1/core/panic/unwind_safe/trait.UnwindSafe.html" title="trait core::panic::unwind_safe::UnwindSafe">UnwindSafe</a> for <a class="struct" href="struct.Seq.html" title="struct vstd::seq::Seq">Seq</a>&lt;A&gt;<div class="where">where
+    A: <a class="trait" href="https://doc.rust-lang.org/1.85.1/core/panic/unwind_safe/trait.UnwindSafe.html" title="trait core::panic::unwind_safe::UnwindSafe">UnwindSafe</a>,</div></h3></section></div><h2 class="section-header" id="blanket-implementations">Blanket Implementations<a class="anchor" href="#blanket-implementations">§</a></h2><div id="blanket-implementations-list"><details class="toggle implementors-toggle"><summary><section class="impl" id="impl-Any-for-T"><a class="src rightside" href="https://doc.rust-lang.org/1.85.1/src/core/any.rs.html#138">Source</a><a class="anchor" href="#impl-Any-for-T">§</a><h3 class="code-header">impl&lt;T&gt; <a class="trait" href="https://doc.rust-lang.org/1.85.1/core/any/trait.Any.html" title="trait core::any::Any">Any</a> for T<div class="where">where
+    T: 'static + ?<a class="trait" href="https://doc.rust-lang.org/1.85.1/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a>,</div></h3></section></summary><div class="impl-items"><details class="toggle method-toggle" open=""><summary><section class="method trait-impl" id="method.type_id"><a class="src rightside" href="https://doc.rust-lang.org/1.85.1/src/core/any.rs.html#139">Source</a><a class="anchor" href="#method.type_id">§</a><h4 class="code-header">fn <a class="fn" href="https://doc.rust-lang.org/1.85.1/core/any/trait.Any.html#tymethod.type_id">type_id</a>(&amp;self) -&gt; <a class="struct" href="https://doc.rust-lang.org/1.85.1/core/any/struct.TypeId.html" title="struct core::any::TypeId">TypeId</a></h4></section></summary><div class="docblock">Gets the <code>TypeId</code> of <code>self</code>. <a href="https://doc.rust-lang.org/1.85.1/core/any/trait.Any.html#tymethod.type_id">Read more</a></div></details></div></details><details class="toggle implementors-toggle"><summary><section class="impl" id="impl-Borrow%3CT%3E-for-T"><a class="src rightside" href="https://doc.rust-lang.org/1.85.1/src/core/borrow.rs.html#209">Source</a><a class="anchor" href="#impl-Borrow%3CT%3E-for-T">§</a><h3 class="code-header">impl&lt;T&gt; <a class="trait" href="https://doc.rust-lang.org/1.85.1/core/borrow/trait.Borrow.html" title="trait core::borrow::Borrow">Borrow</a>&lt;T&gt; for T<div class="where">where
+    T: ?<a class="trait" href="https://doc.rust-lang.org/1.85.1/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a>,</div></h3></section></summary><div class="impl-items"><details class="toggle method-toggle" open=""><summary><section class="method trait-impl" id="method.borrow"><a class="src rightside" href="https://doc.rust-lang.org/1.85.1/src/core/borrow.rs.html#211">Source</a><a class="anchor" href="#method.borrow">§</a><h4 class="code-header">fn <a class="fn" href="https://doc.rust-lang.org/1.85.1/core/borrow/trait.Borrow.html#tymethod.borrow">borrow</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.reference.html">&amp;T</a></h4></section></summary><div class="docblock">Immutably borrows from an owned value. <a href="https://doc.rust-lang.org/1.85.1/core/borrow/trait.Borrow.html#tymethod.borrow">Read more</a></div></details></div></details><details class="toggle implementors-toggle"><summary><section class="impl" id="impl-BorrowMut%3CT%3E-for-T"><a class="src rightside" href="https://doc.rust-lang.org/1.85.1/src/core/borrow.rs.html#217">Source</a><a class="anchor" href="#impl-BorrowMut%3CT%3E-for-T">§</a><h3 class="code-header">impl&lt;T&gt; <a class="trait" href="https://doc.rust-lang.org/1.85.1/core/borrow/trait.BorrowMut.html" title="trait core::borrow::BorrowMut">BorrowMut</a>&lt;T&gt; for T<div class="where">where
+    T: ?<a class="trait" href="https://doc.rust-lang.org/1.85.1/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a>,</div></h3></section></summary><div class="impl-items"><details class="toggle method-toggle" open=""><summary><section class="method trait-impl" id="method.borrow_mut"><a class="src rightside" href="https://doc.rust-lang.org/1.85.1/src/core/borrow.rs.html#218">Source</a><a class="anchor" href="#method.borrow_mut">§</a><h4 class="code-header">fn <a class="fn" href="https://doc.rust-lang.org/1.85.1/core/borrow/trait.BorrowMut.html#tymethod.borrow_mut">borrow_mut</a>(&amp;mut self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/1.85.1/std/primitive.reference.html">&amp;mut T</a></h4></section></summary><div class="docblock">Mutably borrows from an owned value. <a href="https://doc.rust-lang.org/1.85.1/core/borrow/trait.BorrowMut.html#tymethod.borrow_mut">Read more</a></div></details></div></details><details class="toggle implementors-toggle"><summary><section class="impl" id="impl-From%3CT%3E-for-T"><a class="src rightside" href="https://doc.rust-lang.org/1.85.1/src/core/convert/mod.rs.html#767">Source</a><a class="anchor" href="#impl-From%3CT%3E-for-T">§</a><h3 class="code-header">impl&lt;T&gt; <a class="trait" href="https://doc.rust-lang.org/1.85.1/core/convert/trait.From.html" title="trait core::convert::From">From</a>&lt;T&gt; for T</h3></section></summary><div class="impl-items"><details class="toggle method-toggle" open=""><summary><section class="method trait-impl" id="method.from"><a class="src rightside" href="https://doc.rust-lang.org/1.85.1/src/core/convert/mod.rs.html#770">Source</a><a class="anchor" href="#method.from">§</a><h4 class="code-header">fn <a class="fn" href="https://doc.rust-lang.org/1.85.1/core/convert/trait.From.html#tymethod.from">from</a>(t: T) -&gt; T</h4></section></summary><div class="docblock"><p>Returns the argument unchanged.</p>
+</div></details></div></details><details class="toggle implementors-toggle"><summary><section class="impl" id="impl-Into%3CU%3E-for-T"><a class="src rightside" href="https://doc.rust-lang.org/1.85.1/src/core/convert/mod.rs.html#750-752">Source</a><a class="anchor" href="#impl-Into%3CU%3E-for-T">§</a><h3 class="code-header">impl&lt;T, U&gt; <a class="trait" href="https://doc.rust-lang.org/1.85.1/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;U&gt; for T<div class="where">where
+    U: <a class="trait" href="https://doc.rust-lang.org/1.85.1/core/convert/trait.From.html" title="trait core::convert::From">From</a>&lt;T&gt;,</div></h3></section></summary><div class="impl-items"><details class="toggle method-toggle" open=""><summary><section class="method trait-impl" id="method.into"><a class="src rightside" href="https://doc.rust-lang.org/1.85.1/src/core/convert/mod.rs.html#760">Source</a><a class="anchor" href="#method.into">§</a><h4 class="code-header">fn <a class="fn" href="https://doc.rust-lang.org/1.85.1/core/convert/trait.Into.html#tymethod.into">into</a>(self) -&gt; U</h4></section></summary><div class="docblock"><p>Calls <code>U::from(self)</code>.</p>
+<p>That is, this conversion is whatever the implementation of
+<code><a href="https://doc.rust-lang.org/1.85.1/core/convert/trait.From.html" title="trait core::convert::From">From</a>&lt;T&gt; for U</code> chooses to do.</p>
+</div></details></div></details><details class="toggle implementors-toggle"><summary><section class="impl" id="impl-TryFrom%3CU%3E-for-T"><a class="src rightside" href="https://doc.rust-lang.org/1.85.1/src/core/convert/mod.rs.html#807-809">Source</a><a class="anchor" href="#impl-TryFrom%3CU%3E-for-T">§</a><h3 class="code-header">impl&lt;T, U&gt; <a class="trait" href="https://doc.rust-lang.org/1.85.1/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;U&gt; for T<div class="where">where
+    U: <a class="trait" href="https://doc.rust-lang.org/1.85.1/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;T&gt;,</div></h3></section></summary><div class="impl-items"><details class="toggle" open=""><summary><section class="associatedtype trait-impl" id="associatedtype.Error-1"><a class="src rightside" href="https://doc.rust-lang.org/1.85.1/src/core/convert/mod.rs.html#811">Source</a><a class="anchor" href="#associatedtype.Error-1">§</a><h4 class="code-header">type <a class="associatedtype" href="https://doc.rust-lang.org/1.85.1/core/convert/trait.TryFrom.html#associatedtype.Error">Error</a> = <a class="enum" href="https://doc.rust-lang.org/1.85.1/core/convert/enum.Infallible.html" title="enum core::convert::Infallible">Infallible</a></h4></section></summary><div class="docblock">The type returned in the event of a conversion error.</div></details><details class="toggle method-toggle" open=""><summary><section class="method trait-impl" id="method.try_from"><a class="src rightside" href="https://doc.rust-lang.org/1.85.1/src/core/convert/mod.rs.html#814">Source</a><a class="anchor" href="#method.try_from">§</a><h4 class="code-header">fn <a class="fn" href="https://doc.rust-lang.org/1.85.1/core/convert/trait.TryFrom.html#tymethod.try_from">try_from</a>(value: U) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.85.1/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;T, &lt;T as <a class="trait" href="https://doc.rust-lang.org/1.85.1/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;U&gt;&gt;::<a class="associatedtype" href="https://doc.rust-lang.org/1.85.1/core/convert/trait.TryFrom.html#associatedtype.Error" title="type core::convert::TryFrom::Error">Error</a>&gt;</h4></section></summary><div class="docblock">Performs the conversion.</div></details></div></details><details class="toggle implementors-toggle"><summary><section class="impl" id="impl-TryInto%3CU%3E-for-T"><a class="src rightside" href="https://doc.rust-lang.org/1.85.1/src/core/convert/mod.rs.html#792-794">Source</a><a class="anchor" href="#impl-TryInto%3CU%3E-for-T">§</a><h3 class="code-header">impl&lt;T, U&gt; <a class="trait" href="https://doc.rust-lang.org/1.85.1/core/convert/trait.TryInto.html" title="trait core::convert::TryInto">TryInto</a>&lt;U&gt; for T<div class="where">where
+    U: <a class="trait" href="https://doc.rust-lang.org/1.85.1/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;T&gt;,</div></h3></section></summary><div class="impl-items"><details class="toggle" open=""><summary><section class="associatedtype trait-impl" id="associatedtype.Error"><a class="src rightside" href="https://doc.rust-lang.org/1.85.1/src/core/convert/mod.rs.html#796">Source</a><a class="anchor" href="#associatedtype.Error">§</a><h4 class="code-header">type <a class="associatedtype" href="https://doc.rust-lang.org/1.85.1/core/convert/trait.TryInto.html#associatedtype.Error">Error</a> = &lt;U as <a class="trait" href="https://doc.rust-lang.org/1.85.1/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;T&gt;&gt;::<a class="associatedtype" href="https://doc.rust-lang.org/1.85.1/core/convert/trait.TryFrom.html#associatedtype.Error" title="type core::convert::TryFrom::Error">Error</a></h4></section></summary><div class="docblock">The type returned in the event of a conversion error.</div></details><details class="toggle method-toggle" open=""><summary><section class="method trait-impl" id="method.try_into"><a class="src rightside" href="https://doc.rust-lang.org/1.85.1/src/core/convert/mod.rs.html#799">Source</a><a class="anchor" href="#method.try_into">§</a><h4 class="code-header">fn <a class="fn" href="https://doc.rust-lang.org/1.85.1/core/convert/trait.TryInto.html#tymethod.try_into">try_into</a>(self) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.85.1/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;U, &lt;U as <a class="trait" href="https://doc.rust-lang.org/1.85.1/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;T&gt;&gt;::<a class="associatedtype" href="https://doc.rust-lang.org/1.85.1/core/convert/trait.TryFrom.html#associatedtype.Error" title="type core::convert::TryFrom::Error">Error</a>&gt;</h4></section></summary><div class="docblock">Performs the conversion.</div></details></div></details></div></section></div></main></body></html>

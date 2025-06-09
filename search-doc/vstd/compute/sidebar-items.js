@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["all_spec_ensures","range_all_spec_rec"],"trait":["RangeAll"]};

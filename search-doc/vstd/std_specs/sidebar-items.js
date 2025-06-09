@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["alloc","atomic","bits","clone","control_flow","core","hash","num","option","range","result","smart_ptrs","vec","vecdeque"],"struct":["VstdSpecsForRustStdLib"]};

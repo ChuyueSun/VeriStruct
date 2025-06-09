@@ -1,0 +1,97 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Performs a given atomic operation on a given atomic while providing access to its ghost state."><title>atomic_with_ghost in vstd::atomic_ghost - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../static.files/rustdoc-46132b98.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="vstd" data-themes="" data-resource-suffix="" data-rustdoc-version="1.85.1 (4eb161250 2025-03-15)" data-channel="1.85.1" data-search-js="search-75f5ac3e.js" data-settings-js="settings-0f613d39.js" ><script src="../../static.files/storage-59e33391.js"></script><script defer src="sidebar-items.js"></script><script defer src="../../static.files/main-5f194d8c.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-044be391.svg"></head><body class="rustdoc macro"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../vstd/index.html">vstd</a></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">atomic_<wbr>with_<wbr>ghost</a></h2><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#example-todo" title="Example (TODO)">Example (TODO)</a></li></ul></section><div id="rustdoc-modnav"><h2><a href="index.html">In vstd::<wbr>atomic_<wbr>ghost</a></h2></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><span class="rustdoc-breadcrumbs"><a href="../index.html">vstd</a>::<wbr><a href="index.html">atomic_ghost</a></span><h1>Macro <span class="macro">atomic_with_ghost</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../../src/vstd/atomic_ghost.rs.html#326-334">Source</a> </span></div><pre class="rust item-decl"><code>macro_rules! atomic_with_ghost {
+    ($($tokens:tt)*) =&gt; { ... };
+}</code></pre><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Performs a given atomic operation on a given atomic
+while providing access to its ghost state.</p>
+<p><code>atomic_with_ghost!</code> supports the types
+<a href="struct.AtomicU64.html" title="struct vstd::atomic_ghost::AtomicU64"><code>AtomicU64</code></a> <a href="struct.AtomicU32.html" title="struct vstd::atomic_ghost::AtomicU32"><code>AtomicU32</code></a>, <a href="struct.AtomicU16.html" title="struct vstd::atomic_ghost::AtomicU16"><code>AtomicU16</code></a>, <a href="struct.AtomicU8.html" title="struct vstd::atomic_ghost::AtomicU8"><code>AtomicU8</code></a>,
+<a href="struct.AtomicI64.html" title="struct vstd::atomic_ghost::AtomicI64"><code>AtomicI64</code></a>, <a href="struct.AtomicI32.html" title="struct vstd::atomic_ghost::AtomicI32"><code>AtomicI32</code></a>, <a href="struct.AtomicI16.html" title="struct vstd::atomic_ghost::AtomicI16"><code>AtomicI16</code></a>, <a href="struct.AtomicI8.html" title="struct vstd::atomic_ghost::AtomicI8"><code>AtomicI8</code></a>, and <a href="struct.AtomicBool.html" title="struct vstd::atomic_ghost::AtomicBool"><code>AtomicBool</code></a>.</p>
+<p>For each type, it supports all applicable atomic operations among
+<code>load</code>, <code>store</code>, <code>swap</code>, <code>compare_exchange</code>, <code>compare_exchange_weak</code>,
+<code>fetch_add</code>, <code>fetch_add_wrapping</code>, <code>fetch_sub</code>, <code>fetch_sub_wrapping</code>,
+<code>fetch_or</code>, <code>fetch_and</code>, <code>fetch_xor</code>, <code>fetch_nand</code>, <code>fetch_max</code>, and <code>fetch_min</code>.</p>
+<p>Naturally, <code>AtomicBool</code> does not support the arithmetic-specific operations.</p>
+<p>In general, the syntax is:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span>result = <span class="macro">atomic_with_ghost!</span>(
+    <span class="macro-nonterminal">$atomic </span>=&gt; <span class="macro-nonterminal">$operation_name</span>(<span class="macro-nonterminal">$operands</span>...);
+    update <span class="macro-nonterminal">$prev </span>-&gt; <span class="macro-nonterminal">$next</span>;         <span class="comment">// `update` line is optional
+    </span>returning <span class="macro-nonterminal">$ret</span>;                <span class="comment">// `returning` line is optional
+    </span>ghost <span class="macro-nonterminal">$g </span>=&gt; {
+        <span class="comment">/* Proof code with access to `tracked` variable `g: G` */
+    </span>}
+);</code></pre></div>
+<p>Here, the <code>$operation_name</code> is one of <code>load</code>, <code>store</code>, etc. Meanwhile,
+<code>$prev</code>, <code>$next</code>, and <code>$ret</code> are all identifiers which
+will be available as spec variable inside the block to describe the
+atomic action which is performed.</p>
+<p>For example, suppose the user performs <code>fetch_add(1)</code>. The atomic
+operation might load the value 5, add 1, store the value 6,
+and return the original value, 5. In that case, we would have
+<code>prev == 5</code>, <code>next == 6</code>, and <code>ret == 5</code>.</p>
+<p>The specification for a given operation is given as a relation between
+<code>prev</code>, <code>next</code>, and <code>ret</code>; that is, at the beginning of the proof block,
+the user may assume the given specification holds:</p>
+<div><table><thead><tr><th>operation</th><th>specification</th></tr></thead><tbody>
+<tr><td><code>load()</code></td><td><code>next == prev &amp;&amp; rev == prev</code></td></tr>
+<tr><td><code>store(x)</code></td><td><code>next == x &amp;&amp; ret == ()</code></td></tr>
+<tr><td><code>swap(x)</code></td><td><code>next == x &amp;&amp; ret == prev</code></td></tr>
+<tr><td><code>compare_exchange(x, y)</code></td><td><code>prev == x &amp;&amp; next == y &amp;&amp; ret == Ok(prev)</code> (“success”) OR<br> <code>prev != x &amp;&amp; next == prev &amp;&amp; ret == Err(prev)</code> (“failure”)</td></tr>
+<tr><td><code>compare_exchange_weak(x, y)</code></td><td><code>prev == x &amp;&amp; next == y &amp;&amp; ret == Ok(prev)</code> (“success”) OR<br> <code>next == prev &amp;&amp; ret == Err(prev)</code> (“failure”)</td></tr>
+<tr><td><code>fetch_add(x)</code> (*)</td><td><code>next == prev + x &amp;&amp; ret == prev</code></td></tr>
+<tr><td><code>fetch_add_wrapping(x)</code></td><td><code>next == wrapping_add(prev, x) &amp;&amp; ret == prev</code></td></tr>
+<tr><td><code>fetch_sub(x)</code> (*)</td><td><code>next == prev - x &amp;&amp; ret == prev</code></td></tr>
+<tr><td><code>fetch_sub_wrapping(x)</code></td><td><code>next == wrapping_sub(prev, x) &amp;&amp; ret == prev</code></td></tr>
+<tr><td><code>fetch_or(x)</code></td><td><code>next == prev | x &amp;&amp; ret == prev</code></td></tr>
+<tr><td><code>fetch_and(x)</code></td><td><code>next == prev &amp; x &amp;&amp; ret == prev</code></td></tr>
+<tr><td><code>fetch_xor(x)</code></td><td><code>next == prev ^ x &amp;&amp; ret == prev</code></td></tr>
+<tr><td><code>fetch_nand(x)</code></td><td><code>next == !(prev &amp; x) &amp;&amp; ret == prev</code></td></tr>
+<tr><td><code>fetch_max(x)</code></td><td><code>next == max(prev, x) &amp;&amp; ret == prev</code></td></tr>
+<tr><td><code>fetch_min(x)</code></td><td><code>next == max(prev, x) &amp;&amp; ret == prev</code></td></tr>
+<tr><td><code>no_op()</code> (**)</td><td><code>next == prev &amp;&amp; ret == ()</code></td></tr>
+</tbody></table>
+</div>
+<p>(*) Note that <code>fetch_add</code> and <code>fetch_sub</code> do not specify
+wrapping-on-overflow; instead, they require the user to
+prove that overflow <em>does not occur</em>, i.e., the user must show
+that <code>next</code> is in bounds for the integer type in question.
+Furthermore, for <code>fetch_add</code> and <code>fetch_sub</code>, the spec values of
+<code>prev</code>, <code>next</code>, and <code>ret</code> are all given with type <code>int</code>, so the
+user may reason about boundedness within the proof block.</p>
+<p>(As executable code, <code>fetch_add</code> is equivalent to <code>fetch_add_wrapping</code>,
+and likewise for <code>fetch_sub</code> and <code>fetch_sub_wrapping</code>.
+We have both because it’s frequently the case that the user needs to verify
+lack-of-overflow <em>anyway</em>, and having it as an explicit precondition by default
+then makes verification errors easier to diagnose. Furthermore, when overflow is
+intended, the wrapping operations document that intent.)</p>
+<p>(**) <code>no_op</code> is entirely a ghost operation and doesn’t emit any actual instruction.
+This allows the user to access the ghost state and the stored value (as <code>spec</code> data)
+without actually performing a load.</p>
+<hr />
+<p>At the beginning of the proof block, the user may assume, in addition
+to the specified relation between <code>prev</code>, <code>next</code>, and <code>ret</code>, that
+<code>atomic.inv(prev, g)</code> holds. The user is required to update <code>g</code> such that
+<code>atomic.inv(next, g)</code> holds at the end of the block.
+In other words, the ghost block has the implicit pre- and post-conditions:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">let </span>result = <span class="macro">atomic_with_ghost!</span>(
+    <span class="macro-nonterminal">$atomic </span>=&gt; <span class="macro-nonterminal">$operation_name</span>(<span class="macro-nonterminal">$operands</span>...);
+    update <span class="macro-nonterminal">$prev </span>-&gt; <span class="macro-nonterminal">$next</span>;
+    returning <span class="macro-nonterminal">$ret</span>;
+    ghost <span class="macro-nonterminal">$g </span>=&gt; {
+        assume(specified relation on (prev, next, ret));
+        assume(atomic.inv(prev, g));
+
+        <span class="comment">// User code here; may update variable `g` with full
+        // access to variables in the outer context.
+
+        </span>assert(atomic.inv(next, g));
+    }
+);</code></pre></div>
+<p>Note that the necessary action on ghost state might depend
+on the result of the operation; for example, if the user performs a
+compare-and-swap, then the ghost action that they then need to do
+will probably depend on whether the operation succeeded or not.</p>
+<p>The value returned by the <code>atomic_with_ghost!(...)</code> expression will be equal
+to <code>ret</code>, although the return value is an <code>exec</code> value (the actual result of
+the operation) while <code>ret</code> is a <code>spec</code> value.</p>
+<h4 id="example-todo"><a class="doc-anchor" href="#example-todo">§</a>Example (TODO)</h4></div></details></section></div></main></body></html>

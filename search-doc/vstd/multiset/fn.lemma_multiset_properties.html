@@ -1,0 +1,53 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="rustdoc" name="generator"><meta content="API documentation for the Rust `lemma_multiset_properties` fn in crate `vstd`." name="description"><title>lemma_multiset_properties in vstd::multiset - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link href="../../static.files/normalize-9960930a.css" rel="stylesheet"><link href="../../static.files/rustdoc-46132b98.css" rel="stylesheet"><meta data-channel="1.85.1" data-current-crate="vstd" data-resource-suffix="" data-root-path="../../" data-rustdoc-version="1.85.1 (4eb161250 2025-03-15)" data-search-js="search-75f5ac3e.js" data-settings-js="settings-0f613d39.js" data-static-root-path="../../static.files/" data-themes="" name="rustdoc-vars"><script src="../../static.files/storage-59e33391.js"></script><script defer="" src="sidebar-items.js"></script><script defer="" src="../../static.files/main-5f194d8c.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-893ab5e7.css"></noscript><link href="../../static.files/favicon-32x32-6580c154.png" rel="alternate icon" type="image/png"><link href="../../static.files/favicon-044be391.svg" rel="icon" type="image/svg+xml"></head><body class="rustdoc fn"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle" title="show sidebar"></button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../vstd/index.html">vstd</a></h2></div><div class="sidebar-elems"><div id="rustdoc-modnav"><h2><a href="index.html">In vstd::<wbr>multiset</a></h2></div></div></nav><div class="sidebar-resizer"></div><main><div class="width-limiter"><rustdoc-search></rustdoc-search><section class="content" id="main-content"><div class="main-heading"><span class="rustdoc-breadcrumbs"><a href="../index.html">vstd</a>::<wbr><a href="index.html">multiset</a></span><h1>Function <span class="fn">lemma_multiset_properties</span><button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../../src/vstd/multiset.rs.html#593-622">Source</a> </span></div><pre class="rust item-decl"><code>pub fn lemma_multiset_properties&lt;V&gt;()</code></pre><span class="item-info"><div class="stab deprecated"><span class="emoji">👎</span><span>Deprecated: Use <code>broadcast use group_multiset_properties</code> instead</span></div></span><details class="toggle top-doc" open=""><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><div class="verus-spec"><span class="verus-spec-keyword">ensures</span><pre class="rust rest-example-rendered verus-spec-code"><code>forall |m: Multiset&lt;V&gt;, v: V, mult: nat| <span class="attr">#[trigger] </span>m.update(v, mult).count(v) == mult,</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>forall |m: Multiset&lt;V&gt;, v1: V, mult: nat, v2: V| {
+    v1 != v2 ==&gt; <span class="attr">#[trigger] </span>m.update(v1, mult).count(v2) == m.count(v2)
+},</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>forall |m: Multiset&lt;V&gt;| {
+    (<span class="attr">#[trigger] </span>m.len() == <span class="number">0 </span>&lt;==&gt; (m =~= Multiset::empty()))
+        &amp;&amp; (<span class="attr">#[trigger] </span>m.len() &gt; <span class="number">0 </span>==&gt; exists |v: V| <span class="number">0 </span>&lt; m.count(v))
+},</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>forall |m: Multiset&lt;V&gt;, x: V, y: V| {
+    <span class="number">0 </span>&lt; <span class="attr">#[trigger] </span>m.insert(x).count(y) &lt;==&gt; x == y || <span class="number">0 </span>&lt; m.count(y)
+},</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>forall |m: Multiset&lt;V&gt;, x: V| <span class="attr">#[trigger] </span>m.insert(x).count(x) == m.count(x) + <span class="number">1</span>,</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>forall |m: Multiset&lt;V&gt;, x: V, y: V| {
+    <span class="number">0 </span>&lt; m.count(y) ==&gt; <span class="number">0 </span>&lt; <span class="attr">#[trigger] </span>m.insert(x).count(y)
+},</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>forall |m: Multiset&lt;V&gt;, x: V, y: V| {
+    x != y ==&gt; <span class="attr">#[trigger] </span>m.count(y) == <span class="attr">#[trigger] </span>m.insert(x).count(y)
+},</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>forall |m: Multiset&lt;V&gt;, x: V| <span class="attr">#[trigger] </span>m.insert(x).len() == m.len() + <span class="number">1</span>,</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>forall |a: Multiset&lt;V&gt;, b: Multiset&lt;V&gt;, x: V| {
+    <span class="attr">#[trigger] </span>a.intersection_with(b).count(x)
+        == min(a.count(x) <span class="kw">as </span>int, b.count(x) <span class="kw">as </span>int)
+},</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>forall |a: Multiset&lt;V&gt;, b: Multiset&lt;V&gt;| {
+    <span class="attr">#[trigger] </span>a.intersection_with(b).intersection_with(b) == a.intersection_with(b)
+},</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>forall |a: Multiset&lt;V&gt;, b: Multiset&lt;V&gt;| {
+    <span class="attr">#[trigger] </span>a.intersection_with(a.intersection_with(b)) == a.intersection_with(b)
+},</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>forall |a: Multiset&lt;V&gt;, b: Multiset&lt;V&gt;, x: V| {
+    <span class="attr">#[trigger] </span>a.difference_with(b).count(x) == clip(a.count(x) - b.count(x))
+},</code></pre><pre class="rust rest-example-rendered verus-spec-code"><code>forall |a: Multiset&lt;V&gt;, b: Multiset&lt;V&gt;, x: V| {
+    <span class="attr">#[trigger] </span>a.count(x) &lt;= <span class="attr">#[trigger] </span>b.count(x)
+        ==&gt; (<span class="attr">#[trigger] </span>a.difference_with(b)).count(x) == <span class="number">0
+</span>},</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p>Properties of multisets from the Dafny prelude (which were axioms in Dafny, but proven here in Verus)</p>
+</div></details></section></div></main></body></html>
