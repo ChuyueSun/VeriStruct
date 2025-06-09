@@ -49,9 +49,11 @@ impl<T> Lock<T> {
     fn acquire(&self) -> (points_to: Tracked<cell::PointsTo<T>>)
     // TODO: add ensures and requires
     {
-        proof {use_type_invariant(&*self);}
+        proof {
+            // TODO: add proof
+        }
         loop
-            invariant self.inv(),
+            // TODO: add invariant
         {
             let tracked points_to_opt = None;
             let res;
@@ -59,8 +61,7 @@ impl<T> Lock<T> {
                 let tracked (mut atomic_permission, mut points_to_inv) = ghost_stuff;
                 res = self.atomic.compare_exchange(Tracked(&mut atomic_permission), false, true);
                 proof {
-                    tracked_swap(&mut points_to_opt, &mut points_to_inv);
-                    ghost_stuff = (atomic_permission, points_to_inv);
+                    // TODO: add proof
                 }
             });
             if res.is_ok() {
@@ -73,13 +74,13 @@ impl<T> Lock<T> {
     //TODO: add ensures and requires
     {
         proof {
-            use_type_invariant(&*self);
+            // TODO: add proof
         }
         open_atomic_invariant!(self.inv.borrow() => ghost_stuff => {
             let tracked (mut atomic_permission, _) = ghost_stuff;
             self.atomic.store(Tracked(&mut atomic_permission), false);
             proof {
-                ghost_stuff = (atomic_permission, Some(points_to.get()));
+                // TODO: add proof
             }
         });
     }

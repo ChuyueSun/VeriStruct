@@ -6,8 +6,6 @@ use vstd::cell::*;
 use vstd::atomic;
 use vstd::modes::*;
 
-pub fn fn main() { }
-
 verus!{
 
 struct LockInv { }
@@ -20,7 +18,7 @@ impl<T> InvariantPredicate<(AtomicCellId, CellId), (atomic::PermissionBool, Opti
     }
 }
 
-pub struct Lock<T> {
+struct Lock<T> {
     pub atomic: PAtomicBool,
     pub cell: PCell<T>,
     pub inv: Tracked<AtomicInvariant<
@@ -31,12 +29,13 @@ pub struct Lock<T> {
 }
 
 impl<T> Lock<T> {
-    spec fn wf(self) -> bool {
-        // TODO: add specification
+    #[verifier::type_invariant]
+    spec fn inv(self) -> bool {
+        //TODO: add type invariant
     }
 
     fn new(t: T) -> (lock: Self)
-        // TODO: add requires and ensures
+    // TODO: add ensures and requires
     {
         let (atomic, Tracked(atomic_perm)) = PAtomicBool::new(false);
         let (cell, Tracked(cell_perm)) = PCell::new(t);
@@ -48,10 +47,13 @@ impl<T> Lock<T> {
     }
 
     fn acquire(&self) -> (points_to: Tracked<cell::PointsTo<T>>)
-        // TODO: add requires and ensures
+    // TODO: add ensures and requires
     {
+        proof {
+            // TODO: add proof
+        }
         loop
-            invariant self.wf(),
+            // TODO: add invariant
         {
             let tracked points_to_opt = None;
             let res;
@@ -59,8 +61,7 @@ impl<T> Lock<T> {
                 let tracked (mut atomic_permission, mut points_to_inv) = ghost_stuff;
                 res = self.atomic.compare_exchange(Tracked(&mut atomic_permission), false, true);
                 proof {
-                    tracked_swap(&mut points_to_opt, &mut points_to_inv);
-                    ghost_stuff = (atomic_permission, points_to_inv);
+                    // TODO: add proof
                 }
             });
             if res.is_ok() {
@@ -70,17 +71,21 @@ impl<T> Lock<T> {
     }
 
     fn release(&self, points_to: Tracked<cell::PointsTo<T>>)
-        // TODO: add requires and ensures
+    //TODO: add ensures and requires
     {
+        proof {
+            // TODO: add proof
+        }
         open_atomic_invariant!(self.inv.borrow() => ghost_stuff => {
             let tracked (mut atomic_permission, _) = ghost_stuff;
             self.atomic.store(Tracked(&mut atomic_permission), false);
             proof {
-                ghost_stuff = (atomic_permission, Some(points_to.get()));
+                // TODO: add proof
             }
         });
     }
 }
+
 
 /* TEST CODE BELOW */
 
