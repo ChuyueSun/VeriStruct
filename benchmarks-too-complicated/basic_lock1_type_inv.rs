@@ -102,13 +102,13 @@ fn acquire_release_int() {
         let lock = Lock::new(123);
         let pt = lock.acquire();     // OK only if ENSURES hold
         lock.release(pt);           // needs those ENSURES
-    }
+}
 
 fn acquire_release_bool() {
         let lock = Lock::new(false);
         let pt = lock.acquire();
         lock.release(pt);
-    }
+}
 
     
 

@@ -87,7 +87,6 @@ impl<T> Lock<T> {
 }
 
 
-
 /* TEST CODE BELOW */
 
 fn acquire_release_int() {

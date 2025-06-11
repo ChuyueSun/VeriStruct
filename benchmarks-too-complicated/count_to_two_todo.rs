@@ -336,8 +336,7 @@ pub fn thread_routine(
     Tracked(oneshot_thread_half): Tracked<OneShotResource>,
     Ghost(which_thread): Ghost<int>,
 ) -> (return_permission: Tracked<OneShotResource>)
-    requires
-        // TODO: add requires and ensures
+    // TODO: add requires and ensures
 {
     let tracked mut oneshot_thread_half = oneshot_thread_half;
     open_atomic_invariant!(shared_state.inv.borrow() => inner => {
