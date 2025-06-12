@@ -1136,6 +1136,8 @@ def parse_plan_execution_order(plan_text: str, available_modules: List[str], log
     
     # Define our two possible workflows
     full_workflow = ["view_inference", "view_refinement", "inv_inference", "spec_inference"]
+    # If proof_generation module is available, we may append it later based on plan text
+    proof_step = "proof_generation" if "proof_generation" in available_modules else None
     spec_only_workflow = ["spec_inference"]
     
     # Check which modules are available
@@ -1162,8 +1164,15 @@ def parse_plan_execution_order(plan_text: str, available_modules: List[str], log
     if use_spec_only and "spec_inference" in available_modules:
         if logger:
             logger.info("Using spec-inference-only workflow based on plan.")
+        if proof_step and "proof_generation" in plan_text.lower():
+            return spec_only_workflow + [proof_step]
         return spec_only_workflow
     else:
+        if proof_step and "proof_generation" in plan_text.lower():
+            workflow = available_full_workflow + [proof_step]
+            if logger:
+                logger.info("Using full workflow with proof_generation appended.")
+            return workflow
         if logger:
             logger.info("Using full workflow sequence: view_inference -> view_refinement -> inv_inference -> spec_inference")
         return available_full_workflow

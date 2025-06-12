@@ -20,6 +20,7 @@ from src.modules.utils import parse_plan_execution_order
 from src.modules.view_inference import ViewInferenceModule
 from src.modules.view_refinement import ViewRefinementModule
 from src.planner import Planner
+from src.modules.proof_generation import ProofGenerationModule
 
 # Simplified logging configuration: shorter format and controllable level
 log_level = os.getenv("LOG_LEVEL", "INFO").upper()
@@ -260,11 +261,13 @@ def main():
     view_refinement = ViewRefinementModule(config, logger)
     inv_inference = InvInferenceModule(config, logger)
     spec_inference = SpecInferenceModule(config, logger)
+    proof_generation = ProofGenerationModule(config, logger)
 
     context.register_module("view_inference", view_inference)
     context.register_module("view_refinement", view_refinement)
     context.register_module("inv_inference", inv_inference)
     context.register_module("spec_inference", spec_inference)
+    context.register_module("proof_generation", proof_generation)
 
     # Register all repair modules with the context
     repair_registry.register_with_context(context)
