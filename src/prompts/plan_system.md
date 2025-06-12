@@ -16,15 +16,17 @@ You need to analyze the code and determine the best sequence of steps to verify 
 2. Planning the order in which to approach verification tasks
 3. Determining dependencies between different verification components
 
-IMPORTANT: The workflow must follow one of these two patterns:
+IMPORTANT: The workflow must follow one of these two patterns (with an optional final proof_generation step, as explained below):
 1. EITHER: view_inference → view_refinement → inv_inference → spec_inference (in this exact order)
 2. OR: spec_inference (directly)
+
+If the code contains the marker "TODO: add proof", you MUST append proof_generation as the final step after spec_inference completes. If the marker is absent, do NOT include proof_generation.
 
 Choose the most appropriate workflow based on the code analysis. If the code needs a View implementation, choose workflow #1. If it only needs function specifications without a data structure view, choose workflow #2.
 
 Output a clear, step-by-step verification plan that describes:
 1. The overall verification strategy
-2. The specific sequence of modules to use (following one of the two workflows above)
+2. The specific sequence of modules to use (follow one of the workflows above, and include proof_generation last only if "TODO: add proof" is present)
 3. The key properties that need to be verified
 4. Any special considerations for this particular code
 
