@@ -9,6 +9,7 @@ helps Verus discharge the outstanding obligations.
 
 from pathlib import Path
 from typing import List
+import re  # Added for regex detection of empty proof blocks
 
 from src.infer import LLM
 from src.modules.base import BaseModule
@@ -67,7 +68,15 @@ class ProofGenerationModule(BaseModule):
 
     def _should_skip(self, code: str) -> bool:
         """Return True if the code has no proof TODO markers."""
-        return "TODO: add proof" not in code and "TODO:add proof" not in code
+        # Skip only if *none* of the typical proof markers/empty blocks are present.
+        if ("TODO: add proof" in code) or ("TODO:add proof" in code):
+            return False
+
+        # Detect empty proof blocks such as `proof{}`, `proof {}`, or `proof {\n}`
+        if re.search(r"proof\s*{\s*}\s*", code):
+            return False
+
+        return True
 
     # ---------------------------------------------------------------------
     # Public API – required by BaseModule
