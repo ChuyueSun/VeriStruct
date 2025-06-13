@@ -153,7 +153,7 @@ Response with the Rust code only, do not include any explanation."""
         # Evaluate samples and get the best one
         output_dir = samples_dir()
         best_code, _, _ = evaluate_samples(
-            samples=responses if responses else [code],
+            samples=(responses + [code]) if responses else [code],
             output_dir=output_dir,
             prefix="repair_precond",
             logger=self.logger,
@@ -221,7 +221,7 @@ Response with the Rust code only, do not include any explanation."""
         # Evaluate samples and get the best one
         output_dir = samples_dir()
         best_code, _, _ = evaluate_samples(
-            samples=responses if responses else [code],
+            samples=(responses + [code]) if responses else [code],
             output_dir=output_dir,
             prefix="repair_precond",
             logger=self.logger,
@@ -289,7 +289,7 @@ Response with the Rust code only, do not include any explanation."""
         # Evaluate samples and get the best one
         output_dir = samples_dir()
         best_code, _, _ = evaluate_samples(
-            samples=responses if responses else [code],
+            samples=(responses + [code]) if responses else [code],
             output_dir=output_dir,
             prefix="repair_precond",
             logger=self.logger,
@@ -357,7 +357,7 @@ Response with the Rust code only, do not include any explanation."""
         # Evaluate samples and get the best one
         output_dir = samples_dir()
         best_code, _, _ = evaluate_samples(
-            samples=responses if responses else [code],
+            samples=(responses + [code]) if responses else [code],
             output_dir=output_dir,
             prefix="repair_precond",
             logger=self.logger,
