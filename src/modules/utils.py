@@ -1167,11 +1167,11 @@ def parse_plan_execution_order(plan_text: str, available_modules: List[str], log
     if use_spec_only and "spec_inference" in available_modules:
         if logger:
             logger.info("Using spec-inference-only workflow based on plan.")
-        if proof_step and "proof_generation" in plan_text.lower():
+        if proof_step and re.search(r'\bproof_generation\b', plan_text.lower()):
             return spec_only_workflow + [proof_step]
         return spec_only_workflow
     else:
-        if proof_step and "proof_generation" in plan_text.lower():
+        if proof_step and re.search(r'\bproof_generation\b', plan_text.lower()):
             workflow = available_full_workflow + [proof_step]
             if logger:
                 logger.info("Using full workflow with proof_generation appended.")
