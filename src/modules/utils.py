@@ -20,6 +20,9 @@ from loguru import logger
 
 import glob
 
+# External helper for nonlinear-arithmetic analysis
+from lynette import lynette  # Provides code_detect_nonlinear, code_merge_invariant, etc.
+
 # Import VEval from modules.veval rather than src.modules.veval
 from src.modules.veval import VerusErrorType, VEval, EvalScore
 
