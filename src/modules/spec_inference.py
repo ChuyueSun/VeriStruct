@@ -56,6 +56,7 @@ IMPORTANT GUIDELINES:
    - DO NOT use `match` or `let` in the `ensures` clause or `requires` clause, but you can use `match` within `spec fn` bodies
    - DO NOT modify anything in `fn main()`
    - DO NOT add `self.inv()` to pre/post-conditions if `#[verifier::type_invariant]` is used
+   - DO NOT delete any `// TODO: add proof` comment; leave it intact for the proof-generation stage
    - Spec functions (like View) cannot have their own requires/ensures clauses
    - The final code you return MUST compile under Verus; double-check matching braces, parentheses, macro delimiters and remove any remaining "TODO" placeholders
    
