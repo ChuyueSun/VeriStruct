@@ -3,12 +3,12 @@ use vstd::prelude::*;
 verus! {
 
 fn binary_search(v: &Vec<u64>, k: u64) -> (r: usize)
-// add requires and ensures
+// TODO: add requires and ensures
 {
     let mut i1: usize = 0;
     let mut i2: usize = v.len() - 1;
     while i1 != i2
-    // add invariants
+    // TODO: add specification
     {
         let ix = i1 + (i2 - i1) / 2;
         if v[ix] < k {
@@ -21,12 +21,12 @@ fn binary_search(v: &Vec<u64>, k: u64) -> (r: usize)
 }
 
 fn reverse(v: &mut Vec<u64>)
-// add requires and ensures
+// TODO: add requires and ensures
 {
     let length = v.len();
     let ghost v1 = v@;
     for n in 0..(length / 2)
-    // add invariants
+    // TODO: add specification
     {
         let x = v[n];
         let y = v[length - 1 - n];
@@ -37,12 +37,12 @@ fn reverse(v: &mut Vec<u64>)
 
 #[verifier::loop_isolation(false)]
 fn binary_search_no_spinoff(v: &Vec<u64>, k: u64) -> (r: usize)
-// add requires and ensures
+// TODO: add requires and ensures
 {
     let mut i1: usize = 0;
     let mut i2: usize = v.len() - 1;
     while i1 != i2
-    // add invariants
+    // TODO: add specification
     {
         let ghost d = i2 - i1;
         let ix = i1 + (i2 - i1) / 2;

@@ -27,7 +27,7 @@ verus! {
     }
 
     impl<T: Copy> View for RingBuffer<T> {
-        // TODO: add view spec
+        // TODO: add specification
     }
 
     /// This function says that for any `x` and `y`, there are two

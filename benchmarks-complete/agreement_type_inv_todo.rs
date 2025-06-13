@@ -88,7 +88,7 @@ pub struct AgreementResource<T> {
 impl<T> AgreementResource<T> {
     #[verifier::type_invariant]
     pub closed spec fn inv(self) -> bool {
-        // TODO: add type invariant
+        // TODO: add specification
     }
 
     pub closed spec fn id(self) -> Loc {
@@ -98,7 +98,7 @@ impl<T> AgreementResource<T> {
 
     pub closed spec fn view(self) -> T
     {
-        // TODO: add view
+        // TODO: add specification
     }
 
     pub proof fn alloc(c: T) -> (tracked result: AgreementResource<T>)
