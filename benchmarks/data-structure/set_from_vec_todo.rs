@@ -1,0 +1,55 @@
+use vstd::prelude::*;
+
+verus! {
+
+struct VecSet {
+    vt: Vec<u64>,
+}
+
+impl VecSet {
+    pub closed spec fn view(&self) -> Set<u64> {
+        // TODO: add requires and ensures
+    }
+
+    pub fn new() -> (s: Self)
+        // TODO: add requires and ensures
+    {
+        VecSet { vt: Vec::new() }
+    }
+
+    pub fn insert(&mut self, v: u64)
+        // TODO: add requires and ensures
+    {
+        self.vt.push(v);
+    }
+
+    pub fn contains(&self, v: u64) -> (contained: bool)
+        // TODO: add requires and ensures
+    {
+        for i in iter: 0..self.vt.len()
+        {
+            if self.vt[i] == v {
+                return true;
+            }
+        }
+        false
+    }
+}
+
+/* TSET CODE BELOW */
+
+fn test_vecset(t: Vec<u64>)
+{
+    let mut vs: VecSet = VecSet::new();
+    vs.insert(3);
+    vs.insert(5);
+    let contains2 = vs.contains(2);
+    assert(!contains2);
+    let contains3 = vs.contains(3);
+    assert(contains3);
+}
+
+fn main() {}
+
+} // verus!
+

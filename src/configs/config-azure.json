@@ -11,7 +11,8 @@
     "aoai_generation_model": "o1",
     "aoai_debug_model": "o1",
     "aoai_refinement_model": "o3-mini",
-    "verus_path": "/home/chuyue/verus/source/target-verus/release/verus",
+    "verus_path": "/Users/syc/Projects/verus-arm64-macos/verus",
+    "example_path": "/Users/syc/Projects/FVagent/src/examples",
     "platform": "azure",
     "project_dir": "."
 }

@@ -16,7 +16,7 @@
         "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"
     ],
 
-    "verus_path": "/home/chuyue/verus/source/target-verus/release/verus",
+    "verus_path": "/Users/syc/Projects/verus-arm64-macos/verus",
     "platform": "anthropic",
     "project_dir": "."
 } 

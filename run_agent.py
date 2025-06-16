@@ -62,6 +62,7 @@ def main():
     
     # Set output directory env variable
     os.environ['VERUS_OUTPUT_DIR'] = str(Path(args.output_dir).absolute())
+    os.system('rm -rf ' + os.environ['VERUS_OUTPUT_DIR'] + '/*')
     print(f"Using output directory: {os.environ['VERUS_OUTPUT_DIR']}")
     
     # Display banner with file name
