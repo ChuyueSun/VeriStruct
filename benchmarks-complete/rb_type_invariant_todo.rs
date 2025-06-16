@@ -198,6 +198,9 @@ impl<T: Copy> RingBuffer<T> {
     pub fn available_len(&self) -> (ret: usize)
         // TODO: add requires and ensures
     {
+        proof {
+            // TODO: add proof
+        }
         self.ring.len().saturating_sub(1 + self.len())
     }
 }
