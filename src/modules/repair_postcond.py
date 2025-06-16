@@ -122,10 +122,7 @@ Response with the Rust code only, do not include any explanation."""
         query_template += "Failed location\n```\n{}```\n"
         query_template += "\nCode\n```{}```\n"
 
-        if len(failure_to_fix.trace) < 2:
-            self.logger.error("Postcondition error trace is too short to process.")
-            return code
-
+        if len(failure_to_fix.trace) >= 2:
         location_trace, postcond_trace = (
             failure_to_fix.trace[0],
             failure_to_fix.trace[1],
@@ -138,6 +135,12 @@ Response with the Rust code only, do not include any explanation."""
         location_info = f"Line {location_trace.lines[0]}-{location_trace.lines[1]}:\n"
         location_info += location_trace.get_text() + "\n"
         query = query_template.format(post_cond_info, location_info, code)
+        else:
+            # Minimal query: we only have one trace (postcondition line)
+            single_trace = failure_to_fix.trace[0]
+            post_cond_info = f"Line {single_trace.lines[0]}-{single_trace.lines[1]}:\n"
+            post_cond_info += single_trace.get_text() + "\n"
+            query = query_template.format(post_cond_info, "(location unavailable)", code)
 
         # Use the llm instance from the base class
         responses = self.llm.infer_llm(
@@ -197,10 +200,7 @@ Response with the Rust code only, do not include any explanation."""
         query_template += "Failed location\n```\n{}```\n"
         query_template += "\nCode\n```{}```\n"
 
-        if len(failure_to_fix.trace) < 2:
-            self.logger.error("Postcondition error trace is too short to process.")
-            return code
-
+        if len(failure_to_fix.trace) >= 2:
         location_trace, postcond_trace = (
             failure_to_fix.trace[0],
             failure_to_fix.trace[1],
@@ -213,6 +213,12 @@ Response with the Rust code only, do not include any explanation."""
         location_info = f"Line {location_trace.lines[0]}-{location_trace.lines[1]}:\n"
         location_info += location_trace.get_text() + "\n"
         query = query_template.format(post_cond_info, location_info, code)
+        else:
+            # Minimal query: we only have one trace (postcondition line)
+            single_trace = failure_to_fix.trace[0]
+            post_cond_info = f"Line {single_trace.lines[0]}-{single_trace.lines[1]}:\n"
+            post_cond_info += single_trace.get_text() + "\n"
+            query = query_template.format(post_cond_info, "(location unavailable)", code)
 
         # Use the llm instance from the base class
         responses = self.llm.infer_llm(
@@ -262,9 +268,10 @@ Common fixes include:
 2. Create a public ghost function/method that exposes the needed information
 3. Rewrite the ensures clause to use only public state
 4. If appropriate, make the field public (with pub keyword)
+5. If none of the above is practical, simply remove the ensures-line that accesses the private field.
 
 Response with the Rust code only, do not include any explanation."""
-        instruction = self.add_seq_knowledge(code, instruction)
+        instruction += self.add_seq_knowledge(code, instruction)
         instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
 
         examples = get_examples(self.config, "postcond", self.logger)
@@ -272,10 +279,7 @@ Response with the Rust code only, do not include any explanation."""
         query_template += "Failed location\n```\n{}```\n"
         query_template += "\nCode\n```{}```\n"
 
-        if len(failure_to_fix.trace) < 2:
-            self.logger.error("Postcondition error trace is too short to process.")
-            return code
-
+        if len(failure_to_fix.trace) >= 2:
         location_trace, postcond_trace = (
             failure_to_fix.trace[0],
             failure_to_fix.trace[1],
@@ -287,8 +291,93 @@ Response with the Rust code only, do not include any explanation."""
         post_cond_info += postcond_trace.get_text() + "\n"
         location_info = f"Line {location_trace.lines[0]}-{location_trace.lines[1]}:\n"
         location_info += location_trace.get_text() + "\n"
-        query = query_template.format(post_cond_info, location_info, code)
+            # we will build `query` *after* possible quick-fix removal so it always uses up-to-date `code`
+            query = None
+            
+            # Try quick removal if the postcondition line clearly accesses a private field.
+            try:
+                candidate_traces = [postcond_trace, location_trace]
+                for tr in candidate_traces:
+                    offending_line_no = tr.lines[0]
+                    code_lines = code.split("\n")
+                    if 0 < offending_line_no <= len(code_lines):
+                        line_txt = code_lines[offending_line_no - 1]
+                        if ("ret." in line_txt or "self." in line_txt) and "==" in line_txt:
+                            self.logger.info(
+                                f"repair_ensure_private: removing line {offending_line_no} → {line_txt.strip()}"
+                            )
+                            code_lines.pop(offending_line_no - 1)
+                            quick_fix_code = "\n".join(code_lines)
+                            code = quick_fix_code  # use updated code for LLM
+                            post_cond_info = "(offending ensures line removed by quick fix)\n"
+                            location_info = "(location unavailable after quick fix)\n"
+                            context.add_trial(quick_fix_code)
+                            # continue to build LLM prompt with updated `code`
 
+                            # Re-evaluate to capture fresh trace information
+                            veval_tmp = VEval(code, self.logger)
+                            veval_tmp.eval(max_errs=5)
+                            new_failures = veval_tmp.get_failures(error_type=VerusErrorType.ensure_private)
+                            if new_failures:
+                                single = new_failures[0]
+                                if single.trace:
+                                    tmp_trace = single.trace[0]
+                                    post_cond_info = f"Line {tmp_trace.lines[0]}-{tmp_trace.lines[1]}:\n" + tmp_trace.get_text() + "\n"
+                                    location_info = "(updated after quick fix)\n"
+                            else:
+                                # No more ensure_private after fix; we can return immediately
+                                context.add_trial(code)
+                                return code
+
+                            context.add_trial(code)
+                            break
+            except Exception as e:
+                self.logger.warning(f"repair_ensure_private quick-fix (dual-trace) failed: {e}")
+            
+            # Now finalize query with (possibly) updated code
+            if query is None:
+        query = query_template.format(post_cond_info, location_info, code)
+        else:
+            # Minimal query: we only have one trace (postcondition line)
+            single_trace = failure_to_fix.trace[0]
+            post_cond_info = f"Line {single_trace.lines[0]}-{single_trace.lines[1]}:\n"
+            post_cond_info += single_trace.get_text() + "\n"
+            # delay building query until after quick-fix attempt so it picks up updated code
+            query = None
+            
+            # Quick fix: remove the single offending line if pattern matches
+            try:
+                offending_line_no = single_trace.lines[0]
+                code_lines = code.split("\n")
+                if 0 < offending_line_no <= len(code_lines):
+                    line_txt = code_lines[offending_line_no - 1]
+                    if ("ret." in line_txt or "self." in line_txt) and "==" in line_txt:
+                        self.logger.info(
+                            f"repair_ensure_private: removing line {offending_line_no} → {line_txt.strip()}"
+                        )
+                        code_lines.pop(offending_line_no - 1)
+                        quick_fix_code = "\n".join(code_lines)
+                        code = quick_fix_code  # use updated code for LLM
+                        post_cond_info = "(offending ensures line removed by quick fix)\n"
+
+                        veval_tmp = VEval(code, self.logger)
+                        veval_tmp.eval(max_errs=5)
+                        new_failures = veval_tmp.get_failures(error_type=VerusErrorType.ensure_private)
+                        if new_failures:
+                            tmp_trace = new_failures[0].trace[0]
+                            post_cond_info = f"Line {tmp_trace.lines[0]}-{tmp_trace.lines[1]}:\n" + tmp_trace.get_text() + "\n"
+                        else:
+                            context.add_trial(code)
+                            return code
+
+                        context.add_trial(code)
+            except Exception as e:
+                self.logger.warning(f"repair_ensure_private quick-fix (single-trace) failed: {e}")
+            
+            # Rebuild query using (potentially) updated code
+            query = query_template.format(post_cond_info, "(location unavailable)", code)
+        self.logger.info(f"???Query: {query}")
+        self.logger.info(f"???Instruction: {instruction}")
         # Use the llm instance from the base class
         responses = self.llm.infer_llm(
             engine=self.config.get("aoai_generation_model", "gpt-4"),
