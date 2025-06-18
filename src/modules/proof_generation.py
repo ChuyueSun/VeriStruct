@@ -19,7 +19,6 @@ from src.modules.utils import (
     update_checkpoint_best,
     get_examples,
     code_change_is_safe,
-    get_nonlinear_lines,
 )
 from src.modules.lynette import lynette
 from src.prompts.template import build_instruction
@@ -96,61 +95,87 @@ class ProofGenerationModule(BaseModule):
             )
             return code
 
-        # Build instruction with commo.n Verus knowledge and match guidelines
-        instruction = build_instruction(
-            base_instruction=self.proof_instruction,
-            add_common=True,
-            add_match=True,
-            code=code,
-            knowledge=context.gen_knowledge(),
-        )
+        max_retries = 3
+        for retry_attempt in range(max_retries):
+            self.logger.info(f"Proof generation attempt {retry_attempt + 1}/{max_retries}")
 
-        # Load examples if available (input-proof / output-proof)
-        examples = get_examples(self.config, "proof", self.logger)
-
-        # Query the LLM
-        try:
-            responses: List[str] = self.llm.infer_llm(
-                self.config.get("aoai_generation_model", "gpt-4"),
-                instruction,
-                examples,
-                code,
-                system_info="You are a helpful AI assistant specialized in Verus formal verification.",
-                answer_num=3,
-                max_tokens=self.config.get("max_token", 8192),
-                temp=1.0,
+            # Build instruction with common Verus knowledge and match guidelines
+            instruction = build_instruction(
+                base_instruction=self.proof_instruction,
+                add_common=True,
+                add_match=True,
+                code=code,
+                knowledge=context.gen_knowledge(),
             )
-        except Exception as e:
-            self.logger.error(f"Error during LLM inference: {e}")
-            return code  # Fallback to original code
 
-        # Fix simple type errors in each response
-        processed_responses: List[str] = []
-        for resp in responses:
-            fixed_resp, _ = debug_type_error(resp, logger=self.logger)
-            final_resp = fixed_resp if fixed_resp else resp
+            # Load examples if available (input-proof / output-proof)
+            examples = get_examples(self.config, "proof", self.logger)
 
-            # Check if the generated code is safe
-            if code_change_is_safe(
-                origin_code=original_code,
-                changed_code=final_resp,
-                verus_path=self.config.get("verus_path", "verus"),
-                logger=self.logger,
-            ):
-                processed_responses.append(final_resp)
-                self.logger.info("Generated proof code passed safety check")
-            else:
-                self.logger.warning(
-                    "Generated proof code failed safety check, using original"
+            # Query the LLM with increasing temperature on retries
+            try:
+                responses: List[str] = self.llm.infer_llm(
+                    self.config.get("aoai_generation_model", "gpt-4"),
+                    instruction,
+                    examples,
+                    code,
+                    system_info="You are a helpful AI assistant specialized in Verus formal verification.",
+                    answer_num=3,
+                    max_tokens=self.config.get("max_token", 8192),
+                    temp=1.0 + (retry_attempt * 0.2),  # Increase temperature on retries
                 )
-                processed_responses.append(original_code)
+            except Exception as e:
+                self.logger.error(f"Error during LLM inference: {e}")
+                if retry_attempt == max_retries - 1:
+                    return code  # Fallback to original code on last attempt
+                continue
+
+            # Fix simple type errors in each response
+            processed_responses: List[str] = []
+            safe_responses: List[str] = []
+            for resp in responses:
+                fixed_resp, _ = debug_type_error(resp, logger=self.logger)
+                final_resp = fixed_resp if fixed_resp else resp
+
+                # Check if the generated code is safe
+                if code_change_is_safe(
+                    origin_code=original_code,
+                    changed_code=final_resp,
+                    verus_path=self.config.get("verus_path", "verus"),
+                    logger=self.logger,
+                ):
+                    processed_responses.append(final_resp)
+                    safe_responses.append(final_resp)
+                    self.logger.info("Generated proof code passed safety check")
+                else:
+                    self.logger.warning(
+                        "Generated proof code failed safety check, will retry"
+                    )
+                    processed_responses.append(original_code)
+
+            # If we have safe responses, break out of retry loop
+            if safe_responses:
+                self.logger.info(f"Found {len(safe_responses)} safe responses after {retry_attempt + 1} attempts")
+                break
+
+            # If this is not the last attempt, modify instruction for retry
+            if retry_attempt < max_retries - 1:
+                self.proof_instruction += (
+                    f"\n\nIMPORTANT: Previous attempt failed safety checks. "
+                    f"Please ensure your proof blocks do not modify any existing code "
+                    f"and only add new proof blocks. Attempt {retry_attempt + 2}/{max_retries}."
+                )
+
+        # If no safe responses found after all retries, fall back to original
+        if not safe_responses:
+            self.logger.warning("No safe responses found after all retries, using original code")
+            return original_code
 
         # Evaluate samples and select the best one
         output_dir = samples_dir()
         global_dir = best_dir()
 
         best_code, best_score, _ = evaluate_samples(
-            samples=processed_responses if processed_responses else [code],
+            samples=safe_responses,
             output_dir=output_dir,
             prefix="05_proof_generation",
             logger=self.logger,

@@ -31,6 +31,7 @@ def main():
     parser.add_argument('--config', help='Config file to use (default: config-azure)', default='config-azure')
     parser.add_argument('--no-cache-read', action='store_true', help='Disable reading from LLM cache')
     parser.add_argument('--output-dir', help='Directory to store output artifacts', default='output')
+    parser.add_argument('--immutable-functions', help='Comma-separated list of function names that should not be modified during generation or repair', default=None)
     args = parser.parse_args()
     
     # Set environment variables if arguments are provided
@@ -59,6 +60,11 @@ def main():
     if args.no_cache_read:
         os.environ['ENABLE_LLM_CACHE'] = '0'
         print("LLM cache reading disabled")
+    
+    # Set immutable functions if specified
+    if args.immutable_functions:
+        os.environ['VERUS_IMMUTABLE_FUNCTIONS'] = args.immutable_functions
+        print(f"Using immutable functions: {args.immutable_functions}")
     
     # Set output directory env variable
     os.environ['VERUS_OUTPUT_DIR'] = str(Path(args.output_dir).absolute())
