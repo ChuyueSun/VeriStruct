@@ -203,13 +203,13 @@ Please make sure to change that wrong expression and do not change any other par
             temp=1.0,
         )
 
-        # Evaluate samples and get the best one
+        # Evaluate samples and get the best one with safety checking
         output_dir = samples_dir()
-        best_code, _, _ = evaluate_samples(
-            samples=responses if responses else [code],
+        best_code = self.evaluate_repair_candidates(
+            original_code=code,
+            candidates=responses if responses else [code],
             output_dir=output_dir,
-            prefix="repair_seq_syntax",
-            logger=self.logger,
+            prefix="repair_seq_syntax"
         )
 
         # Add the best result to context
@@ -305,13 +305,13 @@ Response with the Rust code only, do not include any explanation."""
             temp=1.0,
         )
 
-        # Evaluate samples and get the best one
+        # Evaluate samples and get the best one with safety checking
         output_dir = samples_dir()
-        best_code, _, _ = evaluate_samples(
-            samples=responses if responses else [code],
+        best_code = self.evaluate_repair_candidates(
+            original_code=code,
+            candidates=responses if responses else [code],
             output_dir=output_dir,
-            prefix="repair_general_syntax",
-            logger=self.logger,
+            prefix="repair_general_syntax"
         )
 
         # Add the best result to context

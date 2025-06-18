@@ -4,7 +4,14 @@ from pathlib import Path
 from src.context import Context
 from src.infer import LLM
 from src.modules.base import BaseModule
-from src.modules.utils import debug_type_error, evaluate_samples, parse_llm_response
+from src.modules.utils import (
+    debug_type_error,
+    evaluate_samples,
+    update_checkpoint_best,
+    get_examples,
+    code_change_is_safe,
+    parse_llm_response
+)
 from src.prompts.template import build_instruction
 from src.utils.path_utils import samples_dir, best_dir
 
@@ -132,6 +139,7 @@ IMPORTANT: Return the complete file with your changes integrated into the origin
 
         # Get the latest trial code
         code = context.trials[-1].code
+        original_code = code  # Store original for safety checking
 
         # Build the complete instruction using the prompt system
         instruction = build_instruction(
@@ -166,36 +174,63 @@ IMPORTANT: Return the complete file with your changes integrated into the origin
         except Exception as e:
             self.logger.error(f"Error loading examples: {e}")
 
-        # Run inference
-        try:
-            responses = self.llm.infer_llm(
-                self.config.get("aoai_generation_model", "gpt-4"),
-                instruction,
-                examples,
-                code,
-                system_info="You are a helpful AI assistant specialized in Verus formal verification.",
-                answer_num=3,
-                max_tokens=self.config.get("max_token", 20000),
-                temp=1.0,
-            )
-        except Exception as e:
-            self.logger.error(f"Error during LLM inference: {e}")
-            # Return a placeholder response in case of error
-            return code
+        # Retry mechanism for safety checks
+        max_retries = 3
+        safe_responses = []
+        
+        for retry_attempt in range(max_retries):
+            self.logger.info(f"View inference attempt {retry_attempt + 1}/{max_retries}")
+            
+            # Run inference
+            try:
+                responses = self.llm.infer_llm(
+                    self.config.get("aoai_generation_model", "gpt-4"),
+                    instruction,
+                    examples,
+                    code,
+                    system_info="You are a helpful AI assistant specialized in Verus formal verification.",
+                    answer_num=3,
+                    max_tokens=self.config.get("max_token", 20000),
+                    temp=1.0 + (retry_attempt * 0.2),  # Increase temperature on retries
+                )
+            except Exception as e:
+                self.logger.error(f"Error during LLM inference: {e}")
+                if retry_attempt == max_retries - 1:
+                    # Last attempt failed, return original code
+                    return code
+                continue
 
-        # Parse and process responses
-        processed_responses = []
-        for response in responses:
-            # First parse the response to extract the View implementation
-            parsed_response = parse_llm_response(response)
+            # Parse and process responses
+            processed_responses = []
+            for response in responses:
+                # First parse the response to extract the View implementation
+                final_response = parsed_response = parse_llm_response(response)
 
-            # Then apply debug_type_error to fix any type errors
-            fixed_response, _ = debug_type_error(parsed_response, logger=self.logger)
-            if fixed_response:  # Only use the fixed version if it's not empty
-                processed_responses.append(fixed_response)
-            else:
-                # If fixing failed, still use the parsed response
-                processed_responses.append(parsed_response)
+                # Then apply debug_type_error to fix any type errors
+                fixed_response, _ = debug_type_error(parsed_response, logger=self.logger)
+                final_response = fixed_response if fixed_response else parsed_response
+                
+                # Check if the generated code is safe
+                if self.check_code_safety(original_code, final_response):
+                    processed_responses.append(final_response)
+                    safe_responses.append(final_response)
+                    self.logger.info("Generated view code passed safety check")
+                else:
+                    self.logger.warning("Generated view code failed safety check, will retry")
+
+            # If we have safe responses, break out of retry loop
+            if safe_responses:
+                self.logger.info(f"Found {len(safe_responses)} safe responses after {retry_attempt + 1} attempts")
+                break
+            
+            # If this is not the last attempt, modify instruction for retry
+            if retry_attempt < max_retries - 1:
+                instruction += f"\n\nIMPORTANT: Previous attempt failed safety checks. Please ensure your View implementation does not modify immutable functions and maintains semantic equivalence. Attempt {retry_attempt + 2}/{max_retries}."
+
+        # If no safe responses found after all retries, fall back to original
+        if not safe_responses:
+            self.logger.warning("No safe responses found after all retries, using original code")
+            safe_responses = [original_code]
 
         # Save all generated samples
         output_dir = samples_dir()
@@ -207,7 +242,7 @@ IMPORTANT: Return the complete file with your changes integrated into the origin
 
         # Evaluate processed samples and get the best one
         best_code, best_score, _ = evaluate_samples(
-            samples=processed_responses if processed_responses else [code],
+            samples=safe_responses,
             output_dir=output_dir,
             prefix="01_view_inference",
             logger=self.logger,
@@ -257,3 +292,29 @@ IMPORTANT: Return the complete file with your changes integrated into the origin
         context.add_trial(best_code)  # Always use the best sample from this step
 
         return best_code
+
+    def check_code_safety(self, original_code: str, new_code: str) -> bool:
+        """
+        Check if code changes are safe using Lynette comparison.
+        
+        Args:
+            original_code: Original code
+            new_code: Modified code
+            
+        Returns:
+            True if changes are safe, False otherwise
+        """
+        try:
+            # Get immutable functions from config if available
+            immutable_funcs = self.config.get("immutable_functions", ["test_enqueue_dequeue_generic"])
+            
+            return code_change_is_safe(
+                origin_code=original_code,
+                changed_code=new_code,
+                verus_path=self.config.get("verus_path", "verus"),
+                logger=self.logger,
+                immutable_funcs=immutable_funcs
+            )
+        except Exception as e:
+            self.logger.error(f"Error checking code safety: {e}")
+            return True  # Default to safe if check fails

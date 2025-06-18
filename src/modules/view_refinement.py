@@ -9,6 +9,8 @@ from src.modules.utils import (
     evaluate_samples,
     save_selection_info,
     update_checkpoint_best,
+    get_examples,
+    code_change_is_safe,
 )
 from src.modules.veval import VEval
 from src.prompts.template import build_instruction
@@ -69,6 +71,7 @@ Please provide only the complete Rust code of the file with no additional commen
 
         # Get the latest trial code
         code = context.trials[-1].code
+        original_code = code  # Store original for safety checking
 
         # Build the complete instruction using the prompt system
         instruction = build_instruction(
@@ -103,32 +106,60 @@ Please provide only the complete Rust code of the file with no additional commen
         except Exception as e:
             self.logger.error(f"Error loading examples: {e}")
 
-        # Run inference
-        try:
-            responses = self.llm.infer_llm(
-                self.config.get("aoai_generation_model", "gpt-4"),
-                instruction,
-                examples,
-                code,
-                system_info="You are a helpful AI assistant specialized in Verus formal verification.",
-                answer_num=3,
-                max_tokens=self.config.get("max_token", 8192),
-                temp=1.0,
-            )
-        except Exception as e:
-            self.logger.error(f"Error during LLM inference: {e}")
-            # Return a placeholder response in case of error
-            return code
+        # Retry mechanism for safety checks
+        max_retries = 3
+        safe_responses = []
+        
+        for retry_attempt in range(max_retries):
+            self.logger.info(f"View refinement attempt {retry_attempt + 1}/{max_retries}")
+            
+            # Run inference
+            try:
+                responses = self.llm.infer_llm(
+                    self.config.get("aoai_generation_model", "gpt-4"),
+                    instruction,
+                    examples,
+                    code,
+                    system_info="You are a helpful AI assistant specialized in Verus formal verification.",
+                    answer_num=3,
+                    max_tokens=self.config.get("max_token", 8192),
+                    temp=1.0 + (retry_attempt * 0.2),  # Increase temperature on retries
+                )
+            except Exception as e:
+                self.logger.error(f"Error during LLM inference: {e}")
+                if retry_attempt == max_retries - 1:
+                    # Last attempt failed, return original code
+                    return code
+                continue
 
-        # Process responses to fix any type errors
-        processed_responses = []
-        for response in responses:
-            # Apply debug_type_error to fix any type errors
-            fixed_response, _ = debug_type_error(response, logger=self.logger)
-            if fixed_response:  # Only use the fixed version if it's not empty
-                processed_responses.append(fixed_response)
-            else:
-                processed_responses.append(response)
+            # Process responses to fix any type errors
+            processed_responses = []
+            for response in responses:
+                # Apply debug_type_error to fix any type errors
+                fixed_response, _ = debug_type_error(response, logger=self.logger)
+                final_response = fixed_response if fixed_response else response
+                
+                # Check if the generated code is safe
+                if self.check_code_safety(original_code, final_response):
+                    processed_responses.append(final_response)
+                    safe_responses.append(final_response)
+                    self.logger.info("Generated view refinement code passed safety check")
+                else:
+                    self.logger.warning("Generated view refinement code failed safety check, will retry")
+
+            # If we have safe responses, break out of retry loop
+            if safe_responses:
+                self.logger.info(f"Found {len(safe_responses)} safe responses after {retry_attempt + 1} attempts")
+                break
+            
+            # If this is not the last attempt, modify instruction for retry
+            if retry_attempt < max_retries - 1:
+                instruction += f"\n\nIMPORTANT: Previous attempt failed safety checks. Please ensure your View refinement does not modify immutable functions and maintains semantic equivalence. Attempt {retry_attempt + 2}/{max_retries}."
+
+        # If no safe responses found after all retries, fall back to original
+        if not safe_responses:
+            self.logger.warning("No safe responses found after all retries, using original code")
+            safe_responses = [original_code]
 
         # Save all generated samples
         output_dir = samples_dir()
@@ -138,7 +169,7 @@ Please provide only the complete Rust code of the file with no additional commen
 
         # Evaluate the samples and get the best one
         best_code, best_score, _ = evaluate_samples(
-            samples=processed_responses,
+            samples=safe_responses,
             output_dir=output_dir,
             prefix="02_view_refinement",
             logger=self.logger,
@@ -170,3 +201,29 @@ Please provide only the complete Rust code of the file with no additional commen
         context.add_trial(best_code)  # Always use the best sample from this step
 
         return best_code
+
+    def check_code_safety(self, original_code: str, new_code: str) -> bool:
+        """
+        Check if code changes are safe using Lynette comparison.
+        
+        Args:
+            original_code: Original code
+            new_code: Modified code
+            
+        Returns:
+            True if changes are safe, False otherwise
+        """
+        try:
+            # Get immutable functions from config if available
+            immutable_funcs = self.config.get("immutable_functions", [])
+            
+            return code_change_is_safe(
+                origin_code=original_code,
+                changed_code=new_code,
+                verus_path=self.config.get("verus_path", "verus"),
+                logger=self.logger,
+                immutable_funcs=immutable_funcs
+            )
+        except Exception as e:
+            self.logger.error(f"Error checking code safety: {e}")
+            return True  # Default to safe if check fails

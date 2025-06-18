@@ -7,7 +7,13 @@ from src.utils.path_utils import samples_dir, best_dir
 
 from src.infer import LLM
 from src.modules.base import BaseModule
-from src.modules.utils import debug_type_error, evaluate_samples, update_checkpoint_best
+from src.modules.utils import (
+    debug_type_error,
+    evaluate_samples,
+    update_checkpoint_best,
+    get_examples,
+    code_change_is_safe,
+)
 from src.prompts.template import build_instruction
 
 
@@ -63,6 +69,29 @@ IMPORTANT GUIDELINES:
 RETURN FORMAT:
    - Return the ENTIRE file with your changes integrated into the original code, not just the parts you modified"""
 
+    def check_code_safety(self, original_code: str, new_code: str) -> bool:
+        """
+        Check if code changes are safe using Lynette comparison.
+        
+        Args:
+            original_code: Original code
+            new_code: Modified code
+            
+        Returns:
+            True if changes are safe, False otherwise
+        """
+        try:
+            return code_change_is_safe(
+                origin_code=original_code,
+                changed_code=new_code,
+                verus_path=self.config.get("verus_path", "verus"),
+                logger=self.logger,
+                immutable_funcs=self.immutable_funcs
+            )
+        except Exception as e:
+            self.logger.error(f"Error checking code safety: {e}")
+            return True  # Default to safe if check fails
+
     def exec(self, context) -> str:
         """
         Execute the spec inference module with the given context.
@@ -77,6 +106,7 @@ RETURN FORMAT:
 
         # Get the latest trial code
         code = context.trials[-1].code
+        original_code = code  # Store original for safety checking
 
         # Build the complete instruction using the prompt system
         instruction = build_instruction(
@@ -134,10 +164,15 @@ RETURN FORMAT:
         for response in responses:
             # Apply debug_type_error to fix any type errors
             fixed_response, _ = debug_type_error(response, logger=self.logger)
-            if fixed_response:  # Only use the fixed version if it's not empty
-                processed_responses.append(fixed_response)
+            final_response = fixed_response if fixed_response else response
+            
+            # Check if the generated code is safe
+            if self.check_code_safety(original_code, final_response):
+                processed_responses.append(final_response)
+                self.logger.info("Generated spec code passed safety check")
             else:
-                processed_responses.append(response)
+                self.logger.warning("Generated spec code failed safety check, using original")
+                processed_responses.append(original_code)
 
         # Save all generated samples
         output_dir = samples_dir()
@@ -154,6 +189,11 @@ RETURN FORMAT:
             prefix="04_spec_inference",
             logger=self.logger,
         )
+
+        # Final safety check on the best code
+        if not self.check_code_safety(original_code, best_code):
+            self.logger.warning("Best generated code failed final safety check, falling back to original")
+            best_code = original_code
 
         # Get the global best from context
         global_best_score = context.get_best_score()

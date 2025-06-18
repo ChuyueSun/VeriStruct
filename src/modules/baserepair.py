@@ -7,7 +7,9 @@ from typing import Any, Dict, List, Optional
 
 from src.infer import LLM
 from src.modules.base import BaseModule
+from src.modules.utils import code_change_is_safe
 from src.modules.veval import VerusError, VerusErrorType, VEval
+from src.prompts.template import fill_template
 
 
 class BaseRepairModule(BaseModule):
@@ -108,6 +110,68 @@ You can use forall or exists for properties over sequences."""
         # Fallback to the first error
         self.logger.info(f"Selecting first failure: {failures[0].error.name}")
         return failures[0]
+
+    def check_code_safety(self, original_code: str, new_code: str) -> bool:
+        """
+        Check if code changes are safe using Lynette comparison.
+        
+        Args:
+            original_code: Original code
+            new_code: Modified code
+            
+        Returns:
+            True if changes are safe, False otherwise
+        """
+        try:
+            return code_change_is_safe(
+                origin_code=original_code,
+                changed_code=new_code,
+                verus_path=self.config.get("verus_path", "verus"),
+                logger=self.logger,
+                immutable_funcs=self.immutable_funcs
+            )
+        except Exception as e:
+            self.logger.error(f"Error checking code safety in repair: {e}")
+            return True  # Default to safe if check fails
+
+    def evaluate_repair_candidates(self, original_code: str, candidates: List[str], output_dir, prefix: str) -> str:
+        """
+        Evaluate repair candidates with safety checking.
+        
+        Args:
+            original_code: Original code before repair
+            candidates: List of candidate repairs
+            output_dir: Directory for saving evaluation results
+            prefix: Prefix for output files
+            
+        Returns:
+            Best safe candidate code
+        """
+        from src.modules.utils import evaluate_samples
+        
+        # Filter candidates by safety first
+        safe_candidates = []
+        for candidate in candidates:
+            if self.check_code_safety(original_code, candidate):
+                safe_candidates.append(candidate)
+                self.logger.info("Repair candidate passed safety check")
+            else:
+                self.logger.warning("Repair candidate failed safety check, excluding from evaluation")
+        
+        # If no candidates are safe, fall back to original
+        if not safe_candidates:
+            self.logger.warning("No safe repair candidates found, returning original code")
+            return original_code
+        
+        # Evaluate safe candidates and return the best one
+        best_code, _, _ = evaluate_samples(
+            samples=safe_candidates,
+            output_dir=output_dir,
+            prefix=prefix,
+            logger=self.logger,
+        )
+        
+        return best_code
 
     def exec(self, context, failure_to_fix: Optional[VerusError] = None) -> str:
         """

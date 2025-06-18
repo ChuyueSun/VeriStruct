@@ -392,61 +392,61 @@ class RepairRegistry:
             if not specialised_available:
                 self.logger.info("Compilation error with no specialised handler – attempting syntax repair…")
 
-            # Store the state before repair
-            before_score = context.trials[-1].eval.get_score()
-            repair_start_time = time.time()
+                # Store the state before repair
+                before_score = context.trials[-1].eval.get_score()
+                repair_start_time = time.time()
 
-            compilation_result = self.repair_compilation_error(context, output_dir)
+                compilation_result = self.repair_compilation_error(context, output_dir)
 
-            # Calculate repair time
-            repair_time = time.time() - repair_start_time
+                # Calculate repair time
+                repair_time = time.time() - repair_start_time
 
-            if compilation_result:
-                from src.modules.veval import VEval
+                if compilation_result:
+                    from src.modules.veval import VEval
 
-                veval = VEval(compilation_result, self.logger)
-                after_score = veval.eval_and_get_score()
+                    veval = VEval(compilation_result, self.logger)
+                    after_score = veval.eval_and_get_score()
 
                     # Only accept the repair if it's an improvement
-                if after_score > before_score:
-                    self.logger.info(
-                        f"Compilation error repair was successful in {repair_time:.2f}s."
-                    )
-                    made_progress = True
-
-                    context.add_trial(compilation_result)
-                    last_trial = context.trials[-1]
-
-                    if progress_logger:
-                        progress_logger.add_repair(
-                            "CompilationError",
-                            "repair_syntax",
-                            before_score,
-                            after_score,
-                            repair_time,
+                    if after_score > before_score:
+                        self.logger.info(
+                            f"Compilation error repair was successful in {repair_time:.2f}s."
                         )
+                        made_progress = True
+
+                        context.add_trial(compilation_result)
+                        last_trial = context.trials[-1]
+
+                        if progress_logger:
+                            progress_logger.add_repair(
+                                "CompilationError",
+                                "repair_syntax",
+                                before_score,
+                                after_score,
+                                repair_time,
+                            )
 
                         # Refresh failures list after a successful compile fix
-                    if not last_trial.eval.compilation_error:
-                        failures = last_trial.eval.get_failures()
-                        if not failures:
+                        if not last_trial.eval.compilation_error:
+                            failures = last_trial.eval.get_failures()
+                            if not failures:
                                 self.logger.info("All errors fixed after compilation repair.")
-                            result_map["compilation"] = compilation_result
-                            return result_map
-                else:
+                                result_map["compilation"] = compilation_result
+                                return result_map
+                    else:
                         self.logger.warning("Syntax repair did not improve score – skipping.")
-                    if progress_logger:
-                        progress_logger.add_repair(
-                            "CompilationError",
-                            "repair_syntax",
-                            before_score,
-                            after_score,
-                            repair_time,
+                        if progress_logger:
+                            progress_logger.add_repair(
+                                "CompilationError",
+                                "repair_syntax",
+                                before_score,
+                                after_score,
+                                repair_time,
                             )
-                else:
-                    self.logger.info(
-                        "Compilation error appears alongside specific Verus failures – deferring to specialised repair modules."
-                        )
+            else:
+                self.logger.info(
+                    "Compilation error appears alongside specific Verus failures – deferring to specialised repair modules."
+                )
 
         # Prioritize failures
         prioritized_failures = self.prioritize_failures(failures)

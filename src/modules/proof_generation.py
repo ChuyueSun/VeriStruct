@@ -18,7 +18,10 @@ from src.modules.utils import (
     evaluate_samples,
     update_checkpoint_best,
     get_examples,
+    code_change_is_safe,
+    get_nonlinear_lines,
 )
+from src.modules.lynette import lynette
 from src.prompts.template import build_instruction
 from src.utils.path_utils import samples_dir, best_dir
 
@@ -78,6 +81,72 @@ class ProofGenerationModule(BaseModule):
 
         return True
 
+    def detect_nonlinear_arithmetic(self, code: str) -> List[int]:
+        """
+        Detect lines with nonlinear arithmetic using Lynette.
+        
+        Args:
+            code: Source code to analyze
+            
+        Returns:
+            List of line numbers containing nonlinear arithmetic
+        """
+        try:
+            return get_nonlinear_lines(code, self.logger)
+        except Exception as e:
+            self.logger.error(f"Error detecting nonlinear arithmetic: {e}")
+            return []
+
+    def check_code_safety(self, original_code: str, new_code: str) -> bool:
+        """
+        Check if code changes are safe using Lynette comparison.
+        
+        Args:
+            original_code: Original code
+            new_code: Modified code
+            
+        Returns:
+            True if changes are safe, False otherwise
+        """
+        try:
+            # Get immutable functions from config if available
+            immutable_funcs = self.config.get("immutable_functions", [])
+            
+            return code_change_is_safe(
+                origin_code=original_code,
+                changed_code=new_code,
+                verus_path=self.config.get("verus_path", "verus"),
+                logger=self.logger,
+                immutable_funcs=immutable_funcs
+            )
+        except Exception as e:
+            self.logger.error(f"Error checking code safety: {e}")
+            return True  # Default to safe if check fails
+
+    def enhance_instruction_with_nonlinear_info(self, instruction: str, code: str) -> str:
+        """
+        Enhance the proof instruction with information about nonlinear arithmetic locations.
+        
+        Args:
+            instruction: Base instruction
+            code: Source code to analyze
+            
+        Returns:
+            Enhanced instruction with nonlinear arithmetic guidance
+        """
+        nonlinear_lines = self.detect_nonlinear_arithmetic(code)
+        
+        if nonlinear_lines:
+            nonlinear_info = (
+                f"\n\nIMPORTANT: The following lines contain nonlinear arithmetic "
+                f"and may require `by(nonlinear_arith)` in proof blocks: "
+                f"{', '.join(map(str, nonlinear_lines))}\n"
+                f"Consider adding assertions with `by(nonlinear_arith)` for these operations."
+            )
+            return instruction + nonlinear_info
+        
+        return instruction
+
     # ---------------------------------------------------------------------
     # Public API – required by BaseModule
     # ---------------------------------------------------------------------
@@ -88,6 +157,7 @@ class ProofGenerationModule(BaseModule):
 
         # Current code to operate on
         code = context.trials[-1].code
+        original_code = code  # Store original for safety checking
 
         # Early exit if no proof markers exist
         if self._should_skip(code):
@@ -95,13 +165,16 @@ class ProofGenerationModule(BaseModule):
             return code
 
         # Build instruction with common Verus knowledge and match guidelines
-        instruction = build_instruction(
+        base_instruction = build_instruction(
             base_instruction=self.proof_instruction,
             add_common=True,
             add_match=True,
             code=code,
             knowledge=context.gen_knowledge(),
         )
+        
+        # Enhance instruction with nonlinear arithmetic information
+        instruction = self.enhance_instruction_with_nonlinear_info(base_instruction, code)
 
         # Load examples if available (input-proof / output-proof)
         examples = get_examples(self.config, "proof", self.logger)
@@ -126,7 +199,15 @@ class ProofGenerationModule(BaseModule):
         processed_responses: List[str] = []
         for resp in responses:
             fixed_resp, _ = debug_type_error(resp, logger=self.logger)
-            processed_responses.append(fixed_resp if fixed_resp else resp)
+            final_resp = fixed_resp if fixed_resp else resp
+            
+            # Check if the generated code is safe
+            if self.check_code_safety(original_code, final_resp):
+                processed_responses.append(final_resp)
+                self.logger.info("Generated proof code passed safety check")
+            else:
+                self.logger.warning("Generated proof code failed safety check, using original")
+                processed_responses.append(original_code)
 
         # Evaluate samples and select the best one
         output_dir = samples_dir()
@@ -138,6 +219,11 @@ class ProofGenerationModule(BaseModule):
             prefix="05_proof_generation",
             logger=self.logger,
         )
+
+        # Final safety check on the best code
+        if not self.check_code_safety(original_code, best_code):
+            self.logger.warning("Best generated code failed final safety check, falling back to original")
+            best_code = original_code
 
         # Update global checkpoint best (but don't overwrite current trial yet)
         global_best_score = context.get_best_score()

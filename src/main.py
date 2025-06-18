@@ -246,12 +246,39 @@ def main():
     os.environ["VERUS_INPUT_FILE"] = input_file_base
     os.environ["VERUS_FILE_ID"] = file_id
 
+    # Parse immutable functions from environment variable
+    immutable_functions = []
+    
+    # First, get from config file if available
+    config_immutable_functions = config.get("immutable_functions", [])
+    if config_immutable_functions:
+        immutable_functions.extend(config_immutable_functions)
+        logger.info(f"Immutable functions from config: {config_immutable_functions}")
+    
+    # Then, get from command line (takes precedence and adds to config ones)
+    if os.environ.get("VERUS_IMMUTABLE_FUNCTIONS"):
+        cli_immutable_functions = [
+            func.strip() 
+            for func in os.environ["VERUS_IMMUTABLE_FUNCTIONS"].split(",")
+            if func.strip()
+        ]
+        immutable_functions.extend(cli_immutable_functions)
+        logger.info(f"Immutable functions from command line: {cli_immutable_functions}")
+    
+    # Remove duplicates while preserving order
+    immutable_functions = list(dict.fromkeys(immutable_functions))
+    
+    if immutable_functions:
+        logger.info(f"Final immutable functions list: {immutable_functions}")
+    else:
+        logger.info("No immutable functions specified")
+
     # Initialize context with sample code
     params = HyperParams()
     context = Context(sample_code, params, logger)
 
     # Initialize repair registry with all repair modules
-    repair_registry = RepairRegistry.create(config, logger)
+    repair_registry = RepairRegistry.create(config, logger, immutable_functions)
 
     # Log repair registry information in debug mode
     logger.debug(repair_registry.get_registry_info())
@@ -260,7 +287,7 @@ def main():
     view_inference = ViewInferenceModule(config, logger)
     view_refinement = ViewRefinementModule(config, logger)
     inv_inference = InvInferenceModule(config, logger)
-    spec_inference = SpecInferenceModule(config, logger)
+    spec_inference = SpecInferenceModule(config, logger, immutable_functions)
     proof_generation = ProofGenerationModule(config, logger)
 
     context.register_module("view_inference", view_inference)
