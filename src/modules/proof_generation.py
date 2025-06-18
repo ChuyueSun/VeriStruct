@@ -12,7 +12,7 @@ from typing import List
 import re  # Added for regex detection of empty proof blocks
 
 from src.infer import LLM
-from src.modules.baserepair import BaseRepairModule
+from src.modules.base import BaseModule
 from src.modules.utils import (
     debug_type_error,
     evaluate_samples,
@@ -26,7 +26,7 @@ from src.prompts.template import build_instruction
 from src.utils.path_utils import samples_dir, best_dir
 
 
-class ProofGenerationModule(BaseRepairModule):
+class ProofGenerationModule(BaseModule):
     """Module that fills in proof blocks for Verus verification."""
 
     def __init__(self, config, logger):
@@ -81,38 +81,6 @@ class ProofGenerationModule(BaseRepairModule):
 
         return True
 
-
-    def check_code_safety(self, original_code: str, new_code: str) -> bool:
-        """
-        Check if code changes are safe using Lynette comparison.
-        
-        Args:
-            original_code: Original code
-            new_code: Modified code
-            
-        Returns:
-            True if changes are safe, False otherwise
-        """
-        try:
-            # Get immutable functions from config if available
-            immutable_funcs = self.config.get("immutable_functions", [])
-            
-            return code_change_is_safe(
-                origin_code=original_code,
-                changed_code=new_code,
-                verus_path=self.config.get("verus_path", "verus"),
-                logger=self.logger,
-                immutable_funcs=immutable_funcs
-            )
-        except Exception as e:
-            self.logger.error(f"Error checking code safety: {e}")
-            return True  # Default to safe if check fails
-
-
-    # ---------------------------------------------------------------------
-    # Public API – required by BaseModule
-    # ---------------------------------------------------------------------
-
     def exec(self, context) -> str:  # type: ignore[override]
         """Run proof generation on the latest trial in *context*."""
         self.logger.info("Proof Generation ...")
@@ -126,7 +94,7 @@ class ProofGenerationModule(BaseRepairModule):
             self.logger.info("No '// TODO: add proof' markers found – skipping proof generation.")
             return code
 
-        # Build instruction with common Verus knowledge and match guidelines
+        # Build instruction with commo.n Verus knowledge and match guidelines
         instruction = build_instruction(
             base_instruction=self.proof_instruction,
             add_common=True,
@@ -162,7 +130,12 @@ class ProofGenerationModule(BaseRepairModule):
             final_resp = fixed_resp if fixed_resp else resp
             
             # Check if the generated code is safe
-            if self.check_code_safety(original_code, final_resp):
+            if code_change_is_safe(
+                origin_code=original_code,
+                changed_code=final_resp,
+                verus_path=self.config.get("verus_path", "verus"),
+                logger=self.logger
+            ):
                 processed_responses.append(final_resp)
                 self.logger.info("Generated proof code passed safety check")
             else:
@@ -181,7 +154,12 @@ class ProofGenerationModule(BaseRepairModule):
         )
 
         # Final safety check on the best code
-        if not self.check_code_safety(original_code, best_code):
+        if not code_change_is_safe(
+            origin_code=original_code,
+            changed_code=best_code,
+            verus_path=self.config.get("verus_path", "verus"),
+            logger=self.logger
+        ):
             self.logger.warning("Best generated code failed final safety check, falling back to original")
             best_code = original_code
 

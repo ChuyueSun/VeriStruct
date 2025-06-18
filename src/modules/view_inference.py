@@ -3,7 +3,7 @@ from pathlib import Path
 
 from src.context import Context
 from src.infer import LLM
-from src.modules.baserepair import BaseRepairModule
+from src.modules.base import BaseModule
 from src.modules.utils import (
     debug_type_error,
     evaluate_samples,
@@ -16,7 +16,7 @@ from src.prompts.template import build_instruction
 from src.utils.path_utils import samples_dir, best_dir
 
 
-class ViewInferenceModule(BaseRepairModule):
+class ViewInferenceModule(BaseModule):
     """
     Module for View function inference in Verus code.
 
@@ -292,29 +292,3 @@ IMPORTANT: Return the complete file with your changes integrated into the origin
         context.add_trial(best_code)  # Always use the best sample from this step
 
         return best_code
-
-    def check_code_safety(self, original_code: str, new_code: str) -> bool:
-        """
-        Check if code changes are safe using Lynette comparison.
-        
-        Args:
-            original_code: Original code
-            new_code: Modified code
-            
-        Returns:
-            True if changes are safe, False otherwise
-        """
-        try:
-            # Get immutable functions from config if available
-            immutable_funcs = self.config.get("immutable_functions", ["test_enqueue_dequeue_generic"])
-            
-            return code_change_is_safe(
-                origin_code=original_code,
-                changed_code=new_code,
-                verus_path=self.config.get("verus_path", "verus"),
-                logger=self.logger,
-                immutable_funcs=immutable_funcs
-            )
-        except Exception as e:
-            self.logger.error(f"Error checking code safety: {e}")
-            return True  # Default to safe if check fails

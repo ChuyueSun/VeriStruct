@@ -36,11 +36,14 @@ class BaseRepairModule(BaseModule):
             logger: Logger instance
             immutable_funcs: List of function names that should not be modified
         """
-        super().__init__(name=name, desc=desc)
-        self.config = config
-        self.logger = logger
+        super().__init__(
+            name=name,
+            desc=desc,
+            config=config,
+            logger=logger,
+            immutable_funcs=immutable_funcs,
+        )
         self.llm = LLM(config, logger)
-        self.immutable_funcs = immutable_funcs if immutable_funcs is not None else []
 
         # Common knowledge strings can be initialized here if needed
         self.proof_block_info = """The proof block looks like this:
@@ -110,29 +113,6 @@ You can use forall or exists for properties over sequences."""
         # Fallback to the first error
         self.logger.info(f"Selecting first failure: {failures[0].error.name}")
         return failures[0]
-
-    def check_code_safety(self, original_code: str, new_code: str) -> bool:
-        """
-        Check if code changes are safe using Lynette comparison.
-        
-        Args:
-            original_code: Original code
-            new_code: Modified code
-            
-        Returns:
-            True if changes are safe, False otherwise
-        """
-        try:
-            return code_change_is_safe(
-                origin_code=original_code,
-                changed_code=new_code,
-                verus_path=self.config.get("verus_path", "verus"),
-                logger=self.logger,
-                immutable_funcs=self.immutable_funcs
-            )
-        except Exception as e:
-            self.logger.error(f"Error checking code safety in repair: {e}")
-            return True  # Default to safe if check fails
 
     def evaluate_repair_candidates(self, original_code: str, candidates: List[str], output_dir, prefix: str) -> str:
         """

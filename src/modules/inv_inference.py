@@ -2,14 +2,14 @@ import re
 from pathlib import Path
 
 from src.infer import LLM
-from src.modules.baserepair import BaseRepairModule
+from src.modules.base import BaseModule
 from src.modules.utils import debug_type_error, evaluate_samples, update_checkpoint_best, code_change_is_safe
 from src.modules.lynette import lynette
 from src.prompts.template import build_instruction
 from src.utils.path_utils import samples_dir, best_dir
 
 
-class InvInferenceModule(BaseRepairModule):
+class InvInferenceModule(BaseModule):
     """
     Module for invariant function inference in Verus code.
 
@@ -168,23 +168,7 @@ class InvInferenceModule(BaseRepairModule):
             else:
                 processed_responses.append(processed)
 
-        # If we have multiple responses, try merging them using Lynette
-        if len(processed_responses) > 1:
-            self.logger.info("Attempting to merge multiple invariant candidates using Lynette")
-            merged_code = processed_responses[0]  # Start with first candidate
-            
-            for i in range(1, len(processed_responses)):
-                candidate_merge = self.merge_invariants(merged_code, processed_responses[i])
-                
-                # Check if the merge is safe
-                if self.check_code_safety(merged_code, candidate_merge):
-                    merged_code = candidate_merge
-                    self.logger.info(f"Successfully merged candidate {i+1}")
-                else:
-                    self.logger.warning(f"Merge with candidate {i+1} deemed unsafe, keeping previous version")
-            
-            # Add the merged result as an additional candidate
-            processed_responses.append(merged_code)
+
 
         # Evaluate processed samples and get the best one
         best_code, best_score, _ = evaluate_samples(
@@ -239,68 +223,6 @@ class InvInferenceModule(BaseRepairModule):
 
         return best_code
 
-    def merge_invariants(self, code1: str, code2: str) -> str:
-        """
-        Merge invariants from two code versions using Lynette.
-        
-        Args:
-            code1: First code version
-            code2: Second code version
-            
-        Returns:
-            Merged code or code2 if merging fails
-        """
-        try:
-            import tempfile
-            
-            with tempfile.NamedTemporaryFile(mode="w", suffix=".rs", delete=False) as f1, \
-                 tempfile.NamedTemporaryFile(mode="w", suffix=".rs", delete=False) as f2:
-                
-                f1.write(code1)
-                f1.flush()
-                f2.write(code2)
-                f2.flush()
-                
-                result = lynette.code_merge_invariant(f1.name, f2.name)
-                
-                # Clean up temp files
-                import os
-                os.unlink(f1.name)
-                os.unlink(f2.name)
-                
-                if result.returncode == 0:
-                    self.logger.info("Successfully merged invariants using Lynette")
-                    return result.stdout.strip()
-                else:
-                    self.logger.warning(f"Lynette invariant merge failed: {result.stderr}")
-                    return code2
-                    
-        except Exception as e:
-            self.logger.error(f"Error during invariant merging: {e}")
-            return code2
 
-    def check_code_safety(self, original_code: str, new_code: str) -> bool:
-        """
-        Check if code changes are safe using Lynette comparison.
-        
-        Args:
-            original_code: Original code
-            new_code: Modified code
-            
-        Returns:
-            True if changes are safe, False otherwise
-        """
-        try:
-            # Get immutable functions from config if available
-            immutable_funcs = self.config.get("immutable_functions", [])
-            
-            return code_change_is_safe(
-                origin_code=original_code,
-                changed_code=new_code,
-                verus_path=self.config.get("verus_path", "verus"),
-                logger=self.logger,
-                immutable_funcs=immutable_funcs
-            )
-        except Exception as e:
-            self.logger.error(f"Error checking code safety: {e}")
-            return True  # Default to safe if check fails
+
+

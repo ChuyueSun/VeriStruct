@@ -6,7 +6,7 @@ from pathlib import Path
 from src.utils.path_utils import samples_dir, best_dir
 
 from src.infer import LLM
-from src.modules.baserepair import BaseRepairModule
+from src.modules.base import BaseModule
 from src.modules.utils import (
     debug_type_error,
     evaluate_samples,
@@ -17,7 +17,7 @@ from src.modules.utils import (
 from src.prompts.template import build_instruction
 
 
-class SpecInferenceModule(BaseRepairModule):
+class SpecInferenceModule(BaseModule):
     """
     Module for inferring requires and ensures clauses for Verus functions.
 
