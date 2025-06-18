@@ -7,7 +7,9 @@ from typing import Any, Dict, List, Optional
 
 from src.infer import LLM
 from src.modules.base import BaseModule
+from src.modules.utils import code_change_is_safe
 from src.modules.veval import VerusError, VerusErrorType, VEval
+from src.prompts.template import fill_template
 
 
 class BaseRepairModule(BaseModule):
@@ -34,11 +36,14 @@ class BaseRepairModule(BaseModule):
             logger: Logger instance
             immutable_funcs: List of function names that should not be modified
         """
-        super().__init__(name=name, desc=desc)
-        self.config = config
-        self.logger = logger
+        super().__init__(
+            name=name,
+            desc=desc,
+            config=config,
+            logger=logger,
+            immutable_funcs=immutable_funcs,
+        )
         self.llm = LLM(config, logger)
-        self.immutable_funcs = immutable_funcs if immutable_funcs is not None else []
 
         # Common knowledge strings can be initialized here if needed
         self.proof_block_info = """The proof block looks like this:
@@ -108,6 +113,51 @@ You can use forall or exists for properties over sequences."""
         # Fallback to the first error
         self.logger.info(f"Selecting first failure: {failures[0].error.name}")
         return failures[0]
+
+    def evaluate_repair_candidates(
+        self, original_code: str, candidates: List[str], output_dir, prefix: str
+    ) -> str:
+        """
+        Evaluate repair candidates with safety checking.
+
+        Args:
+            original_code: Original code before repair
+            candidates: List of candidate repairs
+            output_dir: Directory for saving evaluation results
+            prefix: Prefix for output files
+
+        Returns:
+            Best safe candidate code
+        """
+        from src.modules.utils import evaluate_samples
+
+        # Filter candidates by safety first
+        safe_candidates = []
+        for candidate in candidates:
+            if self.check_code_safety(original_code, candidate):
+                safe_candidates.append(candidate)
+                self.logger.info("Repair candidate passed safety check")
+            else:
+                self.logger.warning(
+                    "Repair candidate failed safety check, excluding from evaluation"
+                )
+
+        # If no candidates are safe, fall back to original
+        if not safe_candidates:
+            self.logger.warning(
+                "No safe repair candidates found, returning original code"
+            )
+            return original_code
+
+        # Evaluate safe candidates and return the best one
+        best_code, _, _ = evaluate_samples(
+            samples=safe_candidates,
+            output_dir=output_dir,
+            prefix=prefix,
+            logger=self.logger,
+        )
+
+        return best_code
 
     def exec(self, context, failure_to_fix: Optional[VerusError] = None) -> str:
         """

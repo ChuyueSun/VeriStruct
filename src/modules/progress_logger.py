@@ -57,7 +57,7 @@ class ProgressLogger:
         self.logger.info(
             f"Progress logger initialized. Logs will be saved to {self.log_file}"
         )
-        
+
         # Display file identification summary
         self.display_file_info()
 
@@ -65,7 +65,7 @@ class ProgressLogger:
         """Display a summary of input and output file information for reference."""
         input_file = os.environ.get("VERUS_INPUT_FILE", "Unknown")
         file_id = os.environ.get("VERUS_FILE_ID", self.file_id)
-        
+
         self.logger.info("=" * 50)
         self.logger.info("FILE IDENTIFICATION SUMMARY")
         self.logger.info("-" * 50)
@@ -311,13 +311,15 @@ class ProgressLogger:
 
             # Get input file info
             input_file = os.environ.get("VERUS_TEST_FILE", "Unknown")
-            input_file_name = os.path.basename(input_file) if input_file != "Unknown" else "Unknown"
+            input_file_name = (
+                os.path.basename(input_file) if input_file != "Unknown" else "Unknown"
+            )
             file_id = os.environ.get("VERUS_FILE_ID", self.file_id)
 
             # Write summary
             with open(summary_file, "w") as f:
                 f.write("# VerusAgent Execution Summary\n\n")
-                
+
                 # Add input file information
                 f.write("## Input and Output Files\n\n")
                 f.write(f"Input File: {input_file}\n")

@@ -61,35 +61,35 @@ pub enum LogResourceValue<T> {
 }
 
 pub open spec fn is_prefix<T>(s1: Seq<T>, s2: Seq<T>) -> bool {
-    // TODO: add specification function
+    // TODO: add specification
 }
 
 impl<T> PCM for LogResourceValue<T> {
     open spec fn valid(self) -> bool {
-    // TODO: add specification function
+    // TODO: add specification
     }
 
     open spec fn op(self, other: Self) -> Self {
-    // TODO: add specification function
+    // TODO: add specification
     }
 
     open spec fn unit() -> Self {
-    // TODO: add specification function
+    // TODO: add specification
     }
 
     proof fn closed_under_incl(a: Self, b: Self) {
     }
 
     proof fn commutative(a: Self, b: Self) {
-    // TODO: add proof function
+    // TODO: add proof
     }
 
     proof fn associative(a: Self, b: Self, c: Self) {
-    // TODO: add proof function
+    // TODO: add proof
     }
 
     proof fn op_unit(a: Self) {
-    // TODO: add proof function
+    // TODO: add proof
     }
 
     proof fn unit_valid() {
@@ -98,11 +98,11 @@ impl<T> PCM for LogResourceValue<T> {
 
 impl<T> LogResourceValue<T> {
     pub open spec fn log(self) -> Seq<T> {
-    // TODO: add specification function
+    // TODO: add specification
     }
 
     proof fn op_unit(a: Self) {
-    // TODO: add proof function
+    // TODO: add proof
     }
 
     proof fn unit_valid() {
@@ -115,47 +115,47 @@ pub struct LogResource<T> {
 
 impl<T> LogResource<T> {
     pub closed spec fn id(self) -> Loc {
-    // TODO: add specification function
+    // TODO: add specification
     }
 
     pub closed spec fn view(self) -> LogResourceValue<T> {
-    // TODO: add specification function
+    // TODO: add specification
     }
 
     pub proof fn alloc() -> (tracked result: LogResource<T>)
     // TODO: add requires and ensures
     {
-        // TODO: implement proof code
+        // TODO: add proof
     }
 
     pub proof fn split(tracked self) -> (tracked halves: (Self, Self))
     // TODO: add requires and ensures
     {
-        // TODO: implement proof code
+        // TODO: add proof
     }
 
     pub proof fn append(tracked &mut self, v: T)
     // TODO: add requires and ensures
     {
-        // TODO: implement proof code
+        // TODO: add proof
     }
 
     pub proof fn append_using_two_halves(tracked &mut self, tracked other: &mut Self, v: T)
     // TODO: add requires and ensures
     {
-        // TODO: implement proof code
+        // TODO: add proof
     }
 
     pub proof fn extract_prefix_knowledge(tracked &self) -> (tracked out: Self)
     // TODO: add requires and ensures
     {
-        // TODO: implement proof code
+        // TODO: add proof
     }
 
     pub proof fn deduce_prefix_relation(tracked &mut self, tracked other: &Self)
     // TODO: add requires and ensures
     {
-        // TODO: implement proof code
+        // TODO: add proof
     }
 }
 

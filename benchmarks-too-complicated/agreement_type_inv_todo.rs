@@ -47,17 +47,17 @@ pub enum AgreementResourceValue<T> {
 
 impl<T> AgreementResourceValue<T> {
     pub open spec fn new(c: T) -> Self {
-        // TODO: implement specification.
+        AgreementResourceValue::<T>::Chosen { c }
     }
 }
 
 impl<T> PCM for AgreementResourceValue<T> {
     open spec fn valid(self) -> bool {
-        // TODO: implement specification.
+        // TODO: add specification
     }
 
     open spec fn op(self, other: Self) -> Self {
-       // TODO: implement specification.
+        // TODO: add specification
     }
 
     open spec fn unit() -> Self {
@@ -86,19 +86,19 @@ pub struct AgreementResource<T> {
 }
 
 impl<T> AgreementResource<T> {
+    #[verifier::type_invariant]
     pub closed spec fn inv(self) -> bool {
-        // TODO: implement specification.
+        // TODO: add specification
     }
 
     pub closed spec fn id(self) -> Loc {
-        // TODO: implement specification.
+        // TODO: add specification
+
     }
 
     pub closed spec fn view(self) -> T
-        recommends
-            self.inv(),
     {
-        // TODO: implement specification.
+        // TODO: add specification
     }
 
     pub proof fn alloc(c: T) -> (tracked result: AgreementResource<T>)
@@ -111,8 +111,8 @@ impl<T> AgreementResource<T> {
         AgreementResource<T>)
     // TODO: add requires and ensures
     {
-        let tracked r = duplicate(&self.r);
-        AgreementResource::<T> { r }
+        // TODO: add proof 
+
     }
 
     pub proof fn lemma_agreement(
@@ -122,8 +122,10 @@ impl<T> AgreementResource<T> {
     // TODO: add requires and ensures
     {
         // TODO: add proof 
+
     }
 }
+
 /* TEST CODE BELOW */
 
 pub fn main() {

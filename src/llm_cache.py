@@ -281,7 +281,9 @@ class LLMCache:
             "hits": self.hits,
             "misses": self.misses,
             "total": self.hits + self.misses,
-            "hit_rate": self.hits / (self.hits + self.misses)
-            if (self.hits + self.misses) > 0
-            else 0,
+            "hit_rate": (
+                self.hits / (self.hits + self.misses)
+                if (self.hits + self.misses) > 0
+                else 0
+            ),
         }

@@ -147,8 +147,16 @@ class ErrorTrace:
 
 class VerusError:
     def __init__(self, err: dict):
-        # Store the raw message text
+        # Store the raw message text and spans
         self.error_text = err["message"]
+        self.spans = err["spans"] if "spans" in err else []
+
+        # Get the full error message including span labels
+        if self.spans:
+            span_labels = [
+                span.get("label", "") for span in self.spans if "label" in span
+            ]
+            self.error_text = f"{self.error_text} ({'; '.join(label for label in span_labels if label)})"
 
         # Default to 'Other' unless a partial match is found
         self.error = VerusErrorType.Other
@@ -156,6 +164,10 @@ class VerusError:
         # Try to match by substring against known keys
         for known_msg, err_type in m2VerusError.items():
             if known_msg in self.error_text:
+                # Special case: don't treat empty function body errors as type errors
+                if err_type == VerusErrorType.MismatchedType:
+                    if "implicitly returns `()`" in self.error_text:
+                        continue
                 self.error = err_type
                 break
 
@@ -164,13 +176,12 @@ class VerusError:
             if "not all trait items implemented, missing" in self.error_text:
                 self.error = VerusErrorType.MissImpl
 
-        self.trace = [ErrorTrace(t) for t in err["spans"]]  # Bottom-up stack trace
-        self.error_text = err["message"]
-        self.spans = err["spans"] if "spans" in err else []
+        # Create the trace after error type is determined
+        self.trace = [ErrorTrace(t) for t in self.spans]  # Bottom-up stack trace
 
         # a subtype of precondfail that often requires separate treatment
         if self.error == VerusErrorType.PreCondFail:
-            if "i < vec.view().len()" in self.trace[0].get_text():
+            if self.trace and "i < vec.view().len()" in self.trace[0].get_text():
                 self.error = VerusErrorType.PreCondFailVecLen
 
     def __str__(self):
@@ -318,10 +329,10 @@ class EvalScore:
     def __gt__(self, value: object) -> bool:
         """
         Compare two EvalScore objects to determine if self is better than value.
-        
+
         Args:
             value: Another EvalScore object to compare with
-            
+
         Returns:
             True if self is better than value, False otherwise
         """
@@ -329,13 +340,16 @@ class EvalScore:
         if not isinstance(value, EvalScore):
             # Log but don't throw exception (prevents crashes in dummy mode)
             import logging
-            logging.getLogger("EvalScore").warning(f"Attempted invalid comparison between EvalScore and {type(value)}")
+
+            logging.getLogger("EvalScore").warning(
+                f"Attempted invalid comparison between EvalScore and {type(value)}"
+            )
             return False
-            
+
         # Compilation error is the highest priority - code that compiles is ALWAYS better
         if self.compilation_error != value.compilation_error:
             return not self.compilation_error
-            
+
         # For code that both compile or both fail to compile, compare other metrics
         try:
             # Handle negative values safely (can happen in dummy mode)
@@ -348,9 +362,12 @@ class EvalScore:
         except Exception as e:
             # If any comparison fails, log it and return False
             import logging
-            logging.getLogger("EvalScore").warning(f"Error during score comparison: {e}")
+
+            logging.getLogger("EvalScore").warning(
+                f"Error during score comparison: {e}"
+            )
             return False
-            
+
         return False
 
     def __le__(self, value: object) -> bool:
@@ -371,10 +388,11 @@ class EvalScore:
 # Don't use dummy mode by default
 DUMMY_MODE = False
 
+
 def fix_trivial_error(code: str) -> str:
-    code = code.replace('/!', '//!')
-    code = code.replace('!/', '//!')
-    code = code.replace('//!', '//')
+    code = code.replace("/!", "//!")
+    code = code.replace("!/", "//!")
+    code = code.replace("//!", "//")
     return code
 
 
@@ -401,11 +419,14 @@ class VEval:
         if self.verus_path is None:
             # See if we can find verus in the environment
             import os
+
             verus_from_env = os.environ.get("VERUS_PATH")
             if verus_from_env and os.path.exists(verus_from_env):
                 self.verus_path = verus_from_env
                 if self.logger:
-                    self.logger.info(f"Found Verus path from environment: {self.verus_path}")
+                    self.logger.info(
+                        f"Found Verus path from environment: {self.verus_path}"
+                    )
                 # Update the global verus object too
                 verus.set_verus_path(self.verus_path)
             elif os.environ.get("ENABLE_VEVAL", "1") == "1":
@@ -414,7 +435,7 @@ class VEval:
                     self.logger.warning(
                         "VEval enabled but no verus_path found. Please set verus_path in config or VERUS_PATH environment variable."
                     )
-            
+
         # Also set dummy mode if verus_path is None
         if self.verus_path is None:
             self.dummy_mode = True

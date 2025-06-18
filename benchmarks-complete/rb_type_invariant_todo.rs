@@ -27,7 +27,7 @@ verus! {
     }
 
     impl<T: Copy> View for RingBuffer<T> {
-        // TODO: add view spec
+        // TODO: add specification
     }
 
     /// This function says that for any `x` and `y`, there are two
@@ -198,6 +198,9 @@ impl<T: Copy> RingBuffer<T> {
     pub fn available_len(&self) -> (ret: usize)
         // TODO: add requires and ensures
     {
+        proof {
+            // TODO: add proof
+        }
         self.ring.len().saturating_sub(1 + self.len())
     }
 }

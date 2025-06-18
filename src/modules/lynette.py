@@ -4,6 +4,8 @@
 
 import os
 import subprocess
+import tempfile
+from pathlib import Path
 
 
 class Lynette:
@@ -14,6 +16,7 @@ class Lynette:
         + os.path.abspath(
             os.path.join(
                 os.path.dirname(__file__),
+                "..",
                 "..",
                 "utils",
                 "lynette",
@@ -51,7 +54,7 @@ class Lynette:
     def code_merge_all(self, file1, file2):
         return self.run(["code", "merge", "--all", file1, file2])
 
-    def code_merge_invariant(self, file1, file2):
+    def code_merge_invariant(self, file1, file2, util_path="../../utils", logger=None):
         return self.run(["code", "merge", "--invariants", file1, file2])
 
     def code_detect_nonlinear(self, file):

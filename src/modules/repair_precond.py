@@ -116,7 +116,9 @@ class RepairPrecondModule(BaseRepairModule):
 Response with the Rust code only, do not include any explanation."""
         instruction += "\n\n" + self.proof_block_info
         instruction = self.add_seq_knowledge(code, instruction)
-        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        instruction += (
+            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        )
 
         examples = get_examples(self.config, "precond", self.logger)
         query_template = "Failed pre-condition\n```\n{}```\n"
@@ -184,7 +186,9 @@ Response with the Rust code only, do not include any explanation."""
 Response with the Rust code only, do not include any explanation."""
         instruction += "\n\n" + self.proof_block_info
         instruction = self.add_seq_knowledge(code, instruction)
-        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        instruction += (
+            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        )
 
         examples = get_examples(self.config, "precond", self.logger)
         query_template = "Failed pre-condition\n```\n{}```\n"
@@ -252,7 +256,9 @@ Response with the Rust code only, do not include any explanation."""
 Response with the Rust code only, do not include any explanation."""
         instruction += "\n\n" + self.proof_block_info
         instruction = self.add_seq_knowledge(code, instruction)
-        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        instruction += (
+            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        )
 
         examples = get_examples(self.config, "precond", self.logger)
         query_template = "Failed pre-condition\n```\n{}```\n"
@@ -320,7 +326,9 @@ Response with the Rust code only, do not include any explanation."""
 Response with the Rust code only, do not include any explanation."""
         instruction += "\n\n" + self.proof_block_info
         instruction = self.add_seq_knowledge(code, instruction)
-        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        instruction += (
+            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        )
 
         examples = get_examples(self.config, "precond", self.logger)
         query_template = "Failed pre-condition\n```\n{}```\n"

@@ -115,29 +115,40 @@ If you are not sure about the correctness of the post-condition, you may weaken 
 Response with the Rust code only, do not include any explanation."""
         instruction += "\n\n" + self.proof_block_info
         instruction = self.add_seq_knowledge(code, instruction)
-        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        instruction += (
+            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        )
 
         examples = get_examples(self.config, "postcond", self.logger)
         query_template = "Failed post-condition\n```\n{}```\n"
         query_template += "Failed location\n```\n{}```\n"
         query_template += "\nCode\n```{}```\n"
 
-        if len(failure_to_fix.trace) < 2:
-            self.logger.error("Postcondition error trace is too short to process.")
-            return code
+        if len(failure_to_fix.trace) >= 2:
+            location_trace, postcond_trace = (
+                failure_to_fix.trace[0],
+                failure_to_fix.trace[1],
+            )
+            if location_trace.label == VerusErrorLabel.FailedThisPostCond:
+                location_trace, postcond_trace = postcond_trace, location_trace
 
-        location_trace, postcond_trace = (
-            failure_to_fix.trace[0],
-            failure_to_fix.trace[1],
-        )
-        if location_trace.label == VerusErrorLabel.FailedThisPostCond:
-            location_trace, postcond_trace = postcond_trace, location_trace
-
-        post_cond_info = f"Line {postcond_trace.lines[0]}-{postcond_trace.lines[1]}:\n"
-        post_cond_info += postcond_trace.get_text() + "\n"
-        location_info = f"Line {location_trace.lines[0]}-{location_trace.lines[1]}:\n"
-        location_info += location_trace.get_text() + "\n"
-        query = query_template.format(post_cond_info, location_info, code)
+            post_cond_info = (
+                f"Line {postcond_trace.lines[0]}-{postcond_trace.lines[1]}:\n"
+            )
+            post_cond_info += postcond_trace.get_text() + "\n"
+            location_info = (
+                f"Line {location_trace.lines[0]}-{location_trace.lines[1]}:\n"
+            )
+            location_info += location_trace.get_text() + "\n"
+            query = query_template.format(post_cond_info, location_info, code)
+        else:
+            # Minimal query: we only have one trace (postcondition line)
+            single_trace = failure_to_fix.trace[0]
+            post_cond_info = f"Line {single_trace.lines[0]}-{single_trace.lines[1]}:\n"
+            post_cond_info += single_trace.get_text() + "\n"
+            query = query_template.format(
+                post_cond_info, "(location unavailable)", code
+            )
 
         # Use the llm instance from the base class
         responses = self.llm.infer_llm(
@@ -151,13 +162,13 @@ Response with the Rust code only, do not include any explanation."""
             temp=1.0,
         )
 
-        # Evaluate samples and get the best one
+        # Evaluate samples and get the best one with safety checking
         output_dir = samples_dir()
-        best_code, _, _ = evaluate_samples(
-            samples=responses if responses else [code],
+        best_code = self.evaluate_repair_candidates(
+            original_code=code,
+            candidates=responses if responses else [code],
             output_dir=output_dir,
             prefix="repair_postcond",
-            logger=self.logger,
         )
 
         # Add the best result to context
@@ -190,29 +201,40 @@ If you are not sure about the correctness of the post-condition, you may weaken 
 Response with the Rust code only, do not include any explanation."""
         instruction += "\n\n" + self.proof_block_info
         instruction = self.add_seq_knowledge(code, instruction)
-        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        instruction += (
+            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        )
 
         examples = get_examples(self.config, "postcond", self.logger)
         query_template = "Failed post-condition\n```\n{}```\n"
         query_template += "Failed location\n```\n{}```\n"
         query_template += "\nCode\n```{}```\n"
 
-        if len(failure_to_fix.trace) < 2:
-            self.logger.error("Postcondition error trace is too short to process.")
-            return code
+        if len(failure_to_fix.trace) >= 2:
+            location_trace, postcond_trace = (
+                failure_to_fix.trace[0],
+                failure_to_fix.trace[1],
+            )
+            if location_trace.label == VerusErrorLabel.FailedThisPostCond:
+                location_trace, postcond_trace = postcond_trace, location_trace
 
-        location_trace, postcond_trace = (
-            failure_to_fix.trace[0],
-            failure_to_fix.trace[1],
-        )
-        if location_trace.label == VerusErrorLabel.FailedThisPostCond:
-            location_trace, postcond_trace = postcond_trace, location_trace
-
-        post_cond_info = f"Line {postcond_trace.lines[0]}-{postcond_trace.lines[1]}:\n"
-        post_cond_info += postcond_trace.get_text() + "\n"
-        location_info = f"Line {location_trace.lines[0]}-{location_trace.lines[1]}:\n"
-        location_info += location_trace.get_text() + "\n"
-        query = query_template.format(post_cond_info, location_info, code)
+            post_cond_info = (
+                f"Line {postcond_trace.lines[0]}-{postcond_trace.lines[1]}:\n"
+            )
+            post_cond_info += postcond_trace.get_text() + "\n"
+            location_info = (
+                f"Line {location_trace.lines[0]}-{location_trace.lines[1]}:\n"
+            )
+            location_info += location_trace.get_text() + "\n"
+            query = query_template.format(post_cond_info, location_info, code)
+        else:
+            # Minimal query: we only have one trace (postcondition line)
+            single_trace = failure_to_fix.trace[0]
+            post_cond_info = f"Line {single_trace.lines[0]}-{single_trace.lines[1]}:\n"
+            post_cond_info += single_trace.get_text() + "\n"
+            query = query_template.format(
+                post_cond_info, "(location unavailable)", code
+            )
 
         # Use the llm instance from the base class
         responses = self.llm.infer_llm(
@@ -226,13 +248,13 @@ Response with the Rust code only, do not include any explanation."""
             temp=1.0,
         )
 
-        # Evaluate samples and get the best one
+        # Evaluate samples and get the best one with safety checking
         output_dir = samples_dir()
-        best_code, _, _ = evaluate_samples(
-            samples=responses if responses else [code],
+        best_code = self.evaluate_repair_candidates(
+            original_code=code,
+            candidates=responses if responses else [code],
             output_dir=output_dir,
             prefix="repair_postcond",
-            logger=self.logger,
         )
 
         # Add the best result to context
@@ -262,32 +284,44 @@ Common fixes include:
 2. Create a public ghost function/method that exposes the needed information
 3. Rewrite the ensures clause to use only public state
 4. If appropriate, make the field public (with pub keyword)
+5. If none of the above is practical, simply remove the ensures-line that accesses the private field.
 
 Response with the Rust code only, do not include any explanation."""
-        instruction = self.add_seq_knowledge(code, instruction)
-        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        instruction += self.add_seq_knowledge(code, instruction)
+        instruction += (
+            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        )
 
         examples = get_examples(self.config, "postcond", self.logger)
         query_template = "Failed post-condition\n```\n{}```\n"
         query_template += "Failed location\n```\n{}```\n"
         query_template += "\nCode\n```{}```\n"
 
-        if len(failure_to_fix.trace) < 2:
-            self.logger.error("Postcondition error trace is too short to process.")
-            return code
+        if len(failure_to_fix.trace) >= 2:
+            location_trace, postcond_trace = (
+                failure_to_fix.trace[0],
+                failure_to_fix.trace[1],
+            )
+            if location_trace.label == VerusErrorLabel.FailedThisPostCond:
+                location_trace, postcond_trace = postcond_trace, location_trace
 
-        location_trace, postcond_trace = (
-            failure_to_fix.trace[0],
-            failure_to_fix.trace[1],
-        )
-        if location_trace.label == VerusErrorLabel.FailedThisPostCond:
-            location_trace, postcond_trace = postcond_trace, location_trace
-
-        post_cond_info = f"Line {postcond_trace.lines[0]}-{postcond_trace.lines[1]}:\n"
-        post_cond_info += postcond_trace.get_text() + "\n"
-        location_info = f"Line {location_trace.lines[0]}-{location_trace.lines[1]}:\n"
-        location_info += location_trace.get_text() + "\n"
-        query = query_template.format(post_cond_info, location_info, code)
+            post_cond_info = (
+                f"Line {postcond_trace.lines[0]}-{postcond_trace.lines[1]}:\n"
+            )
+            post_cond_info += postcond_trace.get_text() + "\n"
+            location_info = (
+                f"Line {location_trace.lines[0]}-{location_trace.lines[1]}:\n"
+            )
+            location_info += location_trace.get_text() + "\n"
+            query = query_template.format(post_cond_info, location_info, code)
+        else:
+            # Minimal query: we only have one trace (postcondition line)
+            single_trace = failure_to_fix.trace[0]
+            post_cond_info = f"Line {single_trace.lines[0]}-{single_trace.lines[1]}:\n"
+            post_cond_info += single_trace.get_text() + "\n"
+            query = query_template.format(
+                post_cond_info, "(location unavailable)", code
+            )
 
         # Use the llm instance from the base class
         responses = self.llm.infer_llm(
@@ -301,13 +335,13 @@ Response with the Rust code only, do not include any explanation."""
             temp=1.0,
         )
 
-        # Evaluate samples and get the best one
+        # Evaluate samples and get the best one with safety checking
         output_dir = samples_dir()
-        best_code, _, _ = evaluate_samples(
-            samples=responses if responses else [code],
+        best_code = self.evaluate_repair_candidates(
+            original_code=code,
+            candidates=responses if responses else [code],
             output_dir=output_dir,
             prefix="repair_postcond",
-            logger=self.logger,
         )
 
         # Add the best result to context

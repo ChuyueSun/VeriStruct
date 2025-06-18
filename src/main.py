@@ -52,7 +52,9 @@ def write_and_verify_file(file_path: Path, content: str, logger) -> bool:
 def handle_checkpoint_best(context, output_dir, file_id, progress_logger, logger):
     """Handle the checkpoint best code and score logic."""
     checkpoint_best_code = context.get_best_code()
-    logger.debug(f"Main - Final checkpoint_best_code is None: {checkpoint_best_code is None}")
+    logger.debug(
+        f"Main - Final checkpoint_best_code is None: {checkpoint_best_code is None}"
+    )
 
     if not checkpoint_best_code:
         final_score = context.trials[-1].eval.get_score()
@@ -75,23 +77,25 @@ def handle_checkpoint_best(context, output_dir, file_id, progress_logger, logger
         f"// Compilation Error: {checkpoint_best_score.compilation_error}"
     )
     write_and_verify_file(checkpoint_best_path, checkpoint_best_with_score, logger)
-    logger.info(f"Saved checkpoint best result to {checkpoint_best_path} with score: {checkpoint_best_score}")
+    logger.info(
+        f"Saved checkpoint best result to {checkpoint_best_path} with score: {checkpoint_best_score}"
+    )
 
     # Save to best directory
     best_dir = output_dir / "best"
     best_dir.mkdir(exist_ok=True, parents=True)
     best_file = best_dir / f"best_{file_id}.rs"
     write_and_verify_file(best_file, checkpoint_best_with_score, logger)
-    
+
     # Use a more descriptive name for the consistent best file that includes the input file name
     input_file_base = os.environ.get("VERUS_INPUT_FILE", "unknown")
     consistent_best_file = best_dir / f"best_{input_file_base}.rs"
     write_and_verify_file(consistent_best_file, checkpoint_best_with_score, logger)
     logger.info(f"Latest best result also saved to {consistent_best_file}")
-    
+
     # Also maintain the standard best.rs for backward compatibility
     write_and_verify_file(best_dir / "best.rs", checkpoint_best_with_score, logger)
-    
+
     logger.info(f"Saved checkpoint best to {best_file}")
 
     # Compare with final result
@@ -112,7 +116,9 @@ def handle_checkpoint_best(context, output_dir, file_id, progress_logger, logger
         logger.info(f"{reason}. Overwriting final result with checkpoint best.")
 
         write_and_verify_file(
-            output_dir / f"final_result_{file_id}.rs", checkpoint_best_with_score, logger
+            output_dir / f"final_result_{file_id}.rs",
+            checkpoint_best_with_score,
+            logger,
         )
         write_and_verify_file(
             output_dir / "final_result.rs", checkpoint_best_with_score, logger
@@ -122,7 +128,7 @@ def handle_checkpoint_best(context, output_dir, file_id, progress_logger, logger
         write_and_verify_file(
             output_dir / "final_result.rs", context.trials[-1].code, logger
         )
-        
+
     # Record final result in progress logger
     progress_logger.record_final_result(final_score)
 
@@ -152,13 +158,16 @@ def main():
             logger.info(f"Verus path set to: {verus.verus_path}")
             # Also set as environment variable for modules to access
             os.environ["VERUS_PATH"] = str(config["verus_path"])
-            logger.info(f"VERUS_PATH environment variable set to: {os.environ['VERUS_PATH']}")
+            logger.info(
+                f"VERUS_PATH environment variable set to: {os.environ['VERUS_PATH']}"
+            )
         else:
             logger.warning("verus_path not found in configuration")
     except Exception as e:
         logger.warning(f"Could not load config-azure or initialize verus path: {e}")
         logger.warning("Using default configuration")
         from src.configs import sconfig as _sconfig_module
+
         config = getattr(_sconfig_module, "config", {})
 
     # Check for custom test file from environment variable
@@ -177,7 +186,7 @@ def main():
 
     sample_code = test_file_path.read_text()
     logger.info(f"Loaded test file: {test_file_path}")
-    
+
     # Update logger format to include input file name (still concise)
     input_file_name = test_file_path.name
     logger.remove()
@@ -206,13 +215,13 @@ def main():
 
     # Extract input file base name (without extension) for output files
     input_file_base = test_file_path.stem
-    
+
     # Extract verification type information by analyzing the file name
     verification_type = ""
     if "type_invariant" in input_file_base:
         verification_type = "TypeInv"
     elif "postcond" in input_file_base:
-        verification_type = "PostCond" 
+        verification_type = "PostCond"
     elif "precond" in input_file_base:
         verification_type = "PreCond"
     elif "invariant" in input_file_base:
@@ -223,7 +232,7 @@ def main():
         verification_type = "Decrease"
     else:
         verification_type = "General"
-        
+
     # For additional context, check for specific data structures in the filename
     data_structure = ""
     if "rb" in input_file_base:
@@ -236,7 +245,7 @@ def main():
         data_structure = "Map"  # Map/Dictionary
     elif "tree" in input_file_base:
         data_structure = "Tree"  # Tree structure
-    
+
     # Combine file identifiers for unique and informative output filenames
     file_id = f"{input_file_base}__{data_structure}_{verification_type}_{run_timestamp}"
     logger.info(f"Output file identifier: {file_id} (from {test_file_path.name})")
@@ -246,12 +255,39 @@ def main():
     os.environ["VERUS_INPUT_FILE"] = input_file_base
     os.environ["VERUS_FILE_ID"] = file_id
 
+    # Parse immutable functions from environment variable
+    immutable_functions = []
+
+    # First, get from config file if available
+    config_immutable_functions = config.get("immutable_functions", [])
+    if config_immutable_functions:
+        immutable_functions.extend(config_immutable_functions)
+        logger.info(f"Immutable functions from config: {config_immutable_functions}")
+
+    # Then, get from command line (takes precedence and adds to config ones)
+    if os.environ.get("VERUS_IMMUTABLE_FUNCTIONS"):
+        cli_immutable_functions = [
+            func.strip()
+            for func in os.environ["VERUS_IMMUTABLE_FUNCTIONS"].split(",")
+            if func.strip()
+        ]
+        immutable_functions.extend(cli_immutable_functions)
+        logger.info(f"Immutable functions from command line: {cli_immutable_functions}")
+
+    # Remove duplicates while preserving order
+    immutable_functions = list(dict.fromkeys(immutable_functions))
+
+    if immutable_functions:
+        logger.info(f"Final immutable functions list: {immutable_functions}")
+    else:
+        logger.info("No immutable functions specified")
+
     # Initialize context with sample code
     params = HyperParams()
     context = Context(sample_code, params, logger)
 
     # Initialize repair registry with all repair modules
-    repair_registry = RepairRegistry.create(config, logger)
+    repair_registry = RepairRegistry.create(config, logger, immutable_functions)
 
     # Log repair registry information in debug mode
     logger.debug(repair_registry.get_registry_info())
@@ -260,7 +296,7 @@ def main():
     view_inference = ViewInferenceModule(config, logger)
     view_refinement = ViewRefinementModule(config, logger)
     inv_inference = InvInferenceModule(config, logger)
-    spec_inference = SpecInferenceModule(config, logger)
+    spec_inference = SpecInferenceModule(config, logger, immutable_functions)
     proof_generation = ProofGenerationModule(config, logger)
 
     context.register_module("view_inference", view_inference)
@@ -278,8 +314,10 @@ def main():
     logger.info("Creating verification plan using the Planner...")
     planner = Planner(logger)
     plan_result = planner.exec(context)
-    logger.info(f"Planning complete. Plan length: {len(plan_result) if isinstance(plan_result, (list, tuple)) else 'unknown'}")
-    
+    logger.info(
+        f"Planning complete. Plan length: {len(plan_result) if isinstance(plan_result, (list, tuple)) else 'unknown'}"
+    )
+
     # Extract the plan text from the result, handling various possible data structures
     def extract_text_from_data(data):
         if isinstance(data, str):
@@ -287,7 +325,7 @@ def main():
         elif isinstance(data, (list, tuple)):
             if len(data) == 0:
                 return ""
-            
+
             # Try the first element
             first_item = data[0]
             if isinstance(first_item, str):
@@ -296,25 +334,25 @@ def main():
                 return extract_text_from_data(first_item)
         elif isinstance(data, dict):
             # If there's a 'content' key, use that
-            if 'content' in data:
-                return extract_text_from_data(data['content'])
+            if "content" in data:
+                return extract_text_from_data(data["content"])
             # Otherwise, just use the first value
             elif data:
                 return extract_text_from_data(next(iter(data.values())))
-        
+
         # Fallback: convert to string
         return str(data)
-    
+
     plan_text = extract_text_from_data(plan_result)
     if not plan_text:
         plan_text = "No plan generated. Proceeding with default execution order."
         logger.warning(plan_text)
-    
+
     # Save the plan to the output directory
     plan_file_path = output_dir / f"verification_plan_{file_id}.txt"
     write_and_verify_file(plan_file_path, plan_text, logger)
     logger.info(f"Saved verification plan to {plan_file_path}")
-    
+
     # Add the plan to the context as knowledge
     context.add_knowledge("verification_plan", plan_text)
     logger.info("Added verification plan to context knowledge")
@@ -332,36 +370,40 @@ def main():
     available_modules = list(context.modules.keys())
     execution_order = parse_plan_execution_order(plan_text, available_modules, logger)
     logger.info(f"Determined execution order from plan: {execution_order}")
-    
+
     # Execute modules according to the plan-derived order
     step_number = 1
     for module_name in execution_order:
         # Ensure the module exists
         if module_name not in context.modules:
-            logger.warning(f"Module '{module_name}' not found in registered modules. Skipping.")
+            logger.warning(
+                f"Module '{module_name}' not found in registered modules. Skipping."
+            )
             continue
-            
+
         module = context.modules[module_name]
-        
+
         # Record the index **before** running spec_inference so that every Trial
         # produced inside that module (it may create several while searching for
         # the best sample) will have an id ≥ this value.
         if module_name == "spec_inference" and spec_trial_start_index is None:
             spec_trial_start_index = len(context.trials)
-        
+
         # Start step tracking
         progress_logger.start_step(module_name, step_number)
         step_start_time = time.time()
-        
+
         logger.info(f"Step {step_number}: Executing {module_name}...")
         step_result = module.exec(context)
-        
+
         step_time = time.time() - step_start_time
-        logger.info(f"{module_name} completed with result length: {len(step_result)} in {step_time:.2f}s")
-        
+        logger.info(
+            f"{module_name} completed with result length: {len(step_result)} in {step_time:.2f}s"
+        )
+
         # Save the intermediate result with timestamp
         step_output_path = output_dir / f"{step_number:02}_{module_name}_{file_id}.rs"
-        
+
         # Add score information if available
         if context.trials and context.trials[-1].eval:
             step_score = context.trials[-1].eval.get_score()
@@ -373,13 +415,15 @@ def main():
             write_and_verify_file(step_output_path, step_result_with_score, logger)
         else:
             write_and_verify_file(step_output_path, step_result, logger)
-            
+
         logger.info(f"Step {step_number} output saved to {step_output_path}")
-        
+
         # Log step progress
         if context.trials and context.trials[-1].eval:
-            progress_logger.end_step(context.trials[-1].eval.get_score(), len(step_result))
-            
+            progress_logger.end_step(
+                context.trials[-1].eval.get_score(), len(step_result)
+            )
+
         step_number += 1
 
     # Step 5: Attempt repairs if needed using the repair registry
@@ -396,7 +440,7 @@ def main():
         previous_non_other_failures = sum(
             1 for failure in failures if failure.error.name != "Other"
         )
-        
+
         # Track rounds where repair made things worse for fallback logic
         rounds_without_improvement = 0
         best_repair_score = last_trial.eval.get_score()
@@ -454,10 +498,14 @@ def main():
                 best_repair_score = current_score
                 best_repair_code = last_trial.code
                 rounds_without_improvement = 0
-                logger.info(f"Round {current_round}: Found better repair with score: {best_repair_score}")
+                logger.info(
+                    f"Round {current_round}: Found better repair with score: {best_repair_score}"
+                )
             else:
                 rounds_without_improvement += 1
-                logger.info(f"Round {current_round}: No improvement in score. Rounds without improvement: {rounds_without_improvement}")
+                logger.info(
+                    f"Round {current_round}: No improvement in score. Rounds without improvement: {rounds_without_improvement}"
+                )
 
             # Check if we made progress (excluding "Other" errors from the comparison)
             if (
@@ -483,17 +531,21 @@ def main():
             # Save intermediate results after each round with timestamp
             round_result = context.trials[-1].code
             round_score = context.trials[-1].eval.get_score()
-            
+
             # Add the score as a comment at the end of the file
             round_result_with_score = (
                 f"{round_result}\n\n"
                 f"// Repair Round {current_round-1} VEval Score: {round_score}\n"
                 f"// Verified: {round_score.verified}, Errors: {round_score.errors}, Verus Errors: {round_score.verus_errors}"
             )
-            
-            repair_round_path = output_dir / f"repair_round_{current_round-1}_{file_id}.rs"
+
+            repair_round_path = (
+                output_dir / f"repair_round_{current_round-1}_{file_id}.rs"
+            )
             write_and_verify_file(repair_round_path, round_result_with_score, logger)
-            logger.info(f"Repair round {current_round-1} result saved to {repair_round_path}")
+            logger.info(
+                f"Repair round {current_round-1} result saved to {repair_round_path}"
+            )
 
             # After three consecutive rounds with no improvement and score worse than original,
             # fallback to the best repair we've seen
@@ -502,7 +554,7 @@ def main():
                     f"No improvement for {rounds_without_improvement} consecutive rounds and score ({best_repair_score}) "
                     f"is worse than original ({original_score}). Reverting to best repair found."
                 )
-                
+
                 # Create a VEval object first
                 v_eval = VEval(best_repair_code, logger)
 
@@ -524,25 +576,25 @@ def main():
                 failures = fallback_trial.eval.get_failures()
 
                 # Log the fallback
-                logger.info(
-                    f"Fallback complete. New failure count: {len(failures)}"
-                )
+                logger.info(f"Fallback complete. New failure count: {len(failures)}")
 
                 # Save the fallback result
                 fallback_code = fallback_trial.code
                 fallback_score = fallback_trial.eval.get_score()
-                
+
                 # Add the score as a comment at the end of the file
                 fallback_with_score = (
                     f"{fallback_code}\n\n"
                     f"// Fallback VEval Score: {fallback_score}\n"
                     f"// Verified: {fallback_score.verified}, Errors: {fallback_score.errors}, Verus Errors: {fallback_score.verus_errors}"
                 )
-                
-                fallback_path = output_dir / f"fallback_result_{current_round-1}_{file_id}.rs"
+
+                fallback_path = (
+                    output_dir / f"fallback_result_{current_round-1}_{file_id}.rs"
+                )
                 write_and_verify_file(fallback_path, fallback_with_score, logger)
                 logger.info(f"Fallback result saved to {fallback_path}")
-                
+
                 # Reset the rounds without improvement counter
                 rounds_without_improvement = 0
 
@@ -604,15 +656,17 @@ def main():
                     # Save the fallback result
                     fallback_code = fallback_trial.code
                     fallback_score = fallback_trial.eval.get_score()
-                    
+
                     # Add the score as a comment at the end of the file
                     fallback_with_score = (
                         f"{fallback_code}\n\n"
                         f"// Fallback VEval Score: {fallback_score}\n"
                         f"// Verified: {fallback_score.verified}, Errors: {fallback_score.errors}, Verus Errors: {fallback_score.verus_errors}"
                     )
-                    
-                    fallback_path = output_dir / f"fallback_result_{current_round-1}_{file_id}.rs"
+
+                    fallback_path = (
+                        output_dir / f"fallback_result_{current_round-1}_{file_id}.rs"
+                    )
                     write_and_verify_file(fallback_path, fallback_with_score, logger)
                     logger.info(f"Fallback result saved to {fallback_path}")
 
@@ -628,19 +682,19 @@ def main():
     # Save the final result with timestamp and to a consistent file
     final_result = context.trials[-1].code
     final_score = context.trials[-1].eval.get_score()
-    
+
     # Add the score as a comment at the end of the file
     final_result_with_score = f"{final_result}\n\n// Final VEval Score: {final_score}\n// Verified: {final_score.verified}, Errors: {final_score.errors}, Verus Errors: {final_score.verus_errors}"
-    
+
     final_result_path = output_dir / f"final_result_{file_id}.rs"
     write_and_verify_file(final_result_path, final_result_with_score, logger)
     logger.info(f"Final verification result saved to {final_result_path}")
-    
+
     # Use a more descriptive name for the consistent result file that includes the input file name
     consistent_result_path = output_dir / f"final_result_{input_file_base}.rs"
     write_and_verify_file(consistent_result_path, final_result_with_score, logger)
     logger.info(f"Latest result also saved to {consistent_result_path}")
-    
+
     # Also maintain the standard final_result.rs for backward compatibility
     standard_result_path = output_dir / "final_result.rs"
     write_and_verify_file(standard_result_path, final_result_with_score, logger)
@@ -657,23 +711,29 @@ def main():
     logger.info(
         f"VerusAgent completed in {total_time:.2f}s! Results saved to {output_dir.absolute()}"
     )
-    
+
     # Display a summary of important file paths for easy reference
     logger.info("=" * 70)
     logger.info(f"{'OUTPUT FILE SUMMARY':^70}")
     logger.info("=" * 70)
     logger.info(f"Input File: {test_file_path.absolute()}")
-    logger.info(f"Final Result (with timestamp): {output_dir / f'final_result_{file_id}.rs'}")
-    logger.info(f"Final Result (by input name): {output_dir / f'final_result_{input_file_base}.rs'}")
+    logger.info(
+        f"Final Result (with timestamp): {output_dir / f'final_result_{file_id}.rs'}"
+    )
+    logger.info(
+        f"Final Result (by input name): {output_dir / f'final_result_{input_file_base}.rs'}"
+    )
     logger.info(f"Checkpoint Best: {output_dir / f'checkpoint_best_{file_id}.rs'}")
     logger.info(f"Latest Best: {best_dir / f'best_{input_file_base}.rs'}")
-    
+
     # Show verification plan
     logger.info(f"Verification Plan: {plan_file_path}")
-    
+
     # Show progress logs
     logger.info(f"Progress Logs: {progress_logger.log_file}")
-    logger.info(f"Summary: {progress_logger.log_dir / f'summary_{progress_logger.file_id}.txt'}")
+    logger.info(
+        f"Summary: {progress_logger.log_dir / f'summary_{progress_logger.file_id}.txt'}"
+    )
     logger.info("=" * 70)
 
 
