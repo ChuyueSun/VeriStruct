@@ -147,8 +147,14 @@ class ErrorTrace:
 
 class VerusError:
     def __init__(self, err: dict):
-        # Store the raw message text
+        # Store the raw message text and spans
         self.error_text = err["message"]
+        self.spans = err["spans"] if "spans" in err else []
+        
+        # Get the full error message including span labels
+        if self.spans:
+            span_labels = [span.get("label", "") for span in self.spans if "label" in span]
+            self.error_text = f"{self.error_text} ({'; '.join(label for label in span_labels if label)})"
 
         # Default to 'Other' unless a partial match is found
         self.error = VerusErrorType.Other
@@ -156,6 +162,10 @@ class VerusError:
         # Try to match by substring against known keys
         for known_msg, err_type in m2VerusError.items():
             if known_msg in self.error_text:
+                # Special case: don't treat empty function body errors as type errors
+                if err_type == VerusErrorType.MismatchedType:
+                    if "implicitly returns `()`" in self.error_text:
+                        continue
                 self.error = err_type
                 break
 
@@ -164,13 +174,12 @@ class VerusError:
             if "not all trait items implemented, missing" in self.error_text:
                 self.error = VerusErrorType.MissImpl
 
-        self.trace = [ErrorTrace(t) for t in err["spans"]]  # Bottom-up stack trace
-        self.error_text = err["message"]
-        self.spans = err["spans"] if "spans" in err else []
+        # Create the trace after error type is determined
+        self.trace = [ErrorTrace(t) for t in self.spans]  # Bottom-up stack trace
 
         # a subtype of precondfail that often requires separate treatment
         if self.error == VerusErrorType.PreCondFail:
-            if "i < vec.view().len()" in self.trace[0].get_text():
+            if self.trace and "i < vec.view().len()" in self.trace[0].get_text():
                 self.error = VerusErrorType.PreCondFailVecLen
 
     def __str__(self):

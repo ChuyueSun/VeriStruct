@@ -345,15 +345,22 @@ def fix_one_type_error(oldline, cstart, cend, newtype):
         newtype: The new type to cast to
 
     Returns:
-        The fixed line
+        The fixed line, or the original line if no fix could be applied
     """
-    # cstart: the starting index of the problematic expression
-    # cend: the ending index of the problematic expression
-
     prefix = oldline[:cstart]
     mid = oldline[cstart : cend + 1]
     suffix = oldline[cend + 1 :]
-    if "->" in prefix and "fn" in prefix:
+
+    # Don't modify function return types or type declarations
+    if "->" in prefix and ("fn" in prefix or "type" in prefix):
+        return oldline
+
+    # Don't modify type declarations
+    if "type" in prefix and "=" in suffix:
+        return oldline
+
+    # Don't modify empty function bodies
+    if mid.strip() == "bool" and "->" in prefix:
         return oldline
 
     oldtype_pos = mid.rfind(" as ")
@@ -388,7 +395,7 @@ def fix_one_type_error_in_code(code, err_trace, verbose=True):
         verbose: Whether to output verbose debugging information
 
     Returns:
-        The fixed code, or an empty string if the error could not be fixed
+        The fixed code if a fix was applied, otherwise the original code
     """
     # note that linenum, cstart, cend indices all start from 0
     err_label = err_trace.strlabel
@@ -412,10 +419,14 @@ def fix_one_type_error_in_code(code, err_trace, verbose=True):
 
     # Default path: expect a `...` label so we can perform a cast/rewrite.
     if err_label is None or "`" not in err_label:
-        sys.stderr.write(f"err_label: {err_label}\n")
-        sys.stderr.write(f"err_trace: {err_trace}\n")
-        sys.stderr.write("Fatal error: err_trace does not have a label\n")
-        sys.stderr.write(code)
+        if verbose:
+            sys.stderr.write(f"err_label: {err_label}\n")
+            sys.stderr.write(f"err_trace: {err_trace}\n")
+            sys.stderr.write("Error: err_trace does not have a label\n")
+        return code
+
+    # Don't try to fix empty function body errors
+    if "implicitly returns `()`" in err_trace.get_text():
         return code
 
     newtype = err_label.split("`")[1]
@@ -434,36 +445,29 @@ def fix_one_type_error_in_code(code, err_trace, verbose=True):
             newlines.append(line)
         else:
             if not err_exp in line:
-                sys.stderr.write(
-                    "Fatal error: `" + err_exp + "' does not exist in " + line
-                )
-                return ""
+                if verbose:
+                    sys.stderr.write(
+                        f"Error: `{err_exp}` does not exist in `{line}`\n"
+                    )
+                return code
             if err_exp != line[cstart : cend + 1]:
-                sys.stderr.write(
-                    "Fatal error. Expected expression is `"
-                    + err_exp
-                    + "'; Get expression `"
-                    + line[cstart : cend + 1]
-                )
-                return ""
+                if verbose:
+                    sys.stderr.write(
+                        f"Error. Expected expression is `{err_exp}`; Got expression `{line[cstart : cend + 1]}`\n"
+                    )
+                return code
 
             newline = fix_one_type_error(line, cstart, cend, newtype)
 
-            # Sometimes, we may encounter non-fixable type error
-            # for example if one expects ..i or [i] to be int, ..i as int or [i] as int will return the same type error
-            # so, we return "" to warn the caller
-            # otherwise, the caller may hang
+            # If we couldn't fix this line, return the original code
             if line == newline:
-                return ""
+                if verbose:
+                    sys.stderr.write(f"Could not fix type error in line: {line}\n")
+                return code
 
-            if verbose == True:
+            if verbose:
                 sys.stderr.write(
-                    "[fix_one_type_error_in_code] changed the type of `"
-                    + line[cstart : cend + 1]
-                    + "'"
-                    + "as `"
-                    + newline.strip()
-                    + "'"
+                    f"[fix_one_type_error_in_code] changed `{line.strip()}` to `{newline.strip()}`\n"
                 )
             newlines.append(newline)
 
@@ -510,7 +514,7 @@ def debug_type_error(code: str, verus_error=None, num=1, logger=None) -> tuple:
             newcode = fix_one_type_error_in_code(
                 code, verus_error.trace[0], verbose=False
             )
-            if newcode:
+            if newcode != code:  # Only update if we actually fixed something
                 code = newcode
 
     # check if there is any type errors in the code; if so, fix
@@ -537,14 +541,12 @@ def debug_type_error(code: str, verus_error=None, num=1, logger=None) -> tuple:
                 newcode = fix_one_type_error_in_code(
                     code, cur_failure.trace[0], verbose=False
                 )
-                # when newcode is "", the above function failed to fix any type error
-                if newcode:
+                # Only consider it fixed if we actually changed something
+                if newcode != code:
                     fixed_typeerr = True
                     code = newcode
                     break
-                else:
-                    # this type error is unfixable, let's move on to next error
-                    continue
+
             if not fixed_typeerr:
                 # not able to fix any type error in this program, no need to try again
                 break
@@ -558,8 +560,7 @@ def debug_type_error(code: str, verus_error=None, num=1, logger=None) -> tuple:
                 logger.info(cur_failure)
             else:
                 logger.info(cur_failure.trace[0].get_text())
-            return "", len(failures)
-
+            return code, len(failures)
 
     return code, len(failures)
 
@@ -689,7 +690,7 @@ def code_change_is_safe(
         if origin != changed:
             logger.error(f"Immutable function '{func_name}' was changed")
             return False
-    return True
+
     try:
         orig_f = tempfile.NamedTemporaryFile(
             mode="w", delete=False, prefix="llm4v_orig", suffix=".rs"
