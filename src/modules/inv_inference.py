@@ -2,14 +2,14 @@ import re
 from pathlib import Path
 
 from src.infer import LLM
-from src.modules.base import BaseModule
+from src.modules.baserepair import BaseRepairModule
 from src.modules.utils import debug_type_error, evaluate_samples, update_checkpoint_best, code_change_is_safe
 from src.modules.lynette import lynette
 from src.prompts.template import build_instruction
 from src.utils.path_utils import samples_dir, best_dir
 
 
-class InvInferenceModule(BaseModule):
+class InvInferenceModule(BaseRepairModule):
     """
     Module for invariant function inference in Verus code.
 
@@ -28,9 +28,9 @@ class InvInferenceModule(BaseModule):
         super().__init__(
             name="inv_inference",
             desc="Generate inv function to capture data structure invariants",
+            config=config,
+            logger=logger,
         )
-        self.config = config
-        self.logger = logger
         self.llm = LLM(config, logger)
 
         # Main instruction for inv inference

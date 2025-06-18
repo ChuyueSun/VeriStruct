@@ -3,7 +3,7 @@ from pathlib import Path
 
 from src.context import Context
 from src.infer import LLM
-from src.modules.base import BaseModule
+from src.modules.baserepair import BaseRepairModule
 from src.modules.utils import (
     debug_type_error,
     evaluate_samples,
@@ -16,7 +16,7 @@ from src.prompts.template import build_instruction
 from src.utils.path_utils import samples_dir, best_dir
 
 
-class ViewInferenceModule(BaseModule):
+class ViewInferenceModule(BaseRepairModule):
     """
     Module for View function inference in Verus code.
 
@@ -35,9 +35,9 @@ class ViewInferenceModule(BaseModule):
         super().__init__(
             name="view_inference",
             desc="Generate a View function for the data structure's mathematical abstraction",
+            config=config,
+            logger=logger,
         )
-        self.config = config
-        self.logger = logger
         self.llm = LLM(config, logger)
 
         # Main instruction for View inference

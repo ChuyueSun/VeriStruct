@@ -6,7 +6,7 @@ from pathlib import Path
 from src.utils.path_utils import samples_dir, best_dir
 
 from src.infer import LLM
-from src.modules.base import BaseModule
+from src.modules.baserepair import BaseRepairModule
 from src.modules.utils import (
     debug_type_error,
     evaluate_samples,
@@ -17,7 +17,7 @@ from src.modules.utils import (
 from src.prompts.template import build_instruction
 
 
-class SpecInferenceModule(BaseModule):
+class SpecInferenceModule(BaseRepairModule):
     """
     Module for inferring requires and ensures clauses for Verus functions.
 
@@ -37,11 +37,11 @@ class SpecInferenceModule(BaseModule):
         super().__init__(
             name="spec_inference",
             desc="Infer and add requires/ensures clauses to Verus functions",
+            config=config,
+            logger=logger,
+            immutable_funcs=immutable_funcs,
         )
-        self.config = config
-        self.logger = logger
         self.llm = LLM(config, logger)
-        self.immutable_funcs = immutable_funcs if immutable_funcs else []
 
         # Main instruction for requires/ensures inference
         self.inference_instruction = """You are an expert in Verus (verifier for rust). You have two main tasks:
@@ -68,29 +68,6 @@ IMPORTANT GUIDELINES:
    
 RETURN FORMAT:
    - Return the ENTIRE file with your changes integrated into the original code, not just the parts you modified"""
-
-    def check_code_safety(self, original_code: str, new_code: str) -> bool:
-        """
-        Check if code changes are safe using Lynette comparison.
-        
-        Args:
-            original_code: Original code
-            new_code: Modified code
-            
-        Returns:
-            True if changes are safe, False otherwise
-        """
-        try:
-            return code_change_is_safe(
-                origin_code=original_code,
-                changed_code=new_code,
-                verus_path=self.config.get("verus_path", "verus"),
-                logger=self.logger,
-                immutable_funcs=self.immutable_funcs
-            )
-        except Exception as e:
-            self.logger.error(f"Error checking code safety: {e}")
-            return True  # Default to safe if check fails
 
     def exec(self, context) -> str:
         """

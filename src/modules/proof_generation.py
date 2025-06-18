@@ -12,7 +12,7 @@ from typing import List
 import re  # Added for regex detection of empty proof blocks
 
 from src.infer import LLM
-from src.modules.base import BaseModule
+from src.modules.baserepair import BaseRepairModule
 from src.modules.utils import (
     debug_type_error,
     evaluate_samples,
@@ -26,16 +26,16 @@ from src.prompts.template import build_instruction
 from src.utils.path_utils import samples_dir, best_dir
 
 
-class ProofGenerationModule(BaseModule):
+class ProofGenerationModule(BaseRepairModule):
     """Module that fills in proof blocks for Verus verification."""
 
     def __init__(self, config, logger):
         super().__init__(
             name="proof_generation",
             desc="Insert proof blocks to replace '// TODO: add proof' markers",
+            config=config,
+            logger=logger,
         )
-        self.config = config
-        self.logger = logger
         self.llm = LLM(config, logger)
 
         # Main instruction for proof generation
@@ -81,21 +81,6 @@ class ProofGenerationModule(BaseModule):
 
         return True
 
-    def detect_nonlinear_arithmetic(self, code: str) -> List[int]:
-        """
-        Detect lines with nonlinear arithmetic using Lynette.
-        
-        Args:
-            code: Source code to analyze
-            
-        Returns:
-            List of line numbers containing nonlinear arithmetic
-        """
-        try:
-            return get_nonlinear_lines(code, self.logger)
-        except Exception as e:
-            self.logger.error(f"Error detecting nonlinear arithmetic: {e}")
-            return []
 
     def check_code_safety(self, original_code: str, new_code: str) -> bool:
         """
@@ -123,29 +108,6 @@ class ProofGenerationModule(BaseModule):
             self.logger.error(f"Error checking code safety: {e}")
             return True  # Default to safe if check fails
 
-    def enhance_instruction_with_nonlinear_info(self, instruction: str, code: str) -> str:
-        """
-        Enhance the proof instruction with information about nonlinear arithmetic locations.
-        
-        Args:
-            instruction: Base instruction
-            code: Source code to analyze
-            
-        Returns:
-            Enhanced instruction with nonlinear arithmetic guidance
-        """
-        nonlinear_lines = self.detect_nonlinear_arithmetic(code)
-        
-        if nonlinear_lines:
-            nonlinear_info = (
-                f"\n\nIMPORTANT: The following lines contain nonlinear arithmetic "
-                f"and may require `by(nonlinear_arith)` in proof blocks: "
-                f"{', '.join(map(str, nonlinear_lines))}\n"
-                f"Consider adding assertions with `by(nonlinear_arith)` for these operations."
-            )
-            return instruction + nonlinear_info
-        
-        return instruction
 
     # ---------------------------------------------------------------------
     # Public API – required by BaseModule
@@ -165,7 +127,7 @@ class ProofGenerationModule(BaseModule):
             return code
 
         # Build instruction with common Verus knowledge and match guidelines
-        base_instruction = build_instruction(
+        instruction = build_instruction(
             base_instruction=self.proof_instruction,
             add_common=True,
             add_match=True,
@@ -173,8 +135,6 @@ class ProofGenerationModule(BaseModule):
             knowledge=context.gen_knowledge(),
         )
         
-        # Enhance instruction with nonlinear arithmetic information
-        instruction = self.enhance_instruction_with_nonlinear_info(base_instruction, code)
 
         # Load examples if available (input-proof / output-proof)
         examples = get_examples(self.config, "proof", self.logger)
