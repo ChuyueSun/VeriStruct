@@ -390,7 +390,9 @@ class RepairRegistry:
                     break
 
             if not specialised_available:
-                self.logger.info("Compilation error with no specialised handler – attempting syntax repair…")
+                self.logger.info(
+                    "Compilation error with no specialised handler – attempting syntax repair…"
+                )
 
                 # Store the state before repair
                 before_score = context.trials[-1].eval.get_score()
@@ -430,11 +432,15 @@ class RepairRegistry:
                         if not last_trial.eval.compilation_error:
                             failures = last_trial.eval.get_failures()
                             if not failures:
-                                self.logger.info("All errors fixed after compilation repair.")
+                                self.logger.info(
+                                    "All errors fixed after compilation repair."
+                                )
                                 result_map["compilation"] = compilation_result
                                 return result_map
                     else:
-                        self.logger.warning("Syntax repair did not improve score – skipping.")
+                        self.logger.warning(
+                            "Syntax repair did not improve score – skipping."
+                        )
                         if progress_logger:
                             progress_logger.add_repair(
                                 "CompilationError",

@@ -209,7 +209,7 @@ Please make sure to change that wrong expression and do not change any other par
             original_code=code,
             candidates=responses if responses else [code],
             output_dir=output_dir,
-            prefix="repair_seq_syntax"
+            prefix="repair_seq_syntax",
         )
 
         # Add the best result to context
@@ -245,7 +245,9 @@ Look carefully at the error message and location to identify the syntax issue. C
 
 Fix ONLY the part of the code with the syntax error, and leave the rest unchanged.
 Response with the Rust code only, do not include any explanation."""
-        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        instruction += (
+            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        )
 
         # Load examples
         examples = get_examples(self.config, "syntax", self.logger)
@@ -274,22 +276,32 @@ Response with the Rust code only, do not include any explanation."""
             error_info += "\n" + "\n".join(error_lines[:20])  # Limit to first 20 lines
 
         # Normalize variable tmp paths to a stable placeholder so prompts are identical across runs
-        normalized_error_info = re.sub(r"/tmp/tmp[0-9A-Za-z_\-]+", "<TMP_PATH>", error_info)
+        normalized_error_info = re.sub(
+            r"/tmp/tmp[0-9A-Za-z_\-]+", "<TMP_PATH>", error_info
+        )
 
         query = query_template.format(normalized_error_info, code)
 
         # Append project knowledge
-        filtered_knowledge = "\n".join([
-            f"### {k}\n\n{v}" for k, v in context.knowledge.items() if k != "verification_plan"
-        ])
+        filtered_knowledge = "\n".join(
+            [
+                f"### {k}\n\n{v}"
+                for k, v in context.knowledge.items()
+                if k != "verification_plan"
+            ]
+        )
         if filtered_knowledge:
-            query_with_knowledge = query + "\n\n### Project Knowledge\n" + filtered_knowledge
+            query_with_knowledge = (
+                query + "\n\n### Project Knowledge\n" + filtered_knowledge
+            )
         else:
             query_with_knowledge = query
 
         # Ensure debug directory exists for prompt saving
         dbg_dir = debug_dir()
-        prompt_path2 = dbg_dir / f"repair_general_syntax_prompt_{len(context.trials)}.txt"
+        prompt_path2 = (
+            dbg_dir / f"repair_general_syntax_prompt_{len(context.trials)}.txt"
+        )
         prompt_path2.write_text(instruction + "\n\n---\n\n" + query_with_knowledge)
         self.logger.info(f"Saved syntax repair prompt to {prompt_path2}")
 
@@ -311,7 +323,7 @@ Response with the Rust code only, do not include any explanation."""
             original_code=code,
             candidates=responses if responses else [code],
             output_dir=output_dir,
-            prefix="repair_general_syntax"
+            prefix="repair_general_syntax",
         )
 
         # Add the best result to context

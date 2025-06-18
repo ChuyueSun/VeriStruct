@@ -105,11 +105,11 @@ class Context:
         print("=" * 60)
         print("CONTEXT INITIALIZATION - PROCESSING KNOWLEDGE")
         print("=" * 60)
-        
+
         knowledge_added = False
         for line in raw_code.split("\n"):
-            if line.startswith('use'):
-                if line.strip() == 'use vstd::prelude::*;':
+            if line.startswith("use"):
+                if line.strip() == "use vstd::prelude::*;":
                     continue
                 lib_name = line.split(" ")[1].strip()
                 print(f"Found use statement: {line.strip()}")
@@ -117,11 +117,13 @@ class Context:
                 content = get_content(lib_name)
                 if len(content) > 0:
                     self.add_knowledge(lib_name, content, append=False)
-                    print(f"✓ Added knowledge for '{lib_name}' ({len(content)} characters)")
+                    print(
+                        f"✓ Added knowledge for '{lib_name}' ({len(content)} characters)"
+                    )
                     knowledge_added = True
                 else:
                     print(f"✗ No content found for '{lib_name}'")
-        
+
         if knowledge_added:
             print("\n" + "=" * 60)
             print("FINAL KNOWLEDGE SUMMARY")
@@ -136,11 +138,13 @@ class Context:
             print(preview)
             print(self.knowledge.keys())
             if len(total_knowledge) > 500:
-                print(f"... (truncated, showing first 500 of {len(total_knowledge)} characters)")
+                print(
+                    f"... (truncated, showing first 500 of {len(total_knowledge)} characters)"
+                )
             print("-" * 40)
         else:
             print("No knowledge was added during initialization.")
-        
+
         print("=" * 60)
 
     def add_trial(self, code: str) -> None:
@@ -224,7 +228,6 @@ class Context:
             # Other mode: TODO
             trial = None
             prevs = []
-
 
         rloc = self.raw_code_loc
         verus_code = trial.code

@@ -108,17 +108,21 @@ class LLM:
         )
 
         # Log config for debugging
-        platform_type_log = self.config.get('platform', 'openai')
-        if platform_type_log in ['openai', 'xai', 'azure']:
+        platform_type_log = self.config.get("platform", "openai")
+        if platform_type_log in ["openai", "xai", "azure"]:
             self.logger.info(f"Config base URLs: {self.config.get('aoai_api_base')}")
         else:
-            self.logger.info("Config: using non-OpenAI platform; base URL list not applicable")
+            self.logger.info(
+                "Config: using non-OpenAI platform; base URL list not applicable"
+            )
 
         # Prepare a list of potential SGL backends
         self.backends = []
 
         # Log which platform we are going to initialize
-        self.logger.info(f"LLM initializing for platform: {self.config.get('platform', 'openai')}")
+        self.logger.info(
+            f"LLM initializing for platform: {self.config.get('platform', 'openai')}"
+        )
 
         if self.dummy_mode:
             self.logger.warning("LLM in dummy mode. Will return placeholder responses.")
@@ -132,7 +136,9 @@ class LLM:
                 for i in range(len(self.config["aoai_api_key"])):
                     self.backends.append(
                         sgl.OpenAI(
-                            model_name=self.config.get("aoai_generation_model", "gpt-4o"),
+                            model_name=self.config.get(
+                                "aoai_generation_model", "gpt-4o"
+                            ),
                             api_key=self.config["aoai_api_key"][i],
                             base_url=self.config["aoai_api_base"][i],
                         )
@@ -159,7 +165,9 @@ class LLM:
             else:
                 raise ValueError(f"Unknown platform: {platform_type}")
 
-            self.logger.info(f"LLM backend initialization complete. Backends count: {len(self.backends)} for platform {platform_type}")
+            self.logger.info(
+                f"LLM backend initialization complete. Backends count: {len(self.backends)} for platform {platform_type}"
+            )
         except Exception as e:
             self.logger.error(f"Error initializing LLM backends: {e}")
             self.dummy_mode = True
@@ -311,13 +319,13 @@ class LLM:
         cache_key = self.cache._get_cache_key(
             engine, instruction, query, max_tokens, exemplars, system_info
         )
-        
+
         # Save prompts in the same directory as the cache responses
         prompt_dir = Path(self.cache.cache_dir)
-        
+
         # Create the prompt file path using the same MD5 but with a .md extension
         prompt_file = prompt_dir / f"{cache_key}.md"
-        
+
         # Format the prompt components
         prompt_content = "# Prompt\n\n"
         if system_info:
@@ -333,7 +341,7 @@ class LLM:
             prompt_content += exemplar_content
         if query:
             prompt_content += f"## Query\n{query}\n\n"
-        
+
         # Save the prompt
         try:
             prompt_file.write_text(prompt_content)

@@ -94,11 +94,11 @@ class BaseModule:
     def check_code_safety(self, original_code: str, new_code: str) -> bool:
         """
         Check if code changes are safe using Lynette comparison.
-        
+
         Args:
             original_code: Original code
             new_code: Modified code
-            
+
         Returns:
             True if changes are safe, False otherwise
         """
@@ -106,9 +106,11 @@ class BaseModule:
             return code_change_is_safe(
                 origin_code=original_code,
                 changed_code=new_code,
-                verus_path=self.config.get("verus_path", "verus") if self.config else "verus",
+                verus_path=(
+                    self.config.get("verus_path", "verus") if self.config else "verus"
+                ),
                 logger=self.logger,
-                immutable_funcs=self.immutable_funcs
+                immutable_funcs=self.immutable_funcs,
             )
         except Exception as e:
             if self.logger:

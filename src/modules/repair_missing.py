@@ -96,7 +96,9 @@ To fix this, you need to add a suitable `use` statement:
 ```use vstd::prelude::*;```
 Consider adding a `main` function if it does not already have one.
 Respond with the entire Rust code only (no explanations) after fixing the import issue."""
-        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        instruction += (
+            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        )
 
         # Load examples
         examples = get_examples(self.config, "import", self.logger)
@@ -167,7 +169,9 @@ For each missing method, you need to implement it based on the trait definition 
 5. Includes appropriate ensures/requires clauses if needed
 
 Response with the Rust code only, do not include any explanation."""
-        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        instruction += (
+            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        )
 
         # Load examples
         examples = get_examples(self.config, "impl", self.logger)

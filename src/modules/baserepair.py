@@ -114,21 +114,23 @@ You can use forall or exists for properties over sequences."""
         self.logger.info(f"Selecting first failure: {failures[0].error.name}")
         return failures[0]
 
-    def evaluate_repair_candidates(self, original_code: str, candidates: List[str], output_dir, prefix: str) -> str:
+    def evaluate_repair_candidates(
+        self, original_code: str, candidates: List[str], output_dir, prefix: str
+    ) -> str:
         """
         Evaluate repair candidates with safety checking.
-        
+
         Args:
             original_code: Original code before repair
             candidates: List of candidate repairs
             output_dir: Directory for saving evaluation results
             prefix: Prefix for output files
-            
+
         Returns:
             Best safe candidate code
         """
         from src.modules.utils import evaluate_samples
-        
+
         # Filter candidates by safety first
         safe_candidates = []
         for candidate in candidates:
@@ -136,13 +138,17 @@ You can use forall or exists for properties over sequences."""
                 safe_candidates.append(candidate)
                 self.logger.info("Repair candidate passed safety check")
             else:
-                self.logger.warning("Repair candidate failed safety check, excluding from evaluation")
-        
+                self.logger.warning(
+                    "Repair candidate failed safety check, excluding from evaluation"
+                )
+
         # If no candidates are safe, fall back to original
         if not safe_candidates:
-            self.logger.warning("No safe repair candidates found, returning original code")
+            self.logger.warning(
+                "No safe repair candidates found, returning original code"
+            )
             return original_code
-        
+
         # Evaluate safe candidates and return the best one
         best_code, _, _ = evaluate_samples(
             samples=safe_candidates,
@@ -150,7 +156,7 @@ You can use forall or exists for properties over sequences."""
             prefix=prefix,
             logger=self.logger,
         )
-        
+
         return best_code
 
     def exec(self, context, failure_to_fix: Optional[VerusError] = None) -> str:

@@ -3,7 +3,12 @@ from pathlib import Path
 
 from src.infer import LLM
 from src.modules.base import BaseModule
-from src.modules.utils import debug_type_error, evaluate_samples, update_checkpoint_best, code_change_is_safe
+from src.modules.utils import (
+    debug_type_error,
+    evaluate_samples,
+    update_checkpoint_best,
+    code_change_is_safe,
+)
 from src.modules.lynette import lynette
 from src.prompts.template import build_instruction
 from src.utils.path_utils import samples_dir, best_dir
@@ -158,7 +163,7 @@ class InvInferenceModule(BaseModule):
         # Process each response to replace @.len() with .len() in type invariants
         processed_responses = []
         original_code = code  # Store original for safety checking
-        
+
         for response in responses:
             processed = self.replace_at_len_in_type_invariant(response)
             # Apply debug_type_error to fix any type errors
@@ -167,8 +172,6 @@ class InvInferenceModule(BaseModule):
                 processed_responses.append(fixed_processed)
             else:
                 processed_responses.append(processed)
-
-
 
         # Evaluate processed samples and get the best one
         best_code, best_score, _ = evaluate_samples(
@@ -180,7 +183,9 @@ class InvInferenceModule(BaseModule):
 
         # Final safety check on the best code
         if not self.check_code_safety(original_code, best_code):
-            self.logger.warning("Best generated code failed safety check, falling back to original")
+            self.logger.warning(
+                "Best generated code failed safety check, falling back to original"
+            )
             best_code = original_code
 
         # Get the global best from context
@@ -222,7 +227,3 @@ class InvInferenceModule(BaseModule):
             return global_best_code
 
         return best_code
-
-
-
-

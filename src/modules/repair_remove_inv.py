@@ -52,7 +52,7 @@ class RepairRemoveInv(BaseRepairModule):
                 failures = last_trial.eval.get_failures(
                     error_type=VerusErrorType.ensure_private
                 )
-                
+
             if not failures:
                 self.logger.warning("No inv-related failures found in the last trial.")
                 return code  # Return original code if no inv-related error
@@ -63,7 +63,10 @@ class RepairRemoveInv(BaseRepairModule):
                 return code
 
         # Check if the error is related to privacy (which could indicate redundant inv calls)
-        if failure_to_fix.error not in [VerusErrorType.require_private, VerusErrorType.ensure_private]:
+        if failure_to_fix.error not in [
+            VerusErrorType.require_private,
+            VerusErrorType.ensure_private,
+        ]:
             self.logger.warning(
                 f"Received non-privacy error: {failure_to_fix.error.name}. Skipping repair."
             )
@@ -87,7 +90,9 @@ class RepairRemoveInv(BaseRepairModule):
         instruction = """DO NOT add `self.inv()` to pre/post-conditions if `#[verifier::type_invariant]` is used
 
 Respond with the full corrected code only."""
-        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        instruction += (
+            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        )
 
         # Load examples
         examples = get_examples(self.config, "inv", self.logger)

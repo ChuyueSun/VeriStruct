@@ -91,7 +91,9 @@ class ProofGenerationModule(BaseModule):
 
         # Early exit if no proof markers exist
         if self._should_skip(code):
-            self.logger.info("No '// TODO: add proof' markers found – skipping proof generation.")
+            self.logger.info(
+                "No '// TODO: add proof' markers found – skipping proof generation."
+            )
             return code
 
         # Build instruction with commo.n Verus knowledge and match guidelines
@@ -102,7 +104,6 @@ class ProofGenerationModule(BaseModule):
             code=code,
             knowledge=context.gen_knowledge(),
         )
-        
 
         # Load examples if available (input-proof / output-proof)
         examples = get_examples(self.config, "proof", self.logger)
@@ -128,18 +129,20 @@ class ProofGenerationModule(BaseModule):
         for resp in responses:
             fixed_resp, _ = debug_type_error(resp, logger=self.logger)
             final_resp = fixed_resp if fixed_resp else resp
-            
+
             # Check if the generated code is safe
             if code_change_is_safe(
                 origin_code=original_code,
                 changed_code=final_resp,
                 verus_path=self.config.get("verus_path", "verus"),
-                logger=self.logger
+                logger=self.logger,
             ):
                 processed_responses.append(final_resp)
                 self.logger.info("Generated proof code passed safety check")
             else:
-                self.logger.warning("Generated proof code failed safety check, using original")
+                self.logger.warning(
+                    "Generated proof code failed safety check, using original"
+                )
                 processed_responses.append(original_code)
 
         # Evaluate samples and select the best one
@@ -158,9 +161,11 @@ class ProofGenerationModule(BaseModule):
             origin_code=original_code,
             changed_code=best_code,
             verus_path=self.config.get("verus_path", "verus"),
-            logger=self.logger
+            logger=self.logger,
         ):
-            self.logger.warning("Best generated code failed final safety check, falling back to original")
+            self.logger.warning(
+                "Best generated code failed final safety check, falling back to original"
+            )
             best_code = original_code
 
         # Update global checkpoint best (but don't overwrite current trial yet)
@@ -176,7 +181,9 @@ class ProofGenerationModule(BaseModule):
         try:
             sample_with_score = f"{best_code}\n\n// VEval Score: {best_score}"
             module_best_path.write_text(sample_with_score)
-            self.logger.info(f"Saved best proof generation sample to {module_best_path}")
+            self.logger.info(
+                f"Saved best proof generation sample to {module_best_path}"
+            )
         except Exception as e:
             self.logger.error(f"Error saving best proof generation sample: {e}")
 
@@ -187,4 +194,4 @@ class ProofGenerationModule(BaseModule):
         # Add the best sample from this step to context so subsequent stages use it
         context.add_trial(best_code)
 
-        return best_code 
+        return best_code

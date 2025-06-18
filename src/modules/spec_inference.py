@@ -142,13 +142,15 @@ RETURN FORMAT:
             # Apply debug_type_error to fix any type errors
             fixed_response, _ = debug_type_error(response, logger=self.logger)
             final_response = fixed_response if fixed_response else response
-            
+
             # Check if the generated code is safe
             if self.check_code_safety(original_code, final_response):
                 processed_responses.append(final_response)
                 self.logger.info("Generated spec code passed safety check")
             else:
-                self.logger.warning("Generated spec code failed safety check, using original")
+                self.logger.warning(
+                    "Generated spec code failed safety check, using original"
+                )
                 processed_responses.append(original_code)
 
         # Save all generated samples
@@ -169,7 +171,9 @@ RETURN FORMAT:
 
         # Final safety check on the best code
         if not self.check_code_safety(original_code, best_code):
-            self.logger.warning("Best generated code failed final safety check, falling back to original")
+            self.logger.warning(
+                "Best generated code failed final safety check, falling back to original"
+            )
             best_code = original_code
 
         # Get the global best from context

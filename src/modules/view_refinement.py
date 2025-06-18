@@ -109,10 +109,12 @@ Please provide only the complete Rust code of the file with no additional commen
         # Retry mechanism for safety checks
         max_retries = 3
         safe_responses = []
-        
+
         for retry_attempt in range(max_retries):
-            self.logger.info(f"View refinement attempt {retry_attempt + 1}/{max_retries}")
-            
+            self.logger.info(
+                f"View refinement attempt {retry_attempt + 1}/{max_retries}"
+            )
+
             # Run inference
             try:
                 responses = self.llm.infer_llm(
@@ -138,27 +140,35 @@ Please provide only the complete Rust code of the file with no additional commen
                 # Apply debug_type_error to fix any type errors
                 fixed_response, _ = debug_type_error(response, logger=self.logger)
                 final_response = fixed_response if fixed_response else response
-                
+
                 # Check if the generated code is safe
                 if self.check_code_safety(original_code, final_response):
                     processed_responses.append(final_response)
                     safe_responses.append(final_response)
-                    self.logger.info("Generated view refinement code passed safety check")
+                    self.logger.info(
+                        "Generated view refinement code passed safety check"
+                    )
                 else:
-                    self.logger.warning("Generated view refinement code failed safety check, will retry")
+                    self.logger.warning(
+                        "Generated view refinement code failed safety check, will retry"
+                    )
 
             # If we have safe responses, break out of retry loop
             if safe_responses:
-                self.logger.info(f"Found {len(safe_responses)} safe responses after {retry_attempt + 1} attempts")
+                self.logger.info(
+                    f"Found {len(safe_responses)} safe responses after {retry_attempt + 1} attempts"
+                )
                 break
-            
+
             # If this is not the last attempt, modify instruction for retry
             if retry_attempt < max_retries - 1:
                 instruction += f"\n\nIMPORTANT: Previous attempt failed safety checks. Please ensure your View refinement does not modify immutable functions and maintains semantic equivalence. Attempt {retry_attempt + 2}/{max_retries}."
 
         # If no safe responses found after all retries, fall back to original
         if not safe_responses:
-            self.logger.warning("No safe responses found after all retries, using original code")
+            self.logger.warning(
+                "No safe responses found after all retries, using original code"
+            )
             safe_responses = [original_code]
 
         # Save all generated samples
@@ -201,5 +211,3 @@ Please provide only the complete Rust code of the file with no additional commen
         context.add_trial(best_code)  # Always use the best sample from this step
 
         return best_code
-
-

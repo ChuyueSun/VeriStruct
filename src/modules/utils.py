@@ -21,7 +21,9 @@ from loguru import logger
 import glob
 
 # External helper for nonlinear-arithmetic analysis
-from src.modules.lynette import lynette  # Provides code_detect_nonlinear, code_merge_invariant, etc.
+from src.modules.lynette import (
+    lynette,
+)  # Provides code_detect_nonlinear, code_merge_invariant, etc.
 
 # Import VEval from modules.veval rather than src.modules.veval
 from src.modules.veval import VerusErrorType, VEval, EvalScore
@@ -213,7 +215,9 @@ def update_checkpoint_best(
     # Debug logging
     logger.debug(f"update_checkpoint_best - Candidate score: {score}")
     logger.debug(f"update_checkpoint_best - Current best score: {best_score_of_all}")
-    logger.debug(f"update_checkpoint_best - Has best code: {best_code_of_all is not None}")
+    logger.debug(
+        f"update_checkpoint_best - Has best code: {best_code_of_all is not None}"
+    )
 
     # Make sure the directory exists
     if not temp_dir.exists():
@@ -495,12 +499,17 @@ def debug_type_error(code: str, verus_error=None, num=1, logger=None) -> tuple:
 
     # Handle dummy mode - if verus_error is a string rather than a VerusError object
     if isinstance(verus_error, str):
-        logger.warning("Received string error in dummy mode instead of VerusError object")
+        logger.warning(
+            "Received string error in dummy mode instead of VerusError object"
+        )
         return code, 0
 
     if verus_error:
         # fix the reported one
-        if not hasattr(verus_error, 'error') or verus_error.error != VerusErrorType.MismatchedType:
+        if (
+            not hasattr(verus_error, "error")
+            or verus_error.error != VerusErrorType.MismatchedType
+        ):
             logger.warning(
                 f"Warning: a non type error is passed to debug_type_error: {getattr(verus_error, 'error', 'unknown')}"
             )
@@ -529,8 +538,11 @@ def debug_type_error(code: str, verus_error=None, num=1, logger=None) -> tuple:
             if isinstance(cur_failure, str):
                 logger.warning(f"Skipping string failure in dummy mode: {cur_failure}")
                 continue
-                
-            if hasattr(cur_failure, 'error') and cur_failure.error == VerusErrorType.MismatchedType:
+
+            if (
+                hasattr(cur_failure, "error")
+                and cur_failure.error == VerusErrorType.MismatchedType
+            ):
                 has_typeerr = True
                 newcode = fix_one_type_error_in_code(
                     code, cur_failure.trace[0], verbose=False
@@ -557,7 +569,6 @@ def debug_type_error(code: str, verus_error=None, num=1, logger=None) -> tuple:
             else:
                 logger.info(cur_failure.trace[0].get_text())
             return "", len(failures)
-
 
     return code, len(failures)
 
@@ -608,40 +619,43 @@ class AttrDict(dict):
 def get_nonlinear_lines(code, logger):
     """
     Detect lines containing nonlinear arithmetic using Lynette.
-    
+
     Args:
         code: Source code to analyze
         logger: Logger instance
-        
+
     Returns:
         List of line numbers containing nonlinear arithmetic
     """
     try:
         import tempfile
         from src.modules.lynette import lynette
-        
+
         with tempfile.NamedTemporaryFile(mode="w", suffix=".rs", delete=False) as f:
             f.write(code)
             f.flush()
-            
+
             result = lynette.code_detect_nonlinear(f.name)
-            
+
             # Clean up temp file
             import os
+
             os.unlink(f.name)
-            
+
             if result.returncode == 0:
                 # Parse the output to extract line numbers
                 lines = []
-                for line in result.stdout.strip().split('\n'):
+                for line in result.stdout.strip().split("\n"):
                     if line.strip() and line.strip().isdigit():
                         lines.append(int(line.strip()))
                 return lines
             else:
                 if logger:
-                    logger.warning(f"Lynette nonlinear detection failed: {result.stderr}")
+                    logger.warning(
+                        f"Lynette nonlinear detection failed: {result.stderr}"
+                    )
                 return []
-                
+
     except Exception as e:
         if logger:
             logger.error(f"Error detecting nonlinear arithmetic: {e}")
@@ -661,9 +675,7 @@ def code_change_is_safe(
 ):
     # Debug mode override (from original code)
     if debug and os.environ.get("DEBUG_SAFE_CODE_CHANGE"):
-        logger.info(
-            "DEBUG_SAFE_CODE_CHANGE is set, skipping safe code change checking"
-        )
+        logger.info("DEBUG_SAFE_CODE_CHANGE is set, skipping safe code change checking")
         return True
 
     # If codes are identical, they're obviously safe
@@ -713,7 +725,7 @@ def code_change_is_safe(
             cargopath = str(cargopath.resolve())
         else:
             cargopath = os.path.join(util_path, "lynette/source/Cargo.toml")
-        
+
         if not os.path.exists(cargopath):
             # Attempt relative path from src/modules/utils.py if absolute fails
             cargopath = (
@@ -724,7 +736,9 @@ def code_change_is_safe(
                 / "Cargo.toml"
             )
             if not cargopath.exists():
-                logger.warning(f"Could not find lynette Cargo.toml at {cargopath}, assuming code is safe")
+                logger.warning(
+                    f"Could not find lynette Cargo.toml at {cargopath}, assuming code is safe"
+                )
                 return True  # Default to safe if we can't compare
             cargopath = str(cargopath.resolve())
 
@@ -740,7 +754,9 @@ def code_change_is_safe(
             + [orig_f.name, changed_f.name]
         )
 
-        m = subprocess.run(verus_compare_cmd, capture_output=True, text=True, timeout=30)
+        m = subprocess.run(
+            verus_compare_cmd, capture_output=True, text=True, timeout=30
+        )
         logger.info(f"Lynette comparison output: {m.stdout}")
         logger.info(f"Lynette comparison error: {m.stderr}")
         logger.info(f"Lynette comparison return code: {m.returncode}")
@@ -751,7 +767,9 @@ def code_change_is_safe(
             if err_m == "Files are different":
                 return False
             else:
-                logger.warning(f"Lynette comparison returned unexpected output: {err_m}, assuming safe")
+                logger.warning(
+                    f"Lynette comparison returned unexpected output: {err_m}, assuming safe"
+                )
                 return True  # Default to safe on unexpected output
         else:
             err_m = m.stderr.strip()
@@ -764,6 +782,7 @@ def code_change_is_safe(
     except Exception as e:
         logger.warning(f"Exception during code comparison: {e}, assuming code is safe")
         return True  # Default to safe on any exception
+
 
 def get_func_body(code, fname, util_path=None, logger=None):
     try:
@@ -807,8 +826,10 @@ def get_func_body(code, fname, util_path=None, logger=None):
         logger.info(f"File exists: {os.path.exists(orig_f.name)}")
         logger.info(f"Current working directory: {os.getcwd()}")
         logger.info(f"Absolute path: {os.path.abspath(orig_f.name)}")
-        
-        m = subprocess.run(lynette_extract_cmd, capture_output=True, text=True, cwd=os.getcwd())
+
+        m = subprocess.run(
+            lynette_extract_cmd, capture_output=True, text=True, cwd=os.getcwd()
+        )
         # logger.info(f"Lynette extract command: {lynette_extract_cmd}")
         # logger.info(f"Lynette extract output: {m.stdout}")
         # logger.info(f"Lynette extract error: {m.stderr}")
@@ -1095,7 +1116,7 @@ def parse_llm_response(response: str, logger=None) -> str:
         lines = response.split("\n")
         in_code_block = False
         current_block = []
-        
+
         for line in lines:
             if line.strip().startswith("```"):
                 if in_code_block:
@@ -1120,9 +1141,23 @@ def parse_llm_response(response: str, logger=None) -> str:
     # Check if the response itself looks like Rust/Verus code
     # by counting keyword occurrences
     rust_keywords = [
-        "fn ", "struct ", "impl ", "pub ", "let ", "use ", "mod ", 
-        "trait ", "enum ", "match ", "proof ", "spec ", "requires", 
-        "ensures", "invariant", "View for", "verus!"
+        "fn ",
+        "struct ",
+        "impl ",
+        "pub ",
+        "let ",
+        "use ",
+        "mod ",
+        "trait ",
+        "enum ",
+        "match ",
+        "proof ",
+        "spec ",
+        "requires",
+        "ensures",
+        "invariant",
+        "View for",
+        "verus!",
     ]
 
     keyword_count = 0
@@ -1133,7 +1168,9 @@ def parse_llm_response(response: str, logger=None) -> str:
     # If the response has several Rust/Verus keywords, it's likely code
     if keyword_count >= 3:
         if logger:
-            logger.info(f"Response contains {keyword_count} Rust/Verus keywords - treating as direct code")
+            logger.info(
+                f"Response contains {keyword_count} Rust/Verus keywords - treating as direct code"
+            )
         return response
 
     # If we couldn't find any code, return empty string
@@ -1142,32 +1179,41 @@ def parse_llm_response(response: str, logger=None) -> str:
     return ""
 
 
-def parse_plan_execution_order(plan_text: str, available_modules: List[str], logger=None) -> List[str]:
+def parse_plan_execution_order(
+    plan_text: str, available_modules: List[str], logger=None
+) -> List[str]:
     """
     Simplified plan execution parser that only allows two possible workflows:
     1. Full sequence: view_inference -> view_refinement -> inv_inference -> spec_inference
     2. Just spec_inference alone
-    
+
     Args:
         plan_text: The planner's response text
-        available_modules: List of available module names 
+        available_modules: List of available module names
         logger: Optional logger for debugging
-        
+
     Returns:
         Ordered list of module names to execute
     """
     if logger:
-        logger.info("Parsing plan to determine module execution order (limited to two possible workflows)...")
-    
+        logger.info(
+            "Parsing plan to determine module execution order (limited to two possible workflows)..."
+        )
+
     # Define our two possible workflows
-    full_workflow = ["view_inference", "view_refinement", "inv_inference", "spec_inference"]
+    full_workflow = [
+        "view_inference",
+        "view_refinement",
+        "inv_inference",
+        "spec_inference",
+    ]
     # If proof_generation module is available, we may append it later based on plan text
     proof_step = "proof_generation" if "proof_generation" in available_modules else None
     spec_only_workflow = ["spec_inference"]
-    
+
     # Check which modules are available
     available_full_workflow = [m for m in full_workflow if m in available_modules]
-    
+
     # Check if we should do the spec-only workflow
     spec_only_indicators = [
         "only need specification",
@@ -1180,24 +1226,28 @@ def parse_plan_execution_order(plan_text: str, available_modules: List[str], log
         "focus on spec",
         "specification is sufficient",
         "specification alone",
-        "specification-only workflow", 
-        "spec-only workflow"
+        "specification-only workflow",
+        "spec-only workflow",
     ]
-    
-    use_spec_only = any(indicator.lower() in plan_text.lower() for indicator in spec_only_indicators)
-    
+
+    use_spec_only = any(
+        indicator.lower() in plan_text.lower() for indicator in spec_only_indicators
+    )
+
     if use_spec_only and "spec_inference" in available_modules:
         if logger:
             logger.info("Using spec-inference-only workflow based on plan.")
-        if proof_step and re.search(r'\bproof_generation\b', plan_text.lower()):
+        if proof_step and re.search(r"\bproof_generation\b", plan_text.lower()):
             return spec_only_workflow + [proof_step]
         return spec_only_workflow
     else:
-        if proof_step and re.search(r'\bproof_generation\b', plan_text.lower()):
+        if proof_step and re.search(r"\bproof_generation\b", plan_text.lower()):
             workflow = available_full_workflow + [proof_step]
             if logger:
                 logger.info("Using full workflow with proof_generation appended.")
             return workflow
         if logger:
-            logger.info("Using full workflow sequence: view_inference -> view_refinement -> inv_inference -> spec_inference")
+            logger.info(
+                "Using full workflow sequence: view_inference -> view_refinement -> inv_inference -> spec_inference"
+            )
         return available_full_workflow

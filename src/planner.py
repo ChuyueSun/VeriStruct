@@ -24,7 +24,7 @@ class Planner:
     It analyzes the code and decides which sequence of modules would be most effective
     for verification.
     """
-    
+
     def __init__(self, logger):
         """Initialize the planner with a logger."""
         self.logger = logger
@@ -32,10 +32,10 @@ class Planner:
     def exec(self, ctx: Context):
         """
         Execute the planner to determine the verification workflow.
-        
+
         Args:
             ctx: The context containing the code to analyze
-            
+
         Returns:
             The LLM's response detailing the chosen workflow
         """
@@ -43,7 +43,7 @@ class Planner:
         modules = ""
         for module in ctx.modules.values():
             modules += f"- **{module.name}**: {module.desc}\n"
-            
+
         # Define the workflow options
         workflow_options = """
 ## Workflow Options
@@ -68,7 +68,7 @@ Choose the Specification-Only workflow if (a) the code has no data structures ne
             {
                 "task_overview": task_overview,
                 "modules": modules,
-                "workflow_options": workflow_options
+                "workflow_options": workflow_options,
             },
         )
 
@@ -82,7 +82,7 @@ Analyze the code and decide which of the two possible workflows is most appropri
 
 Explain your choice in 2-3 sentences, then specify the exact workflow to use.
 """
-        
+
         # Call the LLM to make the decision
         return ctx.llm.infer_llm(
             "",
@@ -99,10 +99,10 @@ Explain your choice in 2-3 sentences, then specify the exact workflow to use.
     def get_normalized_task_desc(self, ctx: Context) -> str:
         """
         Generate a normalized task description without rustc_out to improve cache consistency.
-        
+
         Args:
             ctx: The context containing the code to analyze
-            
+
         Returns:
             A normalized task description with empty rustc_out for consistent caching
         """
@@ -120,7 +120,8 @@ Explain your choice in 2-3 sentences, then specify the exact workflow to use.
         # Skip rustc_out to improve cache consistency
         knowledge = ctx.gen_knowledge()
         prev_descs = [
-            f"### Failure {i}\n\n{ptrail.desc(rloc, output_rustc_out=False)}" for i, ptrail in enumerate(prevs)
+            f"### Failure {i}\n\n{ptrail.desc(rloc, output_rustc_out=False)}"
+            for i, ptrail in enumerate(prevs)
         ]
 
         # Create the normalized description using the same template as Context.gen_task_desc()
