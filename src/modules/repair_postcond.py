@@ -107,7 +107,7 @@ class RepairPostcondModule(BaseRepairModule):
         # Normal route of postcondition fixing
         instruction = f"""Your mission is to fix the post-condition not satisfied error for the following code. There are several general ways to fix the error:
 The postcondition is probably correct but missing some proof. If you are confident that the post-condition is correct, you can do the following:
-1. Add the proof blocks related to the post-condition at or just before the exit point where the post-condition failure occurred.
+1. Add or modify the proof blocks related to the post-condition at or just before the exit point where the post-condition failure occurred. Consider using existing lemmas or to help prove the post-condition.
 2. Modify the existing loop invariants to make them work for the post-condition.
 3. If the function ends with a loop, make sure there is a loop invariant in that loop that reflects the post-condition `{failure_to_fix.trace[0].get_highlights()[0]}'.
 If you are not sure about the correctness of the post-condition, you may weaken the post-condition or remove it.
