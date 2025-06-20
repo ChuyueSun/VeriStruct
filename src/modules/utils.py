@@ -1017,7 +1017,7 @@ def get_examples(
     """
     examples = []
     try:
-        examples_dir = Path(config.get("example_path", "examples"))
+        examples_dir = Path(config.get("example_path", "src/examples"))
         input_dir = examples_dir / f"input-{example_dir_name}"
         output_dir = examples_dir / f"output-{example_dir_name}"
 
