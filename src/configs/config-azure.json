@@ -13,5 +13,6 @@
     "aoai_refinement_model": "o3-mini",
     "verus_path": "/home/chuyue/verus/source/target-verus/release/verus",
     "platform": "azure",
-    "project_dir": "."
+    "project_dir": ".",
+    "example_path": "src/examples"
 }
