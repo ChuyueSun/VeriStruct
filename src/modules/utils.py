@@ -822,9 +822,6 @@ def get_func_body(code, fname, util_path=None, logger=None):
         ]
 
         # Debug: Log the exact file path and working directory
-        logger.info(f"Temp file path: {orig_f.name}")
-        logger.info(f"File exists: {os.path.exists(orig_f.name)}")
-        logger.info(f"Current working directory: {os.getcwd()}")
         logger.info(f"Absolute path: {os.path.abspath(orig_f.name)}")
 
         m = subprocess.run(
