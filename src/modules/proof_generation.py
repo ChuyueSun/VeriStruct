@@ -40,8 +40,8 @@ class ProofGenerationModule(BaseModule):
         # Main instruction for proof generation
         self.proof_instruction = (
             "You are an expert in Verus (a Rust-based verification framework). Your task is to "
-            "replace every occurrence of `// TODO: add proof` with appropriate proof blocks that "
-            "help Verus verify the program. Follow these guidelines carefully:\n\n"
+            "replace every occurrence of `// TODO: add proof` or `// TODO: add invariants` with appropriate "
+            "proof blocks or loop invariants that help Verus verify the program. Follow these guidelines carefully:\n\n"
             "1. PROOF BLOCK STRUCTURE:\n"
             "   - Add proof blocks using the syntax `proof { ... }`\n"
             "   - Each proof block should be focused and minimal, containing only what's needed\n"
@@ -54,17 +54,31 @@ class ProofGenerationModule(BaseModule):
             "   - When helpful, use the `by(...)` syntax for proof steps:\n"
             "     * `by(nonlinear_arith)` for arithmetic reasoning\n"
             "     * `by { ... }` for explicit proof steps\n\n"
-            "3. SPECIAL CASES:\n"
-            "   - For modular arithmetic or index-based postconditions:\n"
-            "     * Look for and use modular arithmetic lemmas (e.g., `lemma_mod_auto`)\n"
-            "     * Call these lemmas before using modular operations\n"
-            "4. CONSTRAINTS:\n"
-            "   - DO NOT modify any code outside of proof blocks\n"
+            "3. LOOP INVARIANTS:\n"
+            "   When adding loop invariants (marked by `// TODO: add invariants`), follow these steps:\n"
+            "   - Identify and add invariants for EVERY variable that is READ in the loop:\n"
+            "     * For scalar variables (e.g., x, y)\n"
+            "     * For array/vector elements (e.g., x[k], v[i])\n"
+            "     * Include invariants about their initial values\n"
+            "   - Identify and add invariants for EVERY variable that is WRITTEN in the loop:\n"
+            "     * For direct assignments (e.g., y = ...)\n"
+            "     * For vector/array updates (e.g., v.set(..., ...))\n"
+            "     * Repeat relevant invariants even if specified earlier\n"
+            "   - Fully utilize available spec functions and proof functions in the invariants\n"
+            "4. COMMON PROOF LOCATIONS:\n"
+            "   - At function start\n"
+            "   - Before loops\n"
+            "   - At loop start\n"
+            "   - At loop end\n"
+            "   - Before key operations\n"
+            "   - After key operations\n"
+            "5. CONSTRAINTS:\n"
+            "   - DO NOT modify any code outside of proof blocks or invariant declarations\n"
             "   - DO NOT change function signatures, types, or specifications\n"
             "   - DO NOT add new functions or types\n"
-            "   - If no `// TODO: add proof` markers exist, return code unchanged\n\n"
-            "5. VERIFICATION:\n"
-            "   - Ensure all proof blocks compile under Verus\n"
+            "   - If no TODO markers exist, return code unchanged\n"
+            "6. VERIFICATION:\n"
+            "   - Ensure all proof blocks and invariants compile under Verus\n"
             "   - Remove all TODO placeholders\n"
             "Return the ENTIRE file with your changes – not a diff or partial snippet."
         )
@@ -123,8 +137,8 @@ class ProofGenerationModule(BaseModule):
                 responses: List[str] = self.llm.infer_llm(
                     self.config.get("aoai_generation_model", "gpt-4"),
                     instruction,
-                    examples,
-                    code,
+                    exemplars=examples,
+                    query=code,
                     system_info="You are a helpful AI assistant specialized in Verus formal verification.",
                     answer_num=3,
                     max_tokens=self.config.get("max_token", 8192),

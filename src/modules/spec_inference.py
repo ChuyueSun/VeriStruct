@@ -62,7 +62,8 @@ IMPORTANT GUIDELINES:
    - DO NOT use `match` or `let` in the `ensures` clause or `requires` clause, but you can use `match` within `spec fn` bodies
    - DO NOT modify anything in `fn main()`
    - DO NOT add `self.inv()` to pre/post-conditions if `#[verifier::type_invariant]` is used
-   - DO NOT delete any `// TODO: add proof` comment; leave it intact for the proof-generation stage
+   - DO NOT delete any `// TODO: add proof` or `// TODO: add invariants` comment; DO NOT add loop invariants yet; leave it intact for the proof-generation stage
+   - DO NOT add vector length requirements like "requires old(v).len() < u64::MAX - 1 as usize" without careful consideration
    - Spec functions (like View) cannot have their own requires/ensures clauses
    - The final code you return MUST compile under Verus; double-check matching braces, parentheses, macro delimiters and remove any remaining "TODO" placeholders
    
@@ -103,28 +104,6 @@ RETURN FORMAT:
 
             # Load examples for spec inference
             examples = get_examples(self.config, "requires", self.logger)
-            # try:
-            #     example_path = (
-            #         Path(self.config.get("example_path", "examples")) / "input-requires"
-            #     )
-            #     if example_path.exists():
-            #         for f in sorted(example_path.iterdir()):
-            #             if f.suffix == ".rs":
-            #                 input_content = f.read_text()
-            #                 answer_path = (
-            #                     Path(self.config.get("example_path", "examples"))
-            #                     / "output-requires"
-            #                     / f.name
-            #                 )
-            #                 answer = answer_path.read_text() if answer_path.exists() else ""
-            #                 examples.append({"query": input_content, "answer": answer})
-            #     else:
-            #         self.logger.warning(
-            #             "Example path does not exist - proceeding without examples"
-            #         )
-            # except Exception as e:
-            #     self.logger.error(f"Error loading examples: {e}")
-
             # Run inference with increasing temperature on retries
             try:
                 responses = self.llm.infer_llm(
