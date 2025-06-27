@@ -76,7 +76,9 @@ class ProofGenerationModule(BaseModule):
     def _should_skip(self, code: str) -> bool:
         """Return True if the code has no proof TODO markers."""
         # Skip only if *none* of the typical proof markers/empty blocks are present.
-        if ("TODO: add proof" in code) or ("TODO:add proof" in code):
+        if ("TODO: add proof" in code) or ("TODO:add proof" in code) or \
+           ("TODO: add invariants" in code) or ("TODO: add invariant" in code) or \
+           ("TODO: add assert" in code) or ("TODO: add asserts" in code):
             return False
 
         # Detect empty proof blocks such as `proof{}`, `proof {}`, or `proof {\n}`

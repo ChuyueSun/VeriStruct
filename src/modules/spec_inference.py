@@ -102,28 +102,28 @@ RETURN FORMAT:
             )
 
             # Load examples for spec inference
-            examples = []
-            try:
-                example_path = (
-                    Path(self.config.get("example_path", "examples")) / "input-requires"
-                )
-                if example_path.exists():
-                    for f in sorted(example_path.iterdir()):
-                        if f.suffix == ".rs":
-                            input_content = f.read_text()
-                            answer_path = (
-                                Path(self.config.get("example_path", "examples"))
-                                / "output-requires"
-                                / f.name
-                            )
-                            answer = answer_path.read_text() if answer_path.exists() else ""
-                            examples.append({"query": input_content, "answer": answer})
-                else:
-                    self.logger.warning(
-                        "Example path does not exist - proceeding without examples"
-                    )
-            except Exception as e:
-                self.logger.error(f"Error loading examples: {e}")
+            examples = get_examples(self.config, "requires", self.logger)
+            # try:
+            #     example_path = (
+            #         Path(self.config.get("example_path", "examples")) / "input-requires"
+            #     )
+            #     if example_path.exists():
+            #         for f in sorted(example_path.iterdir()):
+            #             if f.suffix == ".rs":
+            #                 input_content = f.read_text()
+            #                 answer_path = (
+            #                     Path(self.config.get("example_path", "examples"))
+            #                     / "output-requires"
+            #                     / f.name
+            #                 )
+            #                 answer = answer_path.read_text() if answer_path.exists() else ""
+            #                 examples.append({"query": input_content, "answer": answer})
+            #     else:
+            #         self.logger.warning(
+            #             "Example path does not exist - proceeding without examples"
+            #         )
+            # except Exception as e:
+            #     self.logger.error(f"Error loading examples: {e}")
 
             # Run inference with increasing temperature on retries
             try:
