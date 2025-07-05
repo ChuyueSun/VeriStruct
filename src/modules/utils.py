@@ -1107,7 +1107,7 @@ def parse_llm_response(response: str, logger=None) -> str:
             logger.warning("Empty response received from LLM")
         return ""
 
-    # Look for code blocks with ```
+    # First, try to extract code from markdown-style code blocks
     if "```" in response:
         blocks = []
         lines = response.split("\n")
@@ -1115,7 +1115,10 @@ def parse_llm_response(response: str, logger=None) -> str:
         current_block = []
 
         for line in lines:
-            if line.strip().startswith("```"):
+            stripped_line = line.strip()
+            # Check for code block markers
+            if stripped_line.startswith("```"):
+                # Handle various code block markers
                 if in_code_block:
                     # End of code block
                     in_code_block = False
@@ -1123,19 +1126,30 @@ def parse_llm_response(response: str, logger=None) -> str:
                         blocks.append("\n".join(current_block))
                     current_block = []
                 else:
-                    # Start of code block
-                    in_code_block = True
-                    # Skip the opening ```rust, ```verus, etc.
-                    continue
+                    # Start of code block - check for language specifiers with or without ?
+                    marker = stripped_line[3:].strip()  # Get everything after ```
+                    if marker.startswith("rust") or marker.startswith("verus"):
+                        # Skip the opening line with language specifier
+                        in_code_block = True
+                        continue
+                    elif marker == "":
+                        # Empty code block marker
+                        in_code_block = True
+                        continue
+                    else:
+                        # Some other language or marker - don't include this block
+                        continue
             elif in_code_block:
+                # Inside a code block - add the line as is
                 current_block.append(line)
 
         if blocks:
+            # Join all code blocks with newlines
             if logger:
                 logger.info(f"Extracted {len(blocks)} code block(s)")
-            return "\n".join(blocks)
+            return "\n\n".join(blocks)
 
-    # Check if the response itself looks like Rust/Verus code
+    # If no code blocks found, check if the response itself looks like Rust/Verus code
     # by counting keyword occurrences
     rust_keywords = [
         "fn ",
@@ -1168,7 +1182,15 @@ def parse_llm_response(response: str, logger=None) -> str:
             logger.info(
                 f"Response contains {keyword_count} Rust/Verus keywords - treating as direct code"
             )
-        return response
+        # Clean up any markdown formatting
+        lines = response.split("\n")
+        cleaned_lines = []
+        for line in lines:
+            # Skip markdown formatting lines
+            if line.strip().startswith("```") or line.strip().startswith("path=") or line.strip().startswith("lines="):
+                continue
+            cleaned_lines.append(line)
+        return "\n".join(cleaned_lines)
 
     # If we couldn't find any code, return empty string
     if logger:
@@ -1180,9 +1202,10 @@ def parse_plan_execution_order(
     plan_text: str, available_modules: List[str], logger=None
 ) -> List[str]:
     """
-    Simplified plan execution parser that only allows two possible workflows:
+    Plan execution parser that supports three possible workflows:
     1. Full sequence: view_inference -> view_refinement -> inv_inference -> spec_inference
-    2. Just spec_inference alone
+    2. Invariant-First: inv_inference -> spec_inference
+    3. Specification-Only: just spec_inference
 
     Args:
         plan_text: The planner's response text
@@ -1194,24 +1217,52 @@ def parse_plan_execution_order(
     """
     if logger:
         logger.info(
-            "Parsing plan to determine module execution order (limited to two possible workflows)..."
+            "Parsing plan to determine module execution order..."
         )
 
-    # Define our two possible workflows
+    # Define our three possible workflows
     full_workflow = [
         "view_inference",
         "view_refinement",
         "inv_inference",
         "spec_inference",
     ]
+    invariant_first_workflow = ["inv_inference", "spec_inference"]
+    spec_only_workflow = ["spec_inference"]
+
     # If proof_generation module is available, we may append it later based on plan text
     proof_step = "proof_generation" if "proof_generation" in available_modules else None
-    spec_only_workflow = ["spec_inference"]
 
     # Check which modules are available
     available_full_workflow = [m for m in full_workflow if m in available_modules]
+    available_invariant_workflow = [m for m in invariant_first_workflow if m in available_modules]
 
-    # Check if we should do the spec-only workflow
+    # Check for explicit workflow mentions
+    workflow_mentioned = plan_text.lower()
+    
+    # Check for Invariant-First workflow indicators
+    invariant_first_indicators = [
+        "invariant-first workflow",
+        "invariant first workflow",
+        "invariants first",
+        "needs type invariant",
+        "generate invariant",
+        "infer invariant",
+    ]
+
+    # Negative indicators that should prevent full workflow selection
+    negative_view_indicators = [
+        "no view function",
+        "no view synthesis",
+        "view inference is unnecessary",
+        "never mentions user-defined view",
+        "view function synthesis is unnecessary",
+        "no view implementation",
+        "no view-related",
+        "view inference unnecessary",
+    ]
+
+    # Check for Specification-Only workflow indicators
     spec_only_indicators = [
         "only need specification",
         "only spec inference",
@@ -1225,26 +1276,62 @@ def parse_plan_execution_order(
         "specification alone",
         "specification-only workflow",
         "spec-only workflow",
+        "no invariants needed",
     ]
 
-    use_spec_only = any(
-        indicator.lower() in plan_text.lower() for indicator in spec_only_indicators
+    # Check for Full Sequence workflow indicators - these must be unambiguous
+    full_sequence_indicators = [
+        "full sequence workflow",
+        "needs view implementation",
+        "requires view function",
+        "implement the view",
+        "missing view function",
+        "todo: implement view",
+        "todo: add view",
+    ]
+
+    # First check if there are any negative view indicators
+    has_negative_view = any(indicator in workflow_mentioned for indicator in negative_view_indicators)
+
+    # Only consider full sequence if there are positive indicators AND no negative indicators
+    use_full_sequence = (
+        any(indicator in workflow_mentioned for indicator in full_sequence_indicators)
+        and not has_negative_view
     )
 
-    if use_spec_only and "spec_inference" in available_modules:
+    # Determine which workflow to use based on indicators and explicit mentions
+    use_invariant_first = (
+        (any(indicator in workflow_mentioned for indicator in invariant_first_indicators)
+        or has_negative_view)
+        and "inv_inference" in available_modules
+        and not use_full_sequence
+    )
+
+    use_spec_only = (
+        any(indicator in workflow_mentioned for indicator in spec_only_indicators)
+        and "spec_inference" in available_modules
+        and not use_full_sequence
+        and not use_invariant_first
+    )
+
+    # Select the workflow
+    if use_full_sequence:
         if logger:
-            logger.info("Using spec-inference-only workflow based on plan.")
-        if proof_step and re.search(r"\bproof_generation\b", plan_text.lower()):
-            return spec_only_workflow + [proof_step]
-        return spec_only_workflow
+            logger.info("Using full workflow sequence - explicit View implementation required.")
+        selected_workflow = available_full_workflow
+    elif use_invariant_first:
+        if logger:
+            logger.info("Using invariant-first workflow - no View implementation needed.")
+        selected_workflow = available_invariant_workflow
     else:
-        if proof_step and re.search(r"\bproof_generation\b", plan_text.lower()):
-            workflow = available_full_workflow + [proof_step]
-            if logger:
-                logger.info("Using full workflow with proof_generation appended.")
-            return workflow
         if logger:
-            logger.info(
-                "Using full workflow sequence: view_inference -> view_refinement -> inv_inference -> spec_inference"
-            )
-        return available_full_workflow
+            logger.info("Using specification-only workflow - no invariants or Views needed.")
+        selected_workflow = spec_only_workflow
+
+    # Append proof_generation if needed
+    if proof_step and "proof_generation" in workflow_mentioned.lower():
+        if logger:
+            logger.info("Appending proof_generation step.")
+        selected_workflow.append(proof_step)
+
+    return selected_workflow
