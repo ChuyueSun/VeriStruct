@@ -21,8 +21,7 @@ fn take<T>(lock: &Lock<T>) -> (t: Tracked<T>)
     // TODO: add requires and ensures
 {
     loop
-        invariant
-            lock.well_formed(),
+        // TODO: add invariant
     {
         let tracked ghost_value: Option<T>;
         let result =
