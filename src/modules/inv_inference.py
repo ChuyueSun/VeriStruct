@@ -39,7 +39,15 @@ class InvInferenceModule(BaseModule):
         self.llm = LLM(config, logger)
 
         # Main instruction for inv inference
-        self.inv_instruction = """You are an expert in Verus (a Rust-based verification framework). Given the following Rust code that defines a data structure with private fields, create a closed spec function: `closed spec fn inv(&self) -> bool`. This function should capture all necessary invariants of the data structure. You are allowed to reference private fields directly (i.e., do not rely on "view" conversions unless absolutely necessary). Do not modify other parts of the code or add explanatory text—just provide the final inv function definition."""
+        self.inv_instruction = """You are an expert in Verus (a Rust-based verification framework). Given the following Rust code that defines a data structure with private fields, create a closed spec function: `closed spec fn inv(&self) -> bool`. This function should capture all necessary invariants of the data structure. You are allowed to reference private fields directly (i.e., do not rely on "view" conversions unless absolutely necessary).
+
+IMPORTANT:
+- When `struct_with_invariants` is present in the input file, use library knowledge to construct the correct invariant.. Use `invariant on field with` to construct the invariants for the target class.
+- Return the ENTIRE file with your changes integrated into the original code, not just the inv function definition.
+- Do not modify other parts of the code.
+- Do not add explanatory text.
+- Do NOT fill in any proofs or non-inv specifications - leave all TODOs and proof obligations untouched.
+- Focus ONLY on implementing the inv function - do not attempt to complete any other specifications or proofs."""
 
     def replace_at_len_in_type_invariant(self, content: str) -> str:
         """

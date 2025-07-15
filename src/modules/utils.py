@@ -1202,10 +1202,9 @@ def parse_plan_execution_order(
     plan_text: str, available_modules: List[str], logger=None
 ) -> List[str]:
     """
-    Plan execution parser that supports three possible workflows:
-    1. Full sequence: view_inference -> view_refinement -> inv_inference -> spec_inference
-    2. Invariant-First: inv_inference -> spec_inference
-    3. Specification-Only: just spec_inference
+    Parse the execution steps directly from the verification plan.
+    The plan should contain an "Execution Steps:" section that lists
+    the modules to run in order.
 
     Args:
         plan_text: The planner's response text
@@ -1216,122 +1215,37 @@ def parse_plan_execution_order(
         Ordered list of module names to execute
     """
     if logger:
-        logger.info(
-            "Parsing plan to determine module execution order..."
-        )
+        logger.info("Parsing plan to determine module execution order...")
 
-    # Define our three possible workflows
-    full_workflow = [
-        "view_inference",
-        "view_refinement",
-        "inv_inference",
-        "spec_inference",
-    ]
-    invariant_first_workflow = ["inv_inference", "spec_inference"]
-    spec_only_workflow = ["spec_inference"]
+    # Find the Execution Steps section
+    steps_section = None
+    lines = plan_text.split('\n')
+    for i, line in enumerate(lines):
+        if "**Execution Steps:**" in line:
+            steps_section = lines[i+1:]
+            break
 
-    # If proof_generation module is available, we may append it later based on plan text
-    proof_step = "proof_generation" if "proof_generation" in available_modules else None
-
-    # Check which modules are available
-    available_full_workflow = [m for m in full_workflow if m in available_modules]
-    available_invariant_workflow = [m for m in invariant_first_workflow if m in available_modules]
-
-    # Check for explicit workflow mentions
-    workflow_mentioned = plan_text.lower()
-    
-    # Check for Invariant-First workflow indicators
-    invariant_first_indicators = [
-        "invariant-first workflow",
-        "invariant first workflow",
-        "invariants first",
-        "needs type invariant",
-        "generate invariant",
-        "infer invariant",
-    ]
-
-    # Negative indicators that should prevent full workflow selection
-    negative_view_indicators = [
-        "no view function",
-        "no view synthesis",
-        "view inference is unnecessary",
-        "never mentions user-defined view",
-        "view function synthesis is unnecessary",
-        "no view implementation",
-        "no view-related",
-        "view inference unnecessary",
-    ]
-
-    # Check for Specification-Only workflow indicators
-    spec_only_indicators = [
-        "only need specification",
-        "only spec inference",
-        "spec inference only",
-        "only specification",
-        "skip view",
-        "no view needed",
-        "no need for view",
-        "focus on spec",
-        "specification is sufficient",
-        "specification alone",
-        "specification-only workflow",
-        "spec-only workflow",
-        "no invariants needed",
-    ]
-
-    # Check for Full Sequence workflow indicators - these must be unambiguous
-    full_sequence_indicators = [
-        "full sequence workflow",
-        "needs view implementation",
-        "requires view function",
-        "implement the view",
-        "missing view function",
-        "todo: implement view",
-        "todo: add view",
-    ]
-
-    # First check if there are any negative view indicators
-    has_negative_view = any(indicator in workflow_mentioned for indicator in negative_view_indicators)
-
-    # Only consider full sequence if there are positive indicators AND no negative indicators
-    use_full_sequence = (
-        any(indicator in workflow_mentioned for indicator in full_sequence_indicators)
-        and not has_negative_view
-    )
-
-    # Determine which workflow to use based on indicators and explicit mentions
-    use_invariant_first = (
-        (any(indicator in workflow_mentioned for indicator in invariant_first_indicators)
-        or has_negative_view)
-        and "inv_inference" in available_modules
-        and not use_full_sequence
-    )
-
-    use_spec_only = (
-        any(indicator in workflow_mentioned for indicator in spec_only_indicators)
-        and "spec_inference" in available_modules
-        and not use_full_sequence
-        and not use_invariant_first
-    )
-
-    # Select the workflow
-    if use_full_sequence:
+    if not steps_section:
         if logger:
-            logger.info("Using full workflow sequence - explicit View implementation required.")
-        selected_workflow = available_full_workflow
-    elif use_invariant_first:
-        if logger:
-            logger.info("Using invariant-first workflow - no View implementation needed.")
-        selected_workflow = available_invariant_workflow
-    else:
-        if logger:
-            logger.info("Using specification-only workflow - no invariants or Views needed.")
-        selected_workflow = spec_only_workflow
+            logger.warning("No Execution Steps section found in plan, using default workflow")
+        return ["spec_inference"]  # Default to spec-only as safest option
 
-    # Append proof_generation if needed
-    if proof_step and "proof_generation" in workflow_mentioned.lower():
-        if logger:
-            logger.info("Appending proof_generation step.")
-        selected_workflow.append(proof_step)
+    # Parse the numbered steps, removing any non-step lines
+    execution_steps = []
+    for line in steps_section:
+        line = line.strip()
+        if line and line[0].isdigit() and '.' in line:
+            # Extract module name from lines like "1. module_name"
+            module_name = line.split('.', 1)[1].strip().lower()
+            if module_name in available_modules:
+                execution_steps.append(module_name)
 
-    return selected_workflow
+    if not execution_steps:
+        if logger:
+            logger.warning("No valid execution steps found in plan, using default workflow")
+        return ["spec_inference"]
+
+    if logger:
+        logger.info(f"Parsed execution steps from plan: {execution_steps}")
+
+    return execution_steps
