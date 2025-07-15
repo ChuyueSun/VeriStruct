@@ -13,7 +13,9 @@ struct_with_invariants!{
     }
 
     spec fn well_formed(&self) -> bool {
-        // TODO: add specification
+        invariant on field with () is (b: bool, t: Option<T>) {
+            // TODO: add specification
+        }
     }
 }
 
@@ -60,6 +62,7 @@ proof fn proof_int(x: u64) -> (tracked y: u64)
     // TODO: add specification
 {
     // TODO: add proof
+    // HINT: use `assume` and `proof_from_false`
 }
 
 /* TEST CODE BELOW */
