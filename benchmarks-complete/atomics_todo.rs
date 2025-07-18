@@ -13,7 +13,9 @@ struct_with_invariants!{
     }
 
     spec fn well_formed(&self) -> bool {
-        // TODO: add specification
+        invariant on field with () is (b: bool, t: Option<T>) {
+            // TODO: add specification
+        }
     }
 }
 
@@ -57,11 +59,12 @@ impl AtomicInvariantPredicate<(), u64, u64> for VEqualG {
 }
 
 proof fn proof_int(x: u64) -> (tracked y: u64)
-    // TODO: add specification
+    ensures
+        x == y,
 {
-    // TODO: add proof
+    assume(false);
+    proof_from_false()
 }
-
 /* TEST CODE BELOW */
 
 pub fn main() {

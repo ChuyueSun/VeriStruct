@@ -47,6 +47,8 @@ class SpecInferenceModule(BaseModule):
         self.inference_instruction = """You are an expert in Verus (verifier for rust). You have two main tasks:
 
 TASK 1: Add `requires` and `ensures` to public functions where you see "// TODO: add requires and ensures"
+   - If a type has `#[verifier::type_invariant]`, DO NOT assert invariants explicitly in requires/ensures - the type invariant is automatically maintained
+   - If NO `#[verifier::type_invariant]` exists, consider asserting class invariants (`well-formed`, `invariants`, `inv` etc.) in pre/post-conditions
    - Analyze the semantics of functions and add appropriate preconditions and postconditions
    - Change function signatures to `-> (retname: rettype)` format when adding return value specifications
    - Use precise, mathematical specifications that capture the function's behavior
@@ -66,8 +68,10 @@ IMPORTANT GUIDELINES:
    - DO NOT add vector length requirements like "requires old(v).len() < u64::MAX - 1 as usize" without careful consideration
    - Spec functions (like View) cannot have their own requires/ensures clauses
    - The final code you return MUST compile under Verus; double-check matching braces, parentheses, macro delimiters and remove any remaining "TODO" placeholders
-   
-RETURN FORMAT:
+   - Do not use AtomicBool::load in requires/ensures clauses
+   - At the very minimum, simply assert class invariants in requires/ensures clauses
+
+   RETURN FORMAT:
    - Return the ENTIRE file with your changes integrated into the original code, not just the parts you modified"""
 
     def exec(self, context) -> str:

@@ -39,7 +39,20 @@ class InvInferenceModule(BaseModule):
         self.llm = LLM(config, logger)
 
         # Main instruction for inv inference
-        self.inv_instruction = """You are an expert in Verus (a Rust-based verification framework). Given the following Rust code that defines a data structure with private fields, create a closed spec function: `closed spec fn inv(&self) -> bool`. This function should capture all necessary invariants of the data structure. You are allowed to reference private fields directly (i.e., do not rely on "view" conversions unless absolutely necessary). Do not modify other parts of the code or add explanatory text—just provide the final inv function definition."""
+        self.inv_instruction = """You are an expert in Verus (a Rust-based verification framework). Given the following Rust code that defines a data structure with private fields, implement the invariant functions that are already declared in the code. Common names for these functions are `well_formed`, `inv`, or `invariant`. You are allowed to reference private fields directly (i.e., do not rely on "view" conversions unless absolutely necessary).
+
+IMPORTANT:
+- ONLY implement invariant functions that already exist in the code - do not create new ones.
+- Look for functions named `well_formed`, `inv`, `invariant`, `inv`, or similar that are marked with TODO or are empty.
+- Do NOT rename existing functions or create new `spec fn inv` functions unless explicitly requested.
+- When `struct_with_invariants` is present in the input file, use library knowledge to construct the correct invariant. Use `invariant on field with` to construct the invariants for the target class.
+- Use `===` instead of `==>` and `!==>` for bidirectional equivalence in invariants - this is more precise for verification.
+- Return the ENTIRE file with your changes integrated into the original code, not just the inv function definition.
+- Do not modify other parts of the code.
+- Do not add explanatory text.
+- Do NOT fill in any proofs or non-inv specifications - leave all TODOs and proof obligations untouched.
+- Focus ONLY on implementing existing invariant functions - do not attempt to complete any other specifications or proofs.
+- If you find multiple invariant functions to implement (e.g., both `well_formed` and `inv`), implement all of them while preserving their original names."""
 
     def replace_at_len_in_type_invariant(self, content: str) -> str:
         """
