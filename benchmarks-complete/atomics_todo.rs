@@ -67,7 +67,7 @@ proof fn proof_int(x: u64) -> (tracked y: u64)
 }
 /* TEST CODE BELOW */
 
-pub fn main() {
+pub fn test() {
 
     let ato = AtomicU64::<(), u64, VEqualG>::new(Ghost(()), 10u64, Tracked(10u64));
 
@@ -100,7 +100,9 @@ pub fn main() {
             assert(new_val == 36u64);
             g = proof_int(36u64);
     });
-    
-    
 }
+
+pub fn main() {
+}
+
 } // verus!

@@ -1,7 +1,5 @@
 use vstd::prelude::*;
 
-pub fn main() {}
-
 verus! {
     pub open spec fn ex_saturating_sub_spec(a: int, b: int) -> (ret: nat)
     {
@@ -264,7 +262,7 @@ impl<T: Copy> RingBuffer<T> {
 /* TEST CODE BELOW */
 
 #[verifier::loop_isolation(false)]
-fn test_enqueue_dequeue_generic(len: usize, value: i32, iterations: usize)
+fn test(len: usize, value: i32, iterations: usize)
     requires
         1 < len < usize::MAX - 1,
         iterations * 2 < usize::MAX,
@@ -312,5 +310,8 @@ fn test_enqueue_dequeue_generic(len: usize, value: i32, iterations: usize)
     assert(!enqueue_res);
     let dequeue_res = buf.dequeue();
     assert(dequeue_res.is_some());
+}
+
+pub fn main() {
 }
 }

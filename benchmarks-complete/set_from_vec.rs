@@ -1,5 +1,5 @@
 use vstd::prelude::*;
-
+use vstd::seq_lib::lemma_seq_properties;
 verus! {
 
 struct VecSet {
@@ -24,9 +24,10 @@ impl VecSet {
     {
         self.vt.push(v);
         proof {
-            broadcast use vstd::seq_lib::group_seq_properties;
+            lemma_seq_properties::<u64>();
+            assert(self.vt@ =~= old(self).vt@ + seq![v]);
         }
-        assert(self.vt@ =~= old(self).vt@ + seq![v]);
+        
     }
 
     pub fn contains(&self, v: u64) -> (contained: bool)
@@ -47,7 +48,7 @@ impl VecSet {
 
 /* TSET CODE BELOW */
 
-fn test_vecset(t: Vec<u64>)
+fn test(t: Vec<u64>)
 {
     let mut vs: VecSet = VecSet::new();
     assert(vs@ =~= set![]);
@@ -60,6 +61,6 @@ fn test_vecset(t: Vec<u64>)
     assert(vs@ =~= set![3, 5]);
 }
 
-fn main() {}
+pub fn main() {}
 
 } // verus!

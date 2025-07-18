@@ -92,7 +92,7 @@ impl<A> MyOption<A> {
 
 /* TEST CODE BELOW */
 
-fn test_option_generic(n: i32) {
+fn test(n: i32) {
     let opt: MyOption<i32> = MyOption::None;
     let is_none = opt.is_none();
     let is_some = opt.is_some();
@@ -135,8 +135,9 @@ fn test_option_generic(n: i32) {
     let ref_none = opt_none.is_none();
     assert(ref_none);
 }
+
+pub fn main() {
+}
+
 } // verus!
 
-
-fn main() {
-}

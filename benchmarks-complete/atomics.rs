@@ -14,8 +14,7 @@ struct_with_invariants!{
 
     spec fn well_formed(&self) -> bool {
         invariant on field with () is (b: bool, t: Option<T>) {
-            // b === t.is_Some()
-            b ==> t.is_Some() && !b ==> t.is_None()
+            b === t.is_Some()
         }
     }
 }
@@ -72,7 +71,7 @@ proof fn proof_int(x: u64) -> (tracked y: u64)
 
 /* TEST CODE BELOW */
 
-pub fn main() {
+pub fn test() {
 
     let ato = AtomicU64::<(), u64, VEqualG>::new(Ghost(()), 10u64, Tracked(10u64));
 
@@ -107,6 +106,9 @@ pub fn main() {
     });
     
     
+}
+
+pub fn main() {
 }
 
 } // verus!
