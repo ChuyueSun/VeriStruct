@@ -207,8 +207,6 @@ impl<T: Copy> RingBuffer<T> {
 
 /* TEST CODE BELOW */
 
-/* TEST CODE BELOW */
-
 #[verifier::loop_isolation(false)]
 fn test_enqueue_dequeue_generic(len: usize, value: i32, iterations: usize)
     requires
