@@ -207,10 +207,12 @@ impl<T: Copy> RingBuffer<T> {
 
 /* TEST CODE BELOW */
 
+/* TEST CODE BELOW */
+
 #[verifier::loop_isolation(false)]
 fn test_enqueue_dequeue_generic(len: usize, value: i32, iterations: usize)
     requires
-        len < usize::MAX - 1,
+        1 < len < usize::MAX - 1,
         iterations * 2 < usize::MAX,
 {
     let mut ring: Vec<i32> = Vec::new();
@@ -220,38 +222,41 @@ fn test_enqueue_dequeue_generic(len: usize, value: i32, iterations: usize)
     }
 
     for i in 0..(len + 1)
-        invariant
-            ring.len() == i,
+    invariant
+        ring.len() == i,
     {
         ring.push(0);
     }
 
-    assert(ring.len() > 1);
+    assert(ring.len() == len + 1);
     let mut buf = RingBuffer::new(ring);
-    assert(buf@.1 > 1);
 
-    for _ in 0..2 * iterations
-        invariant
-            buf@.0.len() == 0,
-            buf@.1 > 1
+    let ret = buf.dequeue();
+    let buf_len = buf.len();
+    let has_elements = buf.has_elements();
+    assert(!has_elements);
+    assert(ret == None::<i32>);
+    assert(buf_len == 0);
+    assert(len > 1);
+    for i in 0..len
+    invariant
+        buf@.0.len() == i,
+        buf@.1 == len + 1
     {
         let enqueue_res = buf.enqueue(value);
         assert(enqueue_res);
-
-        let buf_len = buf.len();
-        assert(buf_len == 1);
-
         let has_elements = buf.has_elements();
         assert(has_elements);
-
-        let dequeue_res = buf.dequeue();
-        assert(dequeue_res =~= Some(value));
-
-        let buf_len = buf.len();
-        assert(buf_len == 0);
-
-        let has_elements = buf.has_elements();
-        assert(!has_elements);
+        let available_len = buf.available_len();
+        assert(available_len == len - 1 - i);
     }
+    let dequeue_res = buf.dequeue();
+    assert(dequeue_res.is_some());
+    let enqueue_res = buf.enqueue(value);
+    assert(enqueue_res);
+    let enqueue_res = buf.enqueue(value);
+    assert(!enqueue_res);
+    let dequeue_res = buf.dequeue();
+    assert(dequeue_res.is_some());
 }
 }

@@ -59,12 +59,12 @@ impl AtomicInvariantPredicate<(), u64, u64> for VEqualG {
 }
 
 proof fn proof_int(x: u64) -> (tracked y: u64)
-    // TODO: add specification
+    ensures
+        x == y,
 {
-    // TODO: add proof
-    // HINT: use `assume` and `proof_from_false`
+    assume(false);
+    proof_from_false()
 }
-
 /* TEST CODE BELOW */
 
 pub fn main() {
