@@ -61,8 +61,6 @@ impl<T: Copy> RingBuffer<T> {
     }
 
     /// Returns true if the buffer is full, false otherwise.
-    ///
-    /// Being 'full' means `self@.len() == (self.ring.len() - 1) as nat`.
     pub fn is_full(&self) -> (ret: bool)
         // TODO: add requires and ensures
     {
