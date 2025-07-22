@@ -1235,8 +1235,9 @@ def parse_plan_execution_order(
     for line in steps_section:
         line = line.strip()
         if line and line[0].isdigit() and '.' in line:
-            # Extract module name from lines like "1. module_name"
-            module_name = line.split('.', 1)[1].strip().lower()
+            # Extract module name from lines like "1. module_name" or "1. module_name (comment)"
+            # Take only the first word after the period to handle comments
+            module_name = line.split('.', 1)[1].strip().split()[0].lower()
             if module_name in available_modules:
                 execution_steps.append(module_name)
 
