@@ -37,44 +37,44 @@ class SpecInferenceModule(BaseModule):
         self.immutable_funcs = immutable_funcs or []
 
         # Main instruction for spec inference
-        self.inference_instruction = """You are an expert in Verus (verifier for rust). Your task is to:
-
-1. **Add `requires` and `ensures` to public functions**:
-   - Please change the return type of the function if it doesn't have a return type to `-> (retname: rettype)`.
-   - Analyze the semantics of the functions and append appropriate `requires` and `ensures` clauses to the method implementations.
-   - DO NOT just copy the implementation code. You may use `self.view().XXX` or `self@XXX` in the `ensures` clauses. If `self.view()` is a tuple, you can use `self@.i` to access the i-th element (zero index).
-   - DO NOT use `old` without consideration: "only a variable binding is allowed as the argument to old".
-   - DO NOT use `match` or `let` in the `ensures` clause.
-   - DO NOT add anything to `fn main`.
-   - You do not need to add `self.inv()` to the pre- and post-conditions if `#[verifier::type_invariant]` is used before the `inv` definition.
-   - spec functions like View cannot have requires/ensures.
-
-2. **Add `ensures` clauses for trait methods**:
-   - Analyze the semantics of the functions and append appropriate `ensures` clauses to the trait method implementations.
-   - DO NOT just copy the implementation code. You may use `self.view().XXX` in the `ensures` clauses.
-   - DO NOT add the `requires` clause to the trait method implementations. This is not allowed: "trait method implementation cannot declare requires clauses; these can only be inherited from the trait declaration"
-
-3. **Fill in `spec fn` implementations**:
-   - Implement the specification function based on the context and function name
-   - State what implies the return value if possible
-
-IMPORTANT GUIDELINES:
-   - DO NOT just copy the implementation code in specifications
-   - You may use `self.view().XXX` or `self@XXX` in `ensures` clauses
-   - If `self.view()` is a tuple, you can use `self@.i` to access the i-th element (zero-indexed)
-   - DO NOT use `old` without consideration: "only a variable binding is allowed as the argument to old"
-   - DO NOT use `match` or `let` in the `ensures` clause or `requires` clause, but you can use `match` within `spec fn` bodies
-   - DO NOT modify anything in `fn main()`
-   - DO NOT add `self.inv()` to pre/post-conditions if `#[verifier::type_invariant]` is used
-   - DO NOT delete any `// TODO: add proof` or `// TODO: add invariants` comment; DO NOT add loop invariants yet; leave it intact for the proof-generation stage
-   - DO NOT add vector length requirements like "requires old(v).len() < u64::MAX - 1 as usize" without careful consideration
-   - Spec functions (like View) cannot have their own requires/ensures clauses
-   - The final code you return MUST compile under Verus; double-check matching braces, parentheses, macro delimiters and remove any remaining "TODO" placeholders
-   - Do not use AtomicBool::load in requires/ensures clauses
-   - At the very minimum, simply assert class invariants in requires/ensures clauses
-
-   RETURN FORMAT:
-   - Return the ENTIRE file with your changes integrated into the original code, not just the parts you modified"""
+        self.inference_instruction = (
+            "You are an expert in Verus (verifier for rust). Your task is to:\n\n"
+            "1. **Add `requires` and `ensures` to public functions**:\n"
+            "   - Please change the return type of the function if it doesn't have a return type to `-> (retname: rettype)`.\n"
+            "   - Analyze the semantics of the functions and append appropriate `requires` and `ensures` clauses to the method implementations.\n"
+            "   - DO NOT just copy the implementation code. You may use `self.view().XXX` or `self@XXX` in the `ensures` clauses. If `self.view()` is a tuple, you can use `self@.i` to access the i-th element (zero index).\n"
+            "   - DO NOT use `old` without consideration: \"only a variable binding is allowed as the argument to old\".\n"
+            "   - DO NOT use `match` or `let` in the `ensures` clause.\n"
+            "   - DO NOT add anything to `fn main`.\n"
+            "   - You do not need to add `self.inv()` to the pre- and post-conditions if `#[verifier::type_invariant]` is used before the `inv` definition.\n"
+            "   - spec functions like View cannot have requires/ensures.\n\n"
+            "2. **Add `ensures` clauses for trait methods**:\n"
+            "   - Analyze the semantics of the functions and append appropriate `ensures` clauses to the trait method implementations.\n"
+            "   - DO NOT just copy the implementation code. You may use `self.view().XXX` in the `ensures` clauses.\n"
+            "   - DO NOT add the `requires` clause to the trait method implementations. This is not allowed: \"trait method implementation cannot declare requires clauses; these can only be inherited from the trait declaration\"\n\n"
+            "3. **Fill in `spec fn` implementations**:\n"
+            "   - Implement the specification function based on the context and function name\n"
+            "   - State what implies the return value if possible\n\n"
+            "IMPORTANT GUIDELINES:\n"
+            "   - DO NOT just copy the implementation code in specifications\n"
+            "   - You may use `self.view().XXX` or `self@XXX` in `ensures` clauses\n"
+            "   - If `self.view()` is a tuple, you can use `self@.i` to access the i-th element (zero-indexed)\n"
+            "   - DO NOT use `old` without consideration: \"only a variable binding is allowed as the argument to old\"\n"
+            "   - DO NOT use `match` or `let` in the `ensures` clause or `requires` clause, but you can use `match` within `spec fn` bodies\n"
+            "   - DO NOT modify anything in `fn main()`\n"
+            "   - DO NOT add `self.inv()` to pre/post-conditions if `#[verifier::type_invariant]` is used\n"
+            "   - DO NOT delete any `// TODO: add proof` or `// TODO: add invariants` comment; DO NOT add loop invariants yet; leave it intact for the proof-generation stage\n"
+            "   - DO NOT add vector length requirements like \"requires old(v).len() < u64::MAX - 1 as usize\" without careful consideration\n"
+            "   - Spec functions (like View) cannot have their own requires/ensures clauses\n"
+            "   - The final code you return MUST compile under Verus; double-check matching braces, parentheses, macro delimiters and remove any remaining \"TODO\" placeholders\n"
+            "   - Do not use AtomicBool::load in requires/ensures clauses\n"
+            "   - At the very minimum, simply assert class invariants in requires/ensures clauses\n"
+            "   - ALWAYS use `None::<T>` instead of bare `None` to help type inference. For example:\n"
+            "     * CORRECT: `&&& ret == None::<T>`\n"
+            "     * INCORRECT: `&&& ret == None`\n\n"
+            "RETURN FORMAT:\n"
+            "   - Return the ENTIRE file with your changes integrated into the original code, not just the parts you modified"
+        )
 
     def _get_llm_responses(
         self, 
