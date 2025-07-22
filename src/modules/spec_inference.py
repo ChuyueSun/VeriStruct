@@ -54,7 +54,7 @@ class SpecInferenceModule(BaseModule):
             "   - DO NOT add the `requires` clause to the trait method implementations. This is not allowed: \"trait method implementation cannot declare requires clauses; these can only be inherited from the trait declaration\"\n\n"
             "3. **Fill in `spec fn` implementations**:\n"
             "   - Implement the specification function based on the context and function name\n"
-            "   - State what implies the return value if possible\n\n"
+            "   - State what implies the return value\n\n"
             "IMPORTANT GUIDELINES:\n"
             "   - DO NOT just copy the implementation code in specifications\n"
             "   - You may use `self.view().XXX` or `self@XXX` in `ensures` clauses\n"
