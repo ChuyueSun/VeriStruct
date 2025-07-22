@@ -41,6 +41,7 @@ class ProofGenerationModule(BaseModule):
         self.proof_instruction = (
             "You are an expert in Verus (a Rust-based verification framework). Your task is to "
             "replace every occurrence of `// TODO: add proof` or `// TODO: add invariants` with appropriate "
+            "If invariants already exist, reconsider the invariants and edit them if necessary. "
             "proof blocks or loop invariants that help Verus verify the program. Follow these guidelines carefully:\n\n"
             "1. PROOF BLOCK STRUCTURE:\n"
             "   - For regular functions (`fn` or `pub fn`): Add proof blocks using the syntax `proof { ... }`\n"
@@ -51,7 +52,6 @@ class ProofGenerationModule(BaseModule):
             "     * `use_type_invariant(&*self);` for reference receivers\n"
             "     * `use_type_invariant(self);` for value receivers\n"
             "   - ALWAYS call all relevant existing lemmas from the file in the form `lemma_name(arg1, arg2, ...)`. For example:\n"
-            "     * If there's a lemma about arithmetic properties, call it as `arithmetic_lemma(x, y)`\n"
             "     * If there's a lemma about sequence bounds, call it as `lemma_mod_auto(self.ring.len() as int)`\n"
             "   - When working with sequences in specifications, call relevant modular arithmetic lemmas from the file\n"
             "   - Use assertions strategically with `assert(condition)`\n"
@@ -103,6 +103,20 @@ class ProofGenerationModule(BaseModule):
                 instruction = f"{instruction}\n[Retry Attempt: {retry_attempt}]"
                 use_cache = False  # Disable cache for retries
                 
+            # Log the complete query content for debugging
+            self.logger.debug("=== LLM Query Content ===")
+            self.logger.debug(f"Retry Attempt: {retry_attempt}")
+            self.logger.debug(f"Temperature: {1.0 + (retry_attempt * temperature_boost)}")
+            self.logger.debug(f"Cache Enabled: {use_cache}")
+            self.logger.debug("\n=== Instruction ===\n" + instruction)
+            self.logger.debug("\n=== Code ===\n" + code)
+            if examples:
+                self.logger.debug("\n=== Examples ===")
+                for i, ex in enumerate(examples):
+                    self.logger.debug(f"\nExample {i+1} Query:\n" + ex["query"])
+                    self.logger.debug(f"\nExample {i+1} Answer:\n" + ex["answer"])
+            self.logger.debug("=====================")
+                
             return self.llm.infer_llm(
                 self.config.get("aoai_generation_model", "gpt-4"),
                 instruction,
@@ -150,6 +164,7 @@ class ProofGenerationModule(BaseModule):
     # ---------------------------------------------------------------------
 
     def _should_skip(self, code: str) -> bool:
+        return False
         """Return True if the code has no proof TODO markers or empty proof blocks."""
         # Skip only if *none* of the typical proof markers/empty blocks are present.
         if ("TODO: add proof" in code) or ("TODO:add proof" in code) or \
