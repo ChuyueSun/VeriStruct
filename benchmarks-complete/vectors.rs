@@ -154,7 +154,7 @@ requires
     assert(forall|i: int| 0 <= i < t1.len() ==> t[i] == t1[t1.len() - i - 1]);
 }
 
-fn test() {
+pub fn test() {
 }
 
 pub fn main() {
