@@ -13,7 +13,7 @@ impl InvariantPredicate<int, u32> for ModPredicate {
     }
 }
 
-pub fn main() {
+pub fn test() {
     let tracked u: u32 = 5u32;
     let tracked i: AtomicInvariant<int, u32, ModPredicate> = AtomicInvariant::new(1, u, 0);
     open_atomic_invariant!(&i => inner => {
@@ -35,6 +35,9 @@ pub fn main() {
   });
     let tracked j = i.into_inner();
     assert(j % 2 == 1);
+}
+
+pub fn main() {
 }
 
 } // verus!

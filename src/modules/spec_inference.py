@@ -15,6 +15,7 @@ from src.modules.utils import (
     code_change_is_safe,
 )
 from src.prompts.template import build_instruction
+from typing import List, Dict
 
 
 class SpecInferenceModule(BaseModule):
@@ -26,35 +27,36 @@ class SpecInferenceModule(BaseModule):
     """
 
     def __init__(self, config, logger, immutable_funcs=None):
-        """
-        Initialize the SpecInferenceModule.
-
-        Args:
-            config: Configuration object
-            logger: Logger object
-            immutable_funcs: List of function names that should not be modified
-        """
         super().__init__(
             name="spec_inference",
-            desc="Infer and add requires/ensures clauses to Verus functions",
+            desc="Infer requires and ensures clauses for functions",
             config=config,
             logger=logger,
-            immutable_funcs=immutable_funcs,
         )
         self.llm = LLM(config, logger)
+        self.immutable_funcs = immutable_funcs or []
 
-        # Main instruction for requires/ensures inference
-        self.inference_instruction = """You are an expert in Verus (verifier for rust). You have two main tasks:
+        # Main instruction for spec inference
+        self.inference_instruction = """You are an expert in Verus (verifier for rust). Your task is to:
 
-TASK 1: Add `requires` and `ensures` to public functions where you see "// TODO: add requires and ensures"
-   - If a type has `#[verifier::type_invariant]`, DO NOT assert invariants explicitly in requires/ensures - the type invariant is automatically maintained
-   - If NO `#[verifier::type_invariant]` exists, consider asserting class invariants (`well-formed`, `invariants`, `inv` etc.) in pre/post-conditions
-   - Analyze the semantics of functions and add appropriate preconditions and postconditions
-   - Change function signatures to `-> (retname: rettype)` format when adding return value specifications
-   - Use precise, mathematical specifications that capture the function's behavior
+1. **Add `requires` and `ensures` to public functions**:
+   - Please change the return type of the function if it doesn't have a return type to `-> (retname: rettype)`.
+   - Analyze the semantics of the functions and append appropriate `requires` and `ensures` clauses to the method implementations.
+   - DO NOT just copy the implementation code. You may use `self.view().XXX` or `self@XXX` in the `ensures` clauses. If `self.view()` is a tuple, you can use `self@.i` to access the i-th element (zero index).
+   - DO NOT use `old` without consideration: "only a variable binding is allowed as the argument to old".
+   - DO NOT use `match` or `let` in the `ensures` clause.
+   - DO NOT add anything to `fn main`.
+   - You do not need to add `self.inv()` to the pre- and post-conditions if `#[verifier::type_invariant]` is used before the `inv` definition.
+   - spec functions like View cannot have requires/ensures.
 
-TASK 2: Fill in `spec fn` implementations where you see "TODO: add specification"
+2. **Add `ensures` clauses for trait methods**:
+   - Analyze the semantics of the functions and append appropriate `ensures` clauses to the trait method implementations.
+   - DO NOT just copy the implementation code. You may use `self.view().XXX` in the `ensures` clauses.
+   - DO NOT add the `requires` clause to the trait method implementations. This is not allowed: "trait method implementation cannot declare requires clauses; these can only be inherited from the trait declaration"
+
+3. **Fill in `spec fn` implementations**:
    - Implement the specification function based on the context and function name
+   - State what implies the return value if possible
 
 IMPORTANT GUIDELINES:
    - DO NOT just copy the implementation code in specifications
@@ -73,6 +75,72 @@ IMPORTANT GUIDELINES:
 
    RETURN FORMAT:
    - Return the ENTIRE file with your changes integrated into the original code, not just the parts you modified"""
+
+    def _get_llm_responses(
+        self, 
+        instruction: str,
+        code: str,
+        examples: List[Dict[str, str]] = None,
+        temperature_boost: float = 0.2,
+        retry_attempt: int = 0,
+        use_cache: bool = True,
+    ) -> List[str]:
+        """Get responses from LLM with error handling."""
+        try:
+            # Add retry marker to instruction to ensure cache miss
+            if retry_attempt > 0:
+                instruction = f"{instruction}\n[Retry Attempt: {retry_attempt}]"
+                use_cache = False  # Disable cache for retries
+            
+            # Log the complete query content for debugging
+            self.logger.debug("=== LLM Query Content ===")
+            self.logger.debug(f"Retry Attempt: {retry_attempt}")
+            self.logger.debug(f"Temperature: {1.0 + (retry_attempt * temperature_boost)}")
+            self.logger.debug(f"Cache Enabled: {use_cache}")
+            self.logger.debug("\n=== Instruction ===\n" + instruction)
+            self.logger.debug("\n=== Code ===\n" + code)
+            if examples:
+                self.logger.debug("\n=== Examples ===")
+                for i, ex in enumerate(examples):
+                    self.logger.debug(f"\nExample {i+1} Query:\n" + ex["query"])
+                    self.logger.debug(f"\nExample {i+1} Answer:\n" + ex["answer"])
+            self.logger.debug("=====================")
+                
+            return self.llm.infer_llm(
+                self.config.get("aoai_generation_model", "gpt-4"),
+                instruction,
+                examples or [],
+                code,
+                system_info="You are a helpful AI assistant specialized in Verus formal verification.",
+                answer_num=3,
+                max_tokens=self.config.get("max_token", 8192),
+                temp=1.0 + (retry_attempt * temperature_boost),
+                use_cache=use_cache,  # Pass cache flag to LLM
+            )
+        except Exception as e:
+            self.logger.error(f"Error during LLM inference: {e}")
+            return []
+
+    def _process_responses(
+        self, 
+        responses: List[str], 
+        original_code: str,
+        context_msg: str = ""
+    ) -> List[str]:
+        """Process and validate LLM responses."""
+        safe_responses = []
+        for response in responses:
+            # Apply debug_type_error to fix any type errors
+            fixed_response, _ = debug_type_error(response, logger=self.logger)
+            final_response = fixed_response if fixed_response else response
+
+            # Check if the generated code is safe
+            if self.check_code_safety(original_code, final_response):
+                safe_responses.append(final_response)
+                self.logger.info(f"Generated spec code passed safety check{context_msg}")
+            else:
+                self.logger.warning(f"Generated spec code failed safety check{context_msg}")
+        return safe_responses
 
     def exec(self, context) -> str:
         """
@@ -108,47 +176,24 @@ IMPORTANT GUIDELINES:
 
             # Load examples for spec inference
             examples = get_examples(self.config, "requires", self.logger)
-            # Run inference with increasing temperature on retries
-            try:
-                responses = self.llm.infer_llm(
-                    self.config.get("aoai_generation_model", "gpt-4"),
-                    instruction,
-                    examples,
-                    code,
-                    system_info="You are a helpful AI assistant specialized in Verus formal verification.",
-                    answer_num=3,
-                    max_tokens=self.config.get("max_token", 8192),
-                    temp=1.0 + (retry_attempt * 0.2),  # Increase temperature on retries
-                )
-            except Exception as e:
-                self.logger.error(f"Error during LLM inference: {e}")
-                if retry_attempt == max_retries - 1:
-                    return code  # Fallback to original code on last attempt
-                continue
+            
+            # Use cache only for first attempt
+            responses = self._get_llm_responses(
+                instruction, 
+                code, 
+                examples, 
+                retry_attempt=retry_attempt,
+                use_cache=(retry_attempt == 0)
+            )
+            if not responses and retry_attempt == max_retries - 1:
+                return code
 
-            # Process responses to fix any type errors
-            processed_responses = []
-            for response in responses:
-                # Apply debug_type_error to fix any type errors
-                fixed_response, _ = debug_type_error(response, logger=self.logger)
-                final_response = fixed_response if fixed_response else response
+            safe_responses.extend(self._process_responses(responses, original_code))
 
-                # Check if the generated code is safe
-                if self.check_code_safety(original_code, final_response):
-                    processed_responses.append(final_response)
-                    safe_responses.append(final_response)
-                    self.logger.info("Generated spec code passed safety check")
-                else:
-                    self.logger.warning(
-                        "Generated spec code failed safety check, will retry"
-                    )
-
-            # If we have safe responses, break out of retry loop
             if safe_responses:
                 self.logger.info(f"Found {len(safe_responses)} safe responses after {retry_attempt + 1} attempts")
                 break
 
-            # If this is not the last attempt, modify instruction for retry
             if retry_attempt < max_retries - 1:
                 self.inference_instruction += (
                     f"\n\nIMPORTANT: Previous attempt failed safety checks. "
@@ -193,7 +238,7 @@ IMPORTANT GUIDELINES:
             best_code, global_best_score, global_best_code, global_dir, self.logger
         )
 
-        # Also write to a module-specific best file
+        # Save the best spec inference from this step to a module-specific file
         module_best_path = output_dir / "04_spec_inference_global_best.rs"
         try:
             sample_with_score = f"{best_code}\n\n// VEval Score: {best_score}"
@@ -202,11 +247,11 @@ IMPORTANT GUIDELINES:
         except Exception as e:
             self.logger.error(f"Error saving best spec inference: {e}")
 
-        # Store the updated global best in context, but use the current best sample for the next step
+        # Store the updated global best in context
         context.set_best_score(updated_global_best_score)
         context.set_best_code(updated_global_best_code)
 
-        # Add the best sample from current step to context, regardless of global best
-        context.add_trial(best_code)  # Always use the best sample from this step
+        # Add the best sample from current step to context
+        context.add_trial(best_code)
 
         return best_code

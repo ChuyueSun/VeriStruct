@@ -19,7 +19,7 @@ impl RwLockPredicate<u64> for FixedParity {
 
 /* TEST CODE BELOW */
 
-fn example2(n: u64) {
+fn test(n: u64) {
     let lock_even = RwLock::<u64, FixedParity>::new(20, Ghost(FixedParity { parity: 0 }));
     let lock_odd = RwLock::<u64, FixedParity>::new(23, Ghost(FixedParity { parity: 1 }));
 

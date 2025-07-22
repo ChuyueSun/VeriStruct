@@ -21,6 +21,7 @@ from src.modules.view_inference import ViewInferenceModule
 from src.modules.view_refinement import ViewRefinementModule
 from src.planner import Planner
 from src.modules.proof_generation import ProofGenerationModule
+from src.modules.lemma_preprocessor import LemmaPreprocessor
 
 # Simplified logging configuration: shorter format and controllable level
 log_level = os.getenv("LOG_LEVEL", "INFO").upper()
@@ -167,7 +168,6 @@ def main():
         logger.warning(f"Could not load config-azure or initialize verus path: {e}")
         logger.warning("Using default configuration")
         from src.configs import sconfig as _sconfig_module
-
         config = getattr(_sconfig_module, "config", {})
 
     # Check for custom test file from environment variable
@@ -184,8 +184,31 @@ def main():
         logger.error(f"Test file {test_file_path} not found!")
         return
 
+    # Load and preprocess the input file with lemmas
     sample_code = test_file_path.read_text()
     logger.info(f"Loaded test file: {test_file_path}")
+    logger.info("Original code:")
+    logger.info("=" * 80)
+    logger.info(sample_code)
+    logger.info("=" * 80)
+
+    # Preprocess with lemmas
+    lemmas_dir = Path("src/lemmas")
+    preprocessor = LemmaPreprocessor(str(lemmas_dir), logger)
+    sample_code = preprocessor.preprocess(sample_code)
+    
+    # Log the preprocessed code
+    logger.info("Preprocessed code with lemmas:")
+    logger.info("=" * 80)
+    logger.info(sample_code)
+    logger.info("=" * 80)
+
+    # Save preprocessed code for reference
+    output_dir = Path(os.environ.get("VERUS_OUTPUT_DIR", "output"))
+    output_dir.mkdir(exist_ok=True)
+    preprocessed_file = output_dir / "preprocessed.rs"
+    preprocessed_file.write_text(sample_code)
+    logger.info(f"Saved preprocessed code to {preprocessed_file}")
 
     # Update logger format to include input file name (still concise)
     input_file_name = test_file_path.name

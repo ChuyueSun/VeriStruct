@@ -8,7 +8,7 @@ helps Verus discharge the outstanding obligations.
 """
 
 from pathlib import Path
-from typing import List
+from typing import List, Dict
 import re  # Added for regex detection of empty proof blocks
 
 from src.infer import LLM
@@ -31,7 +31,7 @@ class ProofGenerationModule(BaseModule):
     def __init__(self, config, logger):
         super().__init__(
             name="proof_generation",
-            desc="Insert proof blocks to replace '// TODO: add proof' markers",
+            desc="Generate proofs for Verus functions",
             config=config,
             logger=logger,
         )
@@ -50,7 +50,9 @@ class ProofGenerationModule(BaseModule):
             "   - Start with type invariant usage (if exists): For methods in `impl` blocks, begin with:\n"
             "     * `use_type_invariant(&*self);` for reference receivers\n"
             "     * `use_type_invariant(self);` for value receivers\n"
-            "   - Add necessary lemma calls, reusing existing lemmas from the file or in scope\n"
+            "   - ALWAYS call all relevant existing lemmas from the file in the form `lemma_name(arg1, arg2, ...)`. For example:\n"
+            "     * If there's a lemma about sequence bounds, call it as `sequence_bounds_lemma(seq, idx)`\n"
+            "     * If there's a lemma about arithmetic properties, call it as `arithmetic_lemma(x, y)`\n"
             "   - When working with sequences in specifications, call relevant modular arithmetic lemmas from the file\n"
             "   - Use assertions strategically with `assert(condition)`\n"
             "   - When helpful, use the `by(...)` syntax for proof steps:\n"
@@ -85,20 +87,80 @@ class ProofGenerationModule(BaseModule):
             "Return the ENTIRE file with your changes – not a diff or partial snippet."
         )
 
+    def _get_llm_responses(
+        self, 
+        instruction: str,
+        code: str,
+        examples: List[Dict[str, str]] = None,
+        temperature_boost: float = 0.2,
+        retry_attempt: int = 0,
+        use_cache: bool = True,
+    ) -> List[str]:
+        """Get responses from LLM with error handling."""
+        try:
+            # Add retry marker to instruction to ensure cache miss
+            if retry_attempt > 0:
+                instruction = f"{instruction}\n[Retry Attempt: {retry_attempt}]"
+                use_cache = False  # Disable cache for retries
+                
+            return self.llm.infer_llm(
+                self.config.get("aoai_generation_model", "gpt-4"),
+                instruction,
+                examples or [],
+                code,
+                system_info="You are a helpful AI assistant specialized in Verus formal verification.",
+                answer_num=3,
+                max_tokens=self.config.get("max_token", 8192),
+                temp=1.0 + (retry_attempt * temperature_boost),
+                use_cache=use_cache,  # Pass cache flag to LLM
+            )
+        except Exception as e:
+            self.logger.error(f"Error during LLM inference: {e}")
+            return []
+
+    def _process_responses(
+        self, 
+        responses: List[str], 
+        original_code: str,
+        context_msg: str = "",
+        verus_path: str = "verus",
+    ) -> List[str]:
+        """Process and validate LLM responses."""
+        safe_responses = []
+        for response in responses:
+            # Fix simple type errors
+            fixed_response, _ = debug_type_error(response, logger=self.logger)
+            final_response = fixed_response if fixed_response else response
+
+            # Check if the generated code is safe
+            if code_change_is_safe(
+                origin_code=original_code,
+                changed_code=final_response,
+                verus_path=verus_path,
+                logger=self.logger,
+            ):
+                safe_responses.append(final_response)
+                self.logger.info(f"Generated proof code passed safety check{context_msg}")
+            else:
+                self.logger.warning(f"Generated proof code failed safety check{context_msg}")
+        return safe_responses
+
     # ---------------------------------------------------------------------
     # Helper
     # ---------------------------------------------------------------------
 
     def _should_skip(self, code: str) -> bool:
-        """Return True if the code has no proof TODO markers."""
+        """Return True if the code has no proof TODO markers or empty proof blocks."""
         # Skip only if *none* of the typical proof markers/empty blocks are present.
         if ("TODO: add proof" in code) or ("TODO:add proof" in code) or \
            ("TODO: add invariants" in code) or ("TODO: add invariant" in code) or \
-           ("TODO: add assert" in code) or ("TODO: add asserts" in code):
+           ("TODO: add assert" in code) or ("TODO: add asserts" in code) or \
+           ("Proof body here if needed" in code):
             return False
 
         # Detect empty proof blocks such as `proof{}`, `proof {}`, or `proof {\n}`
-        if re.search(r"proof\s*{\s*}\s*", code):
+        if re.search(r"proof\s*{\s*}\s*", code) or \
+           re.search(r"proof\s*{\s*//[^\n]*\n\s*}\s*", code):  # Matches proof blocks with only comments
             return False
 
         return True
@@ -119,6 +181,8 @@ class ProofGenerationModule(BaseModule):
             return code
 
         max_retries = 3
+        safe_responses = []
+
         for retry_attempt in range(max_retries):
             self.logger.info(f"Proof generation attempt {retry_attempt + 1}/{max_retries}")
 
@@ -134,53 +198,28 @@ class ProofGenerationModule(BaseModule):
             # Load examples if available (input-proof / output-proof)
             examples = get_examples(self.config, "proof", self.logger)
 
-            # Query the LLM with increasing temperature on retries
-            try:
-                responses: List[str] = self.llm.infer_llm(
-                    self.config.get("aoai_generation_model", "gpt-4"),
-                    instruction,
-                    exemplars=examples,
-                    query=code,
-                    system_info="You are a helpful AI assistant specialized in Verus formal verification.",
-                    answer_num=3,
-                    max_tokens=self.config.get("max_token", 8192),
-                    temp=1.0 + (retry_attempt * 0.2),  # Increase temperature on retries
-                )
-            except Exception as e:
-                self.logger.error(f"Error during LLM inference: {e}")
-                if retry_attempt == max_retries - 1:
-                    return code  # Fallback to original code on last attempt
-                continue
+            # Use cache only for first attempt
+            responses = self._get_llm_responses(
+                instruction, 
+                code, 
+                examples, 
+                retry_attempt=retry_attempt,
+                use_cache=(retry_attempt == 0)
+            )
+            if not responses and retry_attempt == max_retries - 1:
+                return code
 
-            # Fix simple type errors in each response
-            processed_responses: List[str] = []
-            safe_responses: List[str] = []
-            for resp in responses:
-                fixed_resp, _ = debug_type_error(resp, logger=self.logger)
-                final_resp = fixed_resp if fixed_resp else resp
+            safe_responses.extend(self._process_responses(
+                responses, 
+                original_code,
+                context_msg="",
+                verus_path=self.config.get("verus_path", "verus")
+            ))
 
-                # Check if the generated code is safe
-                if code_change_is_safe(
-                    origin_code=original_code,
-                    changed_code=final_resp,
-                    verus_path=self.config.get("verus_path", "verus"),
-                    logger=self.logger,
-                ):
-                    processed_responses.append(final_resp)
-                    safe_responses.append(final_resp)
-                    self.logger.info("Generated proof code passed safety check")
-                else:
-                    self.logger.warning(
-                        "Generated proof code failed safety check, will retry"
-                    )
-                    processed_responses.append(original_code)
-
-            # If we have safe responses, break out of retry loop
             if safe_responses:
                 self.logger.info(f"Found {len(safe_responses)} safe responses after {retry_attempt + 1} attempts")
                 break
 
-            # If this is not the last attempt, modify instruction for retry
             if retry_attempt < max_retries - 1:
                 self.proof_instruction += (
                     f"\n\nIMPORTANT: Previous attempt failed safety checks. "
@@ -219,27 +258,24 @@ class ProofGenerationModule(BaseModule):
         # Update global checkpoint best (but don't overwrite current trial yet)
         global_best_score = context.get_best_score()
         global_best_code = context.get_best_code()
-
         updated_global_best_score, updated_global_best_code = update_checkpoint_best(
             best_code, global_best_score, global_best_code, global_dir, self.logger
         )
 
-        # Save module-specific best
+        # Save the best proof generation from this step to a module-specific file
         module_best_path = output_dir / "05_proof_generation_global_best.rs"
         try:
             sample_with_score = f"{best_code}\n\n// VEval Score: {best_score}"
             module_best_path.write_text(sample_with_score)
-            self.logger.info(
-                f"Saved best proof generation sample to {module_best_path}"
-            )
+            self.logger.info(f"Saved best proof generation to {module_best_path}")
         except Exception as e:
-            self.logger.error(f"Error saving best proof generation sample: {e}")
+            self.logger.error(f"Error saving best proof generation: {e}")
 
-        # Update context globals
+        # Store the updated global best in context
         context.set_best_score(updated_global_best_score)
         context.set_best_code(updated_global_best_code)
 
-        # Add the best sample from this step to context so subsequent stages use it
+        # Add the best sample from current step to context
         context.add_trial(best_code)
 
         return best_code

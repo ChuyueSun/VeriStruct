@@ -1,5 +1,6 @@
 import re
 from pathlib import Path
+from typing import List, Dict
 
 from src.context import Context
 from src.infer import LLM
@@ -125,6 +126,75 @@ IMPORTANT: Return the complete file with your changes integrated into the origin
         )
         return parsed_code
 
+    def _get_llm_responses(
+        self, 
+        instruction: str,
+        code: str,
+        examples: List[Dict[str, str]] = None,
+        temperature_boost: float = 0.2,
+        retry_attempt: int = 0,
+        use_cache: bool = True,
+    ) -> List[str]:
+        """Get responses from LLM with error handling."""
+        try:
+            # Add retry marker to instruction to ensure cache miss
+            if retry_attempt > 0:
+                instruction = f"{instruction}\n[Retry Attempt: {retry_attempt}]"
+                use_cache = False  # Disable cache for retries
+            
+            # Log the complete query content for debugging
+            self.logger.debug("=== LLM Query Content ===")
+            self.logger.debug(f"Retry Attempt: {retry_attempt}")
+            self.logger.debug(f"Temperature: {1.0 + (retry_attempt * temperature_boost)}")
+            self.logger.debug(f"Cache Enabled: {use_cache}")
+            self.logger.debug("\n=== Instruction ===\n" + instruction)
+            self.logger.debug("\n=== Code ===\n" + code)
+            if examples:
+                self.logger.debug("\n=== Examples ===")
+                for i, ex in enumerate(examples):
+                    self.logger.debug(f"\nExample {i+1} Query:\n" + ex["query"])
+                    self.logger.debug(f"\nExample {i+1} Answer:\n" + ex["answer"])
+            self.logger.debug("=====================")
+                
+            return self.llm.infer_llm(
+                self.config.get("aoai_generation_model", "gpt-4"),
+                instruction,
+                examples or [],
+                code,
+                system_info="You are a helpful AI assistant specialized in Verus formal verification.",
+                answer_num=3,
+                max_tokens=self.config.get("max_token", 20000),
+                temp=1.0 + (retry_attempt * temperature_boost),
+                use_cache=use_cache,  # Pass cache flag to LLM
+            )
+        except Exception as e:
+            self.logger.error(f"Error during LLM inference: {e}")
+            return []
+
+    def _process_responses(
+        self, 
+        responses: List[str], 
+        original_code: str,
+        context_msg: str = ""
+    ) -> List[str]:
+        """Process and validate LLM responses."""
+        safe_responses = []
+        for response in responses:
+            # First parse the response to extract the View implementation
+            final_response = parsed_response = parse_llm_response(response)
+
+            # Then apply debug_type_error to fix any type errors
+            fixed_response, _ = debug_type_error(parsed_response, logger=self.logger)
+            final_response = fixed_response if fixed_response else parsed_response
+
+            # Check if the generated code is safe
+            if self.check_code_safety(original_code, final_response):
+                safe_responses.append(final_response)
+                self.logger.info(f"Generated view code passed safety check{context_msg}")
+            else:
+                self.logger.warning(f"Generated view code failed safety check{context_msg}")
+        return safe_responses
+
     def exec(self, context: Context) -> str:
         """
         Execute the view inference module with the given context.
@@ -152,72 +222,37 @@ IMPORTANT: Return the complete file with your changes integrated into the origin
 
         # Load examples
         examples = get_examples(self.config, "view", self.logger)
+        
         # Retry mechanism for safety checks
         max_retries = 3
         safe_responses = []
 
         for retry_attempt in range(max_retries):
-            self.logger.info(
-                f"View inference attempt {retry_attempt + 1}/{max_retries}"
+            self.logger.info(f"View inference attempt {retry_attempt + 1}/{max_retries}")
+
+            # Use cache only for first attempt
+            responses = self._get_llm_responses(
+                instruction, 
+                code, 
+                examples, 
+                retry_attempt=retry_attempt,
+                use_cache=(retry_attempt == 0)
             )
+            if not responses and retry_attempt == max_retries - 1:
+                return code
 
-            # Run inference
-            try:
-                responses = self.llm.infer_llm(
-                    self.config.get("aoai_generation_model", "gpt-4"),
-                    instruction,
-                    examples,
-                    code,
-                    system_info="You are a helpful AI assistant specialized in Verus formal verification.",
-                    answer_num=3,
-                    max_tokens=self.config.get("max_token", 20000),
-                    temp=1.0 + (retry_attempt * 0.2),  # Increase temperature on retries
-                )
-            except Exception as e:
-                self.logger.error(f"Error during LLM inference: {e}")
-                if retry_attempt == max_retries - 1:
-                    # Last attempt failed, return original code
-                    return code
-                continue
+            safe_responses.extend(self._process_responses(responses, original_code))
 
-            # Parse and process responses
-            processed_responses = []
-            for response in responses:
-                # First parse the response to extract the View implementation
-                final_response = parsed_response = parse_llm_response(response)
-
-                # Then apply debug_type_error to fix any type errors
-                fixed_response, _ = debug_type_error(
-                    parsed_response, logger=self.logger
-                )
-                final_response = fixed_response if fixed_response else parsed_response
-
-                # Check if the generated code is safe
-                if self.check_code_safety(original_code, final_response):
-                    processed_responses.append(final_response)
-                    safe_responses.append(final_response)
-                    self.logger.info("Generated view code passed safety check")
-                else:
-                    self.logger.warning(
-                        "Generated view code failed safety check, will retry"
-                    )
-
-            # If we have safe responses, break out of retry loop
             if safe_responses:
-                self.logger.info(
-                    f"Found {len(safe_responses)} safe responses after {retry_attempt + 1} attempts"
-                )
+                self.logger.info(f"Found {len(safe_responses)} safe responses after {retry_attempt + 1} attempts")
                 break
 
-            # If this is not the last attempt, modify instruction for retry
             if retry_attempt < max_retries - 1:
                 instruction += f"\n\nIMPORTANT: Previous attempt failed safety checks. Please ensure your View implementation does not modify immutable functions and maintains semantic equivalence. Attempt {retry_attempt + 2}/{max_retries}."
 
         # If no safe responses found after all retries, fall back to original
         if not safe_responses:
-            self.logger.warning(
-                "No safe responses found after all retries, using original code"
-            )
+            self.logger.warning("No safe responses found after all retries, using original code")
             safe_responses = [original_code]
 
         # Save all generated samples
@@ -272,11 +307,7 @@ IMPORTANT: Return the complete file with your changes integrated into the origin
         context.set_best_code(checkpoint_best_code)
         context.set_best_score(checkpoint_best_score)
 
-        self.logger.debug(
-            f"ViewInference - Stored checkpoint best in context with score: {checkpoint_best_score}"
-        )
-
         # Add the best sample from current step to context
-        context.add_trial(best_code)  # Always use the best sample from this step
+        context.add_trial(best_code)
 
         return best_code

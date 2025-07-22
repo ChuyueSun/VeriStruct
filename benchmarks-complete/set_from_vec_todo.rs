@@ -20,6 +20,7 @@ impl VecSet {
     pub fn insert(&mut self, v: u64)
         // TODO: add requires and ensures
     {
+        // TODO: add proof
         self.vt.push(v);
     }
 
@@ -27,6 +28,7 @@ impl VecSet {
         // TODO: add requires and ensures
     {
         for i in iter: 0..self.vt.len()
+        // TODO: add invariant
         {
             if self.vt[i] == v {
                 return true;
@@ -38,7 +40,7 @@ impl VecSet {
 
 /* TSET CODE BELOW */
 
-fn test_vecset(t: Vec<u64>)
+fn test(t: Vec<u64>)
 {
     let mut vs: VecSet = VecSet::new();
     assert(vs@ =~= set![]);
@@ -51,7 +53,7 @@ fn test_vecset(t: Vec<u64>)
     assert(vs@ =~= set![3, 5]);
 }
 
-fn main() {}
+pub fn main() {}
 
 } // verus!
 
