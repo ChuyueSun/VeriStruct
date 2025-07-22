@@ -28,7 +28,7 @@ def main():
     parser = argparse.ArgumentParser(description='Run VerusAgent for formal verification')
     parser.add_argument('--test-file', help='Path to the Rust file to verify', default=None)
     parser.add_argument('--verus-path', help='Path to the Verus executable', default=None)
-    parser.add_argument('--config', help='Config file to use (default: config-azure)', default='config-oai')
+    parser.add_argument('--config', help='Config file to use (default: config-azure)', default='config-azure')
     parser.add_argument('--no-cache-read', action='store_true', help='Disable reading from LLM cache')
     parser.add_argument('--output-dir', help='Directory to store output artifacts', default='output')
     parser.add_argument('--immutable-functions', help='Comma-separated list of function names that should not be modified during generation or repair', default=None)
