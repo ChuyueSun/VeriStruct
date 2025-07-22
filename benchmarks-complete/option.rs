@@ -1,5 +1,6 @@
 use vstd::pervasive::*;
 use builtin_macros::*;
+use vstd::prelude::*;
 
 verus! {
 

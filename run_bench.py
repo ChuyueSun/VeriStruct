@@ -9,7 +9,7 @@ def main():
     parser.add_argument(
         "--configs",
         nargs="+",
-        default=["config-xai", "config-claude", "config-azure"],
+        default=["config-azure"],
         help="List of config file names (without .json) to pass to run_agent.py",
     )
     args = parser.parse_args()
@@ -22,9 +22,9 @@ def main():
         cfg_results_root = os.path.join("results", cfg)
         os.makedirs(cfg_results_root, exist_ok=True)
 
-        for todo_path in glob.glob("benchmarks/*_todo.rs"):
+        for todo_path in glob.glob("benchmarks-complete/*_todo.rs"):
             name = os.path.splitext(os.path.basename(todo_path))[0]
-            test_file = f"benchmarks/{name}.rs"
+            test_file = f"benchmarks-complete/{name}.rs"
 
             bench_dir = os.path.join(cfg_results_root, name)
             os.makedirs(bench_dir, exist_ok=True)
@@ -34,7 +34,7 @@ def main():
             print(f"Running {name} with {cfg} -> log: {log_file}")
 
             cmd = (
-                f"./run_agent.py --test-file {test_file} --config {cfg} > {log_file} 2>&1"
+                    f"./run_agent.py --test-file {test_file} --immutable-functions test > {log_file} 2>&1"
             )
 
             try:
