@@ -2,6 +2,12 @@ use vstd::prelude::*;
 
 verus! {
 
+/// This module provides basic vector algorithms with specifications suitable for formal verification.
+/// 
+/// - `binary_search`: Performs a binary search on a sorted vector to find the index of a given key. The vector must be sorted in ascending order and the key must be present in the vector.
+/// - `reverse`: Reverses the elements of a vector in place, with postconditions about the resulting order.
+/// - `binary_search_no_spinoff`: Variant of binary search with loop isolation disabled for verification purposes.
+
 fn binary_search(v: &Vec<u64>, k: u64) -> (r: usize)
 // TODO: add specification
 {

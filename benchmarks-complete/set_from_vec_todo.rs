@@ -1,4 +1,5 @@
 use vstd::prelude::*;
+use vstd::seq_lib::lemma_seq_properties;
 
 verus! {
 

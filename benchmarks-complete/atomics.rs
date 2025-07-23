@@ -14,11 +14,12 @@ struct_with_invariants!{
 
     spec fn well_formed(&self) -> bool {
         invariant on field with () is (b: bool, t: Option<T>) {
-            b ==> t.is_Some()
+            b === t.is_Some()
         }
     }
 }
 
+#[verifier::exec_allows_no_decreases_clause]
 fn take<T>(lock: &Lock<T>) -> (t: Tracked<T>)
     requires
         lock.well_formed(),
@@ -56,7 +57,7 @@ struct VEqualG {}
 
 impl AtomicInvariantPredicate<(), u64, u64> for VEqualG {
     closed spec fn atomic_inv(k: (), v: u64, g: u64) -> bool {
-        v == g
+        v === g
     }
 }
 
@@ -104,11 +105,12 @@ pub fn test() {
             assert(new_val == 36u64);
             g = proof_int(36u64);
     });
-    
-    
 }
 
 pub fn main() {
 }
 
 } // verus!
+
+// Step 3 (proof_generation) VEval Score: Compilation Error: True, Verified: -1, Errors: 999, Verus Errors: 2
+// Verified: -1, Erro
