@@ -80,32 +80,51 @@ def revise_tests(output_path, total, covered):
     """
     Generates additional tests to cover uncovered lines in the Rust file.
     Returns new total and covered line counts. 
-    This function should ne called only if total != covered.
+    This function should be called only if total != covered.
+    Should total == -1 (there was an error in previous steps), this function will attempt to fix 
+    the file.
     """
     rust_code = util.read_rust_file(output_path)
      # test code generation
-    prompt = f"""
-    You are an expert Rust developer.
-    
-    The following Rust file has unit tests, and out of the {total} lines of code, every line is covered by an unit tests
-    aside from {total - covered} uncovered lines. Identify the {total - covered} uncovered lines and generate new unit tests to cover them.
+    if total == -1:
+            prompt = f"""
+        You are an expert Rust developer.
+        
+        The following Rust file has unit tests, but due to mistakes from removing Verus from the original file with both Verus and Rust, 
+        the original file or generating unit tests, this file cannot be run with cargo tarpaulin for coverage measurement without 
+        raising an error. 
 
-    Return the entire rust file with the new tests included. Keep everything else the same, including 
-    the existing tests, imports, and structure of the file. Do not remove any existing tests or code.
-    Return just the string of file contents, without ```rust tags or extra text. 
-    
-    Here is the Rust file:
+        Identify the lines of code which you suspect most are causing the error, and only fix those lines. Keep 
+        everything else the same, including the existing tests, imports, and structure of the file. Do not remove any existing tests or code. 
+        Return just the string of file contents, without ```rust tags or extra text, and return the entire file, not just 
+        what you changed.
 
-    ```rust
-    
-    Ensure the output is still valid and compatible with cargo tarpaulin for coverage measurement:
-    - Inside the test module, include use super::*; at the top
-    - Each test function must return nothing (i.e., not -> i32, etc.)
-    - All tests must actually call functions from the main code
-    - No functions should be declared but unused
-    - Do not include ```rust tags or any explanation — only output code
-    {rust_code} 
-    """
+        ```rust
+        {rust_code} 
+        """
+    else: 
+        prompt = f"""
+        You are an expert Rust developer.
+        
+        The following Rust file has unit tests, and out of the {total} lines of code, every line is covered by an unit tests
+        aside from {total - covered} uncovered lines. Identify the {total - covered} uncovered lines and generate new unit tests to cover them.
+
+        Return the entire rust file with the new tests included. Keep everything else the same, including 
+        the existing tests, imports, and structure of the file. Do not remove any existing tests or code.
+        Return just the string of file contents, without ```rust tags or extra text. 
+        
+        Here is the Rust file:
+
+        ```rust
+        
+        Ensure the output is still valid and compatible with cargo tarpaulin for coverage measurement:
+        - Inside the test module, include use super::*; at the top
+        - Each test function must return nothing (i.e., not -> i32, etc.)
+        - All tests must actually call functions from the main code
+        - No functions should be declared but unused
+        - Do not include ```rust tags or any explanation — only output code
+        {rust_code} 
+        """
     response = openai.ChatCompletion.create(
         deployment_id=util.deployment_name,
         messages=[{"role": "user", "content": prompt}],
@@ -146,8 +165,9 @@ if __name__ == "__main__":
         sys.exit(1)
 
     output_path, total_lines, covered_lines = initialize_tests(rust_file_path)
-    if total_lines > covered_lines:
-        total_lines, covered_lines = revise_tests(output_path)
+    if total_lines > covered_lines or total_lines == -1:
+        total_lines, covered_lines = revise_tests(output_path, total_lines, covered_lines)
+        
     coverage = (covered_lines / total_lines) * 100
     print(f"Test coverage: {coverage:.2f}%")
     

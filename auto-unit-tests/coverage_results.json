@@ -1,17 +1,35 @@
 {
-  "invariants_tests": {
+  "rb_type_invariant_tests": {
+    "coverage": 100.0
+  },
+  "agreement_tests": {
+    "coverage": -0.0
+  },
+  "set_from_vec_tests": {
     "coverage": 100.0
   },
   "log_tests": {
     "coverage": 100.0
   },
+  "option_tests": {
+    "coverage": 95.65
+  },
+  "atomics_tests": {
+    "coverage": -0.0
+  },
+  "vectors_tests": {
+    "coverage": 100.0
+  },
   "rwlock_vstd_tests": {
     "coverage": 100.0
   },
-  "set_from_vec_tests": {
+  "invariants_tests": {
+    "coverage": 93.75
+  },
+  "agreement_type_inv_tests": {
     "coverage": 100.0
   },
-  "vectors_tests": {
+  "transfer_tests": {
     "coverage": 100.0
   }
 }

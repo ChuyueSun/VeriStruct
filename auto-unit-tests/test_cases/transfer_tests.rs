@@ -1,5 +1,3 @@
-fn main() {}
-
 pub struct Account {
     pub balance: u64,
 }
@@ -14,48 +12,47 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_normal_transfer() {
-        let mut orig = Account { balance: 1000 };
-        let mut dest = Account { balance: 500 };
-        transfer(&mut orig, &mut dest, 200);
-        assert_eq!(orig.balance, 800);
-        assert_eq!(dest.balance, 700);
+    fn test_transfer_valid() {
+        let mut orig = Account { balance: 100 };
+        let mut dest = Account { balance: 50 };
+        transfer(&mut orig, &mut dest, 20);
+        assert_eq!(orig.balance, 80);
+        assert_eq!(dest.balance, 70);
     }
 
     #[test]
     fn test_transfer_zero() {
-        let mut orig = Account { balance: 1000 };
-        let mut dest = Account { balance: 500 };
-        transfer(&mut orig, &mut dest, 0);
-        assert_eq!(orig.balance, 1000);
-        assert_eq!(dest.balance, 500);
-    }
-
-    #[test]
-    #[should_panic]
-    fn test_insufficient_funds() {
         let mut orig = Account { balance: 100 };
-        let mut dest = Account { balance: 500 };
-        // This should panic in debug mode due to subtraction underflow.
-        transfer(&mut orig, &mut dest, 200);
+        let mut dest = Account { balance: 50 };
+        transfer(&mut orig, &mut dest, 0);
+        assert_eq!(orig.balance, 100);
+        assert_eq!(dest.balance, 50);
     }
 
     #[test]
     #[should_panic]
-    fn test_destination_overflow() {
-        // Set up such that dest.balance + amount overflows u64.
-        // For example, if dest.balance is u64::MAX - 5 and we transfer 10, then addition will overflow.
+    fn test_transfer_insufficient_funds() {
         let mut orig = Account { balance: 10 };
-        let mut dest = Account { balance: u64::MAX - 5 };
-        transfer(&mut orig, &mut dest, 10);
+        let mut dest = Account { balance: 20 };
+        // This should panic in debug mode due to underflow in subtraction.
+        transfer(&mut orig, &mut dest, 15);
     }
 
     #[test]
-    fn test_transfer_entire_balance() {
-        let mut orig = Account { balance: 500 };
-        let mut dest = Account { balance: 300 };
-        transfer(&mut orig, &mut dest, 500);
+    fn test_transfer_full_balance() {
+        let mut orig = Account { balance: 100 };
+        let mut dest = Account { balance: 200 };
+        transfer(&mut orig, &mut dest, 100);
         assert_eq!(orig.balance, 0);
-        assert_eq!(dest.balance, 800);
+        assert_eq!(dest.balance, 300);
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_transfer_overflow_on_destination() {
+        let mut orig = Account { balance: 100 };
+        let mut dest = Account { balance: u64::MAX };
+        // This transfer should panic in debug mode due to overflow in addition.
+        transfer(&mut orig, &mut dest, 1);
     }
 }

@@ -28,12 +28,14 @@ fn binary_search_no_spinoff(v: &Vec<u64>, k: u64) -> usize {
     let mut i1: usize = 0;
     let mut i2: usize = v.len() - 1;
     while i1 != i2 {
+        let d = i2 - i1;
         let ix = i1 + (i2 - i1) / 2;
         if v[ix] < k {
             i1 = ix + 1;
         } else {
             i2 = ix;
         }
+        assert!(i2 - i1 < d);
     }
     i1
 }
@@ -45,80 +47,39 @@ mod tests {
     #[test]
     fn test_binary_search_found() {
         let v = vec![1, 3, 5, 7, 9];
-        // Test for each element that exists in the vector
-        for (i, &val) in v.iter().enumerate() {
-            assert_eq!(binary_search(&v, val), i);
-        }
+        // Test when the element is exactly present.
+        assert_eq!(binary_search(&v, 1), 0);
+        assert_eq!(binary_search(&v, 3), 1);
+        assert_eq!(binary_search(&v, 5), 2);
+        assert_eq!(binary_search(&v, 7), 3);
+        assert_eq!(binary_search(&v, 9), 4);
     }
 
     #[test]
-    fn test_binary_search_insertion_point() {
+    fn test_binary_search_not_found() {
         let v = vec![1, 3, 5, 7, 9];
-        // For key between existing values, should return the index of the smallest element that is >= key.
-        // 2 should give index 1 because 3 is the first element >=2.
-        assert_eq!(binary_search(&v, 2), 1);
-        // 4 should give index 2 because 5 is the first element >=4.
+        // When the target is not present, binary_search returns the index of the first element not less than the target.
+        // For k = 4, the first element >= 4 is 5 at index 2.
         assert_eq!(binary_search(&v, 4), 2);
-        // 6 should give index 3 because 7 is the first element >=6.
-        assert_eq!(binary_search(&v, 6), 3);
-        // 8 should give index 4 because 9 is the first element >=8.
+        // For k = 0, it should return index 0.
+        assert_eq!(binary_search(&v, 0), 0);
+        // For k = 8, it should return index 4 because 9 is the first element >= 8.
         assert_eq!(binary_search(&v, 8), 4);
     }
 
     #[test]
     #[should_panic]
     fn test_binary_search_empty() {
-        // This should panic because v.len() - 1 underflows when v is empty.
-        let v: Vec<u64> = Vec::new();
-        let _ = binary_search(&v, 5);
-    }
-
-    #[test]
-    fn test_binary_search_edge_greater_than_all() {
-        // When the key is greater than the greatest element, the algorithm returns last index.
-        let v = vec![1, 3, 5, 7, 9];
-        // Although 10 is greater than all, our algorithm is not designed to return the length,
-        // so we expect it to return the last index.
-        assert_eq!(binary_search(&v, 10), v.len() - 1);
-    }
-
-    #[test]
-    fn test_binary_search_no_spinoff_found() {
-        let v = vec![2, 4, 6, 8, 10];
-        for (i, &val) in v.iter().enumerate() {
-            assert_eq!(binary_search_no_spinoff(&v, val), i);
-        }
-    }
-
-    #[test]
-    fn test_binary_search_no_spinoff_insertion_point() {
-        let v = vec![2, 4, 6, 8, 10];
-        // Key values that are not in the vector.
-        assert_eq!(binary_search_no_spinoff(&v, 3), 1);
-        assert_eq!(binary_search_no_spinoff(&v, 5), 2);
-        assert_eq!(binary_search_no_spinoff(&v, 7), 3);
-        assert_eq!(binary_search_no_spinoff(&v, 9), 4);
-    }
-
-    #[test]
-    #[should_panic]
-    fn test_binary_search_no_spinoff_empty() {
-        let v: Vec<u64> = Vec::new();
-        let _ = binary_search_no_spinoff(&v, 100);
-    }
-
-    #[test]
-    fn test_binary_search_no_spinoff_edge_greater_than_all() {
-        let v = vec![2, 4, 6, 8, 10];
-        // For a key greater than the last element, expect the last index.
-        assert_eq!(binary_search_no_spinoff(&v, 12), v.len() - 1);
+        // With an empty vector, v.len() - 1 will underflow, hence a panic is expected.
+        let v: Vec<u64> = vec![];
+        binary_search(&v, 1);
     }
 
     #[test]
     fn test_reverse_empty() {
-        let mut v: Vec<u64> = Vec::new();
+        let mut v: Vec<u64> = vec![];
         reverse(&mut v);
-        assert!(v.is_empty());
+        assert_eq!(v, vec![]);
     }
 
     #[test]
@@ -137,8 +98,47 @@ mod tests {
 
     #[test]
     fn test_reverse_odd() {
-        let mut v = vec![10, 20, 30, 40, 50];
+        let mut v = vec![1, 2, 3, 4, 5];
         reverse(&mut v);
-        assert_eq!(v, vec![50, 40, 30, 20, 10]);
+        assert_eq!(v, vec![5, 4, 3, 2, 1]);
+    }
+
+    #[test]
+    fn test_binary_search_no_spinoff_found() {
+        let v = vec![1, 3, 5, 7, 9];
+        // Test when the element is exactly present.
+        assert_eq!(binary_search_no_spinoff(&v, 1), 0);
+        assert_eq!(binary_search_no_spinoff(&v, 3), 1);
+        assert_eq!(binary_search_no_spinoff(&v, 5), 2);
+        assert_eq!(binary_search_no_spinoff(&v, 7), 3);
+        assert_eq!(binary_search_no_spinoff(&v, 9), 4);
+    }
+
+    #[test]
+    fn test_binary_search_no_spinoff_not_found() {
+        let v = vec![1, 3, 5, 7, 9];
+        // When the target is not present, binary_search_no_spinoff returns the index of the first element not less than the target.
+        assert_eq!(binary_search_no_spinoff(&v, 4), 2);
+        assert_eq!(binary_search_no_spinoff(&v, 0), 0);
+        assert_eq!(binary_search_no_spinoff(&v, 8), 4);
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_binary_search_no_spinoff_empty() {
+        // With an empty vector, we expect a panic due to underflow in indexing.
+        let v: Vec<u64> = vec![];
+        binary_search_no_spinoff(&v, 1);
+    }
+
+    #[test]
+    fn test_binary_search_with_duplicates() {
+        let v = vec![1, 2, 2, 3, 3, 5];
+        // For duplicate elements, binary_search should return the first index at which the element appears.
+        assert_eq!(binary_search(&v, 2), 1);
+        assert_eq!(binary_search_no_spinoff(&v, 2), 1);
+        // Similarly, for 3.
+        assert_eq!(binary_search(&v, 3), 3);
+        assert_eq!(binary_search_no_spinoff(&v, 3), 3);
     }
 }
