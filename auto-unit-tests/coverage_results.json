@@ -1,0 +1,17 @@
+{
+  "invariants_tests": {
+    "coverage": 100.0
+  },
+  "log_tests": {
+    "coverage": 100.0
+  },
+  "rwlock_vstd_tests": {
+    "coverage": 100.0
+  },
+  "set_from_vec_tests": {
+    "coverage": 100.0
+  },
+  "vectors_tests": {
+    "coverage": 100.0
+  }
+}
