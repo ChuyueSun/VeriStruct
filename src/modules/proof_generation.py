@@ -51,9 +51,10 @@ class ProofGenerationModule(BaseModule):
             "   - Start with type invariant usage (if exists): For methods in `impl` blocks, begin with:\n"
             "     * `use_type_invariant(&*self);` for reference receivers\n"
             "     * `use_type_invariant(self);` for value receivers\n"
-            "   - ALWAYS call all relevant existing lemmas from the file in the form `lemma_name(arg1, arg2, ...)`. For example:\n"
-            "     * If there's a lemma about sequence bounds, call it as `lemma_mod_auto(self.ring.len() as int)`\n"
-            "   - When working with sequences in specifications, call relevant modular arithmetic lemmas from the file\n"
+            "   - Carefully review all existing lemmas defined in the file and invoke each one that is relevant to the current proof context, using the syntax `lemma_name(arg1, arg2, ...)`.\n"
+            "     * For example, if there are lemmas about sequence bounds or modular arithmetic, call them as needed, such as `lemma_mod_auto(self.vt.len() as int)`.\n"
+            "     * For lemmas about sequence properties, use the appropriate generic syntax, e.g., `lemma_seq_properties::<T>()`.\n"
+            "     * When reasoning about sequences or specifications, ensure that all applicable modular arithmetic and sequence-related lemmas from the file are called to support your proof.\n"
             "   - Use assertions strategically with `assert(condition)`\n"
             "   - When helpful, use the `by(...)` syntax for proof steps:\n"
             "     * `by(nonlinear_arith)` for arithmetic reasoning\n"
@@ -205,7 +206,7 @@ class ProofGenerationModule(BaseModule):
             instruction = build_instruction(
                 base_instruction=self.proof_instruction,
                 add_common=True,
-                add_match=True,
+                # add_match=True,
                 code=code,
                 knowledge=context.gen_knowledge(),
             )

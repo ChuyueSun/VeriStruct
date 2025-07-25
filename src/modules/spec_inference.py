@@ -181,11 +181,15 @@ class SpecInferenceModule(BaseModule):
                 base_instruction=self.inference_instruction,
                 add_common=True,
                 add_requires_ensures=True,  # Include requires/ensures formatting
-                add_match=True,  # Include match syntax guidelines
+                add_match=False,  # Include match syntax guidelines
                 code=code,
                 knowledge=context.gen_knowledge(),
             )
-
+            # Debug log for complete instruction
+            self.logger.info("=== Complete Instruction for Debugging ===")
+            self.logger.info(instruction)
+            self.logger.info("=========================================")
+            
             # Load examples for spec inference
             examples = get_examples(self.config, "requires", self.logger)
             
