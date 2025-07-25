@@ -130,7 +130,9 @@ Common fixes include:
 4. Ensuring return types match function signatures
 
 Response with the Rust code only, do not include any explanation."""
-        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        instruction += (
+            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        )
 
         # Load examples
         examples = get_examples(self.config, "type", self.logger)
@@ -192,7 +194,9 @@ Response with the Rust code only, do not include any explanation."""
 (where `T` is the correct type inferred from the context). If you are not certain, do your best to infer the type from nearby definitions, function signatures, or variable usage.
 
 Respond with the **fixed Rust code only** and do not include any explanation."""
-        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        instruction += (
+            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        )
 
         # Load examples
         examples = get_examples(self.config, "type_annotation", self.logger)
@@ -252,7 +256,9 @@ Respond with the **fixed Rust code only** and do not include any explanation."""
         instruction = """Your mission is to fix the constructor so that its declared type invariant is satisfied.
 Often, this means adding `requires` so that the `inv(&self) -> bool` function is true.
 Respond with the **fixed Rust code only** and do not include any explanation."""
-        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        instruction += (
+            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        )
 
         # Load examples
         examples = get_examples(self.config, "constructor_type_invariant", self.logger)
@@ -310,7 +316,9 @@ Respond with the **fixed Rust code only** and do not include any explanation."""
         instruction = """Your mission is to fix the type error in the following Verus code.
 Please carefully analyze the error message and make the necessary changes to resolve it.
 Respond with the Rust code only, do not include any explanation."""
-        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        instruction += (
+            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        )
 
         query_template = "Type error:\n```\n{}```\n"
         query_template += "\nCode\n```\n{}```\n"

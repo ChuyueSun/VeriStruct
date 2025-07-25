@@ -7,7 +7,13 @@ from src.utils.path_utils import samples_dir, best_dir
 
 from src.infer import LLM
 from src.modules.base import BaseModule
-from src.modules.utils import debug_type_error, evaluate_samples, update_checkpoint_best
+from src.modules.utils import (
+    debug_type_error,
+    evaluate_samples,
+    update_checkpoint_best,
+    get_examples,
+    code_change_is_safe,
+)
 from src.prompts.template import build_instruction
 
 
@@ -31,11 +37,11 @@ class SpecInferenceModule(BaseModule):
         super().__init__(
             name="spec_inference",
             desc="Infer and add requires/ensures clauses to Verus functions",
+            config=config,
+            logger=logger,
+            immutable_funcs=immutable_funcs,
         )
-        self.config = config
-        self.logger = logger
         self.llm = LLM(config, logger)
-        self.immutable_funcs = immutable_funcs if immutable_funcs else []
 
         # Main instruction for requires/ensures inference
         self.inference_instruction = """You are an expert in Verus (verifier for rust). You have two main tasks:
@@ -56,6 +62,7 @@ IMPORTANT GUIDELINES:
    - DO NOT use `match` or `let` in the `ensures` clause or `requires` clause, but you can use `match` within `spec fn` bodies
    - DO NOT modify anything in `fn main()`
    - DO NOT add `self.inv()` to pre/post-conditions if `#[verifier::type_invariant]` is used
+   - DO NOT delete any `// TODO: add proof` comment; leave it intact for the proof-generation stage
    - Spec functions (like View) cannot have their own requires/ensures clauses
    - The final code you return MUST compile under Verus; double-check matching braces, parentheses, macro delimiters and remove any remaining "TODO" placeholders
    
@@ -76,67 +83,100 @@ RETURN FORMAT:
 
         # Get the latest trial code
         code = context.trials[-1].code
+        original_code = code  # Store original for safety checking
 
-        # Build the complete instruction using the prompt system
-        instruction = build_instruction(
-            base_instruction=self.inference_instruction,
-            add_common=True,
-            add_requires_ensures=True,  # Include requires/ensures formatting
-            add_match=True,  # Include match syntax guidelines
-            code=code,
-            knowledge=context.gen_knowledge(),
-        )
+        max_retries = 3
+        safe_responses = []
 
-        # Load examples for spec inference
-        examples = []
-        try:
-            example_path = (
-                Path(self.config.get("example_path", "examples")) / "input-requires"
+        for retry_attempt in range(max_retries):
+            self.logger.info(f"Spec inference attempt {retry_attempt + 1}/{max_retries}")
+
+            # Build the complete instruction using the prompt system
+            instruction = build_instruction(
+                base_instruction=self.inference_instruction,
+                add_common=True,
+                add_requires_ensures=True,  # Include requires/ensures formatting
+                add_match=True,  # Include match syntax guidelines
+                code=code,
+                knowledge=context.gen_knowledge(),
             )
-            if example_path.exists():
-                for f in sorted(example_path.iterdir()):
-                    if f.suffix == ".rs":
-                        input_content = f.read_text()
-                        answer_path = (
-                            Path(self.config.get("example_path", "examples"))
-                            / "output-requires"
-                            / f.name
-                        )
-                        answer = answer_path.read_text() if answer_path.exists() else ""
-                        examples.append({"query": input_content, "answer": answer})
-            else:
-                self.logger.warning(
-                    "Example path does not exist - proceeding without examples"
+
+            # Load examples for spec inference
+            examples = []
+            try:
+                example_path = (
+                    Path(self.config.get("example_path", "examples")) / "input-requires"
                 )
-        except Exception as e:
-            self.logger.error(f"Error loading examples: {e}")
+                if example_path.exists():
+                    for f in sorted(example_path.iterdir()):
+                        if f.suffix == ".rs":
+                            input_content = f.read_text()
+                            answer_path = (
+                                Path(self.config.get("example_path", "examples"))
+                                / "output-requires"
+                                / f.name
+                            )
+                            answer = answer_path.read_text() if answer_path.exists() else ""
+                            examples.append({"query": input_content, "answer": answer})
+                else:
+                    self.logger.warning(
+                        "Example path does not exist - proceeding without examples"
+                    )
+            except Exception as e:
+                self.logger.error(f"Error loading examples: {e}")
 
-        # Run inference
-        try:
-            responses = self.llm.infer_llm(
-                self.config.get("aoai_generation_model", "gpt-4"),
-                instruction,
-                examples,
-                code,
-                system_info="You are a helpful AI assistant specialized in Verus formal verification.",
-                answer_num=3,
-                max_tokens=self.config.get("max_token", 8192),
-                temp=1.0,
-            )
-        except Exception as e:
-            self.logger.error(f"Error during LLM inference: {e}")
-            # Return a placeholder response in case of error
-            return code
+            # Run inference with increasing temperature on retries
+            try:
+                responses = self.llm.infer_llm(
+                    self.config.get("aoai_generation_model", "gpt-4"),
+                    instruction,
+                    examples,
+                    code,
+                    system_info="You are a helpful AI assistant specialized in Verus formal verification.",
+                    answer_num=3,
+                    max_tokens=self.config.get("max_token", 8192),
+                    temp=1.0 + (retry_attempt * 0.2),  # Increase temperature on retries
+                )
+            except Exception as e:
+                self.logger.error(f"Error during LLM inference: {e}")
+                if retry_attempt == max_retries - 1:
+                    return code  # Fallback to original code on last attempt
+                continue
 
-        # Process responses to fix any type errors
-        processed_responses = []
-        for response in responses:
-            # Apply debug_type_error to fix any type errors
-            fixed_response, _ = debug_type_error(response, logger=self.logger)
-            if fixed_response:  # Only use the fixed version if it's not empty
-                processed_responses.append(fixed_response)
-            else:
-                processed_responses.append(response)
+            # Process responses to fix any type errors
+            processed_responses = []
+            for response in responses:
+                # Apply debug_type_error to fix any type errors
+                fixed_response, _ = debug_type_error(response, logger=self.logger)
+                final_response = fixed_response if fixed_response else response
+
+                # Check if the generated code is safe
+                if self.check_code_safety(original_code, final_response):
+                    processed_responses.append(final_response)
+                    safe_responses.append(final_response)
+                    self.logger.info("Generated spec code passed safety check")
+                else:
+                    self.logger.warning(
+                        "Generated spec code failed safety check, will retry"
+                    )
+
+            # If we have safe responses, break out of retry loop
+            if safe_responses:
+                self.logger.info(f"Found {len(safe_responses)} safe responses after {retry_attempt + 1} attempts")
+                break
+
+            # If this is not the last attempt, modify instruction for retry
+            if retry_attempt < max_retries - 1:
+                self.inference_instruction += (
+                    f"\n\nIMPORTANT: Previous attempt failed safety checks. "
+                    f"Please ensure your specifications maintain semantic equivalence "
+                    f"and do not modify immutable functions. Attempt {retry_attempt + 2}/{max_retries}."
+                )
+
+        # If no safe responses found after all retries, fall back to original
+        if not safe_responses:
+            self.logger.warning("No safe responses found after all retries, using original code")
+            return original_code
 
         # Save all generated samples
         output_dir = samples_dir()
@@ -146,13 +186,20 @@ RETURN FORMAT:
         global_dir = best_dir()
         global_dir.mkdir(exist_ok=True, parents=True)
 
-        # Evaluate processed samples and get the best one
+        # Evaluate safe responses and get the best one
         best_code, best_score, _ = evaluate_samples(
-            samples=processed_responses if processed_responses else [code],
+            samples=safe_responses,
             output_dir=output_dir,
             prefix="04_spec_inference",
             logger=self.logger,
         )
+
+        # Final safety check on the best code
+        if not self.check_code_safety(original_code, best_code):
+            self.logger.warning(
+                "Best generated code failed final safety check, falling back to original"
+            )
+            best_code = original_code
 
         # Get the global best from context
         global_best_score = context.get_best_score()

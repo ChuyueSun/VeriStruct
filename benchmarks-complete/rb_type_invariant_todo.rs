@@ -27,7 +27,7 @@ verus! {
     }
 
     impl<T: Copy> View for RingBuffer<T> {
-        // TODO: add view spec
+        // TODO: add specification
     }
 
     /// This function says that for any `x` and `y`, there are two
@@ -105,7 +105,7 @@ impl<T: Copy> RingBuffer<T> {
     /// Invariant for the ring buffer.
     #[verifier::type_invariant]
     closed spec fn inv(&self) -> bool {
-        // TODO: specify the invariant
+        // TODO: add specification 
     }
 
 
@@ -113,6 +113,9 @@ impl<T: Copy> RingBuffer<T> {
     pub fn len(&self) -> (ret: usize)
         // TODO: add requires and ensures
     {
+        proof {
+            // TODO: add proof
+        }
         if self.tail > self.head {
             self.tail - self.head
         } else if self.tail < self.head {
@@ -126,6 +129,9 @@ impl<T: Copy> RingBuffer<T> {
     pub fn has_elements(&self) -> (ret: bool)
         // TODO: add requires and ensures
     {
+        proof {
+            // TODO: add proof
+        }
         self.head != self.tail
     }
 
@@ -135,6 +141,9 @@ impl<T: Copy> RingBuffer<T> {
     pub fn is_full(&self) -> (ret: bool)
         // TODO: add requires and ensures
     {
+        proof {
+            // TODO: add proof
+        }
         self.head == ((self.tail + 1) % self.ring.len())
     }
 
@@ -158,6 +167,9 @@ impl<T: Copy> RingBuffer<T> {
         if self.is_full() {
             false
         } else {
+            proof {
+                // TODO: add proof
+            }
             my_set(&mut self.ring, self.tail, val);
             self.tail = (self.tail + 1) % self.ring.len();
             true
@@ -168,6 +180,9 @@ impl<T: Copy> RingBuffer<T> {
     pub fn dequeue(&mut self) -> (ret: Option<T>)
         // TODO: add requires and ensures
     {
+        proof {
+            // TODO: add proof
+        }
         if self.has_elements() {
             let val = self.ring[self.head];
             self.head = (self.head + 1) % self.ring.len();
@@ -183,6 +198,9 @@ impl<T: Copy> RingBuffer<T> {
     pub fn available_len(&self) -> (ret: usize)
         // TODO: add requires and ensures
     {
+        proof {
+            // TODO: add proof
+        }
         self.ring.len().saturating_sub(1 + self.len())
     }
 }

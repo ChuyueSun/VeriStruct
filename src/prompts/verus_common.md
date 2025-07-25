@@ -5,6 +5,7 @@
 - Don't change "unwind" to `(unwind) as bool`!
 - Return the complete modified Rust code in your response without explanations.
 - Keep top level docstrings at the top of the file, before `verus! {`. Do not place them after the `verus! {` declaration.
+- Don't change any function signatures.
 
 ## Spec Functions
 1. No Direct Method Calls:

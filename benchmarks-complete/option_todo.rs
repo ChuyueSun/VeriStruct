@@ -11,16 +11,16 @@ pub enum MyOption<A> {
 }
 
 pub open spec fn is_Some<A>(opt: MyOption<A>) -> bool {
-    // TODO: add specification function
+    // TODO: add specification
 }
 
 pub open spec fn is_None<A>(opt: MyOption<A>) -> bool {
-    // TODO: add specification function
+    // TODO: add specification
 }
 
 pub open spec fn get_Some_0<A>(opt: MyOption<A>) -> A
 {
-    // TODO: add specification function
+    // TODO: add specification
 }
 
 
@@ -39,7 +39,7 @@ impl<A: Copy> Copy for MyOption<A> {
 
 impl<A> MyOption<A> {
     pub open spec fn Or(self, optb: MyOption<A>) -> MyOption<A> {
-        // TODO: add specification function
+        // TODO: add specification
     }
 
     pub fn or(self, optb: MyOption<A>) -> (res: MyOption<A>)

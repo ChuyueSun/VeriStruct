@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 from src.prompts.template import fill_template
+from src.modules.utils import code_change_is_safe
 
 
 class BaseModule:
@@ -20,6 +21,9 @@ class BaseModule:
         self,
         name: str,
         desc: str,
+        config: Optional[Dict[str, Any]] = None,
+        logger: Optional[Any] = None,
+        immutable_funcs: Optional[list] = None,
         hdn=None,
         example=None,
         default_system=None,
@@ -30,7 +34,9 @@ class BaseModule:
         self.hdn = hdn
         self.example = example
         self.default_system = default_system
-        self.config = self._load_config(config_path) if config_path else {}
+        self.config = config or self._load_config(config_path) if config_path else {}
+        self.logger = logger
+        self.immutable_funcs = immutable_funcs if immutable_funcs is not None else []
 
     def _load_config(self, config_path: str) -> Dict[str, Any]:
         """
@@ -84,6 +90,32 @@ class BaseModule:
             print(f"Warning: Error filling template {template_name}: {e}")
             # If template filling fails, return a sensible default or empty string
             return ""
+
+    def check_code_safety(self, original_code: str, new_code: str) -> bool:
+        """
+        Check if code changes are safe using Lynette comparison.
+
+        Args:
+            original_code: Original code
+            new_code: Modified code
+
+        Returns:
+            True if changes are safe, False otherwise
+        """
+        try:
+            return code_change_is_safe(
+                origin_code=original_code,
+                changed_code=new_code,
+                verus_path=(
+                    self.config.get("verus_path", "verus") if self.config else "verus"
+                ),
+                logger=self.logger,
+                immutable_funcs=self.immutable_funcs,
+            )
+        except Exception as e:
+            if self.logger:
+                self.logger.error(f"Error checking code safety: {e}")
+            return True  # Default to safe if check fails
 
     def exec(self, context) -> str:
         """
