@@ -1,4 +1,5 @@
 use vstd::prelude::*;
+use vstd::seq_lib::group_seq_properties;
 
 verus! {
 

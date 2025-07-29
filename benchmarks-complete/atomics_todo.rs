@@ -19,6 +19,7 @@ struct_with_invariants!{
     }
 }
 
+#[verifier::exec_allows_no_decreases_clause]
 fn take<T>(lock: &Lock<T>) -> (t: Tracked<T>)
     // TODO: add requires and ensures
 {

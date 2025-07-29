@@ -6,7 +6,7 @@ fn reverse(v: &mut Vec<u64>)
     let length = v.len();
     let ghost v1 = v@;
     for n in 0..(length / 2)
-        // TODO: add invariants /////////?????
+        // TODO: add invariants
     {
         let x = v[n];
         let y = v[length - 1 - n];

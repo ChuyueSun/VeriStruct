@@ -182,8 +182,21 @@ impl<T: Copy> RingBuffer<T> {
     }
 
 
-    /// If the buffer isn't full, adds a new element to the back.
-    /// Returns whether the element was added.
+    /// This method attempts to add a new element to the back of the ring buffer.
+    /// The operation succeeds only if the buffer is not full.
+    /// 
+    /// # Arguments
+    /// * `val` - The value to add to the buffer
+    /// 
+    /// # Returns
+    /// * `true` - If the element was successfully added (buffer was not full)
+    /// * `false` - If the element could not be added (buffer was full)
+    /// 
+    /// # Invariants
+    /// * The ring buffer's capacity remains unchanged
+    /// * If successful, the length increases by 1 and the new value is at the end
+    /// * If unsuccessful, the buffer remains unchanged
+    /// * All previously enqueued elements remain in their original positions
     pub fn enqueue(&mut self, val: T) -> (succ: bool)
         ensures
             // Full fails iff old(len) == capacity => !succ
@@ -212,7 +225,20 @@ impl<T: Copy> RingBuffer<T> {
         }
     }
 
-    /// Removes and returns the front element, if any.
+    /// Removes and returns the front element from the ring buffer, if one exists.
+    /// 
+    /// This method attempts to remove and return the oldest element (front) from the buffer.
+    /// If the buffer is empty, it returns None.
+    /// 
+    /// # Returns
+    /// * `Some(T)` - The front element if the buffer was not empty
+    /// * `None` - If the buffer was empty
+    /// 
+    /// # Invariants
+    /// * The ring buffer's capacity remains unchanged
+    /// * If an element is returned, the buffer's length decreases by 1
+    /// * If an element is returned, all remaining elements shift forward one position
+    /// * If no element is returned (empty buffer), the buffer remains unchanged
     pub fn dequeue(&mut self) -> (ret: Option<T>)
         ensures
             // The ring size remains unchanged
