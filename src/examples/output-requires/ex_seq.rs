@@ -1,7 +1,7 @@
-pub fn insert(&mut self, v: u64)
+pub fn insert_seq(&mut vt, v: u64)
 ensures
-    self@ =~= old(self)@.insert(v),
+    vt@ =~= old(vt)@.insert(v),
 {
-    self.vt.push(v);
+    vt.push(v);
     // add proof
 }

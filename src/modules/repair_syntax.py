@@ -246,7 +246,7 @@ Look carefully at the error message and location to identify the syntax issue. C
 Fix ONLY the part of the code with the syntax error, and leave the rest unchanged.
 Response with the Rust code only, do not include any explanation."""
         instruction += (
-            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+            "\n\n" + self.general_knowledge + "\n\n"
         )
 
         # Load examples
