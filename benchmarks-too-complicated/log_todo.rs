@@ -161,7 +161,7 @@ impl<T> LogResource<T> {
 
 /* TEST CODE BELOW */
 
-pub fn test_log_resource(t: Vec<int>, v: int) {
+pub fn test(t: Vec<int>, v: int) {
     let tracked full_auth = LogResource::<int>::alloc();
     assert(full_auth@ is FullAuthority);
     assert(full_auth@.log().len() == 0);

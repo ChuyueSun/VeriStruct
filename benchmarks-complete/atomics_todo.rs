@@ -13,16 +13,18 @@ struct_with_invariants!{
     }
 
     spec fn well_formed(&self) -> bool {
-        // TODO: add specification
+        invariant on field with () is (b: bool, t: Option<T>) {
+            // TODO: add specification
+        }
     }
 }
 
+#[verifier::exec_allows_no_decreases_clause]
 fn take<T>(lock: &Lock<T>) -> (t: Tracked<T>)
     // TODO: add requires and ensures
 {
     loop
-        invariant
-            lock.well_formed(),
+        // TODO: add invariant
     {
         let tracked ghost_value: Option<T>;
         let result =
@@ -58,14 +60,15 @@ impl AtomicInvariantPredicate<(), u64, u64> for VEqualG {
 }
 
 proof fn proof_int(x: u64) -> (tracked y: u64)
-    // TODO: add specification
+    ensures
+        x == y,
 {
-    // TODO: add proof
+    assume(false);
+    proof_from_false()
 }
-
 /* TEST CODE BELOW */
 
-pub fn main() {
+pub fn test() {
 
     let ato = AtomicU64::<(), u64, VEqualG>::new(Ghost(()), 10u64, Tracked(10u64));
 
@@ -98,7 +101,9 @@ pub fn main() {
             assert(new_val == 36u64);
             g = proof_int(36u64);
     });
-    
-    
 }
+
+pub fn main() {
+}
+
 } // verus!

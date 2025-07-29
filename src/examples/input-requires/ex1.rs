@@ -36,20 +36,12 @@ mod doubly_linked_list {
     impl<V> DoublyLinkedList<V> {
         /// Pointer to the node of index (i-1), or None if i is 0.
         spec fn prev_of(&self, i: nat) -> Option<PPtr<Node<V>>> {
-            if i == 0 {
-                None
-            } else {
-                Some(self.ghost_state@.ptrs[i as int - 1])
-            }
+            // TODO: add specification
         }
 
         /// Pointer to the node of index (i+1), or None if i is the last index.
         spec fn next_of(&self, i: nat) -> Option<PPtr<Node<V>>> {
-            if i + 1 == self.ghost_state@.ptrs.len() {
-                None
-            } else {
-                Some(self.ghost_state@.ptrs[i as int + 1])
-            }
+           // TODO: add specification
         }
 
         /// Node at index `i` is well-formed
@@ -102,7 +94,7 @@ mod doubly_linked_list {
 
         /// Insert one node, assuming the linked list is empty.
         fn push_empty_case(&mut self, v: V)
-        // TODO: implement this.
+        // TODO: add specification
         {
             // Allocate a node to contain the payload
             let (ptr, Tracked(points_to)) = PPtr::<Node<V>>::new(
@@ -116,7 +108,7 @@ mod doubly_linked_list {
 
         /// Insert a value to the end of the list
         pub fn push_back(&mut self, v: V)
-        // TODO: implement this.
+        // TODO: add specification
         {
             match self.tail {
                 None => {

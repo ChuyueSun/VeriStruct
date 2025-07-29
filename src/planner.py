@@ -44,44 +44,17 @@ class Planner:
         for module in ctx.modules.values():
             modules += f"- **{module.name}**: {module.desc}\n"
 
-        # Define the workflow options
-        workflow_options = """
-## Workflow Options
-There are exactly two possible workflows for verifying Verus code:
-
-1. **Full Sequence Workflow**: 
-   - Step 1: View Inference - Generate a View function for the data structure
-   - Step 2: View Refinement - Refine the generated View implementation
-   - Step 3: Invariant Inference - Generate invariants for loops and data structures
-   - Step 4: Specification Inference - Generate function specifications (requires/ensures)
-
-2. **Specification-Only Workflow**:
-   - Step 1: Specification Inference - Generate function specifications without implementing a View
-
-Your task is to decide which workflow is most appropriate for the given Verus code.
-Choose the Specification-Only workflow if (a) the code has no data structures needing a View implementation, or (b) the input file placeholders only ask to "add requires or ensures" or "add specification", or (c) there is no placeholder ("TODO"/blank) indicating that a View function needs to be filled.
-        """
-
         # Create the system prompt using the template
         system = fill_template(
             "plan_system",
             {
                 "task_overview": task_overview,
                 "modules": modules,
-                "workflow_options": workflow_options,
             },
         )
 
-        # Create the user prompt with a normalized task description for better caching
-        prompt = f"""
-{self.get_normalized_task_desc(ctx)}
-
-Analyze the code and decide which of the two possible workflows is most appropriate:
-1. Full Sequence Workflow (view_inference → view_refinement → inv_inference → spec_inference)
-2. Specification-Only Workflow (spec_inference only)
-
-Explain your choice in 2-3 sentences, then specify the exact workflow to use.
-"""
+        # Create the user prompt with just the task description
+        prompt = self.get_normalized_task_desc(ctx)
 
         # Call the LLM to make the decision
         return ctx.llm.infer_llm(

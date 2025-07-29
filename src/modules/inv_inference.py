@@ -1,5 +1,6 @@
 import re
 from pathlib import Path
+from typing import List, Dict
 
 from src.infer import LLM
 from src.modules.base import BaseModule
@@ -32,14 +33,94 @@ class InvInferenceModule(BaseModule):
         """
         super().__init__(
             name="inv_inference",
-            desc="Generate inv function to capture data structure invariants",
+            desc="Generate invariant functions for the data structure",
             config=config,
             logger=logger,
         )
         self.llm = LLM(config, logger)
 
         # Main instruction for inv inference
-        self.inv_instruction = """You are an expert in Verus (a Rust-based verification framework). Given the following Rust code that defines a data structure with private fields, create a closed spec function: `closed spec fn inv(&self) -> bool`. This function should capture all necessary invariants of the data structure. You are allowed to reference private fields directly (i.e., do not rely on "view" conversions unless absolutely necessary). Do not modify other parts of the code or add explanatory text—just provide the final inv function definition."""
+        self.inv_instruction = """You are an expert in Verus (a Rust-based verification framework). Given the following Rust code that defines a data structure with private fields, implement the invariant functions that are already declared in the code. Common names for these functions are `well_formed`, `inv`, or `invariant`. You are allowed to reference private fields directly (i.e., do not rely on "view" conversions unless absolutely necessary).
+
+IMPORTANT:
+- ONLY implement invariant functions that already exist in the code - do not create new ones.
+- Look for functions named `well_formed`, `inv`, `invariant`, `inv`, or similar that are marked with TODO or are empty.
+- Do NOT rename existing functions or create new `spec fn inv` functions unless explicitly requested.
+- When `struct_with_invariants` is present in the input file, use library knowledge to construct the correct invariant. Use `invariant on field with` to construct the invariants for the target class.
+- Use `===` instead of `==>` and `!==>` for bidirectional equivalence in invariants - this is more precise for verification.
+- Return the ENTIRE file with your changes integrated into the original code, not just the inv function definition.
+- Do not modify other parts of the code.
+- Do not add explanatory text.
+- Do NOT fill in any proofs or non-inv specifications - leave all TODOs and proof obligations untouched.
+- Focus ONLY on implementing existing invariant functions - do not attempt to complete any other specifications or proofs.
+- If you find multiple invariant functions to implement (e.g., both `well_formed` and `inv`), implement all of them while preserving their original names."""
+
+    def _get_llm_responses(
+        self, 
+        instruction: str,
+        code: str,
+        examples: List[Dict[str, str]] = None,
+        temperature_boost: float = 0.2,
+        retry_attempt: int = 0,
+        use_cache: bool = True,
+    ) -> List[str]:
+        """Get responses from LLM with error handling."""
+        try:
+            # Add retry marker to instruction to ensure cache miss
+            if retry_attempt > 0:
+                instruction = f"{instruction}\n[Retry Attempt: {retry_attempt}]"
+                use_cache = False  # Disable cache for retries
+            
+            # Log the complete query content for debugging
+            self.logger.debug("=== LLM Query Content ===")
+            self.logger.debug(f"Retry Attempt: {retry_attempt}")
+            self.logger.debug(f"Temperature: {1.0 + (retry_attempt * temperature_boost)}")
+            self.logger.debug(f"Cache Enabled: {use_cache}")
+            self.logger.debug("\n=== Instruction ===\n" + instruction)
+            self.logger.debug("\n=== Code ===\n" + code)
+            if examples:
+                self.logger.debug("\n=== Examples ===")
+                for i, ex in enumerate(examples):
+                    self.logger.debug(f"\nExample {i+1} Query:\n" + ex["query"])
+                    self.logger.debug(f"\nExample {i+1} Answer:\n" + ex["answer"])
+            self.logger.debug("=====================")
+                
+            return self.llm.infer_llm(
+                self.config.get("aoai_generation_model", "gpt-4"),
+                instruction,
+                examples or [],
+                code,
+                system_info="You are a helpful AI assistant specialized in Verus formal verification.",
+                answer_num=3,
+                max_tokens=self.config.get("max_token", 8192),
+                temp=1.0 + (retry_attempt * temperature_boost),
+                use_cache=use_cache,  # Pass cache flag to LLM
+            )
+        except Exception as e:
+            self.logger.error(f"Error during LLM inference: {e}")
+            return []
+
+    def _process_responses(
+        self, 
+        responses: List[str], 
+        original_code: str,
+        context_msg: str = ""
+    ) -> List[str]:
+        """Process and validate LLM responses."""
+        safe_responses = []
+        for response in responses:
+            processed = self.replace_at_len_in_type_invariant(response)
+            # Apply debug_type_error to fix any type errors
+            fixed_processed, _ = debug_type_error(processed, logger=self.logger)
+            final_response = fixed_processed if fixed_processed else processed
+
+            # Check if the generated code is safe
+            if self.check_code_safety(original_code, final_response):
+                safe_responses.append(final_response)
+                self.logger.info(f"Generated invariant code passed safety check{context_msg}")
+            else:
+                self.logger.warning(f"Generated invariant code failed safety check{context_msg}")
+        return safe_responses
 
     def replace_at_len_in_type_invariant(self, content: str) -> str:
         """
@@ -110,23 +191,15 @@ class InvInferenceModule(BaseModule):
                 knowledge=context.gen_knowledge(),
             )
 
-            # Run inference with increasing temperature on retries
-            try:
-                responses = self.llm.infer_llm(
-                    self.config.get("aoai_generation_model", "gpt-4"),
-                    instruction,
-                    [],  # No examples needed for now
-                    code,
-                    system_info="You are a helpful AI assistant specialized in Verus formal verification.",
-                    answer_num=3,
-                    max_tokens=self.config.get("max_token", 8192),
-                    temp=1.0 + (retry_attempt * 0.2),  # Increase temperature on retries
-                )
-            except Exception as e:
-                self.logger.error(f"Error during LLM inference: {e}")
-                if retry_attempt == max_retries - 1:
-                    return code  # Fallback to original code on last attempt
-                continue
+            # Use cache only for first attempt
+            responses = self._get_llm_responses(
+                instruction, 
+                code, 
+                retry_attempt=retry_attempt,
+                use_cache=(retry_attempt == 0)
+            )
+            if not responses and retry_attempt == max_retries - 1:
+                return code
 
             # Save raw samples
             output_dir = samples_dir()
@@ -142,28 +215,12 @@ class InvInferenceModule(BaseModule):
                 except Exception as e:
                     self.logger.error(f"Error saving raw sample {i+1}: {e}")
 
-            # Process each response to replace @.len() with .len() in type invariants
-            processed_responses = []
-            for response in responses:
-                processed = self.replace_at_len_in_type_invariant(response)
-                # Apply debug_type_error to fix any type errors
-                fixed_processed, _ = debug_type_error(processed, logger=self.logger)
-                final_response = fixed_processed if fixed_processed else processed
+            safe_responses.extend(self._process_responses(responses, original_code))
 
-                # Check if the generated code is safe
-                if self.check_code_safety(original_code, final_response):
-                    processed_responses.append(final_response)
-                    safe_responses.append(final_response)
-                    self.logger.info("Generated invariant code passed safety check")
-                else:
-                    self.logger.warning("Generated invariant code failed safety check, will retry")
-
-            # If we have safe responses, break out of retry loop
             if safe_responses:
                 self.logger.info(f"Found {len(safe_responses)} safe responses after {retry_attempt + 1} attempts")
                 break
 
-            # If this is not the last attempt, modify instruction for retry
             if retry_attempt < max_retries - 1:
                 self.inv_instruction += (
                     f"\n\nIMPORTANT: Previous attempt failed safety checks. "
@@ -216,20 +273,7 @@ class InvInferenceModule(BaseModule):
         context.set_best_score(updated_global_best_score)
         context.set_best_code(updated_global_best_code)
 
-        # Add the best sample from current step to context, regardless of global best
-        context.add_trial(best_code)  # Always use the best sample from this step
-
-        # If the global best is significantly better than what we just generated,
-        # consider returning the global best instead
-        if (
-            global_best_score
-            and best_score
-            and global_best_score.is_correct()
-            and not best_score.is_correct()
-        ):
-            self.logger.info(
-                "Using global best code as it is correct while current best is not"
-            )
-            return global_best_code
+        # Add the best sample from current step to context
+        context.add_trial(best_code)
 
         return best_code

@@ -1107,7 +1107,7 @@ def parse_llm_response(response: str, logger=None) -> str:
             logger.warning("Empty response received from LLM")
         return ""
 
-    # Look for code blocks with ```
+    # First, try to extract code from markdown-style code blocks
     if "```" in response:
         blocks = []
         lines = response.split("\n")
@@ -1115,7 +1115,10 @@ def parse_llm_response(response: str, logger=None) -> str:
         current_block = []
 
         for line in lines:
-            if line.strip().startswith("```"):
+            stripped_line = line.strip()
+            # Check for code block markers
+            if stripped_line.startswith("```"):
+                # Handle various code block markers
                 if in_code_block:
                     # End of code block
                     in_code_block = False
@@ -1123,19 +1126,30 @@ def parse_llm_response(response: str, logger=None) -> str:
                         blocks.append("\n".join(current_block))
                     current_block = []
                 else:
-                    # Start of code block
-                    in_code_block = True
-                    # Skip the opening ```rust, ```verus, etc.
-                    continue
+                    # Start of code block - check for language specifiers with or without ?
+                    marker = stripped_line[3:].strip()  # Get everything after ```
+                    if marker.startswith("rust") or marker.startswith("verus"):
+                        # Skip the opening line with language specifier
+                        in_code_block = True
+                        continue
+                    elif marker == "":
+                        # Empty code block marker
+                        in_code_block = True
+                        continue
+                    else:
+                        # Some other language or marker - don't include this block
+                        continue
             elif in_code_block:
+                # Inside a code block - add the line as is
                 current_block.append(line)
 
         if blocks:
+            # Join all code blocks with newlines
             if logger:
                 logger.info(f"Extracted {len(blocks)} code block(s)")
-            return "\n".join(blocks)
+            return "\n\n".join(blocks)
 
-    # Check if the response itself looks like Rust/Verus code
+    # If no code blocks found, check if the response itself looks like Rust/Verus code
     # by counting keyword occurrences
     rust_keywords = [
         "fn ",
@@ -1168,7 +1182,15 @@ def parse_llm_response(response: str, logger=None) -> str:
             logger.info(
                 f"Response contains {keyword_count} Rust/Verus keywords - treating as direct code"
             )
-        return response
+        # Clean up any markdown formatting
+        lines = response.split("\n")
+        cleaned_lines = []
+        for line in lines:
+            # Skip markdown formatting lines
+            if line.strip().startswith("```") or line.strip().startswith("path=") or line.strip().startswith("lines="):
+                continue
+            cleaned_lines.append(line)
+        return "\n".join(cleaned_lines)
 
     # If we couldn't find any code, return empty string
     if logger:
@@ -1180,9 +1202,9 @@ def parse_plan_execution_order(
     plan_text: str, available_modules: List[str], logger=None
 ) -> List[str]:
     """
-    Simplified plan execution parser that only allows two possible workflows:
-    1. Full sequence: view_inference -> view_refinement -> inv_inference -> spec_inference
-    2. Just spec_inference alone
+    Parse the execution steps directly from the verification plan.
+    The plan should contain an "Execution Steps:" section that lists
+    the modules to run in order.
 
     Args:
         plan_text: The planner's response text
@@ -1193,58 +1215,38 @@ def parse_plan_execution_order(
         Ordered list of module names to execute
     """
     if logger:
-        logger.info(
-            "Parsing plan to determine module execution order (limited to two possible workflows)..."
-        )
+        logger.info("Parsing plan to determine module execution order...")
 
-    # Define our two possible workflows
-    full_workflow = [
-        "view_inference",
-        "view_refinement",
-        "inv_inference",
-        "spec_inference",
-    ]
-    # If proof_generation module is available, we may append it later based on plan text
-    proof_step = "proof_generation" if "proof_generation" in available_modules else None
-    spec_only_workflow = ["spec_inference"]
+    # Find the Execution Steps section
+    steps_section = None
+    lines = plan_text.split('\n')
+    for i, line in enumerate(lines):
+        if "**Execution Steps:**" in line:
+            steps_section = lines[i+1:]
+            break
 
-    # Check which modules are available
-    available_full_workflow = [m for m in full_workflow if m in available_modules]
-
-    # Check if we should do the spec-only workflow
-    spec_only_indicators = [
-        "only need specification",
-        "only spec inference",
-        "spec inference only",
-        "only specification",
-        "skip view",
-        "no view needed",
-        "no need for view",
-        "focus on spec",
-        "specification is sufficient",
-        "specification alone",
-        "specification-only workflow",
-        "spec-only workflow",
-    ]
-
-    use_spec_only = any(
-        indicator.lower() in plan_text.lower() for indicator in spec_only_indicators
-    )
-
-    if use_spec_only and "spec_inference" in available_modules:
+    if not steps_section:
         if logger:
-            logger.info("Using spec-inference-only workflow based on plan.")
-        if proof_step and re.search(r"\bproof_generation\b", plan_text.lower()):
-            return spec_only_workflow + [proof_step]
-        return spec_only_workflow
-    else:
-        if proof_step and re.search(r"\bproof_generation\b", plan_text.lower()):
-            workflow = available_full_workflow + [proof_step]
-            if logger:
-                logger.info("Using full workflow with proof_generation appended.")
-            return workflow
+            logger.warning("No Execution Steps section found in plan, using default workflow")
+        return ["spec_inference"]  # Default to spec-only as safest option
+
+    # Parse the numbered steps, removing any non-step lines
+    execution_steps = []
+    for line in steps_section:
+        line = line.strip()
+        if line and line[0].isdigit() and '.' in line:
+            # Extract module name from lines like "1. module_name" or "1. module_name (comment)"
+            # Take only the first word after the period to handle comments
+            module_name = line.split('.', 1)[1].strip().split()[0].lower()
+            if module_name in available_modules:
+                execution_steps.append(module_name)
+
+    if not execution_steps:
         if logger:
-            logger.info(
-                "Using full workflow sequence: view_inference -> view_refinement -> inv_inference -> spec_inference"
-            )
-        return available_full_workflow
+            logger.warning("No valid execution steps found in plan, using default workflow")
+        return ["spec_inference"]
+
+    if logger:
+        logger.info(f"Parsed execution steps from plan: {execution_steps}")
+
+    return execution_steps

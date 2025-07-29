@@ -14,5 +14,9 @@
     "example_path": "/home/chuyue/-verusyth/code/examples",
     "lemma_path": "/home/chuyue/-verusyth/code/lemmas",
     "util_path": "/home/chuyue/-verusyth/utils",
-    "platform": "openai"
+    "platform": "openai",
+    
+    "cache_dir": "llm_cache",
+    "cache_max_age_days": 7,
+    "always_write_cache": true
 }

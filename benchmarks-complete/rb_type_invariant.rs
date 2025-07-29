@@ -1,7 +1,5 @@
 use vstd::prelude::*;
 
-pub fn main() {}
-
 verus! {
     pub open spec fn ex_saturating_sub_spec(a: int, b: int) -> (ret: nat)
     {
@@ -152,9 +150,11 @@ impl<T: Copy> RingBuffer<T> {
         self.head != self.tail
     }
 
+    pub closed spec fn ring_len(&self) -> usize {
+        self.ring.len()
+    }
+
     /// Returns true if the buffer is full, false otherwise.
-    ///
-    /// Being 'full' means `self@.len() == (self.ring.len() - 1) as nat`.
     pub fn is_full(&self) -> (ret: bool)
     ensures
         ret == (self@.0.len() == (self@.1 - 1) as nat)
@@ -182,8 +182,21 @@ impl<T: Copy> RingBuffer<T> {
     }
 
 
-    /// If the buffer isn't full, adds a new element to the back.
-    /// Returns whether the element was added.
+    /// This method attempts to add a new element to the back of the ring buffer.
+    /// The operation succeeds only if the buffer is not full.
+    /// 
+    /// # Arguments
+    /// * `val` - The value to add to the buffer
+    /// 
+    /// # Returns
+    /// * `true` - If the element was successfully added (buffer was not full)
+    /// * `false` - If the element could not be added (buffer was full)
+    /// 
+    /// # Invariants
+    /// * The ring buffer's capacity remains unchanged
+    /// * If successful, the length increases by 1 and the new value is at the end
+    /// * If unsuccessful, the buffer remains unchanged
+    /// * All previously enqueued elements remain in their original positions
     pub fn enqueue(&mut self, val: T) -> (succ: bool)
         ensures
             // Full fails iff old(len) == capacity => !succ
@@ -194,6 +207,7 @@ impl<T: Copy> RingBuffer<T> {
             succ == (self@.0.len() == old(self)@.0.len() + 1),
             // The newly enqueued value is at the end:
             succ ==> (self@.0.last() == val),
+            !succ ==> (self@ == old(self)@),
             // Previous elements unchanged:
             forall |i: int|
                 0 <= i < old(self)@.0.len() ==> self@.0[i] == old(self)@.0[i]
@@ -211,7 +225,20 @@ impl<T: Copy> RingBuffer<T> {
         }
     }
 
-    /// Removes and returns the front element, if any.
+    /// Removes and returns the front element from the ring buffer, if one exists.
+    /// 
+    /// This method attempts to remove and return the oldest element (front) from the buffer.
+    /// If the buffer is empty, it returns None.
+    /// 
+    /// # Returns
+    /// * `Some(T)` - The front element if the buffer was not empty
+    /// * `None` - If the buffer was empty
+    /// 
+    /// # Invariants
+    /// * The ring buffer's capacity remains unchanged
+    /// * If an element is returned, the buffer's length decreases by 1
+    /// * If an element is returned, all remaining elements shift forward one position
+    /// * If no element is returned (empty buffer), the buffer remains unchanged
     pub fn dequeue(&mut self) -> (ret: Option<T>)
         ensures
             // The ring size remains unchanged
@@ -259,9 +286,9 @@ impl<T: Copy> RingBuffer<T> {
 /* TEST CODE BELOW */
 
 #[verifier::loop_isolation(false)]
-fn test_enqueue_dequeue_generic(len: usize, value: i32, iterations: usize)
+fn test(len: usize, value: i32, iterations: usize)
     requires
-        len < usize::MAX - 1,
+        1 < len < usize::MAX - 1,
         iterations * 2 < usize::MAX,
 {
     let mut ring: Vec<i32> = Vec::new();
@@ -271,38 +298,44 @@ fn test_enqueue_dequeue_generic(len: usize, value: i32, iterations: usize)
     }
 
     for i in 0..(len + 1)
-        invariant
-            ring.len() == i,
+    invariant
+        ring.len() == i,
     {
         ring.push(0);
     }
 
-    assert(ring.len() > 1);
+    assert(ring.len() == len + 1);
     let mut buf = RingBuffer::new(ring);
-    assert(buf@.1 > 1);
 
-    for _ in 0..2 * iterations
-        invariant
-            buf@.0.len() == 0,
-            buf@.1 > 1
+    let ret = buf.dequeue();
+    let buf_len = buf.len();
+    let has_elements = buf.has_elements();
+    assert(!has_elements);
+    assert(ret == None::<i32>);
+    assert(buf_len == 0);
+    assert(len > 1);
+    for i in 0..len
+    invariant
+        buf@.0.len() == i,
+        buf@.1 == len + 1
     {
         let enqueue_res = buf.enqueue(value);
         assert(enqueue_res);
-
-        let buf_len = buf.len();
-        assert(buf_len == 1);
-
         let has_elements = buf.has_elements();
         assert(has_elements);
-
-        let dequeue_res = buf.dequeue();
-        assert(dequeue_res =~= Some(value));
-
-        let buf_len = buf.len();
-        assert(buf_len == 0);
-
-        let has_elements = buf.has_elements();
-        assert(!has_elements);
+        let available_len = buf.available_len();
+        assert(available_len == len - 1 - i);
     }
+    let dequeue_res = buf.dequeue();
+    assert(dequeue_res.is_some());
+    let enqueue_res = buf.enqueue(value);
+    assert(enqueue_res);
+    let enqueue_res = buf.enqueue(value);
+    assert(!enqueue_res);
+    let dequeue_res = buf.dequeue();
+    assert(dequeue_res.is_some());
+}
+
+pub fn main() {
 }
 }

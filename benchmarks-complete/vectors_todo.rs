@@ -2,13 +2,19 @@ use vstd::prelude::*;
 
 verus! {
 
+/// This module provides basic vector algorithms with specifications suitable for formal verification.
+/// 
+/// - `binary_search`: Performs a binary search on a sorted vector to find the index of a given key. The vector must be sorted in ascending order and the key must be present in the vector.
+/// - `reverse`: Reverses the elements of a vector in place, with postconditions about the resulting order.
+/// - `binary_search_no_spinoff`: Variant of binary search with loop isolation disabled for verification purposes.
+
 fn binary_search(v: &Vec<u64>, k: u64) -> (r: usize)
-// TODO: add requires and ensures
+// TODO: add specification
 {
     let mut i1: usize = 0;
     let mut i2: usize = v.len() - 1;
     while i1 != i2
-    // TODO: add specification
+    // TODO: add invariants
     {
         let ix = i1 + (i2 - i1) / 2;
         if v[ix] < k {
@@ -21,12 +27,12 @@ fn binary_search(v: &Vec<u64>, k: u64) -> (r: usize)
 }
 
 fn reverse(v: &mut Vec<u64>)
-// TODO: add requires and ensures
+// TODO: add specification
 {
     let length = v.len();
     let ghost v1 = v@;
     for n in 0..(length / 2)
-    // TODO: add specification
+    // TODO: add invariants
     {
         let x = v[n];
         let y = v[length - 1 - n];
@@ -37,12 +43,12 @@ fn reverse(v: &mut Vec<u64>)
 
 #[verifier::loop_isolation(false)]
 fn binary_search_no_spinoff(v: &Vec<u64>, k: u64) -> (r: usize)
-// TODO: add requires and ensures
+// TODO: add specification
 {
     let mut i1: usize = 0;
     let mut i2: usize = v.len() - 1;
     while i1 != i2
-    // TODO: add specification
+    // TODO: add invariants
     {
         let ghost d = i2 - i1;
         let ix = i1 + (i2 - i1) / 2;
@@ -130,7 +136,10 @@ requires
     assert(forall|i: int| 0 <= i < t1.len() ==> t[i] == t1[t1.len() - i - 1]);
 }
 
+pub fn test() {
+}
+
+pub fn main() {
+}
 
 } // verus!
-fn main() {
-}

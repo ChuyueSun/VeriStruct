@@ -1,7 +1,4 @@
-// #![allow(unused_imports, unused_macros, non_camel_case_types)] #![feature(fmt_internals)]
 use vstd::prelude::*;
-
-fn main() {}
 
 verus! {
 
@@ -18,7 +15,7 @@ pub fn transfer(orig: &mut Account, dest: &mut Account, amount: u64)
 
 /* TEST CODE BELOW */
 
-pub fn test_transfer(init_balance: u64, transfer_amount: u64) 
+pub fn test(init_balance: u64, transfer_amount: u64) 
 requires
     init_balance >= transfer_amount,
     transfer_amount > 0,
@@ -31,6 +28,7 @@ requires
     assert(acc2.balance == transfer_amount);
 }
 
-
+pub fn main() {
+}
 
 } // verus!

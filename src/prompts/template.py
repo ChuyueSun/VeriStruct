@@ -101,7 +101,7 @@ def add_seq_knowledge_if_needed(code: str, instruction: str) -> str:
     Returns:
         Updated instruction with sequence knowledge if needed
     """
-    if "Seq" in code:
+    if "Seq" in code or "seq" in code:
         instruction += f"\n\n{load_prompt('verus_seq')}"
     return instruction
 
