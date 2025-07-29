@@ -111,6 +111,3 @@ pub fn main() {
 }
 
 } // verus!
-
-// Step 3 (proof_generation) VEval Score: Compilation Error: True, Verified: -1, Errors: 999, Verus Errors: 2
-// Verified: -1, Erro
