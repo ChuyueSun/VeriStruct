@@ -110,15 +110,23 @@ class RepairTypeModule(BaseRepairModule):
         """
         code = context.trials[-1].code
 
-        # First, try to fix the type error automatically
+        # Try to fix type errors automatically until no more progress can be made
         if failure_to_fix.trace:
-            newcode = fix_one_type_error_in_code(
-                code, failure_to_fix.trace[0], verbose=False
-            )
-            if newcode and newcode != code:
+            current_code = code
+            while True:
+                newcode = fix_one_type_error_in_code(
+                    current_code, failure_to_fix.trace[0], verbose=False
+                )
+                if not newcode or newcode == current_code:
+                    # No more progress can be made with automatic fixes
+                    break
                 self.logger.info("Automatically fixed type error.")
                 context.add_trial(newcode)
-                return newcode
+                current_code = newcode
+            
+            if current_code != code:
+                # Return if we made any progress
+                return current_code
 
         # If automatic fix fails, use LLM-based approach
         instruction = """Your mission is to fix the mismatched type error in the following Verus code.

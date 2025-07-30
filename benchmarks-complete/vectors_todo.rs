@@ -8,6 +8,14 @@ verus! {
 /// - `reverse`: Reverses the elements of a vector in place, with postconditions about the resulting order.
 /// - `binary_search_no_spinoff`: Variant of binary search with loop isolation disabled for verification purposes.
 
+/// Performs a binary search on a sorted vector to find the index of a given key. The key must be present in the vector.
+/// 
+/// # Arguments
+/// * `v` - A reference to a vector of u64 integers that must be sorted in ascending order
+/// * `k` - The key value to search for in the vector
+///
+/// # Returns
+/// * The index where the key was found in the vector
 fn binary_search(v: &Vec<u64>, k: u64) -> (r: usize)
 // TODO: add specification
 {
@@ -26,6 +34,10 @@ fn binary_search(v: &Vec<u64>, k: u64) -> (r: usize)
     i1
 }
 
+/// Reverses the elements of a vector in place.
+/// 
+/// # Arguments
+/// * `v` - A mutable reference to a vector of u64 integers to be reversed
 fn reverse(v: &mut Vec<u64>)
 // TODO: add specification
 {

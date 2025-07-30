@@ -246,7 +246,7 @@ Look carefully at the error message and location to identify the syntax issue. C
 Fix ONLY the part of the code with the syntax error, and leave the rest unchanged.
 Response with the Rust code only, do not include any explanation."""
         instruction += (
-            "\n\n" + self.general_knowledge + "\n\n"
+            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
         )
 
         # Load examples
@@ -282,27 +282,13 @@ Response with the Rust code only, do not include any explanation."""
 
         query = query_template.format(normalized_error_info, code)
 
-        # Append project knowledge
-        filtered_knowledge = "\n".join(
-            [
-                f"### {k}\n\n{v}"
-                for k, v in context.knowledge.items()
-                if k != "verification_plan"
-            ]
-        )
-        if filtered_knowledge:
-            query_with_knowledge = (
-                query + "\n\n### Project Knowledge\n" + filtered_knowledge
-            )
-        else:
-            query_with_knowledge = query
 
         # Ensure debug directory exists for prompt saving
         dbg_dir = debug_dir()
         prompt_path2 = (
             dbg_dir / f"repair_general_syntax_prompt_{len(context.trials)}.txt"
         )
-        prompt_path2.write_text(instruction + "\n\n---\n\n" + query_with_knowledge)
+        prompt_path2.write_text(instruction + "\n\n---\n\n" + query)
         self.logger.info(f"Saved syntax repair prompt to {prompt_path2}")
 
         # Use the llm instance from the base class
@@ -310,7 +296,7 @@ Response with the Rust code only, do not include any explanation."""
             engine=self.config.get("aoai_debug_model", "gpt-4"),
             instruction=instruction,
             exemplars=examples,
-            query=query_with_knowledge,
+            query=query,
             system_info=self.default_system,
             answer_num=3,
             max_tokens=8192,
