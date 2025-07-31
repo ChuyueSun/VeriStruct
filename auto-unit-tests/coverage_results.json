@@ -2,34 +2,55 @@
   "rb_type_invariant_tests": {
     "coverage": 100.0
   },
-  "agreement_tests": {
-    "coverage": -0.0
+  "rb_type_invariant_tests_baseline": {
+    "coverage": 0.0
   },
   "set_from_vec_tests": {
     "coverage": 100.0
   },
-  "log_tests": {
-    "coverage": 100.0
+  "set_from_vec_tests_baseline": {
+    "coverage": 90.0
+  },
+  "bst_map_tests": {
+    "coverage": 95.71
+  },
+  "bst_map_tests_baseline": {
+    "coverage": 0.0
   },
   "option_tests": {
-    "coverage": 95.65
+    "coverage": 100.0
+  },
+  "option_tests_baseline": {
+    "coverage": 0.0
   },
   "atomics_tests": {
     "coverage": -0.0
   },
+  "atomics_tests_baseline": {
+    "coverage": 0.0
+  },
   "vectors_tests": {
-    "coverage": 100.0
+    "coverage": 95.45
+  },
+  "vectors_tests_baseline": {
+    "coverage": 0.0
   },
   "rwlock_vstd_tests": {
     "coverage": 100.0
   },
-  "invariants_tests": {
-    "coverage": 93.75
+  "rwlock_vstd_tests_baseline": {
+    "coverage": -0.0
   },
-  "agreement_type_inv_tests": {
+  "invariants_tests": {
     "coverage": 100.0
+  },
+  "invariants_tests_baseline": {
+    "coverage": 0.0
   },
   "transfer_tests": {
     "coverage": 100.0
+  },
+  "transfer_tests_baseline": {
+    "coverage": 0.0
   }
 }

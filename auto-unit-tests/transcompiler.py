@@ -525,33 +525,36 @@ pub fn main() {
 Apply this guide rigorously to transform a Rust file into a fully verified Verus module. Happy verifying\!
 """
 
-def to_verus(rust_file_path):
+def generate_verus_tests(rust_file_path, spec_file_path):
     """
-    Converts a Rust file with units tests to a Verus-annotated file with specs and unit tests.
-    The Verus code will be written to a new file in the `verus_test_cases' folder. 
+    Converts a Rust with Verus specs but Rust only units tests file to a complete Verus-annotated file with the corresponding unit tests.
+    The Verus code overwrites the provided file at the spec_file_path in the `verus-test-cases' folder. 
+    This function requires that be a /* TEST CODE BELOW */ line within the spec_file_path file. 
     """
-    rust_code = util.read_rust_file(rust_file_path) 
+    test_code = util.read_rust_file(rust_file_path) 
+    test_idx = test_code.find("#[cfg(test)]")
+    if test_idx != -1:
+        test_code = test_code[:test_idx].rstrip()
+    rust_code = util.read_rust_file(spec_file_path) + test_code + "\n} // verus!"
     
+    if "/* TEST CODE BELOW */" not in rust_code:
+        raise ValueError("Spec file must contain '/* TEST CODE BELOW */' marker.")
+
     prompt = f"""
     You are an expert Verus and Rust developer.
 
-    Given the following Rust file with unit tests, generate the corresponding file with Verus specs for each function 
-    as well as Verus unit tests for the functions. In particular, there are two parts of this file: 
-    the original non-test Rust code with Verus specs added in between the lines, as well as the old units tests in Rust removed and completely replaced with 
-    Verus units tests under a `/* TEST CODE BELOW */` comment, verifying the correctness of the functions in the file
-    given the specs (done in first part) with assert proofs. Both parts are part of the same verus! {{...}} block 
-    with all necessary "use" statements at the top of the file, outside of the verus! {{...}} block.
+    Given the following Rust/Verus file with Verus specs and Rust unit tests, generate the file with the corresponding Verus versions of the rust unit tests, evaluating 
+    the correctness of the functions in the file given the specs. All your edits should consist of removing the old Rust unit tests entirely and replacing 
+    them with Verus unit tests in Verus syntax, which are assert statement based. Do so below the `/* TEST CODE BELOW */` comment which is guranteed to be in the file
+    and change nothing else in the file.
     
     Here is the Rust file:
 
-    ```rust
     {rust_code}
     
-    Provide the same Rust file with the same lines, format, structure, but with Verus code added as needed throughout 
-    to verify and make sure the Rust file is fully correct. Do not add explanations, summaries, or ```rust tags.
-    Output only the raw Rust code. 
+    Do not add explanations, summaries, or ```rust tags. Output only the raw Rust code. 
     
-    If needed, see the provided Verus reference for details on how to transform Rust code into Verus: 
+    If needed, see the provided Verus reference for details on how to transform Rust units tests into Verus from the specs and provided rust code: 
     
     Reference: 
     {REFERENCE} 
@@ -566,10 +569,10 @@ def to_verus(rust_file_path):
     )
     final_code = response.choices[0].message.content.strip()
     
-    os.makedirs("verus_test_cases", exist_ok=True)
+    os.makedirs("verus-test-cases", exist_ok=True)
     base_filename = os.path.basename(rust_file_path)
     base_no_ext = os.path.splitext(base_filename)[0]
-    output_path = os.path.join("verus_test_cases", f"{base_no_ext}_verus.rs")
+    output_path = os.path.join("verus-test-cases", f"{base_no_ext}_verus.rs")
     
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(final_code)
@@ -577,14 +580,19 @@ def to_verus(rust_file_path):
     print(f"Wrote Verus‑annotated file to {output_path}")
     
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python generate_tests.py <path_to_rust_file>")
+    if len(sys.argv) != 3:
+        print("Usage: python generate_tests.py <path_to_rust_file> <path_to_spec_file>")
         sys.exit(1)
 
     rust_file_path = sys.argv[1]
+    spec_file_path = sys.argv[2]
 
     if not os.path.isfile(rust_file_path):
-        print(f"Error: File not found at {rust_file_path}")
+        print(f"Error: Rust file not found at {rust_file_path}")
         sys.exit(1)
 
-    to_verus(rust_file_path)
+    if not os.path.isfile(spec_file_path):
+        print(f"Error: Spec file not found at {spec_file_path}")
+        sys.exit(1)
+
+    generate_verus_tests(rust_file_path, spec_file_path)

@@ -3,10 +3,17 @@ import openai
 import generator_util as util 
 
 COVERAGE_JSON_PATH = "coverage_results.json" 
+TEST_STRING = "/* TEST CODE BELOW */" 
 
 def initialize_tests(rust_file_path):
-    # remove verus
-    rust_code = util.strip_verus(util.read_rust_file(rust_file_path))
+    """
+    This function takes a rust_file with Verus specs and test cases. It removes Verus specs, test cases, and ghost code, and generates a new 
+    Rust-only file with automatically generated unit tests. This is stored in test-cases folder. A copy of the file with Verus specs
+    but no test cases is stored in verus-test-cases folder. The function returns the path to the baseline Rust file without automatic generation, 
+    the Rust file with tests, the total number of lines in the file, the number of lines, total amount of lines covered by tests, and a list of uncovered lines, used for evaluation and revision of the tests.
+    """
+    code = util.read_rust_file(rust_file_path)
+    spec_code, rust_code, baseline = code[:code.find(TEST_STRING) + len(TEST_STRING)], util.strip_verus(code), util.strip_verus(code, keep=True)
     
     # test code generation
     prompt = f"""
@@ -18,14 +25,15 @@ def initialize_tests(rust_file_path):
 
     Here is the Rust file:
 
-    ```rust
     {rust_code}
+    
     Provide only the Rust test code (inside a #[cfg(test)] mod tests {{ ... }} block). Ensure the output is valid and 
     compatible with cargo tarpaulin for coverage measurement:
     - Inside the test module, include use super::*; at the top
     - Each test function must return nothing (i.e., not -> i32, etc.)
     - All tests must actually call functions from the main code
     - No functions should be declared but unused
+    - Make sure all edge cases (including those with very specific preconditions) are covered
     - Do not include ```rust tags or any explanation — only output code
     """
     response = openai.ChatCompletion.create(
@@ -48,12 +56,13 @@ def initialize_tests(rust_file_path):
     ```rust
     pub fn main() {{
     }}
+    ```
     function. 
 
     Here is the Rust file:
 
-    ```rust
     {rust_code}
+
     Provide only the Rust code (and only the Rust code). In particular, do not ever include ```rust tags. 
     """
     response = openai.ChatCompletion.create(
@@ -64,22 +73,35 @@ def initialize_tests(rust_file_path):
     rust_code = response.choices[0].message.content.strip()
     combined_code = rust_code.strip() + "\n\n" + test_code
     
-    # prepare to store rust code with tests in test_cases folder
-    os.makedirs("test_cases", exist_ok=True)
+    # prepare to store rust code with tests in test-cases folder
+    os.makedirs("test-cases", exist_ok=True)
     base_filename = os.path.basename(rust_file_path)
     base_no_ext = os.path.splitext(base_filename)[0]
-    output_path = os.path.join("test_cases", f"{base_no_ext}_tests.rs")
+    output_path = os.path.join("test-cases", f"{base_no_ext}_tests.rs")
     
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(combined_code)
     
-    total, covered = util.get_rust_coverage(output_path)
-    return output_path, total, covered
+    # store spec file for transcompilation
+    os.makedirs("verus-test-cases", exist_ok=True)
+    spec_path = os.path.join("verus-test-cases", f"{base_no_ext}_spec.rs")
+    with open(spec_path, "w", encoding="utf-8") as f:
+        f.write(spec_code)
+        print(f"Specs stored for transcompilation.")
+        
+    # store baseline forcomparison
+    os.makedirs("baseline-test-cases", exist_ok=True)
+    base_path = os.path.join("baseline-test-cases", f"{base_no_ext}_base.rs")
+    with open(base_path, "w", encoding="utf-8") as f:
+        f.write(baseline)
+        
+    total, covered, uncovered_lines = util.get_rust_coverage(output_path)
+    return base_path, output_path, total, covered, uncovered_lines
 
-def revise_tests(output_path, total, covered):
+def revise_tests(output_path, total, uncovered_lines):
     """
     Generates additional tests to cover uncovered lines in the Rust file.
-    Returns new total and covered line counts. 
+    Returns new total and covered line counts as well list of uncovered lines.
     This function should be called only if total != covered.
     Should total == -1 (there was an error in previous steps), this function will attempt to fix 
     the file.
@@ -99,15 +121,18 @@ def revise_tests(output_path, total, covered):
         Return just the string of file contents, without ```rust tags or extra text, and return the entire file, not just 
         what you changed.
 
-        ```rust
         {rust_code} 
         """
     else: 
         prompt = f"""
         You are an expert Rust developer.
         
-        The following Rust file has unit tests, and out of the {total} lines of code, every line is covered by an unit tests
-        aside from {total - covered} uncovered lines. Identify the {total - covered} uncovered lines and generate new unit tests to cover them.
+        The following Rust file has unit tests, and out of the {total} lines of code, every line is covered by at least one unit test
+        aside from {len(uncovered_lines)} uncovered lines. These uncovered lines are given by the list: {uncovered_lines} (which is 1-indexed, so that line
+        1 is the first line of the file). The lines along with some surrounding context are given below:
+        {util.get_lines_with_context(rust_code, uncovered_lines)}
+        
+        Generate new unit tests to cover them.
 
         Return the entire rust file with the new tests included. Keep everything else the same, including 
         the existing tests, imports, and structure of the file. Do not remove any existing tests or code.
@@ -115,15 +140,15 @@ def revise_tests(output_path, total, covered):
         
         Here is the Rust file:
 
-        ```rust
+        {rust_code} 
         
         Ensure the output is still valid and compatible with cargo tarpaulin for coverage measurement:
         - Inside the test module, include use super::*; at the top
         - Each test function must return nothing (i.e., not -> i32, etc.)
         - All tests must actually call functions from the main code
         - No functions should be declared but unused
+        - Make sure all edge cases (including those with very specific preconditions) are covered
         - Do not include ```rust tags or any explanation — only output code
-        {rust_code} 
         """
     response = openai.ChatCompletion.create(
         deployment_id=util.deployment_name,
@@ -164,12 +189,21 @@ if __name__ == "__main__":
         print(f"Error: File not found at {rust_file_path}")
         sys.exit(1)
 
-    output_path, total_lines, covered_lines = initialize_tests(rust_file_path)
-    if total_lines > covered_lines or total_lines == -1:
-        total_lines, covered_lines = revise_tests(output_path, total_lines, covered_lines)
+    base_path, output_path, total, covered, uncovered_lines = initialize_tests(rust_file_path)
+    
+    # automatic generator 
+    if total > covered or total == -1:
+        total, covered, _ = revise_tests(output_path, total, uncovered_lines)
         
-    coverage = (covered_lines / total_lines) * 100
+    coverage = (covered / total) * 100
     print(f"Test coverage: {coverage:.2f}%")
     
     file_id = os.path.splitext(os.path.basename(output_path))[0]
     save_coverage_result(file_id, coverage)
+    
+    # baseline
+    base_total, base_covered, _ = util.get_rust_coverage(base_path) 
+    coverage = (base_covered / base_total) * 100
+    print(f"Baseline coverage: {coverage:.2f}%")
+    file_id += "_baseline"
+    save_coverage_result(file_id, coverage) 
