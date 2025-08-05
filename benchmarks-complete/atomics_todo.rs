@@ -7,6 +7,14 @@ use vstd::{pervasive::*, *};
 
 verus! {
 
+/// A lock implementation using atomic boolean operations.
+/// 
+/// This lock structure provides a way to safely share data of type `T` between threads
+/// using atomic operations. The lock maintains an invariant that the boolean state
+/// matches whether the contained value is Some or None.
+///
+/// # Type Parameters
+/// * `T` - The type of data protected by the lock
 struct_with_invariants!{
     struct Lock<T> {
         field: AtomicBool<_, Option<T>, _>,
@@ -20,6 +28,20 @@ struct_with_invariants!{
 }
 
 #[verifier::exec_allows_no_decreases_clause]
+/// Given that the lock is well formed, the procedure attempts to take the value from the lock, spinning until successful.
+///
+/// In detail, it accepts a well-formed lock, and will repeatedly try to atomically swap the lock's state from true to false,
+/// taking ownership of the contained value when successful. It spins in a loop until
+/// it successfully acquires the lock.
+///
+/// # Parameters
+/// * `lock` - Reference to the lock containing the value to take
+///
+/// # Requires
+/// * The lock must be well-formed according to its invariant
+///
+/// # Returns
+/// * A tracked value of type T that was contained in the lock
 fn take<T>(lock: &Lock<T>) -> (t: Tracked<T>)
     // TODO: add requires and ensures
 {
@@ -51,6 +73,10 @@ fn take<T>(lock: &Lock<T>) -> (t: Tracked<T>)
     }
 }
 
+/// A predicate type that enforces equality between visible and ghost state in atomic operations.
+///
+/// This struct implements the AtomicInvariantPredicate trait to maintain the invariant
+/// that the visible value (v) equals the ghost value (g) in atomic operations.
 struct VEqualG {}
 
 impl AtomicInvariantPredicate<(), u64, u64> for VEqualG {
@@ -66,6 +92,8 @@ proof fn proof_int(x: u64) -> (tracked y: u64)
     assume(false);
     proof_from_false()
 }
+
+
 /* TEST CODE BELOW */
 
 pub fn test() {
