@@ -124,6 +124,7 @@ class Context:
                 else:
                     print(f"✗ No content found for '{lib_name}'")
 
+        # Following is for logging only
         if knowledge_added:
             print("\n" + "=" * 60)
             print("FINAL KNOWLEDGE SUMMARY")
