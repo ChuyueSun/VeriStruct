@@ -1,6 +1,6 @@
-pub fn insert(&mut self, v: u64)
+pub fn insert_seq(&mut vt, v: u64)
 // TODO: add requires and ensures
 {
-    self.vt.push(v);
+    vt.push(v);
     // add proof
 }

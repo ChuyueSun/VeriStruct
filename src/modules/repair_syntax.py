@@ -11,6 +11,7 @@ from src.infer import LLM
 from src.modules.baserepair import BaseRepairModule
 from src.modules.utils import clean_code, evaluate_samples, get_examples
 from src.modules.veval import VerusError, VerusErrorLabel, VerusErrorType, VEval
+from src.prompts.template import build_instruction
 from src.utils.path_utils import samples_dir, best_dir, debug_dir
 
 
@@ -154,6 +155,7 @@ class RepairSyntaxModule(BaseRepairModule):
             The potentially repaired code string.
         """
         code = context.trials[-1].code
+        original_code = code  # Store original for safety checking
 
         # Extract error information
         error_line = None
@@ -170,7 +172,8 @@ class RepairSyntaxModule(BaseRepairModule):
                 context, failure_to_fix, context.trials[-1].eval.rustc_out
             )
 
-        instruction = f"""This code contains a syntax error on line {error_line} in the expression ` {error_text}'. Your mission is to rewrite this expression `{error_text}' to fix the syntax error.
+        # Base instruction for Seq syntax repair
+        base_instruction = f"""This code contains a syntax error on line {error_line} in the expression ` {error_text}'. Your mission is to rewrite this expression `{error_text}' to fix the syntax error.
 
 Please make sure to change that wrong expression and do not change any other part of the code. Response with the Rust code only, do not include any explanation. Please use a comment to explain what changes you have made to fix this syntax error."""
 
@@ -181,41 +184,89 @@ Please make sure to change that wrong expression and do not change any other par
                 "\n".join(seq_examples)
             )
         )
-        instruction += "\n\n" + seq_knowledge
-
-        # Load examples
-        examples = get_examples(self.config, "seqsyntax", self.logger)
+        base_instruction += "\n\n" + seq_knowledge
 
         query_template = "Incorrect line \n```\n{}```\n"
         query_template += "\nCode\n```\n{}```\n"
-
         query = query_template.format(error_text, code)
 
-        # Use the llm instance from the base class
-        responses = self.llm.infer_llm(
-            engine=self.config.get("aoai_debug_model", "gpt-4"),
-            instruction=instruction,
-            exemplars=examples,
-            query=query,
-            system_info=self.default_system,
-            answer_num=3,
-            max_tokens=8192,
-            temp=1.0,
-        )
+        max_retries = 3
+        safe_responses = []
 
-        # Evaluate samples and get the best one with safety checking
-        output_dir = samples_dir()
-        best_code = self.evaluate_repair_candidates(
-            original_code=code,
-            candidates=responses if responses else [code],
-            output_dir=output_dir,
-            prefix="repair_seq_syntax",
-        )
+        for retry_attempt in range(max_retries):
+            self.logger.info(f"Seq syntax repair attempt {retry_attempt + 1}/{max_retries}")
+
+            # Build complete instruction using the prompt system
+            instruction = build_instruction(
+                base_instruction=base_instruction,
+                add_common=True,  # Add common Verus knowledge
+                code=code,  # For Seq detection
+                knowledge=self.general_knowledge  # Add general knowledge
+            )
+
+            # Debug log for complete instruction
+            self.logger.info("=== Complete Instruction for Debugging ===")
+            self.logger.info(instruction)
+            self.logger.info("=========================================")
+
+            # Load examples
+            examples = get_examples(self.config, "seqsyntax", self.logger)
+
+            # Ensure debug directory exists for prompt saving
+            dbg_dir = debug_dir()
+            prompt_path2 = (
+                dbg_dir / f"repair_seq_syntax_prompt_{len(context.trials)}.txt"
+            )
+            prompt_path2.write_text(instruction + "\n\n---\n\n" + query)
+            self.logger.info(f"Saved seq syntax repair prompt to {prompt_path2}")
+
+            # Get responses from LLM
+            responses = self._get_llm_responses(
+                instruction,
+                query,
+                examples,
+                retry_attempt=retry_attempt,
+                use_cache=(retry_attempt == 0),
+                context=context  # Pass context for appending knowledge
+            )
+
+            if not responses and retry_attempt == max_retries - 1:
+                return code
+
+            # Evaluate samples and get the best one with safety checking
+            output_dir = samples_dir()
+            best_code = self.evaluate_repair_candidates(
+                original_code=code,
+                candidates=responses if responses else [code],
+                output_dir=output_dir,
+                prefix=f"repair_seq_syntax_attempt_{retry_attempt + 1}",
+            )
+
+            if best_code != code:  # If we got a potentially better solution
+                safe_responses.append(best_code)
+                self.logger.info(f"Found a potentially safe response after {retry_attempt + 1} attempts")
+                break
+
+            if retry_attempt < max_retries - 1:
+                base_instruction += (
+                    f"\n\nIMPORTANT: Previous attempt failed to fix the Seq syntax error. "
+                    f"Please try a different approach. Attempt {retry_attempt + 2}/{max_retries}."
+                )
+
+        # If no safe responses found after all retries, fall back to original
+        if not safe_responses:
+            self.logger.warning("No safe responses found after all retries, using original code")
+            return code
+
+        # Use the last safe response (since we break after finding one)
+        best_code = safe_responses[-1]
 
         # Add the best result to context
         context.add_trial(best_code)
 
         return best_code
+
+
 
     def repair_general_syntax_error(
         self, context, failure_to_fix: Optional[VerusError], rustc_out: str
@@ -232,8 +283,10 @@ Please make sure to change that wrong expression and do not change any other par
             The potentially repaired code string.
         """
         code = context.trials[-1].code
+        original_code = code  # Store original for safety checking
 
-        instruction = """Your mission is to fix the syntax error in the following Verus code.
+        # Base instruction for syntax repair
+        base_instruction = """Your mission is to fix the syntax error in the following Verus code.
 
 Look carefully at the error message and location to identify the syntax issue. Common syntax errors include:
 1. Missing or misplaced parentheses, braces, or brackets
@@ -245,15 +298,6 @@ Look carefully at the error message and location to identify the syntax issue. C
 
 Fix ONLY the part of the code with the syntax error, and leave the rest unchanged.
 Response with the Rust code only, do not include any explanation."""
-        instruction += (
-            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
-        )
-
-        # Load examples
-        examples = get_examples(self.config, "syntax", self.logger)
-
-        query_template = "Syntax error:\n```\n{}```\n"
-        query_template += "\nCode\n```\n{}```\n"
 
         # Extract relevant error information
         error_info = ""
@@ -280,51 +324,80 @@ Response with the Rust code only, do not include any explanation."""
             r"/tmp/tmp[0-9A-Za-z_\-]+", "<TMP_PATH>", error_info
         )
 
+        query_template = "Syntax error:\n```\n{}```\n"
+        query_template += "\nCode\n```\n{}```\n"
         query = query_template.format(normalized_error_info, code)
 
-        # Append project knowledge
-        filtered_knowledge = "\n".join(
-            [
-                f"### {k}\n\n{v}"
-                for k, v in context.knowledge.items()
-                if k != "verification_plan"
-            ]
-        )
-        if filtered_knowledge:
-            query_with_knowledge = (
-                query + "\n\n### Project Knowledge\n" + filtered_knowledge
+        max_retries = 3
+        safe_responses = []
+
+        for retry_attempt in range(max_retries):
+            self.logger.info(f"Syntax repair attempt {retry_attempt + 1}/{max_retries}")
+
+            # Build complete instruction using the prompt system
+            instruction = build_instruction(
+                base_instruction=base_instruction,
+                add_common=True,  # Add common Verus knowledge
+                code=code,  # For Seq detection
+                knowledge=self.general_knowledge  # Add general knowledge
             )
-        else:
-            query_with_knowledge = query
 
-        # Ensure debug directory exists for prompt saving
-        dbg_dir = debug_dir()
-        prompt_path2 = (
-            dbg_dir / f"repair_general_syntax_prompt_{len(context.trials)}.txt"
-        )
-        prompt_path2.write_text(instruction + "\n\n---\n\n" + query_with_knowledge)
-        self.logger.info(f"Saved syntax repair prompt to {prompt_path2}")
+            # Debug log for complete instruction
+            self.logger.info("=== Complete Instruction for Debugging ===")
+            self.logger.info(instruction)
+            self.logger.info("=========================================")
 
-        # Use the llm instance from the base class
-        responses = self.llm.infer_llm(
-            engine=self.config.get("aoai_debug_model", "gpt-4"),
-            instruction=instruction,
-            exemplars=examples,
-            query=query_with_knowledge,
-            system_info=self.default_system,
-            answer_num=3,
-            max_tokens=8192,
-            temp=1.0,
-        )
+            # Load examples
+            examples = get_examples(self.config, "syntax", self.logger)
 
-        # Evaluate samples and get the best one with safety checking
-        output_dir = samples_dir()
-        best_code = self.evaluate_repair_candidates(
-            original_code=code,
-            candidates=responses if responses else [code],
-            output_dir=output_dir,
-            prefix="repair_general_syntax",
-        )
+            # Ensure debug directory exists for prompt saving
+            dbg_dir = debug_dir()
+            prompt_path2 = (
+                dbg_dir / f"repair_general_syntax_prompt_{len(context.trials)}.txt"
+            )
+            prompt_path2.write_text(instruction + "\n\n---\n\n" + query)
+            self.logger.info(f"Saved syntax repair prompt to {prompt_path2}")
+
+            # Get responses from LLM
+            responses = self._get_llm_responses(
+                instruction,
+                query,
+                examples,
+                retry_attempt=retry_attempt,
+                use_cache=(retry_attempt == 0),
+                context=context  # Pass context for appending knowledge
+            )
+
+            if not responses and retry_attempt == max_retries - 1:
+                return code
+
+            # Evaluate samples and get the best one with safety checking
+            output_dir = samples_dir()
+            best_code = self.evaluate_repair_candidates(
+                original_code=code,
+                candidates=responses if responses else [code],
+                output_dir=output_dir,
+                prefix=f"repair_general_syntax_attempt_{retry_attempt + 1}",
+            )
+
+            if best_code != code:  # If we got a potentially better solution
+                safe_responses.append(best_code)
+                self.logger.info(f"Found a potentially safe response after {retry_attempt + 1} attempts")
+                break
+
+            if retry_attempt < max_retries - 1:
+                base_instruction += (
+                    f"\n\nIMPORTANT: Previous attempt failed to fix the syntax error. "
+                    f"Please try a different approach. Attempt {retry_attempt + 2}/{max_retries}."
+                )
+
+        # If no safe responses found after all retries, fall back to original
+        if not safe_responses:
+            self.logger.warning("No safe responses found after all retries, using original code")
+            return code
+
+        # Use the last safe response (since we break after finding one)
+        best_code = safe_responses[-1]
 
         # Add the best result to context
         context.add_trial(best_code)

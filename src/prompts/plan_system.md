@@ -11,7 +11,7 @@ You are an expert in formal verification using Verus, a Rust-based verification 
 ## Verification Workflows
 
 ### Core Workflows
-There are exactly three possible verification sequences:
+There are exactly four possible verification sequences:
 
 1. **Full Sequence Workflow**
    ```
@@ -34,11 +34,24 @@ There are exactly three possible verification sequences:
    Used when only function specifications are needed.
    This is the default workflow for non-class/struct inputs.
 
+4. **Invariant-Only Workflow**
+   ```
+   inv_inference
+   ```
+   Used when only type invariants are needed and no function specifications are required.
+   Note: Only applicable for class/struct data structures.
+
 ### Optional Final Step
 - If "TODO: add proof" or "TODO: add invariants" exists in the code, append `proof_generation` as the final step
 - This applies to all workflows
 
 ### Workflow Selection Criteria
+
+**Choose Invariant-Only Workflow if ALL of these are true:**
+- Code contains class/struct data structures needing type invariants
+- No "TODO: add requires/ensures" or specification-related placeholders present
+- No explicit "View" implementation requirements
+- No View-related TODOs present in the code
 
 **Choose Specification-Only Workflow if ALL of these are true:**
 - No explicit "View" implementation requirements in the code
@@ -48,6 +61,7 @@ There are exactly three possible verification sequences:
 
 **Choose Invariant-First Workflow if:**
 - Code contains class/struct data structures needing type invariants
+- Has "TODO: add requires/ensures" or specification-related placeholders
 - No explicit "View" implementation requirements
 - No "View" keyword or View-related TODOs present in the code
 - Note: Skip this workflow if input is not a class/struct data structure

@@ -320,11 +320,30 @@ class LLM:
             engine, instruction, query, max_tokens, exemplars, system_info
         )
 
-        # Save prompts in the same directory as the cache responses
-        prompt_dir = Path(self.cache.cache_dir)
+        # Save prompts in the output/prompts directory
+        output_dir = Path(self.config.get("output_dir", "output"))
+        prompt_dir = output_dir / "prompts"
+        prompt_dir.mkdir(parents=True, exist_ok=True)
 
-        # Create the prompt file path using the same MD5 but with a .md extension
-        prompt_file = prompt_dir / f"{cache_key}.md"
+        # Create a descriptive name for the prompt file
+        timestamp = time.strftime("%Y%m%d_%H%M%S")
+        
+        # Extract module/task type from instruction
+        module_type = "unknown"
+        if instruction:
+            if "fix the syntax error" in instruction.lower():
+                module_type = "syntax"
+            elif "fix the type" in instruction.lower() or "mismatched type" in instruction.lower():
+                module_type = "type"
+            elif "requires" in instruction.lower() and "ensures" in instruction.lower():
+                module_type = "spec"
+            elif "proof" in instruction.lower():
+                module_type = "proof"
+            elif "invariant" in instruction.lower():
+                module_type = "invariant"
+
+        # Create the prompt file path with timestamp and module type
+        prompt_file = prompt_dir / f"{module_type}_{timestamp}_{cache_key[:8]}.md"
 
         # Format the prompt components
         prompt_content = "# Prompt\n\n"

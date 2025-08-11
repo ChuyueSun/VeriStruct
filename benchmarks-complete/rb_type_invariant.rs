@@ -233,12 +233,6 @@ impl<T: Copy> RingBuffer<T> {
     /// # Returns
     /// * `Some(T)` - The front element if the buffer was not empty
     /// * `None` - If the buffer was empty
-    /// 
-    /// # Invariants
-    /// * The ring buffer's capacity remains unchanged
-    /// * If an element is returned, the buffer's length decreases by 1
-    /// * If an element is returned, all remaining elements shift forward one position
-    /// * If no element is returned (empty buffer), the buffer remains unchanged
     pub fn dequeue(&mut self) -> (ret: Option<T>)
         ensures
             // The ring size remains unchanged

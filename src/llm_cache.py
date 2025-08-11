@@ -129,11 +129,13 @@ class LLMCache:
         # Double-check environment variables in case they changed after initialization
         if os.environ.get("ENABLE_LLM_CACHE", "1") == "0":
             if self.logger:
-                self.logger.debug("Cache disabled by environment variable")
+                self.logger.warning("Cache miss: Cache disabled by environment variable")
             self.misses += 1
             return None
 
         if not self.enabled:
+            if self.logger:
+                self.logger.warning("Cache miss: Cache is not enabled")
             self.misses += 1
             return None
 
@@ -144,7 +146,8 @@ class LLMCache:
 
         if not cache_file.exists():
             if self.logger:
-                self.logger.debug(f"Cache miss: {cache_key}")
+                self.logger.warning(f"Cache miss: File not found for key {cache_key}")
+                self.logger.debug(f"Cache miss details - Query: {query[:100]}...")
             self.misses += 1
             return None
 
@@ -154,10 +157,12 @@ class LLMCache:
             # Check if cache is too old
             timestamp = cache_data.get("timestamp", 0)
             current_time = time.time()
+            age_hours = (current_time - timestamp) / 3600  # Convert to hours
 
             if current_time - timestamp > self.max_age_seconds:
                 if self.logger:
-                    self.logger.debug(f"Cache expired: {cache_key}")
+                    self.logger.warning(f"Cache miss: Entry expired for key {cache_key}")
+                    self.logger.debug(f"Cache entry age: {age_hours:.2f} hours (max age: {self.max_age_seconds/3600:.2f} hours)")
                 self.misses += 1
                 return None
 
@@ -171,7 +176,9 @@ class LLMCache:
 
         except (json.JSONDecodeError, KeyError) as e:
             if self.logger:
-                self.logger.warning(f"Cache read error: {e}")
+                self.logger.error(f"Cache miss: Failed to read cache file {cache_key}")
+                self.logger.error(f"Cache read error details: {str(e)}")
+                self.logger.debug(f"Cache file path: {cache_file}")
             self.misses += 1
             return None
 

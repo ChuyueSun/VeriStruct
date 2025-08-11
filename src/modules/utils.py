@@ -398,7 +398,14 @@ def fix_one_type_error_in_code(code, err_trace, verbose=True):
     # Special-case: mutability mismatch (e.g., "types differ in mutability").
     # For this error the simplest automatic fix is to remove the entire line;
     # the LLM-based repair pipeline can then try a different approach later.
-    if err_label is not None and "types differ in mutability" in err_label:
+    if err_label is not None and (
+        "types differ in mutability" in err_label
+        or "no method named `view` found for struct" in err_label
+        or "cannot call function `vstd::atomic_ghost::impl&%21::load` with mode exec"
+        or "cannot call function `vstd::atomic_ghost::impl&%21::store` with mode exec"
+        or "no field `ghost` on type"
+        in err_label
+    ):
         err_lnum = err_trace.get_lines()[0]
         linenum = err_lnum - 1
 
