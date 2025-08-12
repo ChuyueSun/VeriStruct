@@ -2,61 +2,61 @@
 #![cfg_attr(verus_keep_ghost, verifier::exec_allows_no_decreases_clause)]
 
 #[allow(unused_imports)]
-use vstd::prelude::*;
-use vstd::seq_lib::*;
+use builtin::*;
 use builtin_macros::*;
+use vstd::{prelude::*, seq_lib::*};
 
 /*
 u64 bit vector library begins
 */
 
-macro_rules! get_bit64_macro {
-    ($a:expr, $b:expr) => {{
-        (0x1u64 & ($a >> $b)) == 1
-    }};
-}
-
-// since this wraps with `verus_proof_macro_exprs`, should use the above `get_bit64_macro` if it is going to be executable.
-#[allow(unused_macros)]
-macro_rules! get_bit64 {
-    ($($a:tt)*) => {
-        verus_proof_macro_exprs!(get_bit64_macro!($($a)*))
-    }
-}
-
-macro_rules! set_bit64_macro {
-    ($a:expr,$b:expr, $c:expr) => {{
-        if $c {
-            $a | 1u64 << $b
-        } else {
-            $a & (!(1u64 << $b))
-        }
-    }};
-}
-
-// since this wraps with `verus_proof_macro_exprs`, should use the above `set_bit64_macro` if it is going to be executable.
-#[allow(unused_macros)]
-macro_rules! set_bit64 {
-    ($($a:tt)*) => {
-        verus_proof_macro_exprs!(set_bit64_macro!($($a)*))
-    }
-}
 
 verus! {
 
+
+fn get_bit64_macro(a: u64, b: u64) -> bool 
+requires
+    0 <= b < 64,
+{
+    (0x1u64 & (a >> b)) == 1
+}
+
+fn set_bit64_macro(a: u64, b: u64, c: bool) -> u64 
+requires
+    b < 64,
+{
+    if c {
+        a | (1u64 << b)
+    } else {
+        a & (!(1u64 << b))
+    }
+}
+
+spec fn get_bit64(a: u64, b: u64) -> bool {
+    (0x1u64 & (a >> b)) == 1
+}
+
+spec fn set_bit64(a: u64, b: u64, c: bool) -> u64 {
+    if c {
+        a | (1u64 << b)
+    } else {
+        a & (!(1u64 << b))
+    }
+}
+
 spec fn u64_view(u: u64) -> Seq<bool> {
-    Seq::new(64, |i: int| get_bit64!(u, i as u64))
+    Seq::new(64, |i: int| get_bit64(u, i as u64))
 }
 
 #[verifier::bit_vector]
 proof fn set_bit64_proof(bv_new: u64, bv_old: u64, index: u64, bit: bool)
     requires
-        bv_new == set_bit64!(bv_old, index, bit),
+        bv_new == set_bit64(bv_old, index, bit),
         index < 64,
     ensures
-        get_bit64!(bv_new, index) == bit,
+        get_bit64(bv_new, index) == bit,
         forall|loc2: u64|
-            (loc2 < 64 && loc2 != index) ==> (get_bit64!(bv_new, loc2) == get_bit64!(bv_old, loc2)),
+            (loc2 < 64 && loc2 != index) ==> (get_bit64(bv_new, loc2) == get_bit64(bv_old, loc2)),
 {
 }
 
@@ -66,7 +66,7 @@ proof fn bit_or_64_proof(bv1: u64, bv2: u64, bv_new: u64)
         bv_new == bv1 | bv2,
     ensures
         forall|i: u64|
-            (i < 64) ==> get_bit64!(bv_new, i) == (get_bit64!(bv1, i) || get_bit64!(bv2, i)),
+            (i < 64) ==> get_bit64(bv_new, i) == (get_bit64(bv1, i) || get_bit64(bv2, i)),
 {
 }
 
@@ -117,7 +117,7 @@ impl BitMap {
         let seq_index: usize = (index / 64) as usize;
         let bit_index: u32 = index % 64;
         let bucket: u64 = self.bits[seq_index];
-        get_bit64_macro!(bucket, bit_index as u64)
+        get_bit64_macro(bucket, bit_index as u64)
     }
 
     fn set_bit(&mut self, index: u32, bit: bool)
@@ -130,7 +130,7 @@ impl BitMap {
         let seq_index: usize = (index / 64) as usize;
         let bit_index: u32 = index % 64;
         let bv_old: u64 = self.bits[seq_index];
-        let bv_new: u64 = set_bit64_macro!(bv_old, bit_index as u64, bit);
+        let bv_new: u64 = set_bit64_macro(bv_old, bit_index as u64, bit);
         proof {
             set_bit64_proof(bv_new, bv_old, bit_index as u64, bit);
         }
