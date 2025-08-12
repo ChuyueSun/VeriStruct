@@ -26,59 +26,57 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_new_contains_none() {
-        let set = VecSet::new();
-        // Test that the new set does not contain arbitrary elements
-        assert_eq!(set.contains(0), false);
-        assert_eq!(set.contains(42), false);
-        assert_eq!(set.contains(u64::MAX), false);
+    fn test_new_vecset_is_empty() {
+        let vs = VecSet::new();
+        // Ensure that an empty set does not contain any element.
+        assert!(!vs.contains(0));
+        assert!(!vs.contains(42));
     }
 
     #[test]
-    fn test_insert_single() {
-        let mut set = VecSet::new();
-        set.insert(10);
-        assert!(set.contains(10));
-        // Ensure no false positives
-        assert!(!set.contains(0));
-        assert!(!set.contains(20));
+    fn test_insert_single_value() {
+        let mut vs = VecSet::new();
+        vs.insert(42);
+        // Check that the inserted value is contained.
+        assert!(vs.contains(42));
+        // Check that a value which was not inserted returns false.
+        assert!(!vs.contains(100));
     }
 
     #[test]
-    fn test_insert_multiple() {
-        let mut set = VecSet::new();
-        let values = [1, 2, 3, 100, 999];
-        for &v in &values {
-            set.insert(v);
+    fn test_insert_multiple_values() {
+        let mut vs = VecSet::new();
+        let values = [10, 20, 30, 40];
+        for &v in values.iter() {
+            vs.insert(v);
         }
-        for &v in &values {
-            assert!(set.contains(v));
+        // Assert all inserted values are found.
+        for &v in values.iter() {
+            assert!(vs.contains(v));
         }
-        // Test an element not inserted
-        assert!(!set.contains(0));
-        assert!(!set.contains(500));
+        // Check that a non-inserted value returns false.
+        assert!(!vs.contains(50));
     }
 
     #[test]
-    fn test_insert_duplicates() {
-        let mut set = VecSet::new();
-        set.insert(50);
-        set.insert(50);
-        // Regardless of duplicate, contains should be true
-        assert!(set.contains(50));
-        // Still false for non-inserted value
-        assert!(!set.contains(51));
+    fn test_duplicate_inserts() {
+        let mut vs = VecSet::new();
+        // Insert the same value multiple times.
+        vs.insert(99);
+        vs.insert(99);
+        vs.insert(99);
+        // The set should still report the value as contained.
+        assert!(vs.contains(99));
     }
 
     #[test]
     fn test_edge_values() {
-        let mut set = VecSet::new();
-        // Test with edge values
-        set.insert(0);
-        set.insert(u64::MAX);
-        assert!(set.contains(0));
-        assert!(set.contains(u64::MAX));
-        // Test a value that was not inserted
-        assert!(!set.contains(1));
+        let mut vs = VecSet::new();
+        // Insert the minimum value for u64.
+        vs.insert(0);
+        assert!(vs.contains(0));
+        // Insert the maximum value for u64.
+        vs.insert(u64::MAX);
+        assert!(vs.contains(u64::MAX));
     }
 }

@@ -68,6 +68,8 @@ impl<T: Copy> RingBuffer<T> {
     }
 }
 
+/* TEST CODE BELOW */
+
 fn test(len: usize, value: i32, iterations: usize) {
     let mut ring: Vec<i32> = Vec::new();
 
@@ -86,7 +88,7 @@ fn test(len: usize, value: i32, iterations: usize) {
     let buf_len = buf.len();
     let has_elements = buf.has_elements();
     assert!(!has_elements);
-    assert!(ret == None::<i32>);
+    assert!(ret == None);
     assert!(buf_len == 0);
     assert!(len > 1);
     for i in 0..len {
@@ -105,6 +107,16 @@ fn test(len: usize, value: i32, iterations: usize) {
     assert!(!enqueue_res);
     let dequeue_res = buf.dequeue();
     assert!(dequeue_res.is_some());
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn ring_buffer_test() {
+        test(5, 42, 1);
+    }
 }
 
 pub fn main() {

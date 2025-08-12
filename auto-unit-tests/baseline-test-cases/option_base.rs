@@ -3,6 +3,21 @@ pub enum MyOption<A> {
     Some(A),
 }
 
+pub fn is_Some<A>(opt: MyOption<A>) -> bool {
+    matches!(opt, MyOption::Some(_))
+}
+
+pub fn is_None<A>(opt: MyOption<A>) -> bool {
+    matches!(opt, MyOption::None)
+}
+
+pub fn get_Some_0<A>(opt: MyOption<A>) -> A {
+    match opt {
+        MyOption::Some(a) => a,
+        MyOption::None => panic!("get_Some_0 called on None"),
+    }
+}
+
 impl<A: Clone> Clone for MyOption<A> {
     fn clone(&self) -> Self {
         match self {
@@ -12,10 +27,16 @@ impl<A: Clone> Clone for MyOption<A> {
     }
 }
 
-impl<A: Copy> Copy for MyOption<A> {
-}
+impl<A: Copy> Copy for MyOption<A> {}
 
 impl<A> MyOption<A> {
+    pub fn Or(self, optb: MyOption<A>) -> MyOption<A> {
+        match self {
+            MyOption::None => optb,
+            MyOption::Some(_) => self,
+        }
+    }
+
     pub fn or(self, optb: MyOption<A>) -> MyOption<A> {
         match self {
             MyOption::None => optb,
@@ -56,48 +77,55 @@ impl<A> MyOption<A> {
 
 /* TEST CODE BELOW */
 
-fn test(n: i32) {
-    let opt: MyOption<i32> = MyOption::None;
-    let is_none = opt.is_none();
-    let is_some = opt.is_some();
-    assert!(is_none);
-    assert!(!is_some);
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-    let opt2: MyOption<i32> = MyOption::Some(n);
-    let is_none = opt2.is_none();
-    let is_some = opt2.is_some();
-    assert!(!is_none);
-    assert!(is_some);
+    #[test]
+    fn test_option_behaviour() {
+        let n: i32 = 10;
+        let opt: MyOption<i32> = MyOption::None;
+        let is_none = opt.is_none();
+        let is_some = opt.is_some();
+        assert!(is_none);
+        assert!(!is_some);
 
-    let opt3 = opt.or(opt2);
-    let is_some = opt3.is_some();
-    let val = opt3.unwrap();
-    assert!(is_some);
-    assert!(val == n);
+        let opt2: MyOption<i32> = MyOption::Some(n);
+        let is_none = opt2.is_none();
+        let is_some = opt2.is_some();
+        assert!(!is_none);
+        assert!(is_some);
 
-    let opt4 = opt2.or(opt);
-    let is_some = opt4.is_some();
-    let val = opt4.unwrap();
-    assert!(is_some);
-    assert!(val == n);
+        let opt3 = opt.or(opt2);
+        let is_some = opt3.is_some();
+        let val = opt3.unwrap();
+        assert!(is_some);
+        assert_eq!(val, n);
 
-    let opt5 = opt.or(MyOption::None);
-    let is_none = opt5.is_none();
-    let is_some = opt5.is_some();
-    assert!(is_none);
-    assert!(!is_some);
+        let opt4 = opt2.or(opt);
+        let is_some = opt4.is_some();
+        let val = opt4.unwrap();
+        assert!(is_some);
+        assert_eq!(val, n);
 
-    let opt_some: MyOption<i32> = MyOption::Some(n);
-    let opt_ref = opt_some.as_ref();
-    let ref_some = opt_ref.is_some();
-    let val = *opt_ref.unwrap();
-    assert!(ref_some);
-    assert!(val == n);
+        let opt5 = opt.or(MyOption::None);
+        let is_none = opt5.is_none();
+        let is_some = opt5.is_some();
+        assert!(is_none);
+        assert!(!is_some);
 
-    let opt_none: MyOption<i32> = MyOption::None;
-    let opt_ref_none = opt_none.as_ref();
-    let ref_none = opt_none.is_none();
-    assert!(ref_none);
+        let opt_some: MyOption<i32> = MyOption::Some(n);
+        let opt_ref = opt_some.as_ref();
+        let ref_some = opt_ref.is_some();
+        let val = *opt_ref.unwrap();
+        assert!(ref_some);
+        assert_eq!(val, n);
+
+        let opt_none: MyOption<i32> = MyOption::None;
+        let _opt_ref_none = opt_none.as_ref();
+        let ref_none = opt_none.is_none();
+        assert!(ref_none);
+    }
 }
 
 pub fn main() {

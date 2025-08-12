@@ -1,4 +1,4 @@
-enum MyOption<A> {
+pub enum MyOption<A> {
     None,
     Some(A),
 }
@@ -48,7 +48,7 @@ impl<A> MyOption<A> {
     pub fn unwrap(self) -> A {
         match self {
             MyOption::Some(a) => a,
-            MyOption::None => panic!("called unwrap on None"),
+            MyOption::None => unreachable!(),
         }
     }
 }
@@ -58,114 +58,88 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_is_some_and_is_none() {
-        let some_val: MyOption<i32> = MyOption::Some(10);
-        let none_val: MyOption<i32> = MyOption::None;
-
-        assert!(some_val.is_some());
-        assert!(!some_val.is_none());
-
-        assert!(none_val.is_none());
-        assert!(!none_val.is_some());
+    fn test_is_some() {
+        let some_value = MyOption::Some(5);
+        let none_value: MyOption<i32> = MyOption::None;
+        assert!(some_value.is_some());
+        assert!(!none_value.is_some());
     }
 
     #[test]
-    fn test_or_method_when_self_is_some() {
-        let opt1 = MyOption::Some(5);
-        let opt2 = MyOption::Some(10);
-        // when self is Some, or should return self regardless of opt2
-        let result = opt1.or(opt2);
-        match result {
-            MyOption::Some(val) => assert_eq!(val, 5),
+    fn test_is_none() {
+        let some_value = MyOption::Some(10);
+        let none_value: MyOption<i32> = MyOption::None;
+        assert!(!some_value.is_none());
+        assert!(none_value.is_none());
+    }
+
+    #[test]
+    fn test_or_method() {
+        // Case: Some.or(None) should yield Some
+        let option1 = MyOption::Some(1);
+        let option2: MyOption<i32> = MyOption::None;
+        let result = option1.or(option2);
+        assert!(result.is_some());
+        assert_eq!(result.unwrap(), 1);
+
+        // Case: None.or(Some) should yield Some
+        let option1: MyOption<i32> = MyOption::None;
+        let option2 = MyOption::Some(2);
+        let result = option1.or(option2);
+        assert!(result.is_some());
+        assert_eq!(result.unwrap(), 2);
+
+        // Case: None.or(None) should yield None
+        let option1: MyOption<i32> = MyOption::None;
+        let option2: MyOption<i32> = MyOption::None;
+        let result = option1.or(option2);
+        assert!(result.is_none());
+
+        // Case: Some.or(Some) should retain the first Some
+        let option1 = MyOption::Some(3);
+        let option2 = MyOption::Some(4);
+        let result = option1.or(option2);
+        assert!(result.is_some());
+        assert_eq!(result.unwrap(), 3);
+    }
+
+    #[test]
+    fn test_as_ref() {
+        let some_value = MyOption::Some(20);
+        match some_value.as_ref() {
+            MyOption::Some(&val) => assert_eq!(val, 20),
             MyOption::None => panic!("Expected Some, got None"),
         }
-    }
 
-    #[test]
-    fn test_or_method_when_self_is_none() {
-        let opt1: MyOption<i32> = MyOption::None;
-        let opt2 = MyOption::Some(20);
-        let result = opt1.or(opt2);
-        match result {
-            MyOption::Some(val) => assert_eq!(val, 20),
-            MyOption::None => panic!("Expected Some from second option, got None"),
-        }
-    }
-
-    #[test]
-    fn test_or_method_when_both_are_none() {
-        let opt1: MyOption<i32> = MyOption::None;
-        let opt2: MyOption<i32> = MyOption::None;
-        let result = opt1.or(opt2);
-        match result {
-            MyOption::None => assert!(true),
+        let none_value: MyOption<i32> = MyOption::None;
+        match none_value.as_ref() {
             MyOption::Some(_) => panic!("Expected None, got Some"),
+            MyOption::None => {}
         }
     }
 
     #[test]
-    fn test_as_ref_method() {
-        let value = 30;
-        let some_val = MyOption::Some(value);
-        let none_val: MyOption<i32> = MyOption::None;
-
-        let as_ref_some = some_val.as_ref();
-        match as_ref_some {
-            MyOption::Some(&v) => assert_eq!(v, 30),
-            MyOption::None => panic!("Expected Some reference, got None"),
-        }
-
-        let as_ref_none = none_val.as_ref();
-        match as_ref_none {
-            MyOption::None => assert!(true),
-            MyOption::Some(_) => panic!("Expected None, got Some"),
-        }
+    fn test_unwrap_some() {
+        let some_value = MyOption::Some("hello");
+        assert_eq!(some_value.unwrap(), "hello");
     }
 
     #[test]
-    fn test_unwrap_method_success() {
-        let some_val = MyOption::Some("hello");
-        let unwrapped = some_val.unwrap();
-        assert_eq!(unwrapped, "hello");
+    #[should_panic]
+    fn test_unwrap_none() {
+        let none_value: MyOption<i32> = MyOption::None;
+        let _ = none_value.unwrap();
     }
 
     #[test]
-    #[should_panic(expected = "called unwrap on None")]
-    fn test_unwrap_method_panic() {
-        let none_val: MyOption<i32> = MyOption::None;
-        let _ = none_val.unwrap();
-    }
-
-    #[test]
-    fn test_clone_impl() {
-        let original = MyOption::Some(String::from("rust"));
+    fn test_clone_and_copy() {
+        // Using a type that supports Clone and Copy (i32)
+        let original = MyOption::Some(42);
         let cloned = original.clone();
-        match cloned {
-            MyOption::Some(ref s) => assert_eq!(s, "rust"),
-            MyOption::None => panic!("Expected Some, got None"),
-        }
+        assert_eq!(original.unwrap(), cloned.unwrap());
 
-        let none_option: MyOption<String> = MyOption::None;
-        let cloned_none = none_option.clone();
-        match cloned_none {
-            MyOption::None => assert!(true),
-            MyOption::Some(_) => panic!("Expected None after cloning None"),
-        }
-    }
-
-    #[test]
-    fn test_copy_impl() {
-        // Using an i32 which is Copy
-        let original = MyOption::Some(100);
-        let copied = original; // copy occurs here because i32 is Copy
-        // Verify both original and copied still hold the value.
-        match original {
-            MyOption::Some(val) => assert_eq!(val, 100),
-            MyOption::None => panic!("Expected Some, got None"),
-        }
-        match copied {
-            MyOption::Some(val) => assert_eq!(val, 100),
-            MyOption::None => panic!("Expected Some, got None"),
-        }
+        // Test Copy trait: copying should work implicitly
+        let copied = original;
+        assert_eq!(copied.unwrap(), 42);
     }
 }

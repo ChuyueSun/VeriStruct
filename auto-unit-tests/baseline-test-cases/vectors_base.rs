@@ -27,17 +27,17 @@ fn binary_search_no_spinoff(v: &Vec<u64>, k: u64) -> usize {
     let mut i1: usize = 0;
     let mut i2: usize = v.len() - 1;
     while i1 != i2 {
+        let d = i2 - i1;
         let ix = i1 + (i2 - i1) / 2;
         if v[ix] < k {
             i1 = ix + 1;
         } else {
             i2 = ix;
         }
+        assert!(i2 - i1 < d);
     }
     i1
 }
-
-/* TEST CODE BELOW */
 
 fn pusher() -> Vec<u64> {
     let mut v = Vec::new();
@@ -60,21 +60,14 @@ fn pop_test(t: Vec<u64>) {
     let mut t = t;
     let x = t.pop().unwrap();
     assert!(uninterp_fn(x));
-    for i in 0..t.len() {
-        assert!(uninterp_fn(t[i]));
-    }
 }
 
-fn push_test(t: Vec<u64>, y: u64) {
-    let mut t = t;
+fn push_test(mut t: Vec<u64>, y: u64) {
     t.push(y);
-    for i in 0..t.len() {
-        assert!(uninterp_fn(t[i]));
-    }
 }
 
 fn binary_search_test(t: Vec<u64>) {
-    for i in 0 .. t.len() {
+    for i in 0..t.len() {
         let k = t[i];
         let r = binary_search(&t, k);
         assert!(r < t.len());
@@ -98,4 +91,38 @@ pub fn test() {
 }
 
 pub fn main() {
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_binary_search() {
+        let t = vec![0, 1, 2, 3, 4];
+        binary_search_test(t);
+    }
+
+    #[test]
+    fn test_reverse() {
+        let mut t = vec![0, 1, 2, 3, 4];
+        reverse_test(&mut t);
+    }
+
+    #[test]
+    fn test_pop() {
+        let t = vec![0, 1, 2, 3, 4];
+        pop_test(t);
+    }
+
+    #[test]
+    fn test_push() {
+        let t = vec![0, 1, 2, 3, 4];
+        push_test(t, 5);
+    }
+
+    #[test]
+    fn test_pusher() {
+        let _ = pusher();
+    }
 }

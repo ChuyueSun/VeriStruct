@@ -1,27 +1,14 @@
+#![allow(unused_imports)]
+
 struct FixedParity {
     pub parity: i64,
 }
 
-use std::sync::RwLock;
-
-fn main() {}
-
-fn test(n: u64) {
-    let lock_even = RwLock::new(20);
-    let lock_odd = RwLock::new(23);
-
-    let read_handle_even = lock_even.read().unwrap();
-    let val_even = *read_handle_even;
-    assert!(val_even % 2 == 0);
-
-    let read_handle_odd = lock_odd.read().unwrap();
-    let val_odd = *read_handle_odd;
-    assert!(val_odd % 2 == 1);
-
-    let lock_arbitrary = RwLock::new(n);
-    let read_handle_arbitrary = lock_arbitrary.read().unwrap();
-    let val_arbitrary = *read_handle_arbitrary;
-    assert!(val_arbitrary % 2 == n % 2);
+impl FixedParity {
+    fn normalized_parity(&self) -> i64 {
+        // Use the Euclidean remainder so that the result is always nonnegative.
+        self.parity.rem_euclid(2)
+    }
 }
 
 #[cfg(test)]
@@ -29,32 +16,52 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_with_even_number() {
-        // Test with a typical even number.
-        test(100);
+    fn test_positive_even() {
+        let fp = FixedParity { parity: 2 };
+        // Check that a positive even number has an even parity.
+        assert_eq!(fp.normalized_parity(), 0);
     }
 
     #[test]
-    fn test_with_odd_number() {
-        // Test with a typical odd number.
-        test(101);
+    fn test_positive_odd() {
+        let fp = FixedParity { parity: 3 };
+        // Check that a positive odd number has an odd parity.
+        assert_eq!(fp.normalized_parity(), 1);
     }
 
     #[test]
-    fn test_with_zero() {
-        // Zero is even.
-        test(0);
+    fn test_zero() {
+        let fp = FixedParity { parity: 0 };
+        // Zero is considered even.
+        assert_eq!(fp.normalized_parity(), 0);
     }
 
     #[test]
-    fn test_with_u64_max() {
-        // u64::MAX is 18446744073709551615, which is odd.
-        test(u64::MAX);
+    fn test_negative_even() {
+        let fp = FixedParity { parity: -4 };
+        // Check that a negative even number remains even.
+        assert_eq!(fp.normalized_parity(), 0);
     }
 
     #[test]
-    fn test_main_function() {
-        // Ensure that the main function, even though empty, is callable.
-        main();
+    fn test_negative_odd() {
+        let fp = FixedParity { parity: -5 };
+        // Check that a negative odd number remains odd.
+        // Using normalized_parity to consistently get a nonnegative result.
+        assert_eq!(fp.normalized_parity(), 1);
+    }
+
+    #[test]
+    fn test_max_value() {
+        let fp = FixedParity { parity: i64::MAX };
+        // i64::MAX is 9223372036854775807 which is odd.
+        assert_eq!(fp.normalized_parity(), 1);
+    }
+
+    #[test]
+    fn test_min_value() {
+        let fp = FixedParity { parity: i64::MIN };
+        // i64::MIN is -9223372036854775808 which is even.
+        assert_eq!(fp.normalized_parity(), 0);
     }
 }

@@ -70,104 +70,98 @@ mod tests {
 
     #[test]
     fn test_ex_saturating_sub() {
-        // a > b
+        // When a > b.
         assert_eq!(ex_saturating_sub(10, 5), 5);
-        // a == b
-        assert_eq!(ex_saturating_sub(7, 7), 0);
-        // a < b, saturates to 0
-        assert_eq!(ex_saturating_sub(3, 10), 0);
+        // When a == b.
+        assert_eq!(ex_saturating_sub(10, 10), 0);
+        // When a < b.
+        assert_eq!(ex_saturating_sub(5, 10), 0);
     }
 
     #[test]
-    fn test_ringbuffer_empty() {
-        // Create a ring buffer with capacity for 5 elements (effective capacity = 4).
-        let ring = vec![0; 5];
-        let mut rb = RingBuffer::new(ring);
-        // Initially, the ring buffer is empty.
-        assert_eq!(rb.len(), 0);
-        assert_eq!(rb.available_len(), 4);
-        assert!(!rb.has_elements());
-        // Dequeue from an empty ring should return None.
-        assert_eq!(rb.dequeue(), None);
+    fn test_dequeue_empty() {
+        // Create a ring buffer of capacity 3 (vector of length 4)
+        let mut buf: RingBuffer<i32> = RingBuffer::new(vec![0; 4]);
+        // Initially empty.
+        assert!(!buf.has_elements());
+        assert_eq!(buf.len(), 0);
+        assert_eq!(buf.dequeue(), None);
     }
 
     #[test]
-    fn test_ringbuffer_enqueue_dequeue() {
-        let ring = vec![0; 5];
-        let mut rb = RingBuffer::new(ring);
-        // Effective capacity is ring.len() - 1 = 4.
-        // Enqueue 4 elements.
-        assert!(rb.enqueue(10));
-        assert!(rb.enqueue(20));
-        assert!(rb.enqueue(30));
-        assert!(rb.enqueue(40));
-        // Now the buffer should be full.
-        assert!(rb.is_full());
-        // available_len should be 0.
-        assert_eq!(rb.available_len(), 0);
-        // Attempt to enqueue one more element should fail.
-        assert!(!rb.enqueue(50));
-        // The length should be 4.
-        assert_eq!(rb.len(), 4);
-        // Dequeue elements and confirm FIFO order.
-        assert_eq!(rb.dequeue(), Some(10));
-        assert_eq!(rb.dequeue(), Some(20));
-        assert_eq!(rb.dequeue(), Some(30));
-        assert_eq!(rb.dequeue(), Some(40));
-        // Now the ring should be empty.
-        assert_eq!(rb.len(), 0);
-        assert_eq!(rb.available_len(), 4);
-        assert!(!rb.has_elements());
-        assert_eq!(rb.dequeue(), None);
-    }
+    fn test_enqueue_dequeue() {
+        // Create a ring buffer with a vector of length 4 (capacity = 3)
+        let mut buf: RingBuffer<i32> = RingBuffer::new(vec![0; 4]);
+        // Initially, available_len should be 3.
+        assert_eq!(buf.available_len(), 3);
 
-    #[test]
-    fn test_ringbuffer_wrap_around() {
-        let ring = vec![0; 5];
-        let mut rb = RingBuffer::new(ring);
-        // Enqueue 4 elements to fill the ring buffer.
-        assert!(rb.enqueue(1));
-        assert!(rb.enqueue(2));
-        assert!(rb.enqueue(3));
-        assert!(rb.enqueue(4));
-        // Buffer is full now.
-        assert!(rb.is_full());
-        // Dequeue one element (should be 1).
-        assert_eq!(rb.dequeue(), Some(1));
-        // Now there's space for one more element.
-        assert!(!rb.is_full());
-        // Enqueue another element; this should go to the wrapped-around position.
-        assert!(rb.enqueue(5));
-        // Now, the buffer should contain 2, 3, 4, 5 in FIFO order.
-        assert_eq!(rb.len(), 4);
-        assert!(rb.is_full());
-        // Dequeue remaining elements and check order.
-        assert_eq!(rb.dequeue(), Some(2));
-        assert_eq!(rb.dequeue(), Some(3));
-        assert_eq!(rb.dequeue(), Some(4));
-        assert_eq!(rb.dequeue(), Some(5));
-        // The buffer is empty again.
-        assert_eq!(rb.len(), 0);
-        assert_eq!(rb.available_len(), 4);
-        assert_eq!(rb.dequeue(), None);
-    }
+        // Enqueue three elements.
+        assert!(buf.enqueue(10));
+        assert!(buf.enqueue(20));
+        assert!(buf.enqueue(30));
 
-    #[test]
-    fn test_ringbuffer_available_len() {
-        let ring = vec![0; 6]; // effective capacity = 5
-        let mut rb = RingBuffer::new(ring);
-        // Initially available_len should be len(ring) - 1
-        assert_eq!(rb.available_len(), 5);
-        // Enqueue two elements.
-        assert!(rb.enqueue(100));
-        assert!(rb.enqueue(200));
-        // Now len() is 2, so available_len should be 6 - 1 - 2 = 3.
-        assert_eq!(rb.len(), 2);
-        assert_eq!(rb.available_len(), 3);
+        // Now it should be full.
+        assert!(buf.is_full());
+        assert!(buf.has_elements());
+        assert_eq!(buf.len(), 3);
+        assert_eq!(buf.available_len(), 0);
+
+        // Enqueue should fail when full.
+        assert!(!buf.enqueue(40));
+
         // Dequeue one element.
-        assert_eq!(rb.dequeue(), Some(100));
-        // Now len() is 1; available_len should be 6 - 1 - 1 = 4.
-        assert_eq!(rb.len(), 1);
-        assert_eq!(rb.available_len(), 4);
+        assert_eq!(buf.dequeue(), Some(10));
+        // Now available length increases.
+        assert!(buf.available_len() > 0);
+
+        // Enqueue now should succeed.
+        assert!(buf.enqueue(40));
+
+        // Dequeue the remaining elements in order.
+        assert_eq!(buf.dequeue(), Some(20));
+        assert_eq!(buf.dequeue(), Some(30));
+        assert_eq!(buf.dequeue(), Some(40));
+        // Finally, buffer becomes empty.
+        assert_eq!(buf.dequeue(), None);
+    }
+
+    #[test]
+    fn test_full_wraparound() {
+        // Use a ring buffer with a vector of length 5, so capacity is 4.
+        let mut buf: RingBuffer<i32> = RingBuffer::new(vec![0; 5]);
+
+        // Enqueue 4 elements.
+        assert!(buf.enqueue(1));
+        assert!(buf.enqueue(2));
+        assert!(buf.enqueue(3));
+        assert!(buf.enqueue(4)); // This should fill the buffer.
+        assert!(buf.is_full());
+        assert_eq!(buf.len(), 4);
+
+        // Dequeue two elements.
+        assert_eq!(buf.dequeue(), Some(1));
+        assert_eq!(buf.dequeue(), Some(2));
+        // Now the buffer should not be full.
+        assert!(!buf.is_full());
+        // The length should now be 2.
+        assert_eq!(buf.len(), 2);
+        // There should be space for 2 more elements.
+        assert_eq!(buf.available_len(), 2);
+
+        // Enqueue two more to test wraparound.
+        assert!(buf.enqueue(5));
+        assert!(buf.enqueue(6));
+        // Now the buffer should be full again.
+        assert!(buf.is_full());
+        assert_eq!(buf.len(), 4);
+
+        // Dequeue all remaining elements and check order.
+        // The expected order is the remaining original elements then the wrap-around ones.
+        let expected = [3, 4, 5, 6];
+        for exp in &expected {
+            assert_eq!(buf.dequeue(), Some(*exp));
+        }
+        // Buffer should now be empty.
+        assert_eq!(buf.dequeue(), None);
     }
 }

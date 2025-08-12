@@ -530,6 +530,7 @@ def generate_verus_tests(rust_file_path, spec_file_path):
     Converts a Rust with Verus specs but Rust only units tests file to a complete Verus-annotated file with the corresponding unit tests.
     The Verus code overwrites the provided file at the spec_file_path in the `verus-test-cases' folder. 
     This function requires that be a /* TEST CODE BELOW */ line within the spec_file_path file. 
+    Returns the filepath to the generated Verus file.
     """
     test_code = util.read_rust_file(rust_file_path) 
     test_idx = test_code.find("#[cfg(test)]")
@@ -552,7 +553,7 @@ def generate_verus_tests(rust_file_path, spec_file_path):
 
     {rust_code}
     
-    Do not add explanations, summaries, or ```rust tags. Output only the raw Rust code. 
+    Do not add explanations, summaries, or ```rust fences. Output only the raw Rust with Verus code. 
     
     If needed, see the provided Verus reference for details on how to transform Rust units tests into Verus from the specs and provided rust code: 
     
@@ -571,13 +572,88 @@ def generate_verus_tests(rust_file_path, spec_file_path):
     
     os.makedirs("verus-test-cases", exist_ok=True)
     base_filename = os.path.basename(rust_file_path)
-    base_no_ext = os.path.splitext(base_filename)[0]
+    base_no_ext = os.path.splitext(base_filename)[0].split("_")[0] 
     output_path = os.path.join("verus-test-cases", f"{base_no_ext}_verus.rs")
     
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(final_code)
         
     print(f"Wrote Verus‑annotated file to {output_path}")
+    return output_path
+
+def check_syntax(output_path):
+    """
+    Accepts the filepath to a Rust file with Verus specs and unit tests and identifies lines with syntax errors. Stores the auto generated,
+    error corrected file to the same filepath, overwriting the original file.
+    """
+    code = util.read_rust_file(output_path) 
+
+    prompt = f"""
+    You are an expert Verus and Rust developer.
+    
+    The code below is a Rust file with Verus specs and unit tests. Using your knowledge of Verus, identify any syntax errors in the code 
+    and output an explanation of the lines with syntax errors, if any. If there are no Verus-specific syntax errors, output "No syntax errors found." Only
+    return an explanations of the lines with syntax errors if there are genuine syntax errors, not just warnings or stylistic issues. 
+    Write as if you are the friend of the developer who wrote this code.   
+    
+    Here is the Rust/Verus file:
+
+    {code}
+    
+    Output only the desired text. 
+    
+    If needed, and only if needed, see the provided Verus reference for details on how to transform Rust units tests into Verus from the specs and provided rust code: 
+    
+    Reference: 
+    {REFERENCE} 
+    """
+    response = openai.ChatCompletion.create(
+        deployment_id=util.deployment_name,
+        messages=[{"role": "user", "content": prompt}],
+        max_completion_tokens=16000,
+    )
+    error_analysis = response.choices[0].message.content.strip()
+    
+    prompt = f"""
+    You are an expert Verus and Rust developer.
+    
+    The code below is a Rust file with Verus specs and unit tests.
+    
+    Here is the Rust/Verus file:
+
+    {code}
+    
+    A friend has looked over the file and provided the following feedback on the Verus syntax errors present in the file:
+    
+    {error_analysis}
+    
+    Using your knowledge of Verus, make the appropriate changes, if any. Only make changes to the code if there are genuine Verus-specific syntax errors, 
+    not just warnings or stylistic issues, and otherwise keep the rest of the code unchanged. If there are no Verus-specific syntax errors,
+    do not make any changes to the code and simply return the original code as is. 
+    
+    IMPORTANT: Do not add explanations, summaries, or ```rust fences. Output only the raw Rust with Verus code. 
+   
+    If needed, and only if needed, see the provided Verus reference for details on how to transform Rust units tests into Verus from the specs and provided rust code: 
+    
+    Reference: 
+    {REFERENCE} 
+    """
+    response = openai.ChatCompletion.create(
+        deployment_id=util.deployment_name,
+        messages=[{"role": "user", "content": prompt}],
+        max_completion_tokens=16000,
+    )
+    final_code = response.choices[0].message.content.strip()
+    
+    os.makedirs("verus-test-cases", exist_ok=True)
+    base_filename = os.path.basename(output_path)
+    base_no_ext = os.path.splitext(base_filename)[0] 
+    output_path = os.path.join("verus-test-cases", f"{base_no_ext}_verus.rs")
+    
+    with open(output_path, "w", encoding="utf-8") as f:
+        f.write(final_code)
+        
+    print(f"Wrote Revised Verus‑annotated file to {output_path}")
     
 if __name__ == "__main__":
     if len(sys.argv) != 3:
@@ -595,4 +671,5 @@ if __name__ == "__main__":
         print(f"Error: Spec file not found at {spec_file_path}")
         sys.exit(1)
 
-    generate_verus_tests(rust_file_path, spec_file_path)
+    output_path = generate_verus_tests(rust_file_path, spec_file_path)
+    check_syntax(output_path) 
