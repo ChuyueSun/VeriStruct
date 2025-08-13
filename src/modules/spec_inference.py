@@ -102,7 +102,7 @@ class SpecInferenceModule(BaseModule):
             # Add retry marker to instruction to ensure cache miss
             if retry_attempt > 0:
                 instruction = f"{instruction}\n[Retry Attempt: {retry_attempt}]"
-                use_cache = False  # Disable cache for retries
+                # use_cache = False  # Disable cache for retries
             
             # Log the complete query content for debugging
             self.logger.debug("=== LLM Query Content ===")
@@ -199,7 +199,8 @@ class SpecInferenceModule(BaseModule):
                 code, 
                 examples, 
                 retry_attempt=retry_attempt,
-                use_cache=(retry_attempt == 0)
+                use_cache=True,
+                # use_cache=(retry_attempt == 0)
             )
             if not responses and retry_attempt == max_retries - 1:
                 return code
