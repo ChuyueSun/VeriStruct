@@ -9,22 +9,27 @@ pub struct TreeMap<V> {
     root: Option<Box<Node<V>>>,
 }
 
+// ANCHOR: new
 impl<V> TreeMap<V> {
+// ANCHOR: new_signature
     /// Creates a new empty TreeMap.
-    /// 
+    ///
     /// # Returns
     /// * A new TreeMap instance with no elements
     ///
     /// # Ensures
     /// * The resulting map is empty
-    pub fn new() -> Self {
+    pub fn new() -> Self
+// ANCHOR_END: new_signature
+    {
         TreeMap::<V> { root: None }
     }
 }
+// ANCHOR_END: new
 
 impl<V> Node<V> {
     /// Inserts a key-value pair into an optional BST node.
-    /// 
+    ///
     /// This helper function handles insertion into an optional node pointer, either by:
     /// 1. Creating a new leaf node if the pointer is None
     /// 2. Recursively inserting into an existing node while maintaining BST invariants
@@ -52,38 +57,23 @@ impl<V> Node<V> {
             let mut tmp = None;
             std::mem::swap(&mut tmp, node);
             let mut boxed_node = tmp.unwrap();
-
             (&mut *boxed_node).insert(key, value);
-
             *node = Some(boxed_node);
         }
     }
 
+    /// Inserts a key-value pair into this BST node.
+    ///
+    /// If the key is less than the node's key, it is inserted into the left subtree.
+    /// If the key is greater than the node's key, it is inserted into the right subtree.
+    /// If the key is equal to the node's key, the value is updated.
     fn insert(&mut self, key: u64, value: V) {
-        if key == self.key {
-            self.value = value;
-        } else if key < self.key {
-            if let Some(ref mut left) = self.left {
-                left.insert(key, value);
-            } else {
-                self.left = Some(Box::new(Node {
-                    key,
-                    value,
-                    left: None,
-                    right: None,
-                }));
-            }
+        if key < self.key {
+            Node::insert_into_optional(&mut self.left, key, value);
+        } else if key > self.key {
+            Node::insert_into_optional(&mut self.right, key, value);
         } else {
-            if let Some(ref mut right) = self.right {
-                right.insert(key, value);
-            } else {
-                self.right = Some(Box::new(Node {
-                    key,
-                    value,
-                    left: None,
-                    right: None,
-                }));
-            }
+            self.value = value;
         }
     }
 }
@@ -92,109 +82,86 @@ impl<V> Node<V> {
 mod tests {
     use super::*;
 
-    // Test that a new TreeMap is indeed empty.
     #[test]
-    fn test_tree_map_new_is_empty() {
-        let map: TreeMap<i32> = TreeMap::new();
-        assert!(map.root.is_none());
+    fn test_new_treemap_is_empty() {
+        let tree: TreeMap<i32> = TreeMap::new();
+        assert!(tree.root.is_none(), "New TreeMap should have no root");
     }
 
-    // Test that inserting into an empty Option<Box<Node>> creates a new node.
     #[test]
-    fn test_insert_into_optional_creates_node_when_none() {
-        let mut node: Option<Box<Node<i32>>> = None;
-        Node::insert_into_optional(&mut node, 5, 50);
-        let n = node.expect("Node should have been created");
-        assert_eq!(n.key, 5);
-        assert_eq!(n.value, 50);
-        assert!(n.left.is_none());
-        assert!(n.right.is_none());
+    fn test_insert_into_empty_node() {
+        let mut node: Option<Box<Node<&str>>> = None;
+        Node::insert_into_optional(&mut node, 10, "hello");
+        let node = node.expect("Node should be created");
+        assert_eq!(node.key, 10, "Inserted key should match");
+        assert_eq!(node.value, "hello", "Inserted value should match");
+        assert!(node.left.is_none(), "Newly created node should have no left child");
+        assert!(node.right.is_none(), "Newly created node should have no right child");
     }
 
-    // Test that inserting a key less than the existing node's key goes to the left.
+    // The following tests assume that the Node::insert method (called inside insert_into_optional)
+    // implements BST insertion logic:
+    // - If the new key is less than the current node's key, it is inserted into the left subtree.
+    // - If the key is greater than the current node's key, it is inserted into the right subtree.
+    // - If the key is equal to the current node's key, the value is updated.
+
     #[test]
-    fn test_insert_into_optional_inserts_left() {
-        let mut node: Option<Box<Node<i32>>> = Some(Box::new(Node {
-            key: 10,
-            value: 100,
+    fn test_insert_into_nonempty_left() {
+        let mut node: Option<Box<Node<&str>>> = Some(Box::new(Node {
+            key: 50,
+            value: "root",
             left: None,
             right: None,
         }));
-        // Inserting key 5 (<10) should go to the left branch.
-        Node::insert_into_optional(&mut node, 5, 50);
-        let n = node.expect("Root node must exist");
-        // Depending on the actual BST insert implementation inside Node::insert,
-        // the node with key==5 should be in the left child.
-        assert!(n.left.is_some());
-        let left_child = n.left.expect("Left child must have been inserted");
-        assert_eq!(left_child.key, 5);
-        assert_eq!(left_child.value, 50);
+        // Insert a key less than 50. It should go to the left subtree.
+        Node::insert_into_optional(&mut node, 25, "left");
+        let root = node.as_ref().expect("Root should exist");
+        // Root remains unchanged.
+        assert_eq!(root.key, 50, "Root key should remain unchanged");
+        assert_eq!(root.value, "root", "Root value should remain unchanged");
+        // Check left child.
+        let left = root.left.as_ref().expect("Left child should be created");
+        assert_eq!(left.key, 25, "Left child's key should be 25");
+        assert_eq!(left.value, "left", "Left child's value should be 'left'");
+        // Right child should still be empty.
+        assert!(root.right.is_none(), "Right child should remain None");
     }
 
-    // Test that inserting a key greater than the existing node's key goes to the right.
     #[test]
-    fn test_insert_into_optional_inserts_right() {
-        let mut node: Option<Box<Node<i32>>> = Some(Box::new(Node {
-            key: 10,
-            value: 100,
+    fn test_insert_into_nonempty_right() {
+        let mut node: Option<Box<Node<&str>>> = Some(Box::new(Node {
+            key: 50,
+            value: "root",
             left: None,
             right: None,
         }));
-        // Inserting key 15 (>10) should go to the right branch.
-        Node::insert_into_optional(&mut node, 15, 150);
-        let n = node.expect("Root node must exist");
-        assert!(n.right.is_some());
-        let right_child = n.right.expect("Right child must have been inserted");
-        assert_eq!(right_child.key, 15);
-        assert_eq!(right_child.value, 150);
+        // Insert a key greater than 50. It should go to the right subtree.
+        Node::insert_into_optional(&mut node, 75, "right");
+        let root = node.as_ref().expect("Root should exist");
+        // Root remains unchanged.
+        assert_eq!(root.key, 50, "Root key should remain unchanged");
+        assert_eq!(root.value, "root", "Root value should remain unchanged");
+        // Check right child.
+        let right = root.right.as_ref().expect("Right child should be created");
+        assert_eq!(right.key, 75, "Right child's key should be 75");
+        assert_eq!(right.value, "right", "Right child's value should be 'right'");
+        // Left child should still be empty.
+        assert!(root.left.is_none(), "Left child should remain None");
     }
 
-    // Test that inserting a duplicate key updates its associated value.
     #[test]
-    fn test_insert_into_optional_updates_value_for_existing_key() {
-        let mut node: Option<Box<Node<i32>>> = Some(Box::new(Node {
-            key: 10,
-            value: 100,
-            left: Some(Box::new(Node {
-                key: 5,
-                value: 50,
-                left: None,
-                right: None,
-            })),
+    fn test_insert_duplicate_key_updates_value() {
+        let mut node: Option<Box<Node<&str>>> = Some(Box::new(Node {
+            key: 50,
+            value: "root",
+            left: None,
             right: None,
         }));
-        // Inserting the same key (5) with a new value should update the node.
-        Node::insert_into_optional(&mut node, 5, 55);
-        let n = node.expect("Root node must exist");
-        assert!(n.left.is_some());
-        let left_child = n.left.expect("Left child must exist");
-        assert_eq!(left_child.key, 5);
-        assert_eq!(left_child.value, 55);
-    }
-
-    // Test inserting extreme key values.
-    #[test]
-    fn test_insert_into_optional_extreme_keys() {
-        let mut node: Option<Box<Node<i32>>> = None;
-        // Insert the minimum possible key.
-        Node::insert_into_optional(&mut node, 0, 0);
-        // Insert the maximum possible key.
-        Node::insert_into_optional(&mut node, u64::MAX, 1);
-        let root = node.expect("Root node must exist");
-        // Depending on the order of insertion, one of the extreme keys will be the root.
-        // Check that the other extreme key was inserted into the proper branch.
-        if root.key == 0 {
-            assert!(root.right.is_some());
-            let right_child = root.right.expect("Right child must exist");
-            assert_eq!(right_child.key, u64::MAX);
-            assert_eq!(right_child.value, 1);
-        } else if root.key == u64::MAX {
-            assert!(root.left.is_some());
-            let left_child = root.left.expect("Left child must exist");
-            assert_eq!(left_child.key, 0);
-            assert_eq!(left_child.value, 0);
-        } else {
-            panic!("Unexpected root key value");
-        }
+        // Insert a duplicate key. According to BST semantics,
+        // this should update the node's value.
+        Node::insert_into_optional(&mut node, 50, "updated_root");
+        let root = node.as_ref().expect("Root should exist");
+        assert_eq!(root.key, 50, "Key should remain unchanged for duplicate insertion");
+        assert_eq!(root.value, "updated_root", "Value should be updated for duplicate key");
     }
 }

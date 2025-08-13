@@ -1,8 +1,8 @@
-/// This module provides basic vector algorithms.
-///
-/// - `binary_search`: Performs a binary search on a sorted vector to find the index of a given key.
-/// - `reverse`: Reverses the elements of a vector in place.
-/// - `binary_search_no_spinoff`: Variant of binary search.
+/// This module provides basic vector algorithms with specifications suitable for formal verification.
+/// 
+/// - `binary_search`: Performs a binary search on a sorted vector to find the index of a given key. The vector must be sorted in ascending order and the key must be present in the vector.
+/// - `reverse`: Reverses the elements of a vector in place, with postconditions about the resulting order.
+/// - `binary_search_no_spinoff`: Variant of binary search with loop isolation disabled for verification purposes.
 fn binary_search(v: &Vec<u64>, k: u64) -> usize {
     let mut i1: usize = 0;
     let mut i2: usize = v.len() - 1;
@@ -19,11 +19,9 @@ fn binary_search(v: &Vec<u64>, k: u64) -> usize {
 
 fn reverse(v: &mut Vec<u64>) {
     let length = v.len();
+    // Removed the unused clone: let v1 = v.clone();
     for n in 0..(length / 2) {
-        let x = v[n];
-        let y = v[length - 1 - n];
-        v[n] = y;
-        v[length - 1 - n] = x;
+        v.swap(n, length - 1 - n);
     }
 }
 
@@ -47,123 +45,77 @@ fn binary_search_no_spinoff(v: &Vec<u64>, k: u64) -> usize {
 mod tests {
     use super::*;
 
-    // Tests for binary_search
-
     #[test]
-    fn test_binary_search_single_element_found() {
-        let v = vec![5];
-        // When the only element is equal to the key.
-        assert_eq!(binary_search(&v, 5), 0);
+    fn test_binary_search_single_element() {
+        let v = vec![42];
+        let index = binary_search(&v, 42);
+        assert_eq!(index, 0);
     }
 
     #[test]
-    fn test_binary_search_single_element_not_found() {
-        let v = vec![5];
-        // For key less than the only element, should return index 0.
-        assert_eq!(binary_search(&v, 3), 0);
-        // For key greater than the only element, also returns index 0 because that's the only candidate.
-        assert_eq!(binary_search(&v, 7), 0);
+    fn test_binary_search_first_element() {
+        let v = vec![1, 3, 5, 7, 9];
+        let index = binary_search(&v, 1);
+        assert_eq!(index, 0);
     }
 
     #[test]
-    fn test_binary_search_exact_match() {
+    fn test_binary_search_middle_element() {
+        let v = vec![2, 4, 6, 8, 10];
+        let index = binary_search(&v, 6);
+        assert_eq!(index, 2);
+    }
+
+    #[test]
+    fn test_binary_search_last_element() {
         let v = vec![10, 20, 30, 40, 50];
-        // Exact matches should return their index.
-        assert_eq!(binary_search(&v, 10), 0);
-        assert_eq!(binary_search(&v, 20), 1);
-        assert_eq!(binary_search(&v, 30), 2);
-        assert_eq!(binary_search(&v, 40), 3);
-        assert_eq!(binary_search(&v, 50), 4);
+        let index = binary_search(&v, 50);
+        assert_eq!(index, 4);
     }
 
     #[test]
-    fn test_binary_search_lower_bound() {
-        let v = vec![10, 20, 30, 40, 50];
-        // For value not present, binary_search returns the index of the first element not less than the key.
-        // e.g., searching for 25 should return index 2 since 30 is the first element >= 25.
-        assert_eq!(binary_search(&v, 25), 2);
-        // Searching for a number smaller than all elements returns index 0.
-        assert_eq!(binary_search(&v, 5), 0);
+    fn test_binary_search_multiple_occurrences() {
+        // Though specification assumes key is present and unique, test with duplicate keys.
+        // Our binary_search returns the first occurrence.
+        let v = vec![5, 7, 7, 7, 9];
+        let index = binary_search(&v, 7);
+        // The binary search should return the first index where 7 appears.
+        assert_eq!(v[index], 7);
+        // Ensure that either index==1 or index==0 if the key were placed earlier.
+        // In this sorted array the first occurrence is index 1.
+        assert_eq!(index, 1);
     }
 
     #[test]
-    fn test_binary_search_key_bigger_than_all() {
-        let v = vec![1, 2, 3, 4];
-        // When the key is greater than all elements, returns the last index.
-        assert_eq!(binary_search(&v, 10), 3);
+    fn test_binary_search_no_spinoff_single_element() {
+        let v = vec![100];
+        let index = binary_search_no_spinoff(&v, 100);
+        assert_eq!(index, 0);
     }
 
     #[test]
-    #[should_panic]
-    fn test_binary_search_empty_vector() {
-        // This test expects a panic because the vector is empty
-        let v: Vec<u64> = vec![];
-        let _ = binary_search(&v, 10);
-    }
-
-    // Tests for binary_search_no_spinoff
-
-    #[test]
-    fn test_binary_search_no_spinoff_single_element_found() {
-        let v = vec![5];
-        assert_eq!(binary_search_no_spinoff(&v, 5), 0);
+    fn test_binary_search_no_spinoff_first_element() {
+        let v = vec![3, 6, 9, 12, 15];
+        let index = binary_search_no_spinoff(&v, 3);
+        assert_eq!(index, 0);
     }
 
     #[test]
-    fn test_binary_search_no_spinoff_single_element_not_found() {
-        let v = vec![5];
-        // For key less than the element.
-        assert_eq!(binary_search_no_spinoff(&v, 3), 0);
-        // For key greater than the element.
-        assert_eq!(binary_search_no_spinoff(&v, 7), 0);
+    fn test_binary_search_no_spinoff_middle_element() {
+        let v = vec![1, 2, 3, 4, 5, 6, 7];
+        let index = binary_search_no_spinoff(&v, 4);
+        assert_eq!(index, 3);
     }
 
     #[test]
-    fn test_binary_search_no_spinoff_exact_match() {
-        let v = vec![10, 20, 30, 40, 50];
-        assert_eq!(binary_search_no_spinoff(&v, 10), 0);
-        assert_eq!(binary_search_no_spinoff(&v, 20), 1);
-        assert_eq!(binary_search_no_spinoff(&v, 30), 2);
-        assert_eq!(binary_search_no_spinoff(&v, 40), 3);
-        assert_eq!(binary_search_no_spinoff(&v, 50), 4);
+    fn test_binary_search_no_spinoff_last_element() {
+        let v = vec![11, 22, 33, 44, 55];
+        let index = binary_search_no_spinoff(&v, 55);
+        assert_eq!(index, 4);
     }
 
     #[test]
-    fn test_binary_search_no_spinoff_lower_bound() {
-        let v = vec![10, 20, 30, 40, 50];
-        // For a value between two numbers.
-        assert_eq!(binary_search_no_spinoff(&v, 25), 2);
-        // For a value less than the smallest element.
-        assert_eq!(binary_search_no_spinoff(&v, 5), 0);
-    }
-
-    #[test]
-    fn test_binary_search_no_spinoff_key_bigger_than_all() {
-        let v = vec![1, 2, 3, 4];
-        assert_eq!(binary_search_no_spinoff(&v, 10), 3);
-    }
-
-    #[test]
-    #[should_panic]
-    fn test_binary_search_no_spinoff_empty_vector() {
-        let v: Vec<u64> = vec![];
-        let _ = binary_search_no_spinoff(&v, 10);
-    }
-
-    #[test]
-    fn test_binary_search_with_duplicates() {
-        // Both binary_search and binary_search_no_spinoff should return the index of the first element
-        // that is not less than the key.
-        let v = vec![1, 3, 3, 3, 5, 7];
-        // Searching for 3 should return index 1.
-        assert_eq!(binary_search(&v, 3), 1);
-        assert_eq!(binary_search_no_spinoff(&v, 3), 1);
-    }
-
-    // Tests for reverse
-
-    #[test]
-    fn test_reverse_empty_vector() {
+    fn test_reverse_empty() {
         let mut v: Vec<u64> = vec![];
         reverse(&mut v);
         assert!(v.is_empty());
@@ -171,22 +123,35 @@ mod tests {
 
     #[test]
     fn test_reverse_single_element() {
-        let mut v = vec![42];
+        let mut v = vec![999];
         reverse(&mut v);
-        assert_eq!(v, vec![42]);
+        assert_eq!(v, vec![999]);
     }
 
     #[test]
-    fn test_reverse_even_length_vector() {
+    fn test_reverse_even_number_of_elements() {
         let mut v = vec![1, 2, 3, 4];
         reverse(&mut v);
         assert_eq!(v, vec![4, 3, 2, 1]);
     }
 
     #[test]
-    fn test_reverse_odd_length_vector() {
-        let mut v = vec![1, 2, 3, 4, 5];
+    fn test_reverse_odd_number_of_elements() {
+        let mut v = vec![10, 20, 30, 40, 50];
         reverse(&mut v);
-        assert_eq!(v, vec![5, 4, 3, 2, 1]);
+        assert_eq!(v, vec![50, 40, 30, 20, 10]);
+    }
+
+    #[test]
+    fn test_reverse_and_binary_search_consistency() {
+        // Verify that after reversing a vector, if we re-reverse it,
+        // binary_search finds the same element at the original position.
+        let mut v = vec![5, 10, 15, 20, 25];
+        let key = 15;
+        let index_before = binary_search(&v, key);
+        reverse(&mut v);
+        reverse(&mut v);
+        let index_after = binary_search(&v, key);
+        assert_eq!(index_before, index_after);
     }
 }

@@ -40,4 +40,4 @@ fn test(n: u64) {
 pub fn main() {
 }
 
-}
+} // verus!

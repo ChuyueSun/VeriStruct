@@ -6,10 +6,10 @@
     "coverage": 100.0
   },
   "bst_map_tests": {
-    "coverage": 93.55
+    "coverage": 100.0
   },
   "option_tests": {
-    "coverage": 95.65
+    "coverage": 100.0
   },
   "atomics_tests": {
     "coverage": -0.0
@@ -18,10 +18,10 @@
     "coverage": 100.0
   },
   "rwlock_vstd_tests": {
-    "coverage": 100.0
+    "coverage": -0.0
   },
   "invariants_tests": {
-    "coverage": 100.0
+    "coverage": 100.0 
   },
   "transfer_tests": {
     "coverage": 100.0

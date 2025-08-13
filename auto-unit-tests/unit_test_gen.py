@@ -1,6 +1,7 @@
 import os, sys, json
 import openai
 import generator_util as util 
+import verus_util as verus 
 
 COVERAGE_JSON_PATH = "coverage_results.json" 
 TEST_STRING = "/* TEST CODE BELOW */" 
@@ -16,9 +17,9 @@ def initialize_tests(rust_file_path, base=False):
     """
     code = util.read_rust_file(rust_file_path)
     spec_code = code[:code.find(TEST_STRING) + len(TEST_STRING)]
-    rust_code = util.strip_verus(spec_code[:-len(TEST_STRING)])
+    rust_code = verus.strip_verus(spec_code[:-len(TEST_STRING)])
     if base:
-        baseline = util.strip_verus(code, keep=True)
+        baseline = verus.strip_verus(code)
     
     # test code generation
     prompt = f"""
@@ -212,7 +213,7 @@ def revise_tests(output_path, uncovered_lines):
         Those lines, along with up to two lines of surrounding context, are provided below:
         {context_block}
         
-        Moreover, the how to reach those lines is given by the following trace:
+        Moreover, how to reach those lines is given by the following trace:
         {trace}
         This trace is derived from the Rust file, and you should this understanding of how to reach those lines to consider which 
         if/else/specific preconditions and/or edge cases are not covered by the existing tests which has led to those uncovered line(s)

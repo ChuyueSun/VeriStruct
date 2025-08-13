@@ -464,5 +464,5 @@ fn test2(tree_map: TreeMap<bool>, key1: u64, key2: u64) {
 
 
 fn main() { }
-}
+} // verus!
 // ANCHOR_END: all

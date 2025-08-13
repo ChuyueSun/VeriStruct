@@ -338,4 +338,4 @@ fn test(len: usize, value: i32, iterations: usize)
 
 pub fn main() {
 }
-}
+} // verus!
