@@ -53,7 +53,7 @@ class ProofGenerationModule(BaseModule):
             "     * `use_type_invariant(self);` for value receivers\n"
             "   - Carefully review all existing lemmas defined in the file and invoke each one that is relevant to the current proof context, using the syntax `lemma_name(arg1, arg2, ...)`.\n"
             "     * For example, if there are lemmas about sequence bounds or modular arithmetic, call them as needed, such as `lemma_mod_auto(self.vt.len() as int)`.\n"
-            "     * For lemmas about sequence properties, use the appropriate generic syntax, e.g., `lemma_seq_properties::<T>()`.\n"
+            "     * For lemmas about sequence properties, use the appropriate generic syntax, e.g., `broadcast use group_seq_properties`.\n"
             "     * When reasoning about sequences or specifications, ensure that all applicable modular arithmetic and sequence-related lemmas from the file are called to support your proof.\n"
             "   - Use assertions strategically with `assert(condition)`\n"
             "   - When helpful, use the `by(...)` syntax for proof steps:\n"

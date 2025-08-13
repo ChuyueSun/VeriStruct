@@ -154,6 +154,7 @@ def build_instruction(
         instruction = add_seq_knowledge_if_needed(code, instruction)
 
     if knowledge is not None:
+        instruction += "\n\nadditional knowledge:\n"
         instruction += knowledge
 
     return instruction

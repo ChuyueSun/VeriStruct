@@ -159,6 +159,71 @@ You can use forall or exists for properties over sequences."""
 
         return best_code
 
+    def _get_llm_responses(
+        self,
+        instruction: str,
+        query: str,
+        examples: List[Dict[str, str]] = None,
+        temperature_boost: float = 0.2,
+        retry_attempt: int = 0,
+        use_cache: bool = True,
+        context = None,  # Optional context for appending knowledge
+    ) -> List[str]:
+        """
+        Get responses from LLM with error handling.
+
+        Args:
+            instruction: The instruction for the LLM
+            query: The query/code to process
+            examples: Optional list of example dictionaries with 'query' and 'answer' keys
+            temperature_boost: Amount to increase temperature per retry
+            retry_attempt: Current retry attempt number
+            use_cache: Whether to use response caching
+            context: Optional context object for appending knowledge
+
+        Returns:
+            List of response strings from the LLM
+        """
+        try:
+            # Add retry marker to instruction to ensure cache miss
+            if retry_attempt > 0:
+                instruction = f"{instruction}\n[Retry Attempt: {retry_attempt}]"
+                use_cache = False  # Disable cache for retries
+
+            # Append context knowledge to query if available
+            final_query = query
+            if context and hasattr(context, 'gen_knowledge'):
+                final_query += "\n\nAdditional Context:\n" + context.gen_knowledge()
+
+            # Log the complete query content for debugging
+            self.logger.debug("=== LLM Query Content ===")
+            self.logger.debug(f"Retry Attempt: {retry_attempt}")
+            self.logger.debug(f"Temperature: {1.0 + (retry_attempt * temperature_boost)}")
+            self.logger.debug(f"Cache Enabled: {use_cache}")
+            self.logger.debug("\n=== Instruction ===\n" + instruction)
+            self.logger.debug("\n=== Query ===\n" + final_query)
+            if examples:
+                self.logger.debug("\n=== Examples ===")
+                for i, ex in enumerate(examples):
+                    self.logger.debug(f"\nExample {i+1} Query:\n" + ex["query"])
+                    self.logger.debug(f"\nExample {i+1} Answer:\n" + ex["answer"])
+            self.logger.debug("=====================")
+
+            return self.llm.infer_llm(
+                engine=self.config.get("aoai_debug_model", "gpt-4"),
+                instruction=instruction,
+                exemplars=examples or [],
+                query=final_query,
+                system_info=self.default_system,
+                answer_num=3,
+                max_tokens=8192,
+                temp=1.0 + (retry_attempt * temperature_boost),
+                use_cache=use_cache,
+            )
+        except Exception as e:
+            self.logger.error(f"Error during LLM inference: {e}")
+            return []
+
     def exec(self, context, failure_to_fix: Optional[VerusError] = None) -> str:
         """
         Execute the repair module.

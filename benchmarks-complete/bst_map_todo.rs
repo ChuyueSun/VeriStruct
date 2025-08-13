@@ -1,183 +1,275 @@
-// rust_verify/tests/example.rs
 #![cfg_attr(verus_keep_ghost, verifier::exec_allows_no_decreases_clause)]
 
-#[allow(unused_imports)]
-use builtin::*;
-use builtin_macros::*;
-use vstd::{prelude::*, seq_lib::*};
+// ANCHOR: all
+use vstd::prelude::*;
 
-/*
-u64 bit vector library begins
-*/
+verus!{
 
-macro_rules! get_bit64_macro {
-    ($a:expr, $b:expr) => {{
-        (0x1u64 & ($a >> $b)) == 1
-    }};
+struct Node<V> {
+    key: u64,
+    value: V,
+    left: Option<Box<Node<V>>>,
+    right: Option<Box<Node<V>>>,
 }
 
-// since this wraps with `verus_proof_macro_exprs`, should use the above `get_bit64_macro` if it is going to be executable.
-#[allow(unused_macros)]
-macro_rules! get_bit64 {
-    ($($a:tt)*) => {
-        verus_proof_macro_exprs!(get_bit64_macro!($($a)*))
+pub struct TreeMap<V> {
+    root: Option<Box<Node<V>>>,
+}
+
+impl<V> Node<V> {
+    spec fn optional_as_map(node_opt: Option<Box<Node<V>>>) -> Map<u64, V>
+    {
+        // TODO: add specification function
+    }
+
+    spec fn as_map(self) -> Map<u64, V>
+    {
+        // TODO: add specification function
     }
 }
 
-macro_rules! set_bit64_macro {
-    ($a:expr,$b:expr, $c:expr) => {{
-        if $c {
-            $a | 1u64 << $b
+impl<V> TreeMap<V> {
+    pub closed spec fn as_map(self) -> Map<u64, V> {
+        // TODO: add specification function
+    }
+}
+
+impl<V> View for TreeMap<V> {
+    type V = Map<u64, V>;
+
+    open spec fn view(&self) -> Map<u64, V> {
+        // TODO: add specification function
+    }
+}
+
+impl<V> Node<V> {
+    spec fn well_formed(self) -> bool
+    {
+        // TODO: add specification function
+    }
+}
+
+// ANCHOR: well_formed_with_attr
+impl<V> TreeMap<V> {
+    #[verifier::type_invariant]
+    spec fn well_formed(self) -> bool {
+        // TODO: add specification function
+    }
+}
+// ANCHOR_END: well_formed_with_attr
+
+// ANCHOR: new
+impl<V> TreeMap<V> {
+// ANCHOR: new_signature
+    pub fn new() -> (s: Self)
+    // TODO: add requires and ensures
+// ANCHOR_END: new_signature
+    {
+        TreeMap::<V> { root: None }
+    }
+}
+// ANCHOR_END: new
+
+impl<V> Node<V> {
+    fn insert_into_optional(node: &mut Option<Box<Node<V>>>, key: u64, value: V)
+    // TODO: add requires and ensures
+    {
+        if node.is_none() {
+            *node = Some(Box::new(Node::<V> {
+                key: key,
+                value: value,
+                left: None,
+                right: None,
+            }));
         } else {
-            $a & (!(1u64 << $b))
+            let mut tmp = None;
+            std::mem::swap(&mut tmp, node);
+            let mut boxed_node = tmp.unwrap();
+
+            (&mut *boxed_node).insert(key, value);
+
+            *node = Some(boxed_node);
         }
-    }};
-}
-
-// since this wraps with `verus_proof_macro_exprs`, should use the above `set_bit64_macro` if it is going to be executable.
-#[allow(unused_macros)]
-macro_rules! set_bit64 {
-    ($($a:tt)*) => {
-        verus_proof_macro_exprs!(set_bit64_macro!($($a)*))
-    }
-}
-
-verus! {
-
-spec fn u64_view(u: u64) -> Seq<bool> {
-    Seq::new(64, |i: int| get_bit64!(u, i as u64))
-}
-
-#[verifier::bit_vector]
-proof fn set_bit64_proof(bv_new: u64, bv_old: u64, index: u64, bit: bool)
-    requires
-        bv_new == set_bit64!(bv_old, index, bit),
-        index < 64,
-    ensures
-        get_bit64!(bv_new, index) == bit,
-        forall|loc2: u64|
-            (loc2 < 64 && loc2 != index) ==> (get_bit64!(bv_new, loc2) == get_bit64!(bv_old, loc2)),
-{
-}
-
-#[verifier::bit_vector]
-proof fn bit_or_64_proof(bv1: u64, bv2: u64, bv_new: u64)
-    requires
-        bv_new == bv1 | bv2,
-    ensures
-        forall|i: u64|
-            (i < 64) ==> get_bit64!(bv_new, i) == (get_bit64!(bv1, i) || get_bit64!(bv2, i)),
-{
-}
-
-proof fn bit_or_64_view_proof(u1: u64, u2: u64, bv_new: u64)
-    requires
-        bv_new == u1 | u2,
-    ensures
-        u64_view(bv_new) =~= Seq::new(64, |i: int| u64_view(u1).index(i) || u64_view(u2).index(i)),
-{
-    bit_or_64_proof(u1, u2, bv_new);
-}
-
-spec fn or_u64_relation(u1: u64, u2: u64, or_int: u64) -> bool {
-    u64_view(or_int) =~= Seq::new(64, |i: int| u64_view(u1).index(i) || u64_view(u2).index(i))
-}
-
-/*
-u64 bit vector library ends
-bitmap impl begins
-*/
-
-pub struct BitMap {
-    bits: Vec<u64>,
-}
-
-impl BitMap {
-    spec fn view(&self) -> Seq<bool> {
-        // TODO: implement view
     }
 
-    fn from(v: Vec<u64>) -> (ret: BitMap) 
+    fn insert(&mut self, key: u64, value: V)
     // TODO: add requires and ensures
     {
-        BitMap { bits: v }
-    }
+        if key == self.key {
+            self.value = value;
 
-    fn get_bit(&self, index: u32) -> (bit: bool)
-    // TODO: add requires and ensures
-    {
-        // REVIEW: at this moment, usize is assumed to be 32 or 64.
-        // Therefore, if `index` is u64, verification fails due to the possibility of truncation
-        // when we begin to consider `usize` smaller than 32, this might fail again.
-        let seq_index: usize = (index / 64) as usize;
-        let bit_index: u32 = index % 64;
-        let bucket: u64 = self.bits[seq_index];
-        get_bit64_macro!(bucket, bit_index as u64)
-    }
+            assert(!Node::<V>::optional_as_map(self.left).dom().contains(key));
+            assert(!Node::<V>::optional_as_map(self.right).dom().contains(key));
+        } else if key < self.key {
+            Self::insert_into_optional(&mut self.left, key, value);
 
-    fn set_bit(&mut self, index: u32, bit: bool)
+            assert(!Node::<V>::optional_as_map(self.right).dom().contains(key));
+        } else {
+            Self::insert_into_optional(&mut self.right, key, value);
+
+            assert(!Node::<V>::optional_as_map(self.left).dom().contains(key));
+        }
+    }
+}
+
+// ANCHOR: insert
+impl<V> TreeMap<V> {
+// ANCHOR: insert_signature
+    pub fn insert(&mut self, key: u64, value: V)
     // TODO: add requires and ensures
+// ANCHOR_END: insert_signature
     {
-        // REVEIW: Same problem here with above regarding `usize`.
-        let seq_index: usize = (index / 64) as usize;
-        let bit_index: u32 = index % 64;
-        let bv_old: u64 = self.bits[seq_index];
-        let bv_new: u64 = set_bit64_macro!(bv_old, bit_index as u64, bit);
         // TODO: add proof
-        self.bits.set(seq_index, bv_new);
-        // TODO: add proof
+        let mut root = None;
+        std::mem::swap(&mut root, &mut self.root);
+        Node::<V>::insert_into_optional(&mut root, key, value);
+        self.root = root;
     }
+}
+// ANCHOR_END: insert
 
-    // bitwise-OR for bitmap
-    fn or(&self, bm: &BitMap) -> (ret: BitMap)
+impl<V> Node<V> {
+    fn delete_from_optional(node: &mut Option<Box<Node<V>>>, key: u64)
     // TODO: add requires and ensures
     {
-        let n: usize = self.bits.len();
-        let mut i: usize = 0;
-        let mut res_bits: Vec<u64> = Vec::new();
-        let mut result = BitMap { bits: res_bits };
-        while i < n
-        // TODO: add loop invariant
-        {
-            res_bits = result.bits;
-            let u1: u64 = self.bits[i];
-            let u2: u64 = bm.bits[i];
-            let or_int: u64 = u1 | u2;
+        if node.is_some() {
+            let mut tmp = None;
+            std::mem::swap(&mut tmp, node);
+            let mut boxed_node = tmp.unwrap();
+
+            if key == boxed_node.key {
+                assert(!Node::<V>::optional_as_map(boxed_node.left).dom().contains(key));
+                assert(!Node::<V>::optional_as_map(boxed_node.right).dom().contains(key));
+
+                if boxed_node.left.is_none() {
+                    *node = boxed_node.right;
+                } else {
+                    if boxed_node.right.is_none() {
+                        *node = boxed_node.left;
+                    } else {
+                        let (popped_key, popped_value) = Node::<V>::delete_rightmost(&mut boxed_node.left);
+                        boxed_node.key = popped_key;
+                        boxed_node.value = popped_value;
+                        *node = Some(boxed_node);
+                    }
+                }
+            } else if key < boxed_node.key {
+                assert(!Node::<V>::optional_as_map(boxed_node.right).dom().contains(key));
+                Node::<V>::delete_from_optional(&mut boxed_node.left, key);
+                *node = Some(boxed_node);
+            } else {
+                assert(!Node::<V>::optional_as_map(boxed_node.left).dom().contains(key));
+                Node::<V>::delete_from_optional(&mut boxed_node.right, key);
+                *node = Some(boxed_node);
+            }
+        }
+    }
+
+    fn delete_rightmost(node: &mut Option<Box<Node<V>>>) -> (popped: (u64, V))
+    // TODO: add requires and ensures
+    {
+        let mut tmp = None;
+        std::mem::swap(&mut tmp, node);
+        let mut boxed_node = tmp.unwrap();
+
+        if boxed_node.right.is_none() {
+            *node = boxed_node.left;
+            assert(Node::<V>::optional_as_map(boxed_node.right) =~= Map::empty());
+            assert(!Node::<V>::optional_as_map(boxed_node.left).dom().contains(boxed_node.key));
+            return (boxed_node.key, boxed_node.value);
+        } else {
+            let (popped_key, popped_value) = Node::<V>::delete_rightmost(&mut boxed_node.right);
+            assert(!Node::<V>::optional_as_map(boxed_node.left).dom().contains(popped_key));
+            *node = Some(boxed_node);
+            return (popped_key, popped_value);
+        }
+    }
+}
+
+// ANCHOR: delete
+impl<V> TreeMap<V> {
+// ANCHOR: delete_signature
+    pub fn delete(&mut self, key: u64)
+    // TODO: add requires and ensures
+// ANCHOR_END: delete_signature
+    {
+        // TODO: add proof
+        let mut root = None;
+        std::mem::swap(&mut root, &mut self.root);
+        Node::<V>::delete_from_optional(&mut root, key);
+        self.root = root;
+    }
+}
+// ANCHOR_END: delete
+
+impl<V> Node<V> {
+    fn get_from_optional(node: &Option<Box<Node<V>>>, key: u64) -> Option<&V>
+    // TODO: add requires and ensures
+    {
+        match node {
+            None => None,
+            Some(node) => {
+                node.get(key)
+            }
+        }
+    }
+
+    fn get(&self, key: u64) -> Option<&V>
+    // TODO: add requires and ensures
+    {
+        if key == self.key {
+            Some(&self.value)
+        } else if key < self.key {
             // TODO: add proof
-            res_bits.push(or_int);
-            result = BitMap { bits: res_bits };
-            i = i + 1;
+            Self::get_from_optional(&self.left, key)
+        } else {
+            // TODO: add proof
+            Self::get_from_optional(&self.right, key)
         }
-        result
     }
 }
 
-fn test_bitmap(x1: u32, x2: u32, x3: u32) 
+// ANCHOR: get
+impl<V> TreeMap<V> {
+// ANCHOR: get_signature
+    pub fn get(&self, key: u64) -> Option<&V>
+    // TODO: add requires and ensures
+// ANCHOR_END: get_signature
+    {
+        // TODO: add proof
+        Node::<V>::get_from_optional(&self.root, key)
+    }
+}
+// ANCHOR_END: get
+
+// ANCHOR: example_use
+fn test(v: u64) 
 requires
-    0 < x1 < 128,
-    0 < x2 < 128,
-    0 < x3 < 128,
+    v < u64::MAX - 10,
 {
-    let mut bm1 = BitMap::from(vec![0u64, 0u64]);
-    let mut bm2 = BitMap::from(vec![0u64, 0u64]);
+    let mut tree_map = TreeMap::<bool>::new();
+    tree_map.insert(v, false);
+    tree_map.insert(v + 1, false);
+    tree_map.insert(v, true);
+    tree_map.delete(v);
 
-    bm1.set_bit(x1, true);
-    bm1.set_bit(x2, true);
-    bm2.set_bit(x2, true);
-    bm2.set_bit(x3, true);
-    let bm1_x1 = bm1.get_bit(x1);
-    let bm1_x2 = bm1.get_bit(x2);
-    assert(bm1_x1 && bm1_x2);
-    let bm2_x2 = bm2.get_bit(x2);
-    let bm2_x3 = bm2.get_bit(x3);
-    assert(bm2_x2 && bm2_x3);
+    let elem17 = tree_map.get(v);
+    let elem18 = tree_map.get(v + 1);
+    assert(elem17.is_none());
+    assert(elem18 == Some(&false));
 
-    let bm3 = bm1.or(&bm2);
-    let bm3_x1 = bm3.get_bit(x1);
-    let bm3_x2 = bm3.get_bit(x2);
-    let bm3_x3 = bm3.get_bit(x3);
-    assert(bm3_x1 && bm3_x2 && bm3_x3);
-} 
+    test2(tree_map, v + 2, v + 3);
+}
 
-fn main() {}
-} // verus!
+fn test2(tree_map: TreeMap<bool>, key1: u64, key2: u64) {
+    let mut tree_map = tree_map;
+    tree_map.insert(key1, true);
+    tree_map.insert(key2, true);
+}
+// ANCHOR_END: example_use
+
+
+}
+// ANCHOR_END: all
+
+fn main() { }
