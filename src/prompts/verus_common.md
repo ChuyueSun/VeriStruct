@@ -1,6 +1,7 @@
 # Verus Common Knowledge
 
 ## Important Notes
+- ALWAYS use parentheses whenever possible for clarity!
 - Don't delete existing non-buggy `#[trigger]`!
 - Don't change "unwind" to `(unwind) as bool`!
 - Return the complete modified Rust code in your response without explanations.
@@ -15,6 +16,8 @@
 3. Always use vector.len() instead of vector@.len().
 4. Simplify Boolean Conjunctions:
    When combining multiple conditions, avoid excessive &&&. Fewer (or well-structured) conjunctions make the spec code easier to read and debug.
+5. Parentheses Usage:
+   ALWAYS wrap conditions in parentheses, even for simple expressions. This makes precedence explicit and prevents errors.
 
 ## Operators
 Verus extends Rust logical operators with low-precedence forms that are especially helpful in specification code:
