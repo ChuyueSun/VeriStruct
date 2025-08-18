@@ -6,6 +6,7 @@ use vstd::prelude::*;
 use vstd::seq_lib::*;
 use builtin_macros::*;
 
+verus! {
 /*
 u64 bit vector library begins
 */
@@ -42,7 +43,6 @@ macro_rules! set_bit64 {
     }
 }
 
-verus! {
 
 spec fn u64_view(u: u64) -> Seq<bool> {
     Seq::new(64, |i: int| get_bit64!(u, i as u64))
