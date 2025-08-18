@@ -220,7 +220,8 @@ class ProofGenerationModule(BaseModule):
                 code, 
                 examples, 
                 retry_attempt=retry_attempt,
-                use_cache=(retry_attempt == 0)
+                use_cache=True,
+                # use_cache=(retry_attempt == 0)    
             )
             if not responses and retry_attempt == max_retries - 1:
                 return code

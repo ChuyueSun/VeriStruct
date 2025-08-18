@@ -1,3 +1,4 @@
+
 pub open spec fn ex_saturating_sub_spec(a: int, b: int) -> (ret: nat)
 {
     if (a > b) {
