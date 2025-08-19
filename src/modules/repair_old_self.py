@@ -1,5 +1,27 @@
 """
 Repair module for fixing requires clauses that need old(self) for &mut variables.
+
+This module handles the error "in requires, use `old(self)` to refer to the pre-state of an &mut variable"
+by replacing all instances of `self.` with `old(self).` in requires clauses. It supports:
+
+1. Single-line requires clauses
+2. Multi-line requires clauses with multiple conditions
+3. Multiple self references in a single requires clause
+
+Example:
+    Input:
+        pub fn push(&mut self, value: i32)
+            requires self.len() < 100
+        {
+            // Implementation
+        }
+
+    Output:
+        pub fn push(&mut self, value: i32)
+            requires old(self).len() < 100
+        {
+            // Implementation
+        }
 """
 
 import logging
@@ -11,10 +33,32 @@ from src.modules.veval import VerusError, VerusErrorType
 
 
 class RepairOldSelfModule(BaseRepairModule):
+    # Number of lines to search before and after the error line
+    SEARCH_CONTEXT = 5
+    
+    # Patterns to identify requires clause components
+    REQUIRES_KEYWORD = "requires"
+    SELF_PATTERN = "self."
+    OLD_SELF_PATTERN = "old(self)."
+    
     """
     Repair module for fixing requires clauses that need old(self) for &mut variables.
     This module handles cases where a requires clause needs to use old(self) to refer
     to the pre-state of a mutable reference.
+
+    Repair Strategy:
+    1. Locate the requires clause around the error line (within 5 lines)
+    2. Identify the full extent of the requires clause, handling both single-line
+       and multi-line formats
+    3. Replace all instances of 'self.' with 'old(self).' within the requires clause
+    4. Preserve original formatting, indentation, and line breaks
+
+    The module maintains the original code structure and only modifies the necessary
+    'self.' references within the requires clause. It handles:
+    - Single-line requires clauses: requires(self.len() < 100)
+    - Multi-line requires clauses with multiple conditions
+    - Multiple self references in a single line
+    - Requires clauses with mixed self and non-self conditions
     """
 
     def __init__(self, config, logger, immutable_funcs=[]):
@@ -88,33 +132,119 @@ class RepairOldSelfModule(BaseRepairModule):
 
         # Get the error location from the trace
         if not failure_to_fix.trace:
-            self.logger.warning("No error trace available.")
+            self.logger.warning("No error trace available in the failure object.")
             return code
 
         error_trace = failure_to_fix.trace[0]
-        error_line = error_trace.get_line_number() - 1  # Convert to 0-based index
-        error_text = error_trace.get_text()
-
-        # Find the requires clause containing the error
-        requires_pattern = r"requires\s*\([^)]*\)"
-        requires_match = None
-        for i in range(max(0, error_line - 5), min(len(lines), error_line + 5)):
-            if "requires" in lines[i]:
-                match = re.search(requires_pattern, lines[i])
-                if match:
-                    requires_match = match
-                    error_line = i
-                    break
-
-        if not requires_match:
-            self.logger.warning("Could not find requires clause.")
+        try:
+            error_line = error_trace.get_lines()[0] - 1  # Convert to 0-based index
+        except (AttributeError, IndexError) as e:
+            self.logger.warning(f"Failed to get error line number: {e}")
             return code
 
-        # Replace self with old(self) in the requires clause
-        old_requires = requires_match.group(0)
-        new_requires = old_requires.replace("self.", "old(self).")
+        error_text = error_trace.get_text()
+        self.logger.info(f"Processing error at line {error_line + 1}: {error_text}")
 
-        # Update the line with the fixed requires clause
-        lines[error_line] = lines[error_line].replace(old_requires, new_requires)
+        # Find the requires clause containing the error
+        requires_range = self._find_requires_clause(lines, error_line)
+        if requires_range is None:
+            self.logger.warning(
+                f"Could not find {self.REQUIRES_KEYWORD} clause near line {error_line + 1}"
+            )
+            return code
+        requires_start, requires_end = requires_range
+
+        # Replace self with old(self) in each line of the requires clause
+        replacements_made = 0
+        for i in range(requires_start, requires_end + 1):
+            if self.SELF_PATTERN in lines[i]:
+                old_line = lines[i]
+                lines[i] = lines[i].replace(self.SELF_PATTERN, self.OLD_SELF_PATTERN)
+                replacements_made += 1
+                self.logger.debug(
+                    f"Line {i + 1}: Replaced '{old_line}' with '{lines[i]}'"
+                )
+
+        if replacements_made == 0:
+            self.logger.warning(
+                f"No '{self.SELF_PATTERN}' references found in {self.REQUIRES_KEYWORD} clause to replace"
+            )
+        else:
+            self.logger.info(
+                f"Made {replacements_made} replacements of '{self.SELF_PATTERN}' with '{self.OLD_SELF_PATTERN}'"
+            )
 
         return "\n".join(lines)
+
+    def _find_requires_clause(self, lines: list[str], error_line: int) -> Optional[tuple[int, int]]:
+        """
+        Find the requires clause containing or near the error line.
+
+        Args:
+            lines: List of code lines
+            error_line: The 0-based line number where the error was found
+
+        Returns:
+            A tuple of (start_line, end_line) if found, None otherwise.
+            Both line numbers are 0-based indices into the lines list.
+        """
+        # Define the search range around the error line
+        search_start = max(0, error_line - self.SEARCH_CONTEXT)
+        search_end = min(len(lines), error_line + self.SEARCH_CONTEXT)
+
+        # State for tracking requires clause
+        requires_start = None
+        requires_end = None
+        in_requires = False
+        paren_count = 0  # For tracking nested parentheses
+
+        # Look for requires clause in the search range
+        for i in range(search_start, search_end):
+            line = lines[i].rstrip()
+            stripped = line.strip()
+
+            # Skip empty lines unless we're in a requires clause
+            if not stripped and not in_requires:
+                continue
+
+            # Start of requires clause
+            if self.REQUIRES_KEYWORD in line and not in_requires:
+                requires_start = i
+                requires_end = i
+                in_requires = True
+                # Count opening parentheses in the rest of the line
+                paren_count = line[line.index(self.REQUIRES_KEYWORD):].count('(')
+                paren_count -= line[line.index(self.REQUIRES_KEYWORD):].count(')')
+                self.logger.debug(f"Found requires clause starting at line {i + 1}")
+                continue
+
+            # Inside requires clause
+            if in_requires:
+                # Update parentheses count
+                paren_count += stripped.count('(') - stripped.count(')')
+
+                # Check for end conditions
+                if stripped == "{":  # Function body start
+                    in_requires = False
+                    self.logger.debug(f"Found end of requires clause at line {i + 1} (function body)")
+                elif paren_count == 0 and stripped.endswith(")"):  # Balanced parentheses
+                    requires_end = i
+                    in_requires = False
+                    self.logger.debug(f"Found end of requires clause at line {i + 1} (balanced parens)")
+                elif stripped and not stripped.endswith(","):  # Non-empty line without continuation
+                    requires_end = i
+                    in_requires = False
+                    self.logger.debug(f"Found end of requires clause at line {i + 1} (no continuation)")
+                elif stripped:  # Non-empty line with potential continuation
+                    requires_end = i
+                    self.logger.debug(f"Found requires clause content at line {i + 1}")
+
+        # Return None if we didn't find a requires clause
+        if requires_start is None:
+            return None
+
+        # Log the found range
+        self.logger.debug(
+            f"Found requires clause from line {requires_start + 1} to {requires_end + 1}"
+        )
+        return (requires_start, requires_end)
