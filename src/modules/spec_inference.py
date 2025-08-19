@@ -102,6 +102,7 @@ class SpecInferenceModule(BaseModule):
             # Add retry marker to instruction to ensure cache miss
             if retry_attempt > 0:
                 instruction = f"{instruction}\n[Retry Attempt: {retry_attempt}]"
+                use_cache = True
                 # use_cache = False  # Disable cache for retries
             
             # Log the complete query content for debugging

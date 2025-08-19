@@ -38,6 +38,7 @@ class VerusErrorType(Enum):
     TypeAnnotation = 20
     ConstructorFailTypeInvariant = 21
     CannotCallFunc = 22
+    RequiresOldSelf = 23
 
 
 m2VerusError = {
@@ -60,6 +61,7 @@ m2VerusError = {
     "type annotations needed": VerusErrorType.TypeAnnotation,
     "constructed value may fail to meet its declared type invariant": VerusErrorType.ConstructorFailTypeInvariant,
     "cannot call function": VerusErrorType.CannotCallFunc,
+    "in requires, use `old(self)` to refer to the pre-state of an &mut variable": VerusErrorType.RequiresOldSelf,
 }
 
 VerusError2m = {v: k for k, v in m2VerusError.items()}

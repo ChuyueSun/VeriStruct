@@ -68,6 +68,7 @@ class RepairRegistry:
         from src.modules.repair_invariant import RepairInvariantModule
         from src.modules.repair_missing import RepairMissingModule
         from src.modules.repair_mode import RepairModeModule
+        from src.modules.repair_old_self import RepairOldSelfModule
         from src.modules.repair_postcond import RepairPostcondModule
         from src.modules.repair_precond import RepairPrecondModule
         from src.modules.repair_remove_inv import RepairRemoveInv
@@ -189,6 +190,15 @@ class RepairRegistry:
             "12_repair_mode.rs",
         )
 
+        # Initialize and register old(self) repair module
+        old_self_repair = RepairOldSelfModule(config, logger, immutable_funcs)
+        registry.register_module(
+            "repair_old_self",
+            old_self_repair,
+            [VerusErrorType.RequiresOldSelf],
+            "14_repair_old_self.rs",
+        )
+
         # TODO: Add more specialized repair modules for other error types:
         # - RecommendNotMet
 
@@ -291,11 +301,12 @@ class RepairRegistry:
             VerusErrorType.SplitAssertFail: 14,  # Fix split assertion failures
             VerusErrorType.PreCondFail: 15,  # Fix precondition failures
             VerusErrorType.SplitPreFail: 16,  # Fix split precondition failures
-            VerusErrorType.PostCondFail: 17,  # Fix postcondition failures
-            VerusErrorType.SplitPostFail: 18,  # Fix split postcondition failures
-            VerusErrorType.ensure_private: 19,  # Fix private field access in ensures
-            VerusErrorType.require_private: 20,  # Fix private function access in requires
-            VerusErrorType.RecommendNotMet: 21,  # Fix recommendation not met errors
+            VerusErrorType.RequiresOldSelf: 17,  # Fix old(self) in requires clauses
+            VerusErrorType.PostCondFail: 18,  # Fix postcondition failures
+            VerusErrorType.SplitPostFail: 19,  # Fix split postcondition failures
+            VerusErrorType.ensure_private: 20,  # Fix private field access in ensures
+            VerusErrorType.require_private: 21,  # Fix private function access in requires
+            VerusErrorType.RecommendNotMet: 22,  # Fix recommendation not met errors
             # Add more error types with their priorities here
         }
 
