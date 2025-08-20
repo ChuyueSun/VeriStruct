@@ -504,18 +504,29 @@ class RepairRegistry:
                         self.logger.warning(
                             f"{error_type.name} repair did not improve the score or made it worse."
                         )
-                        # If repair made things worse (especially causing compilation errors),
-                        # remove the last trial to revert to the previous state
-                        if (
-                            context.trials[-1].eval.compilation_error
-                            and not before_score.compilation_error
-                        ):
-                            self.logger.warning(
-                                "Repair introduced compilation errors. Reverting to previous state."
-                            )
-                            context.trials.pop()  # Remove the last trial
-                            # Skip adding this error type to result_map
-                            continue
+                    # If repair made things worse, try fallback
+                    if context.trials[-1].eval.compilation_error and not before_score.compilation_error:
+                        self.logger.info("Repair introduced compilation errors. Attempting fallback...")
+                        
+                        # Remove the failed trial
+                        context.trials.pop()
+                        
+                        # Try fallback repair
+                        fallback_result, fallback_score = self._try_fallback_repair(
+                            context=context,
+                            output_dir=output_dir,
+                            max_attempts=3,
+                            preserve_trial=False
+                        )
+                        
+                        if fallback_result and fallback_score:
+                            self.logger.info("Fallback repair improved score. Adding to trials.")
+                            # Add successful fallback as new trial
+                            context.add_trial(fallback_result)
+                            result_map[error_type] = fallback_result
+                            made_progress = True
+                        else:
+                            self.logger.warning("Fallback repair failed. Continuing with original code.")
                     else:
                         # Only add to result_map if repair was successful
                         result_map[error_type] = result
@@ -525,17 +536,12 @@ class RepairRegistry:
                         if output_dir and result:
                             output_path = self.get_output_path(type_failures[0])
                             if output_path:
-                                # Get file ID from environment (set in main.py)
-                                file_id = os.environ.get("VERUS_FILE_ID", "")
-                                if file_id:
-                                    # Insert file ID before file extension
-                                    base, ext = os.path.splitext(output_path)
-                                    output_path = f"{base}_{file_id}{ext}"
-
-                                output_file = output_dir / output_path
-                                output_file.write_text(result)
-                                self.logger.info(
-                                    f"Saved {error_type.name} repair result to {output_file} after {repair_time:.2f}s"
+                                self._save_repair_result(
+                                    output_dir=output_dir,
+                                    output_path=output_path,
+                                    result=result,
+                                    repair_type=error_type.name,
+                                    repair_time=repair_time
                                 )
 
                 # Log the repair in the progress logger
@@ -562,6 +568,95 @@ class RepairRegistry:
         # If we made progress on at least some errors, return the results
         # even if we couldn't repair all errors
         return result_map
+
+    def _check_file_size(self, result: str, original_size: Optional[int] = None) -> bool:
+        """
+        Validate repair result size is reasonable.
+        
+        Args:
+            result: The repair result string
+            original_size: Optional size of original file for comparison
+            
+        Returns:
+            bool: True if size seems valid, False otherwise
+        """
+        # Basic size check - files shouldn't be tiny
+        min_size = 100  # Minimum reasonable size for a Verus file
+        
+        # Get size in bytes and lines
+        result_bytes = len(result.encode('utf-8'))
+        result_lines = len(result.splitlines())
+        
+        # Log sizes for debugging
+        self.logger.info(f"Repair result size: {result_bytes} bytes, {result_lines} lines")
+        
+        if result_bytes < min_size:
+            self.logger.warning(f"Repair result suspiciously small: {result_bytes} bytes")
+            return False
+            
+        # If we have original size, compare
+        if original_size:
+            # Allow some variance but catch major discrepancies
+            size_ratio = result_bytes / original_size
+            if size_ratio < 0.5:  # Less than 50% of original
+                self.logger.warning(f"Repair result much smaller than original: {size_ratio:.2%}")
+                return False
+                
+        # Check for large blocks of empty lines
+        non_empty_lines = len([l for l in result.splitlines() if l.strip()])
+        empty_ratio = (result_lines - non_empty_lines) / result_lines
+        if empty_ratio > 0.5:  # More than 50% empty lines
+            self.logger.warning(f"Repair result has too many empty lines: {empty_ratio:.2%}")
+            return False
+            
+        return True
+
+    def _save_repair_result(
+        self,
+        output_dir: Path,
+        output_path: str,
+        result: str,
+        repair_type: str,
+        repair_time: Optional[float] = None,
+    ) -> None:
+        """
+        Helper method to save repair results to a file.
+
+        Args:
+            output_dir: Directory to save the result
+            output_path: Base path for the output file
+            result: The repair result to save
+            repair_type: Type of repair (for logging)
+            repair_time: Optional repair time in seconds
+        """
+        # Validate size before saving
+        if not self._check_file_size(result):
+            self.logger.warning(f"Skipping save of invalid/incomplete repair result for {repair_type}")
+            return
+            
+        # Get file ID from environment
+        file_id = os.environ.get("VERUS_FILE_ID", "")
+        if file_id:
+            # Insert file ID before file extension
+            base, ext = os.path.splitext(output_path)
+            output_path = f"{base}_{file_id}{ext}"
+
+        output_file = output_dir / output_path
+        
+        # Log file sizes before writing
+        self.logger.info(f"Writing repair result: {len(result.encode('utf-8'))} bytes to {output_file}")
+        
+        output_file.write_text(result)
+        
+        # Verify written file
+        if output_file.exists():
+            written_size = output_file.stat().st_size
+            self.logger.info(f"Verified written file size: {written_size} bytes")
+            
+            if repair_time is not None:
+                self.logger.info(f"Saved {repair_type} repair result to {output_file} after {repair_time:.2f}s")
+            else:
+                self.logger.info(f"Saved {repair_type} repair result to {output_file}")
 
     def get_registry_info(self) -> str:
         """
@@ -593,6 +688,96 @@ class RepairRegistry:
 
         return "\n".join(info)
 
+    def _try_fallback_repair(
+        self,
+        context,
+        output_dir: Optional[Path] = None,
+        max_attempts: int = 3,
+        preserve_trial: bool = False
+    ) -> tuple[Optional[str], Optional[float]]:
+        """
+        Attempt fallback repair for compilation errors.
+
+        Args:
+            context: The execution context
+            output_dir: Optional directory to save repair results
+            max_attempts: Maximum number of fallback attempts
+            preserve_trial: Whether to keep the failed trial in context
+
+        Returns:
+            Tuple of (repaired code if successful, score if successful)
+        """
+        if not context.trials:
+            self.logger.warning("No trials available for fallback repair.")
+            return None, None
+
+        last_trial = context.trials[-1]
+        if not last_trial.eval.compilation_error:
+            self.logger.info("No compilation error detected.")
+            return None, None
+
+        # Store original state
+        original_score = last_trial.eval.get_score()
+        original_code = last_trial.code
+        original_size = len(original_code.encode('utf-8'))
+        self.logger.info(f"Original code size: {original_size} bytes")
+        
+        attempt = 0
+
+        while attempt < max_attempts:
+            attempt += 1
+            self.logger.info(f"Fallback repair attempt {attempt}/{max_attempts}")
+
+            # Check for modules registered to handle syntax errors
+            syntax_modules = [
+                m for m in self.repair_modules.values() if m.name == "repair_syntax"
+            ]
+
+            if not syntax_modules:
+                self.logger.warning("No repair module found for compilation errors.")
+                return None, None
+
+            syntax_module = syntax_modules[0]
+            self.logger.info(
+                f"Attempting compilation error repair with {syntax_module.name}..."
+            )
+
+            # Try repair
+            result = syntax_module.exec(context)
+            if not result:
+                self.logger.warning(f"Fallback attempt {attempt} produced no result.")
+                continue
+                
+            # Validate size before evaluating
+            if not self._check_file_size(result, original_size):
+                self.logger.warning(f"Fallback attempt {attempt} produced incomplete/invalid result")
+                continue
+
+            # Evaluate result
+            from src.modules.veval import VEval
+            veval = VEval(result, self.logger)
+            current_score = veval.eval_and_get_score()
+
+            # Check if repair improved the score
+            if current_score > original_score:
+                self.logger.info(f"Fallback attempt {attempt} improved score and passed size validation.")
+                
+                # Save result if directory provided
+                if output_dir:
+                    self._save_repair_result(
+                        output_dir=output_dir,
+                        output_path=f"fallback_result_{len(context.trials)}.rs",
+                        result=result,
+                        repair_type=f"fallback_attempt_{attempt}"
+                    )
+                
+                return result, current_score
+
+            self.logger.warning(f"Fallback attempt {attempt} did not improve score.")
+
+        self.logger.warning(f"All {max_attempts} fallback attempts failed.")
+        return None, None
+
     def repair_compilation_error(
         self, context, output_dir: Optional[Path] = None
     ) -> Optional[str]:
@@ -607,39 +792,10 @@ class RepairRegistry:
         Returns:
             The repaired code if successful, None otherwise
         """
-        last_trial = context.trials[-1]
-
-        if not last_trial.eval.compilation_error:
-            self.logger.info("No compilation error detected.")
-            return None
-
-        # Check for modules registered to handle syntax errors
-        syntax_modules = [
-            m for m in self.repair_modules.values() if m.name == "repair_syntax"
-        ]
-
-        if syntax_modules:
-            syntax_module = syntax_modules[0]
-            self.logger.info(
-                f"Attempting compilation error repair with {syntax_module.name}..."
-            )
-            result = syntax_module.exec(context)
-
-            if output_dir and result:
-                # Get file ID from environment (set in main.py)
-                file_id = os.environ.get("VERUS_FILE_ID", "")
-                output_path = "03_repair_syntax.rs"
-
-                if file_id:
-                    # Insert file ID before file extension
-                    base, ext = os.path.splitext(output_path)
-                    output_path = f"{base}_{file_id}{ext}"
-
-                output_file = output_dir / output_path
-                output_file.write_text(result)
-                self.logger.info(f"Saved syntax repair result to {output_file}")
-
-            return result
-
-        self.logger.warning("No repair module found for compilation errors.")
-        return None
+        result, _ = self._try_fallback_repair(
+            context=context,
+            output_dir=output_dir,
+            max_attempts=3,
+            preserve_trial=True
+        )
+        return result
