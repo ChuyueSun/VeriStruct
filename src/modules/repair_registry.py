@@ -569,16 +569,71 @@ class RepairRegistry:
         # even if we couldn't repair all errors
         return result_map
 
+    def _check_file_completeness(self, result: str) -> bool:
+        """
+        Validate repair result completeness by checking brace closure.
+        """
+        # Split into lines for analysis
+        lines = result.splitlines()
+        
+        # Track braces
+        open_braces = 0
+        brace_positions = []  # Track line numbers of brace changes
+        
+        self.logger.info("Starting file completeness check...")
+        
+        for i, line in enumerate(lines):
+            stripped = line.strip()
+            if not stripped:
+                continue
+                
+            # Track braces
+            open_count = stripped.count("{")
+            close_count = stripped.count("}")
+            
+            if open_count > 0 or close_count > 0:
+                brace_positions.append((i + 1, open_count, close_count))
+                self.logger.debug(f"Line {i + 1}: {'+' * open_count}{'-' * close_count} braces ({stripped})")
+                
+            open_braces += open_count
+            open_braces -= close_count
+            
+            if open_braces < 0:
+                self.logger.error(f"Extra closing brace detected at line {i + 1}: {stripped}")
+                return False
+        
+        # Log brace tracking summary
+        if brace_positions:
+            self.logger.info("Brace tracking summary:")
+            for line_num, opens, closes in brace_positions:
+                change = opens - closes
+                if change > 0:
+                    self.logger.info(f"  Line {line_num}: +{change} open braces")
+                elif change < 0:
+                    self.logger.info(f"  Line {line_num}: {change} close braces")
+        
+        # Validate brace closure
+        if open_braces != 0:
+            self.logger.warning(f"Unclosed blocks detected: {open_braces} unclosed braces")
+            if open_braces > 0:
+                self.logger.warning("Some blocks were not closed")
+            else:
+                self.logger.warning("Extra closing braces found")
+            return False
+            
+        self.logger.info("File structure validation passed: All blocks properly closed")
+        return True
+
     def _check_file_size(self, result: str, original_size: Optional[int] = None) -> bool:
         """
-        Validate repair result size is reasonable.
+        Validate repair result size and completeness.
         
         Args:
             result: The repair result string
             original_size: Optional size of original file for comparison
             
         Returns:
-            bool: True if size seems valid, False otherwise
+            bool: True if size and structure seem valid, False otherwise
         """
         # Basic size check - files shouldn't be tiny
         min_size = 100  # Minimum reasonable size for a Verus file
@@ -601,15 +656,9 @@ class RepairRegistry:
             if size_ratio < 0.5:  # Less than 50% of original
                 self.logger.warning(f"Repair result much smaller than original: {size_ratio:.2%}")
                 return False
-                
-        # Check for large blocks of empty lines
-        non_empty_lines = len([l for l in result.splitlines() if l.strip()])
-        empty_ratio = (result_lines - non_empty_lines) / result_lines
-        if empty_ratio > 0.5:  # More than 50% empty lines
-            self.logger.warning(f"Repair result has too many empty lines: {empty_ratio:.2%}")
-            return False
-            
-        return True
+        
+        # Check structural completeness
+        return self._check_file_completeness(result)
 
     def _save_repair_result(
         self,
@@ -629,9 +678,14 @@ class RepairRegistry:
             repair_type: Type of repair (for logging)
             repair_time: Optional repair time in seconds
         """
-        # Validate size before saving
+        # Check file completeness first
+        if not self._check_file_completeness(result):
+            self.logger.error(f"Skipping save of structurally incomplete repair result for {repair_type}")
+            return
+            
+        # Then check size
         if not self._check_file_size(result):
-            self.logger.warning(f"Skipping save of invalid/incomplete repair result for {repair_type}")
+            self.logger.warning(f"Skipping save of invalid size repair result for {repair_type}")
             return
             
         # Get file ID from environment
@@ -646,17 +700,21 @@ class RepairRegistry:
         # Log file sizes before writing
         self.logger.info(f"Writing repair result: {len(result.encode('utf-8'))} bytes to {output_file}")
         
-        output_file.write_text(result)
-        
-        # Verify written file
-        if output_file.exists():
-            written_size = output_file.stat().st_size
-            self.logger.info(f"Verified written file size: {written_size} bytes")
+        # Final validation before write
+        if self._check_file_completeness(result):  # Double-check to be safe
+            output_file.write_text(result)
             
-            if repair_time is not None:
-                self.logger.info(f"Saved {repair_type} repair result to {output_file} after {repair_time:.2f}s")
-            else:
-                self.logger.info(f"Saved {repair_type} repair result to {output_file}")
+            # Verify written file
+            if output_file.exists():
+                written_size = output_file.stat().st_size
+                self.logger.info(f"Verified written file size: {written_size} bytes")
+                
+                if repair_time is not None:
+                    self.logger.info(f"Saved {repair_type} repair result to {output_file} after {repair_time:.2f}s")
+                else:
+                    self.logger.info(f"Saved {repair_type} repair result to {output_file}")
+        else:
+            self.logger.error(f"Final validation failed - repair result became incomplete, skipping save")
 
     def get_registry_info(self) -> str:
         """
