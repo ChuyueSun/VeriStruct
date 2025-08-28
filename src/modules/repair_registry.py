@@ -93,7 +93,7 @@ class RepairRegistry:
         registry.register_module(
             "repair_assertion",
             assertion_repair,
-            [VerusErrorType.AssertFail, VerusErrorType.SplitAssertFail],
+            [VerusErrorType.AssertFail, VerusErrorType.TestAssertFail],
             "04_repair_assertion.rs",
         )
 
@@ -105,7 +105,6 @@ class RepairRegistry:
             [
                 VerusErrorType.PreCondFail,
                 VerusErrorType.PreCondFailVecLen,
-                VerusErrorType.SplitPreFail,
             ],
             "05_repair_precond.rs",
         )
@@ -126,7 +125,6 @@ class RepairRegistry:
             postcond_repair,
             [
                 VerusErrorType.PostCondFail,
-                VerusErrorType.SplitPostFail,
                 VerusErrorType.ensure_private,
             ],
             "06_repair_postcond.rs",
@@ -186,7 +184,7 @@ class RepairRegistry:
         registry.register_module(
             "repair_mode",
             mode_repair,
-            [VerusErrorType.CannotCallFunc],
+            [VerusErrorType.CannotCallFunc, VerusErrorType.PubSpecVisibility],
             "12_repair_mode.rs",
         )
 
@@ -298,15 +296,13 @@ class RepairRegistry:
             VerusErrorType.MissImpl: 11,  # Fix missing implementations
             VerusErrorType.CannotCallFunc: 12,  # Fix mode errors
             VerusErrorType.AssertFail: 13,  # Fix assertion failures
-            VerusErrorType.SplitAssertFail: 14,  # Fix split assertion failures
+            VerusErrorType.TestAssertFail: 14,  # Fix test assertion failures
             VerusErrorType.PreCondFail: 15,  # Fix precondition failures
-            VerusErrorType.SplitPreFail: 16,  # Fix split precondition failures
-            VerusErrorType.RequiresOldSelf: 17,  # Fix old(self) in requires clauses
-            VerusErrorType.PostCondFail: 18,  # Fix postcondition failures
-            VerusErrorType.SplitPostFail: 19,  # Fix split postcondition failures
-            VerusErrorType.ensure_private: 20,  # Fix private field access in ensures
-            VerusErrorType.require_private: 21,  # Fix private function access in requires
-            VerusErrorType.RecommendNotMet: 22,  # Fix recommendation not met errors
+            VerusErrorType.RequiresOldSelf: 16,  # Fix old(self) in requires clauses
+            VerusErrorType.PostCondFail: 17,  # Fix postcondition failures
+            VerusErrorType.ensure_private: 18,  # Fix private field access in ensures
+            VerusErrorType.require_private: 19,  # Fix private function access in requires
+            VerusErrorType.RecommendNotMet: 20,  # Fix recommendation not met errors
             # Add more error types with their priorities here
         }
 
@@ -593,24 +589,13 @@ class RepairRegistry:
             
             if open_count > 0 or close_count > 0:
                 brace_positions.append((i + 1, open_count, close_count))
-                self.logger.debug(f"Line {i + 1}: {'+' * open_count}{'-' * close_count} braces ({stripped})")
                 
             open_braces += open_count
             open_braces -= close_count
             
             if open_braces < 0:
-                self.logger.error(f"Extra closing brace detected at line {i + 1}: {stripped}")
                 return False
         
-        # Log brace tracking summary
-        if brace_positions:
-            self.logger.info("Brace tracking summary:")
-            for line_num, opens, closes in brace_positions:
-                change = opens - closes
-                if change > 0:
-                    self.logger.info(f"  Line {line_num}: +{change} open braces")
-                elif change < 0:
-                    self.logger.info(f"  Line {line_num}: {change} close braces")
         
         # Validate brace closure
         if open_braces != 0:
