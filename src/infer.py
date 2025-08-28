@@ -12,6 +12,7 @@ from pathlib import Path
 
 # Import our new cache
 from src.llm_cache import LLMCache
+from src.utils.path_utils import get_output_dir
 
 # sglang
 try:
@@ -321,7 +322,7 @@ class LLM:
         )
 
         # Save prompts in the output/prompts directory
-        output_dir = Path(self.config.get("output_dir", "output"))
+        output_dir = get_output_dir()
         prompt_dir = output_dir / "prompts"
         prompt_dir.mkdir(parents=True, exist_ok=True)
 

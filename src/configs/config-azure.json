@@ -7,12 +7,13 @@
         "6mKL6q3U9UDbRZuJksQFcbW7EuJZ42qhxQWEHhLfQvvSUkOWDMMsJQQJ99BDACHYHv6XJ3w3AAAAACOGzX5o"
     ],
     "aoai_max_retries": 5,
-    "max_token": 8192,
+    "max_token": 100000,
     "aoai_generation_model": "o1",
     "aoai_debug_model": "o1",
     "aoai_refinement_model": "o3-mini",
     "verus_path": "/home/chuyue/verus/source/target-verus/release/verus",
     "platform": "azure",
     "project_dir": ".",
-    "example_path": "src/examples"
+    "example_path": "src/examples",
+    "lemma_path": "src/lemmas_for_repairs"
 }

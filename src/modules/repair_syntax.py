@@ -3,6 +3,7 @@ Module for repairing syntax errors in Verus code.
 """
 
 import logging
+import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 import re
@@ -408,42 +409,21 @@ Response with the Rust code only, do not include any explanation."""
 
     def get_seq_examples(self) -> List[str]:
         """
-        Get examples of Seq usage to help with repair.
+        Get examples of Seq usage from examples/seq/*.rs to help with repair.
 
         Returns:
             List of example Seq usages
         """
-        return [
-            "// Creating sequences",
-            "let s1 = Seq::empty();",
-            "let s2 = seq![1, 2, 3];",
-            "let s3 = Seq::singleton(42);",
-            "",
-            "// Getting the length",
-            "let len = s2.len();  // 3",
-            "",
-            "// Indexing (0-based)",
-            "let val = s2[1];  // 2",
-            "",
-            "// Subrange (inclusive start, exclusive end)",
-            "let sub = s2.subrange(0, 2);  // seq![1, 2]",
-            "",
-            "// Concatenation",
-            "let s4 = s2 + s3;  // seq![1, 2, 3, 42]",
-            "",
-            "// Updating a value (returns a new Seq)",
-            "let s5 = s2.update(1, 99);  // seq![1, 99, 3]",
-            "",
-            "// Adding elements (returns a new Seq)",
-            "let s6 = s2.push(4);  // seq![1, 2, 3, 4]",
-            "",
-            "// Converting between Vec and Seq",
-            "let v: Vec<int> = vec![1, 2, 3];",
-            "let s = v.view();  // Convert Vec to Seq for specifications",
-            "",
-            "// Filtering elements",
-            "let evens = s2.filter(|&x| x % 2 == 0);  // seq![2]",
-            "",
-            "// Taking the first n elements",
-            "let first_two = s2.take(2);  // seq![1, 2]",
-        ]
+        examples_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "examples", "seq")
+        examples = []
+        try:
+            for file in os.listdir(examples_dir):
+                if file.endswith('.rs'):
+                    file_path = os.path.join(examples_dir, file)
+                    with open(file_path, 'r') as f:
+                        examples.extend(line.strip() for line in f if line.strip())
+            return examples
+        except Exception as e:
+            print(f"Warning: Could not load sequence examples from {examples_dir}: {e}")
+            # Return an empty list as fallback
+            return []

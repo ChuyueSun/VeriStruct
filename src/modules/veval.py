@@ -3,6 +3,7 @@
 
 
 import json
+import logging
 import os
 import re
 import subprocess
@@ -22,10 +23,8 @@ class VerusErrorType(Enum):
     InvFailFront = 4
     DecFailEnd = 5
     DecFailCont = 6
-    SplitAssertFail = 7
-    SplitPreFail = 8
-    SplitPostFail = 9
-    RecommendNotMet = 10
+    TestAssertFail = 7
+    RecommendNotMet = 8
     AssertFail = 11
     ArithmeticFlow = 12
     MismatchedType = 13
@@ -39,6 +38,7 @@ class VerusErrorType(Enum):
     ConstructorFailTypeInvariant = 21
     CannotCallFunc = 22
     RequiresOldSelf = 23
+    PubSpecVisibility = 24
 
 
 m2VerusError = {
@@ -48,9 +48,6 @@ m2VerusError = {
     "invariant not satisfied before loop": VerusErrorType.InvFailFront,
     "decreases not satisfied at end of loop": VerusErrorType.DecFailEnd,
     "decreases not satisfied at continue": VerusErrorType.DecFailCont,
-    "split assertion failure": VerusErrorType.SplitAssertFail,
-    "split precondition failure": VerusErrorType.SplitPreFail,
-    "split postcondition failure": VerusErrorType.SplitPostFail,
     "recommendation not met": VerusErrorType.RecommendNotMet,
     "assertion failed": VerusErrorType.AssertFail,
     "possible arithmetic underflow/overflow": VerusErrorType.ArithmeticFlow,
@@ -62,6 +59,7 @@ m2VerusError = {
     "constructed value may fail to meet its declared type invariant": VerusErrorType.ConstructorFailTypeInvariant,
     "cannot call function": VerusErrorType.CannotCallFunc,
     "in requires, use `old(self)` to refer to the pre-state of an &mut variable": VerusErrorType.RequiresOldSelf,
+    "non-private spec function must be marked open or closed": VerusErrorType.PubSpecVisibility,
 }
 
 VerusError2m = {v: k for k, v in m2VerusError.items()}
@@ -152,6 +150,10 @@ class VerusError:
         # Store the raw message text and spans
         self.error_text = err["message"]
         self.spans = err["spans"] if "spans" in err else []
+        self.logger = logging.getLogger("VerusError")
+
+        # Create the trace first so we can use it for error classification
+        self.trace = [ErrorTrace(t) for t in self.spans]  # Bottom-up stack trace
 
         # Get the full error message including span labels
         if self.spans:
@@ -177,9 +179,21 @@ class VerusError:
         if self.error == VerusErrorType.Other:
             if "not all trait items implemented, missing" in self.error_text:
                 self.error = VerusErrorType.MissImpl
+        
+        # Special case: TestAssertFail is an assertion failure inside a test function
+        if self.error == VerusErrorType.AssertFail:
+            self.logger.info(f"Found assertion failure, checking if it's in a test function...")
+            for trace in self.trace:
+                trace_text = trace.get_text().lower()
+                if trace.fname:
+                    self.logger.info(f"Checking trace from file {trace.fname}")
+                    self.logger.info(f"Trace text: {trace_text}")
+                    if "test" in trace_text:
+                        self.logger.info("Found 'test' in trace, classifying as TestAssertFail")
+                        self.error = VerusErrorType.TestAssertFail
+                        break
 
-        # Create the trace after error type is determined
-        self.trace = [ErrorTrace(t) for t in self.spans]  # Bottom-up stack trace
+
 
         # a subtype of precondfail that often requires separate treatment
         if self.error == VerusErrorType.PreCondFail:

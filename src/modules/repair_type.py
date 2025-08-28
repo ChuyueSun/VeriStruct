@@ -257,8 +257,8 @@ Respond with the **fixed Rust code only** and do not include any explanation."""
                 query,
                 examples,
                 retry_attempt=retry_attempt,
-                use_cache=True,
-                #   use_cache=(retry_attempt == 0),
+                # use_cache=True,
+                  use_cache=(retry_attempt == 0),
                 context=context  # Pass context for appending knowledge
             )
 

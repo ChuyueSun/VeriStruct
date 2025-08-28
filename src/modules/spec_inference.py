@@ -39,16 +39,16 @@ class SpecInferenceModule(BaseModule):
         # Main instruction for spec inference
         self.inference_instruction = (
             "You are an expert in Verus (verifier for rust). Your task is to:\n\n"
-            "1. **Add `requires` and `ensures` to public functions**:\n"
+            "1. **Add `requires` and `ensures` to all functions, no matter the function is public or private**:\n"
             "   - Change function signatures without return type to `-> (retname: rettype)`\n"
             "   - Add appropriate `requires` and `ensures` clauses based on function semantics\n"
-            "   - For field access in specifications of public functions:\n"
+            "   - For field access in specifications of functions:\n"
             "     * If type T implements View: use `self.view().field` to access fields\n"
             "     * For tuples returned by view(): if `self.view()` returns (A, B), use `self.view().0`, `self.view().1`\n"
             "   - DO NOT use `old(x)` unless x is a simple variable binding\n"
             "   - DO NOT use `match` or `let` in `requires`/`ensures` clauses\n"
             "   - DO NOT modify `fn main()`\n"
-            "   - Skip `self.inv()` in specs when `#[verifier::type_invariant]` is present\n"
+            "   - Skip `self.inv()` or `self.well_formed()` in specs when `#[verifier::type_invariant]` is present\n"
             "   - Spec functions (e.g., View) cannot have requires/ensures\n\n"
             "2. **Add `ensures` clauses to trait method implementations**:\n"
             "   - Add appropriate `ensures` clauses based on method semantics\n"
@@ -64,7 +64,7 @@ class SpecInferenceModule(BaseModule):
             "ADDITIONAL GUIDELINES:\n"
             "   - DO NOT copy implementation code into specifications\n"
             "   - DO NOT modify `fn main()`\n"
-            "   - DO NOT delete `// TODO:` comments about proofs or invariants\n"
+            "   - DO NOT delete `// TODO: add proof` or `// TODO: add loop invariant` markers\n"
             "   - DO NOT add loop invariants (leave for proof-generation stage)\n"
             "   - DO NOT add vector length requirements without careful consideration\n"
             "   - DO NOT use AtomicBool::load in requires/ensures clauses\n"
@@ -134,6 +134,33 @@ class SpecInferenceModule(BaseModule):
             self.logger.error(f"Error during LLM inference: {e}")
             return []
 
+    def check_code_safety(self, original_code: str, generated_code: str) -> bool:
+        """Check if the generated code is safe to use."""
+        # First check if code changes are safe using existing function
+        if not code_change_is_safe(
+            original_code, generated_code, self.immutable_funcs, self.logger
+        ):
+            return False
+            
+        # Check for preservation of TODO markers
+        todo_markers = [
+            "// TODO: add proof",
+            "// TODO: add loop invariant"
+        ]
+        
+        for marker in todo_markers:
+            original_count = original_code.count(marker)
+            generated_count = generated_code.count(marker)
+            
+            if original_count > generated_count:
+                self.logger.warning(
+                    f"Generated code removed {marker} marker(s). "
+                    f"Original had {original_count}, generated has {generated_count}."
+                )
+                return False
+                
+        return True
+
     def _process_responses(
         self, 
         responses: List[str], 
@@ -154,6 +181,8 @@ class SpecInferenceModule(BaseModule):
             else:
                 self.logger.warning(f"Generated spec code failed safety check{context_msg}")
         return safe_responses
+
+
 
     def exec(self, context) -> str:
         """
@@ -184,7 +213,8 @@ class SpecInferenceModule(BaseModule):
                 add_requires_ensures=True,  # Include requires/ensures formatting
                 add_match=False,  # Include match syntax guidelines
                 code=code,
-                knowledge=context.gen_knowledge(),
+                knowledge="",
+                # knowledge=context.gen_knowledge(),
             )
             # Debug log for complete instruction
             self.logger.info("=== Complete Instruction for Debugging ===")
@@ -246,6 +276,21 @@ class SpecInferenceModule(BaseModule):
                 "Best generated code failed final safety check, falling back to original"
             )
             best_code = original_code
+
+        # Check for compilation errors and attempt repair if needed
+        context.add_trial(best_code)  # Add trial to get evaluation results
+        latest_trial = context.trials[-1]
+        self.logger.info("Latest trial eval:")
+        self.logger.info(latest_trial.eval.compilation_error)
+        if latest_trial.eval.compilation_error:
+            self.logger.info("Detected compilation error, attempting repair...")
+            from src.modules.repair_registry import RepairRegistry
+            repair_registry = RepairRegistry(self.config, self.logger, self.immutable_funcs)
+            repaired_code = repair_registry.repair_compilation_error(context)
+            if repaired_code and repaired_code != best_code:
+                self.logger.info("Successfully repaired compilation error")
+                best_code = repaired_code
+                context.add_trial(best_code)  # Add the repaired code as a new trial
 
         # Get the global best from context
         global_best_score = context.get_best_score()
