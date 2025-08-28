@@ -1,4 +1,3 @@
-// rust_verify/tests/example.rs
 #![cfg_attr(verus_keep_ghost, verifier::exec_allows_no_decreases_clause)]
 
 #[allow(unused_imports)]
@@ -106,12 +105,7 @@ impl BitMap {
     /// 
     /// # Returns
     /// A new BitMap instance containing the provided bits
-    /// 
-    /// # Formal Specification Hints
-    /// Required specifications should include:
-    /// - `requires` clause to ensure the vector is not empty
-    /// - `ensures` clause to guarantee the relationship between input vector and output bitmap
-    /// - `ensures` clause to verify the view() of the new bitmap matches the input bits
+
     fn from(v: Vec<u64>) -> (ret: BitMap) 
     // TODO: add requires and ensures
     {
@@ -131,14 +125,6 @@ impl BitMap {
     /// The index is split into two parts:
     /// - seq_index: determines which u64 chunk contains the bit
     /// - bit_index: determines the bit position within that chunk
-    /// 
-    /// # Formal Specification Hints
-    /// Required specifications should include:
-    /// - `requires` clause to ensure index is within bounds:
-    ///   * index < total_bits (where total_bits = self.bits.len() * 64)
-    /// - `ensures` clause to verify the returned bit matches the bitmap's view:
-    ///   * result == self.view().index(index as int)
-    /// - `ensures` clause to guarantee the bitmap remains unchanged
     fn get_bit(&self, index: u32) -> (bit: bool)
     // TODO: add requires and ensures
     {
@@ -162,21 +148,6 @@ impl BitMap {
     /// 1. Locating the correct u64 chunk using seq_index
     /// 2. Computing the bit position within that chunk
     /// 3. Using set_bit64_macro to modify the specific bit while preserving others
-    /// 
-    /// # Formal Specification Hints
-    /// Required specifications should include:
-    /// - `requires` clause to ensure index is within bounds:
-    ///   * index < total_bits (where total_bits = self.bits.len() * 64)
-    /// - `ensures` clause to verify the bit was set correctly:
-    ///   * self.get_bit(index) == bit
-    /// - `ensures` clause to verify all other bits remain unchanged:
-    ///   * forall|i: int| i != index ==> self.view().index(i) == old(self.view()).index(i)
-    /// 
-    /// # Proof Requirements
-    /// The implementation needs proofs to verify:
-    /// 1. The correctness of the bit setting operation using set_bit64_proof
-    /// 2. The preservation of other bits in the same u64 chunk
-    /// 3. The preservation of bits in other chunks
     fn set_bit(&mut self, index: u32, bit: bool)
     // TODO: add requires and ensures
     {
@@ -201,31 +172,6 @@ impl BitMap {
     /// # Implementation Notes
     /// The operation performs a component-wise OR of the u64 chunks
     /// from both bitmaps, creating a new bitmap with the combined bits
-    /// 
-    /// # Formal Specification Hints
-    /// Required specifications should include:
-    /// - `requires` clause to ensure bitmaps are compatible:
-    ///   * self.bits.len() == bm.bits.len()
-    /// - `ensures` clause to verify the OR operation on views:
-    ///   * forall|i: int| result.view().index(i) == 
-    ///     (self.view().index(i) || bm.view().index(i))
-    /// - `ensures` clause to verify the length of the result:
-    ///   * result.bits.len() == self.bits.len()
-    /// 
-    /// # Loop Invariant Hints
-    /// The while loop needs invariants to verify:
-    /// 1. Loop bounds: 0 <= i <= n
-    /// 2. Partial result correctness:
-    ///    - All processed indices (0..i) contain correct OR results
-    ///    - result.bits.len() == i
-    /// 3. Original bitmaps unchanged:
-    ///    - self and bm remain unmodified
-    /// 
-    /// # Proof Requirements
-    /// The implementation needs proofs to verify:
-    /// 1. Each OR operation on u64 chunks using bit_or_64_proof
-    /// 2. The relationship between chunk-wise OR and bit-wise OR
-    /// 3. The preservation of the OR operation across the entire bitmap
     fn or(&self, bm: &BitMap) -> (ret: BitMap)
     // TODO: add requires and ensures
     {

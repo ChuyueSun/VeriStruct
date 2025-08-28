@@ -226,7 +226,8 @@ Please make sure to change that wrong expression and do not change any other par
                 query,
                 examples,
                 retry_attempt=retry_attempt,
-                use_cache=(retry_attempt == 0),
+                use_cache=True,
+                #   use_cache=(retry_attempt == 0),
                 context=context  # Pass context for appending knowledge
             )
 
@@ -364,7 +365,8 @@ Response with the Rust code only, do not include any explanation."""
                 query,
                 examples,
                 retry_attempt=retry_attempt,
-                use_cache=(retry_attempt == 0),
+                use_cache=True,
+                #   use_cache=(retry_attempt == 0),
                 context=context  # Pass context for appending knowledge
             )
 
