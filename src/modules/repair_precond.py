@@ -174,10 +174,41 @@ Response with the Rust code only, do not include any explanation."""
         self.logger.info("Repairing precondition failure error due to vector length...")
         code = context.trials[-1].code
 
-        # Normal route of precondition fixing
-        instruction = """Your mission is to fix the precondition not satisfied error for the following code. Basically, you should add the proof blocks related to the pre-condition check just before the invocation of the function. Note, DO NOT change the proof function whose pre-condition is not satisfied. You can use the pre-conditions of the current function, invariants of the current loop, and the pre-conditions of the called functions to fix the error.
+        # Extract error information from the trace
+        if len(failure_to_fix.trace) < 2:
+            self.logger.error("Precondition error trace is too short to process.")
+            return code
 
-Response with the Rust code only, do not include any explanation."""
+        precond_trace, location_trace = failure_to_fix.trace[0], failure_to_fix.trace[1]
+        if location_trace.label == VerusErrorLabel.FailedThisPreCond:
+            precond_trace, location_trace = location_trace, precond_trace
+
+        error_line = location_trace.lines[0]
+        error_code = location_trace.get_text().strip()
+        
+        instruction = f"""Your mission is to fix the vector length precondition error in the following code. 
+
+For the expression `{error_code}` on Line {error_line}, you need to:
+
+1. Identify all array/vector accesses (e.g., vec[k], vec.set(k, ..)) in this expression
+2. For EACH array/vector access, add appropriate proof blocks that establish:
+   - The vector length requirement (e.g., vec.len() == expected_length)
+   - Index bounds (e.g., k >= 0 && k < vec.len())
+3. Use available information from:
+   - Current function's preconditions
+   - Active loop invariants
+   - Called functions' preconditions
+
+Important Requirements:
+- DO NOT modify the function whose precondition is not satisfied
+- DO NOT change function signatures or pre/post conditions
+- ONLY add proof blocks before the vector access
+- Add proof blocks just before the invocation point where the precondition fails
+- Return the complete program with your changes integrated
+
+Response Format:
+- Return ONLY the Rust code without any explanation
+- Include the entire program, not just the added proof blocks"""
         instruction += "\n\n" + self.proof_block_info
         instruction = self.add_seq_knowledge(code, instruction)
         instruction += (
@@ -188,14 +219,6 @@ Response with the Rust code only, do not include any explanation."""
         query_template = "Failed pre-condition\n```\n{}```\n"
         query_template += "Failed location\n```\n{}```\n"
         query_template += "\nCode\n```{}```\n"
-
-        if len(failure_to_fix.trace) < 2:
-            self.logger.error("Precondition error trace is too short to process.")
-            return code
-
-        precond_trace, location_trace = failure_to_fix.trace[0], failure_to_fix.trace[1]
-        if location_trace.label == VerusErrorLabel.FailedThisPreCond:
-            precond_trace, location_trace = location_trace, precond_trace
 
         pre_cond_info = precond_trace.get_text() + "\n"
         location_info = f"Line {location_trace.lines[0]}-{location_trace.lines[1]}:\n"

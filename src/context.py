@@ -29,6 +29,16 @@ class Trial:
         except Exception as e:
             if self.logger:
                 self.logger.error(f"Error evaluating trial: {e}")
+                # Provide a short excerpt of rustc stderr to aid debugging
+                try:
+                    stderr = getattr(self.eval, "rustc_out", "") or ""
+                    if stderr:
+                        lines = stderr.splitlines()
+                        excerpt = "\n".join(lines[:30])  # first 30 lines
+                        self.logger.error("rustc stderr excerpt (first 30 lines):\n" + excerpt)
+                except Exception as _:
+                    # Best‑effort logging; ignore secondary failures
+                    pass
 
     @property
     def code(self):
@@ -102,9 +112,9 @@ class Context:
         self.add_trial(raw_code)
 
         # Process use statements and add knowledge
-        print("=" * 60)
-        print("CONTEXT INITIALIZATION - PROCESSING KNOWLEDGE")
-        print("=" * 60)
+        self.logger.info("=" * 60)
+        self.logger.info("CONTEXT INITIALIZATION - PROCESSING KNOWLEDGE")
+        self.logger.info("=" * 60)
 
         knowledge_added = False
         for line in raw_code.split("\n"):
@@ -112,41 +122,41 @@ class Context:
                 if line.strip() == "use vstd::prelude::*;":
                     continue
                 lib_name = line.split(" ")[1].strip()
-                print(f"Found use statement: {line.strip()}")
-                print(f"Extracting library name: {lib_name}")
+                self.logger.info(f"Found use statement: {line.strip()}")
+                self.logger.debug(f"Extracting library name: {lib_name}")
                 content = get_content(lib_name)
                 if len(content) > 0:
                     self.add_knowledge(lib_name, content, append=False)
-                    print(
+                    self.logger.info(
                         f"✓ Added knowledge for '{lib_name}' ({len(content)} characters)"
                     )
                     knowledge_added = True
                 else:
-                    print(f"✗ No content found for '{lib_name}'")
+                    self.logger.info(f"✗ No content found for '{lib_name}'")
 
         # Following is for logging only
         if knowledge_added:
-            print("\n" + "=" * 60)
-            print("FINAL KNOWLEDGE SUMMARY")
-            print("=" * 60)
+            self.logger.info("\n" + "=" * 60)
+            self.logger.info("FINAL KNOWLEDGE SUMMARY")
+            self.logger.info("=" * 60)
             total_knowledge = self.gen_knowledge()
-            print(f"Total knowledge entries: {len(self.knowledge)}")
-            print(f"Total knowledge length: {len(total_knowledge)} characters")
-            print("\nFormatted knowledge preview:")
-            print("-" * 40)
+            self.logger.info(f"Total knowledge entries: {len(self.knowledge)}")
+            self.logger.info(f"Total knowledge length: {len(total_knowledge)} characters")
+            self.logger.debug("\nFormatted knowledge preview:")
+            self.logger.debug("-" * 40)
             # Print first 500 characters of the formatted knowledge
             preview = total_knowledge[:500]
-            print(preview)
-            print(self.knowledge.keys())
+            self.logger.debug(preview)
+            self.logger.debug(str(self.knowledge.keys()))
             if len(total_knowledge) > 500:
-                print(
+                self.logger.debug(
                     f"... (truncated, showing first 500 of {len(total_knowledge)} characters)"
                 )
-            print("-" * 40)
+            self.logger.debug("-" * 40)
         else:
-            print("No knowledge was added during initialization.")
+            self.logger.info("No knowledge was added during initialization.")
 
-        print("=" * 60)
+        self.logger.info("=" * 60)
 
     def add_trial(self, code: str) -> None:
         """

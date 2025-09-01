@@ -7,7 +7,7 @@ import logging
 import os
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Type
+from typing import Any, Dict, List, Optional, Tuple, Type, Union
 
 from src.modules.baserepair import BaseRepairModule
 from src.modules.veval import VerusError, VerusErrorType
@@ -565,12 +565,15 @@ class RepairRegistry:
         # even if we couldn't repair all errors
         return result_map
 
-    def _check_file_completeness(self, result: str) -> bool:
+    def _check_file_completeness(self, result) -> bool:
         """
         Validate repair result completeness by checking brace closure.
         """
-        # Split into lines for analysis
-        lines = result.splitlines()
+        if isinstance(result, list):
+            lines = result
+        else:
+            # Split into lines for analysis
+            lines = result.splitlines()
         
         # Track braces
         open_braces = 0
@@ -609,12 +612,12 @@ class RepairRegistry:
         self.logger.info("File structure validation passed: All blocks properly closed")
         return True
 
-    def _check_file_size(self, result: str, original_size: Optional[int] = None) -> bool:
+    def _check_file_size(self, result: Union[str, List[str]], original_size: Optional[int] = None) -> bool:
         """
         Validate repair result size and completeness.
         
         Args:
-            result: The repair result string
+            result: The repair result (either a string or list of strings)
             original_size: Optional size of original file for comparison
             
         Returns:
@@ -622,6 +625,10 @@ class RepairRegistry:
         """
         # Basic size check - files shouldn't be tiny
         min_size = 100  # Minimum reasonable size for a Verus file
+        
+        # Convert list to string if needed
+        if isinstance(result, list):
+            result = '\n'.join(result)
         
         # Get size in bytes and lines
         result_bytes = len(result.encode('utf-8'))
@@ -649,7 +656,7 @@ class RepairRegistry:
         self,
         output_dir: Path,
         output_path: str,
-        result: str,
+        result: Union[str, List[str]],
         repair_type: str,
         repair_time: Optional[float] = None,
     ) -> None:
@@ -659,10 +666,14 @@ class RepairRegistry:
         Args:
             output_dir: Directory to save the result
             output_path: Base path for the output file
-            result: The repair result to save
+            result: The repair result to save (string or list of strings)
             repair_type: Type of repair (for logging)
             repair_time: Optional repair time in seconds
         """
+        # Convert list to string if needed
+        if isinstance(result, list):
+            result = '\n'.join(result)
+            
         # Check file completeness first
         if not self._check_file_completeness(result):
             self.logger.error(f"Skipping save of structurally incomplete repair result for {repair_type}")

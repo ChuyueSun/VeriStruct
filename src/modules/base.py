@@ -52,7 +52,10 @@ class BaseModule:
             with open(config_path, "r") as f:
                 return json.load(f)
         except Exception as e:
-            print(f"Error loading config from {config_path}: {e}")
+            if self.logger:
+                self.logger.error(f"Error loading config from {config_path}: {e}")
+            else:
+                print(f"Error loading config from {config_path}: {e}")
             return {}
 
     def _load_prompt(self, prompt_path: str) -> str:
@@ -70,7 +73,10 @@ class BaseModule:
             with open(prompt_file, "r") as f:
                 return f.read()
         except Exception as e:
-            print(f"Error loading prompt from {prompt_path}: {e}")
+            if self.logger:
+                self.logger.warning(f"Error loading prompt from {prompt_path}: {e}")
+            else:
+                print(f"Error loading prompt from {prompt_path}: {e}")
             return ""
 
     def _fill_template(self, template_name: str, replacements: Dict[str, str]) -> str:
@@ -87,7 +93,10 @@ class BaseModule:
         try:
             return fill_template(template_name, replacements)
         except Exception as e:
-            print(f"Warning: Error filling template {template_name}: {e}")
+            if self.logger:
+                self.logger.warning(f"Error filling template {template_name}: {e}")
+            else:
+                print(f"Warning: Error filling template {template_name}: {e}")
             # If template filling fails, return a sensible default or empty string
             return ""
 

@@ -976,35 +976,9 @@ def insert_loop_isolation(code):
     )
     return new_code
 
-
-def insert_lemma_func(code, lemma_names, lemma_path):
-    """Insert existing already-proved lemmas"""
-    for lemma_name in lemma_names:
-        name = lemma_name
-        if not name.endswith(".rs"):
-            name = name + ".rs"
-        input_file = os.path.join(lemma_path, name)
-        lemma_code = open(input_file).read()
-        lemma_func_dict = {lemma_name: lemma_code}
-        code = insert_proof_func(code, lemma_func_dict)
-    return code
-
-
-def insert_proof_func(code, proof_func_dict):
-    """Insert the proof functions into the code."""
-    lines = code.splitlines()
-    verus_line = -1
-    for i, line in enumerate(lines):
-        if "verus!" in line:
-            verus_line = i
-            break
-    if verus_line == -1:
-        return code
-    proof_func_code = "\n\n".join(proof_func_dict.values())
-    new_code = "\n".join(
-        lines[: verus_line + 1] + [proof_func_code] + lines[verus_line + 1 :]
-    )
-    return new_code
+# NOTE: Lemma/proof insertion helpers are defined in src/utils/lemma_utils.py
+from src.utils.lemma_utils import insert_lemma_func as insert_lemma_func  # re-export for compatibility
+from src.utils.lemma_utils import insert_proof_func as insert_proof_func  # re-export for compatibility
 
 
 def get_examples(
@@ -1206,6 +1180,72 @@ def parse_llm_response(response: str, logger=None) -> str:
     return ""
 
 
+def move_main_to_end(code: str) -> str:
+    """
+    If the code starts with 'fn main() {}', moves it to the end of the file.
+    
+    Args:
+        code: The source code to process
+        
+    Returns:
+        The processed code with main() at the end if it was at the start
+    """
+    # Skip empty code
+    if not code.strip():
+        return code
+        
+    # Split code into lines for processing
+    lines = code.split('\n')
+    
+    # Find the main function if it starts at the beginning
+    main_start = -1
+    main_end = -1
+    brace_count = 0
+    found_main = False
+    
+    # Look for main function at the start (allowing for whitespace/empty lines)
+    for i, line in enumerate(lines):
+        stripped = line.strip()
+        if not stripped:  # Skip empty lines
+            continue
+        if stripped.startswith("fn main()"):
+            main_start = i
+            found_main = True
+            brace_count = 1 if "{" in line else 0
+            break
+        if stripped and not stripped.startswith("//"):  # Found non-empty, non-comment line
+            break
+            
+    # If main() not found at start or no need to move, return original
+    if not found_main:
+        return code
+        
+    # Find the end of main function by matching braces
+    for i in range(main_start + 1, len(lines)):
+        line = lines[i]
+        brace_count += line.count("{") - line.count("}")
+        if brace_count == 0:
+            main_end = i
+            break
+            
+    if main_end == -1:  # Couldn't find end of main
+        return code
+        
+    # Extract main function and remove from original position
+    main_func = lines[main_start:main_end + 1]
+    remaining_code = lines[:main_start] + lines[main_end + 1:]
+    
+    # Remove any trailing empty lines before adding main
+    while remaining_code and not remaining_code[-1].strip():
+        remaining_code.pop()
+        
+    # Add main at the end with proper spacing
+    if remaining_code:
+        remaining_code.extend(['', ''])  # Add two blank lines before main
+    remaining_code.extend(main_func)
+    
+    return '\n'.join(remaining_code)
+
 def parse_plan_execution_order(
     plan_text: str, available_modules: List[str], logger=None
 ) -> List[str]:
@@ -1236,7 +1276,8 @@ def parse_plan_execution_order(
     if not steps_section:
         if logger:
             logger.warning("No Execution Steps section found in plan, using default workflow")
-        return ["spec_inference"]  # Default to spec-only as safest option
+        # Sensible default: do view inference, then specs, then proof generation
+        return ["view_inference", "spec_inference", "proof_generation"]
 
     # Parse the numbered steps, removing any non-step lines
     execution_steps = []
@@ -1252,7 +1293,7 @@ def parse_plan_execution_order(
     if not execution_steps:
         if logger:
             logger.warning("No valid execution steps found in plan, using default workflow")
-        return ["spec_inference"]
+        return ["view_inference", "spec_inference", "proof_generation"]
 
     if logger:
         logger.info(f"Parsed execution steps from plan: {execution_steps}")
