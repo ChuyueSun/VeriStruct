@@ -14,13 +14,23 @@ import tempfile
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
-from loguru import logger
+# Use loguru if available, otherwise fall back to standard logging
+try:
+    from loguru import logger  # type: ignore
+except Exception:  # pragma: no cover - loguru is optional
+    logger = logging.getLogger(__name__)
 
 # Import VEval from modules.veval rather than src.modules.veval
 from src.modules.veval import EvalScore, VEval
 
 # External helper for nonlinear-arithmetic analysis
-# (Imported lazily within functions to avoid unused import warnings)
+from src.modules.lynette import (
+    lynette,
+)  # Provides code_detect_nonlinear, code_merge_invariant, etc.
+
+# Import VEval from modules.veval rather than src.modules.veval
+from src.modules.veval import EvalScore, VerusErrorType, VEval
+
 
 
 def write_candidate_code(
@@ -407,8 +417,10 @@ def fix_one_type_error_in_code(code, err_trace, verbose=True):
         err_lnum = err_trace.get_lines()[0]
         linenum = err_lnum - 1
         logger.info(f"Removing line {err_lnum} due to mutability mismatch.")
-        code_lines = code.splitlines()
-        logger.info(f"Line: {code_lines[linenum]}")
+
+        # Avoid backslashes in f-string expressions by using logging formatting
+        logger.info("Line: %s", code.splitlines()[linenum])
+
         logger.info(f"Error label: {err_label}")
         # Drop that line from the source.
         new_code_lines = [line for idx, line in enumerate(code_lines) if idx != linenum]

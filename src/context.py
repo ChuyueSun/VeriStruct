@@ -1,16 +1,16 @@
-import os, sys
+import os
 import subprocess
+import sys
 import warnings
 from dataclasses import dataclass
 from typing import Dict, List, Optional
 
 from src.configs.sconfig import config
+from src.doc.naive_reader import get_content
 from src.infer import LLM
 from src.modules.base import BaseModule
 from src.modules.veval import EvalScore, VEval
-
 from src.prompts.template import fill_template
-from src.doc.naive_reader import get_content
 
 
 class Trial:
@@ -35,7 +35,9 @@ class Trial:
                     if stderr:
                         lines = stderr.splitlines()
                         excerpt = "\n".join(lines[:30])  # first 30 lines
-                        self.logger.error("rustc stderr excerpt (first 30 lines):\n" + excerpt)
+                        self.logger.error(
+                            "rustc stderr excerpt (first 30 lines):\n" + excerpt
+                        )
                 except Exception as _:
                     # Best‑effort logging; ignore secondary failures
                     pass
@@ -141,7 +143,9 @@ class Context:
             self.logger.info("=" * 60)
             total_knowledge = self.gen_knowledge()
             self.logger.info(f"Total knowledge entries: {len(self.knowledge)}")
-            self.logger.info(f"Total knowledge length: {len(total_knowledge)} characters")
+            self.logger.info(
+                f"Total knowledge length: {len(total_knowledge)} characters"
+            )
             self.logger.debug("\nFormatted knowledge preview:")
             self.logger.debug("-" * 40)
             # Print first 500 characters of the formatted knowledge
@@ -236,9 +240,9 @@ class Context:
             trial = self.trials[-1]
             prevs = self.trials[-1 - self.params.max_prev_trial : -1]
         else:
-            # Other mode: TODO
-            trial = None
-            prevs = []
+            raise NotImplementedError(
+                f"Unsupported trial_fetch_mode: {self.params.trial_fetch_mode!r}"
+            )
 
         rloc = self.raw_code_loc
         verus_code = trial.code
