@@ -165,13 +165,18 @@ class ProofGenerationModule(BaseModule):
     # ---------------------------------------------------------------------
 
     def _should_skip(self, code: str) -> bool:
-        return False
-        """Return True if the code has no proof TODO markers or empty proof blocks."""
-        # Skip only if *none* of the typical proof markers/empty blocks are present.
-        if ("TODO: add proof" in code) or ("TODO:add proof" in code) or \
-           ("TODO: add invariants" in code) or ("TODO: add invariant" in code) or \
-           ("TODO: add assert" in code) or ("TODO: add asserts" in code) or \
-           ("Proof body here if needed" in code):
+        """Return True only if there are no TODO markers or empty proof blocks."""
+
+        # If any TODO markers or placeholders exist, we should not skip.
+        if (
+            ("TODO: add proof" in code)
+            or ("TODO:add proof" in code)
+            or ("TODO: add invariants" in code)
+            or ("TODO: add invariant" in code)
+            or ("TODO: add assert" in code)
+            or ("TODO: add asserts" in code)
+            or ("Proof body here if needed" in code)
+        ):
             return False
 
         # Detect empty proof blocks such as `proof{}`, `proof {}`, or `proof {\n}`
