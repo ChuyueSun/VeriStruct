@@ -9,19 +9,19 @@ def get_output_dir() -> Path:
     return Path(os.environ.get("VERUS_OUTPUT_DIR", _DEF))
 
 
-def samples_dir() -> Path:
-    d = get_output_dir() / "samples"
+def _ensure_subdir(name: str) -> Path:
+    d = get_output_dir() / name
     d.mkdir(parents=True, exist_ok=True)
     return d
+
+
+def samples_dir() -> Path:
+    return _ensure_subdir("samples")
 
 
 def best_dir() -> Path:
-    d = get_output_dir() / "best"
-    d.mkdir(parents=True, exist_ok=True)
-    return d
+    return _ensure_subdir("best")
 
 
 def debug_dir() -> Path:
-    d = get_output_dir() / "debug"
-    d.mkdir(parents=True, exist_ok=True)
-    return d 
+    return _ensure_subdir("debug")
