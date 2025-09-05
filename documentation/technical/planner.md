@@ -2,7 +2,9 @@
 
 ## Overview
 
-The Planner system in VerusAgent is responsible for determining the optimal verification workflow for a given piece of Verus code. It uses a combination of code analysis, LLM-based decision making, and knowledge integration to create an effective verification strategy.
+The Planner system in VerusAgent determines the optimal verification workflow for each piece of Verus code.
+It analyzes the code and leverages LLM-based decision making.
+The planner also integrates existing knowledge to assemble an effective verification strategy.
 
 ## Architecture
 
