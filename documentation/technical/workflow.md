@@ -2,7 +2,8 @@
 
 ## Overview
 
-VerusAgent is an automated verification system designed to assist in verifying Rust code using the Verus verification framework. The system employs a modular architecture with a sophisticated workflow that combines planning, verification, and repair strategies. It uses Large Language Models (LLM) for intelligent decision-making and code generation.
+VerusAgent streamlines Rust code verification in the Verus framework with a modular workflow that coordinates planning, checking, and repair.
+Large language models guide these steps, making decisions and generating code to overcome verification challenges.
 
 ## System Architecture
 
