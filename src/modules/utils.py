@@ -5,16 +5,14 @@ This module provides shared functionality used across different inference and re
 particularly for writing, evaluating, and scoring code samples.
 """
 
-import json
 import logging
 import os
 import re
 import subprocess
 import sys
 import tempfile
-import time
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 # Use loguru if available, otherwise fall back to standard logging
 try:
@@ -22,7 +20,8 @@ try:
 except Exception:  # pragma: no cover - loguru is optional
     logger = logging.getLogger(__name__)
 
-import glob
+# Import VEval from modules.veval rather than src.modules.veval
+from src.modules.veval import EvalScore, VEval
 
 # External helper for nonlinear-arithmetic analysis
 from src.modules.lynette import (
@@ -31,6 +30,7 @@ from src.modules.lynette import (
 
 # Import VEval from modules.veval rather than src.modules.veval
 from src.modules.veval import EvalScore, VerusErrorType, VEval
+
 
 
 def write_candidate_code(
@@ -74,10 +74,10 @@ def evaluate_samples(
     prefix: str,
     logger: logging.Logger,
     max_errs: int = 5,
-) -> Tuple[str, EvalScore, List[EvalScore]]:
+) -> Tuple[str, Optional[EvalScore], List[EvalScore]]:
     """
     Evaluates multiple code samples using VEval, writes them to files with scores,
-    and returns the best sample, its score, and all scores.
+    and returns the best sample, its score if available, and all scores.
 
     Args:
         samples: List of code samples to evaluate
@@ -87,15 +87,15 @@ def evaluate_samples(
         max_errs: Maximum number of errors to report in VEval
 
     Returns:
-        Tuple containing (best_code, best_score, all_scores)
+        Tuple containing (best_code, best_score if available, all_scores)
     """
     if not samples:
-        logger.error(f"No samples provided for evaluation")
+        logger.error("No samples provided for evaluation")
         return "", None, []
 
     best_code = samples[0]  # Default to first sample
-    best_score = None
-    scores = []
+    best_score: Optional[EvalScore] = None
+    scores: List[EvalScore] = []
 
     logger.info(f"Scoring generated {prefix} samples using VEval...")
     for i, sample in enumerate(samples):
@@ -131,8 +131,11 @@ def evaluate_samples(
         except Exception as e:
             logger.error(f"Error scoring sample {i+1}: {e}")
 
-    # Save the selected sample with details
-    save_selection_info(output_dir, prefix, scores, best_score, logger)
+    # Save the selected sample with details if available
+    if best_score is not None:
+        save_selection_info(output_dir, prefix, scores, best_score, logger)
+    else:
+        logger.warning("No valid scores generated; selection info not saved.")
 
     return best_code, best_score, scores
 
@@ -414,13 +417,13 @@ def fix_one_type_error_in_code(code, err_trace, verbose=True):
         err_lnum = err_trace.get_lines()[0]
         linenum = err_lnum - 1
         logger.info(f"Removing line {err_lnum} due to mutability mismatch.")
+
         # Avoid backslashes in f-string expressions by using logging formatting
         logger.info("Line: %s", code.splitlines()[linenum])
+
         logger.info(f"Error label: {err_label}")
         # Drop that line from the source.
-        new_code_lines = [
-            line for idx, line in enumerate(code.split("\n")) if idx != linenum
-        ]
+        new_code_lines = [line for idx, line in enumerate(code_lines) if idx != linenum]
         if verbose:
             sys.stderr.write(
                 f"[fix_one_type_error_in_code] removed line {err_lnum} due to mutability mismatch.\n"
