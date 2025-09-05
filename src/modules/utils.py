@@ -16,7 +16,11 @@ import time
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
-from loguru import logger
+# Use loguru if available, otherwise fall back to standard logging
+try:
+    from loguru import logger  # type: ignore
+except Exception:  # pragma: no cover - loguru is optional
+    logger = logging.getLogger(__name__)
 
 import glob
 
@@ -26,7 +30,7 @@ from src.modules.lynette import (
 )  # Provides code_detect_nonlinear, code_merge_invariant, etc.
 
 # Import VEval from modules.veval rather than src.modules.veval
-from src.modules.veval import VerusErrorType, VEval, EvalScore
+from src.modules.veval import EvalScore, VerusErrorType, VEval
 
 
 def write_candidate_code(
@@ -401,14 +405,17 @@ def fix_one_type_error_in_code(code, err_trace, verbose=True):
     # TODO: this is a hack, we should fix the mutability mismatch in the code instead.
     if err_label is not None and (
         "no method named `view` found for struct" in err_label
-        or "cannot call function `vstd::atomic_ghost::impl&%21::load` with mode exec" in err_label
-        or "cannot call function `vstd::atomic_ghost::impl&%21::store` with mode exec" in err_label
+        or "cannot call function `vstd::atomic_ghost::impl&%21::load` with mode exec"
+        in err_label
+        or "cannot call function `vstd::atomic_ghost::impl&%21::store` with mode exec"
+        in err_label
         or "no field `ghost` on type" in err_label
     ):
         err_lnum = err_trace.get_lines()[0]
         linenum = err_lnum - 1
         logger.info(f"Removing line {err_lnum} due to mutability mismatch.")
-        logger.info(f"Line: {code.split('\n')[linenum]}")
+        # Avoid backslashes in f-string expressions by using logging formatting
+        logger.info("Line: %s", code.splitlines()[linenum])
         logger.info(f"Error label: {err_label}")
         # Drop that line from the source.
         new_code_lines = [
@@ -637,6 +644,7 @@ def get_nonlinear_lines(code, logger):
     """
     try:
         import tempfile
+
         from src.modules.lynette import lynette
 
         with tempfile.NamedTemporaryFile(mode="w", suffix=".rs", delete=False) as f:
@@ -976,9 +984,14 @@ def insert_loop_isolation(code):
     )
     return new_code
 
+
 # NOTE: Lemma/proof insertion helpers are defined in src/utils/lemma_utils.py
-from src.utils.lemma_utils import insert_lemma_func as insert_lemma_func  # re-export for compatibility
-from src.utils.lemma_utils import insert_proof_func as insert_proof_func  # re-export for compatibility
+from src.utils.lemma_utils import (
+    insert_lemma_func as insert_lemma_func,
+)  # re-export for compatibility
+from src.utils.lemma_utils import (
+    insert_proof_func as insert_proof_func,
+)  # re-export for compatibility
 
 
 def get_examples(
@@ -1169,7 +1182,11 @@ def parse_llm_response(response: str, logger=None) -> str:
         cleaned_lines = []
         for line in lines:
             # Skip markdown formatting lines
-            if line.strip().startswith("```") or line.strip().startswith("path=") or line.strip().startswith("lines="):
+            if (
+                line.strip().startswith("```")
+                or line.strip().startswith("path=")
+                or line.strip().startswith("lines=")
+            ):
                 continue
             cleaned_lines.append(line)
         return "\n".join(cleaned_lines)
@@ -1183,26 +1200,26 @@ def parse_llm_response(response: str, logger=None) -> str:
 def move_main_to_end(code: str) -> str:
     """
     If the code starts with 'fn main() {}', moves it to the end of the file.
-    
+
     Args:
         code: The source code to process
-        
+
     Returns:
         The processed code with main() at the end if it was at the start
     """
     # Skip empty code
     if not code.strip():
         return code
-        
+
     # Split code into lines for processing
-    lines = code.split('\n')
-    
+    lines = code.split("\n")
+
     # Find the main function if it starts at the beginning
     main_start = -1
     main_end = -1
     brace_count = 0
     found_main = False
-    
+
     # Look for main function at the start (allowing for whitespace/empty lines)
     for i, line in enumerate(lines):
         stripped = line.strip()
@@ -1213,13 +1230,15 @@ def move_main_to_end(code: str) -> str:
             found_main = True
             brace_count = 1 if "{" in line else 0
             break
-        if stripped and not stripped.startswith("//"):  # Found non-empty, non-comment line
+        if stripped and not stripped.startswith(
+            "//"
+        ):  # Found non-empty, non-comment line
             break
-            
+
     # If main() not found at start or no need to move, return original
     if not found_main:
         return code
-        
+
     # Find the end of main function by matching braces
     for i in range(main_start + 1, len(lines)):
         line = lines[i]
@@ -1227,24 +1246,25 @@ def move_main_to_end(code: str) -> str:
         if brace_count == 0:
             main_end = i
             break
-            
+
     if main_end == -1:  # Couldn't find end of main
         return code
-        
+
     # Extract main function and remove from original position
-    main_func = lines[main_start:main_end + 1]
-    remaining_code = lines[:main_start] + lines[main_end + 1:]
-    
+    main_func = lines[main_start : main_end + 1]
+    remaining_code = lines[:main_start] + lines[main_end + 1 :]
+
     # Remove any trailing empty lines before adding main
     while remaining_code and not remaining_code[-1].strip():
         remaining_code.pop()
-        
+
     # Add main at the end with proper spacing
     if remaining_code:
-        remaining_code.extend(['', ''])  # Add two blank lines before main
+        remaining_code.extend(["", ""])  # Add two blank lines before main
     remaining_code.extend(main_func)
-    
-    return '\n'.join(remaining_code)
+
+    return "\n".join(remaining_code)
+
 
 def parse_plan_execution_order(
     plan_text: str, available_modules: List[str], logger=None
@@ -1267,15 +1287,17 @@ def parse_plan_execution_order(
 
     # Find the Execution Steps section
     steps_section = None
-    lines = plan_text.split('\n')
+    lines = plan_text.split("\n")
     for i, line in enumerate(lines):
         if "**Execution Steps:**" in line:
-            steps_section = lines[i+1:]
+            steps_section = lines[i + 1 :]
             break
 
     if not steps_section:
         if logger:
-            logger.warning("No Execution Steps section found in plan, using default workflow")
+            logger.warning(
+                "No Execution Steps section found in plan, using default workflow"
+            )
         # Sensible default: do view inference, then specs, then proof generation
         return ["view_inference", "spec_inference", "proof_generation"]
 
@@ -1283,16 +1305,18 @@ def parse_plan_execution_order(
     execution_steps = []
     for line in steps_section:
         line = line.strip()
-        if line and line[0].isdigit() and '.' in line:
+        if line and line[0].isdigit() and "." in line:
             # Extract module name from lines like "1. module_name" or "1. module_name (comment)"
             # Take only the first word after the period to handle comments
-            module_name = line.split('.', 1)[1].strip().split()[0].lower()
+            module_name = line.split(".", 1)[1].strip().split()[0].lower()
             if module_name in available_modules:
                 execution_steps.append(module_name)
 
     if not execution_steps:
         if logger:
-            logger.warning("No valid execution steps found in plan, using default workflow")
+            logger.warning(
+                "No valid execution steps found in plan, using default workflow"
+            )
         return ["view_inference", "spec_inference", "proof_generation"]
 
     if logger:
