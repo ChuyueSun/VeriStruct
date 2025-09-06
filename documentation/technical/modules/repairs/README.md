@@ -11,17 +11,23 @@ Errors are handled in the following priority order (lower number = higher priori
 1. Type Errors (MismatchedType)
 2. Vector Length Errors (PreCondFailVecLen)
 3. Arithmetic Errors (ArithmeticFlow)
-4. Loop Invariant Failures (InvFailFront, InvFailEnd)
-5. Constructor Type Invariant Errors
-6. Type Annotation Errors
-7. Decrease Failures
-8. Missing Imports/Implementations
-9. Mode Errors
-10. Assertion Failures
-11. Precondition Failures
-12. Old(self) Errors
-13. Postcondition Failures
-14. Private Access Errors
+4. Loop Invariant Failures at Start (InvFailFront)
+5. Loop Invariant Failures at End (InvFailEnd)
+6. Constructor Type Invariant Errors (ConstructorFailTypeInvariant)
+7. Type Annotation Errors (TypeAnnotation)
+8. Decrease Failures at End (DecFailEnd)
+9. Decrease Failures at Continue (DecFailCont)
+10. Missing Imports (MissingImport)
+11. Missing Implementations (MissImpl)
+12. Mode Errors (CannotCallFunc)
+13. Assertion Failures (AssertFail)
+14. Test Assertion Failures (TestAssertFail)
+15. Precondition Failures (PreCondFail)
+16. Old(self) Requirements (RequiresOldSelf)
+17. Postcondition Failures (PostCondFail)
+18. Private Field Access in Ensures (ensure_private)
+19. Private Function Access in Requires (require_private)
+20. Recommendation Not Met (RecommendNotMet)
 
 ## Module Architecture
 
@@ -63,7 +69,7 @@ graph TD
 ### Verification Repairs
 1. [Assertion Repair](assertion.md) - Assertion failures
 2. [Decrease Repair](decrease.md) - Termination proofs
-3. [Invariant Removal](inv_removal.md) - Private field access
+3. [Invariant Removal](remove_inv.md) - Private field access
 
 ## Common Features
 
