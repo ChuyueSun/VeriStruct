@@ -18,6 +18,23 @@ set of query parameters and recording basic hit/miss statistics.
   older than the configured maximum age (seven days by default), and `clear()`
   prunes expired files from the cache directory.
 
+### Cache key generation
+
+`LLMCache` forms a cache key by serializing the full set of query parameters and
+hashing the result:
+
+1. A dictionary is assembled with `engine`, `instruction`, `query`,
+   `max_tokens`, the `exemplars` list (or `[]` if none), and `system_info`
+   (or `""`).
+2. `json.dumps(..., sort_keys=True)` converts this dictionary to a canonical
+   string with keys sorted to guarantee deterministic ordering.
+3. The MD5 digest of that string is computed and rendered as a 32-character
+   hexadecimal value.
+
+The resulting digest becomes both the in-memory identifier and the filename of
+the cache entry (`<cache_dir>/<digest>.json`). Any change to the parameters or
+their order yields a different key.
+
 ## Reading from the cache
 
 `get()` computes a cache key from the incoming request and returns the stored
