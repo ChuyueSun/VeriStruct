@@ -11,8 +11,8 @@ graph TD
     A[Input Code] --> B[View Inference]
     B --> C[LLM Processing]
     C --> D[View Parsing]
-    D --> E[Safety Checking]
-    E --> F[Type Error Fixing]
+    D --> E[Type Error Fixing]
+    E --> F[Safety Checking]
     F --> G[Sample Evaluation]
     G --> H[Best Code Selection]
     
@@ -68,9 +68,9 @@ def parse_view_response(self, response: str) -> str:
         return view_impls[0]
 ```
 
-### 3. Safety Checking System
+### 3. Type Error Fixing and Safety Checking
 
-Comprehensive safety validation:
+Comprehensive type error correction followed by safety validation:
 
 ```python
 def _process_responses(self, responses: List[str], original_code: str):
