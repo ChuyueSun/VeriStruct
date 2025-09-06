@@ -10,8 +10,8 @@ The Invariant Inference Module is responsible for generating and implementing in
 graph TD
     A[Input Code] --> B[Invariant Inference]
     B --> C[LLM Processing]
-    C --> D[Safety Checking]
-    D --> E[Type Error Fixing]
+    C --> D[Type Error Fixing]
+    D --> E[Safety Checking]
     E --> F[Sample Evaluation]
     F --> G[Best Code Selection]
     
@@ -24,6 +24,8 @@ graph TD
     L[Configuration] --> B
     M[Logger] --> B
 ```
+
+The pipeline processes each output sequentially: results from the LLM are fixed for type errors, checked for safety, and then evaluated as samples before selecting the best code.
 
 ## Core Components
 
@@ -136,6 +138,7 @@ def _process_responses(self, responses: List[str], original_code: str):
         if self.check_code_safety(original_code, fixed_processed):
             safe_responses.append(fixed_processed)
 ```
+This step fixes type errors prior to running safety checks, mirroring the architectural flow from LLM output to sample evaluation.
 
 4. Best Result Selection:
 ```python
