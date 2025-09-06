@@ -10,8 +10,8 @@ The Proof Generation Module is responsible for generating and implementing proof
 graph TD
     A[Input Code] --> B[Proof Generation]
     B --> C[LLM Processing]
-    C --> D[Safety Checking]
-    D --> E[Type Error Fixing]
+    C --> D[Type Error Fixing]
+    D --> E[Safety Checking]
     E --> F[Sample Evaluation]
     F --> G[Best Code Selection]
     
