@@ -6,11 +6,12 @@ This directory contains comprehensive documentation for the VerusAgent system.
 
 ### /technical
 Contains technical documentation about system components and architecture:
-- [workflow.md](technical/workflow.md): Detailed explanation of the VerusAgent workflow
+- [modules](technical/modules/README.md): Module-level documentation for individual VerusAgent components
 - [planner.md](technical/planner.md): In-depth documentation of the planning system
+- [workflow.md](technical/workflow.md): Detailed explanation of the VerusAgent workflow
 
 ### /tutorial
-Step-by-step guides for using VerusAgent (see [README](tutorial/README.md) for an overview):
+Step-by-step guides for using VerusAgent:
 - [01_getting_started.md](tutorial/01_getting_started.md): Initial setup and first verification
 - [02_basic_verification.md](tutorial/02_basic_verification.md): Simple verification tasks
 - [03_advanced_verification.md](tutorial/03_advanced_verification.md): Complex verification scenarios
