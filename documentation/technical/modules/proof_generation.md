@@ -74,23 +74,26 @@ When adding loop invariants, follow these steps:
 
 ### 3. Safety Checking System
 
-Comprehensive safety validation:
+Comprehensive safety validation: the module logs type errors, falls back to the
+original response when necessary, and only accepts changes that pass safety
+checks.
 
 ```python
 def _process_responses(self, responses: List[str], original_code: str):
     safe_responses = []
     for response in responses:
         # Fix type errors
-        fixed_response, _ = debug_type_error(response)
-        
+        fixed_response, _ = debug_type_error(response, logger=self.logger)
+        final_response = fixed_response if fixed_response else response
+
         # Check safety
         if code_change_is_safe(
             origin_code=original_code,
-            changed_code=fixed_response,
+            changed_code=final_response,
             verus_path=verus_path,
             logger=self.logger,
         ):
-            safe_responses.append(fixed_response)
+            safe_responses.append(final_response)
     return safe_responses
 ```
 
@@ -133,13 +136,16 @@ for retry_attempt in range(max_retries):
 ```
 
 3. Response Processing:
+The module logs type errors, uses the original response when fixes are not
+produced, and then validates safety.
 ```python
 def _process_responses(self, responses, original_code, verus_path):
     safe_responses = []
     for response in responses:
-        fixed_response, _ = debug_type_error(response)
-        if code_change_is_safe(original_code, fixed_response):
-            safe_responses.append(fixed_response)
+        fixed_response, _ = debug_type_error(response, logger=self.logger)
+        final_response = fixed_response if fixed_response else response
+        if code_change_is_safe(original_code, final_response):
+            safe_responses.append(final_response)
 ```
 
 ## Features
