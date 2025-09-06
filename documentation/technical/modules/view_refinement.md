@@ -53,47 +53,51 @@ Your responsibilities:
 
 ### 2. Example Management
 
-Sophisticated example handling system:
+Sophisticated example handling system that logs missing directories and keeps entries even when answers are absent:
 
 ```python
 def _load_examples(self) -> List[Dict[str, str]]:
     """Load example files for view refinement."""
     examples = []
-    base_dir = Path(self.config.get("example_path", "examples"))
-    example_path = base_dir / "input-view-refine"
-
-    if not example_path.exists():
-        return examples
-
-    for f in sorted(example_path.iterdir()):
-        if f.suffix == ".rs":
-            input_content = f.read_text()
-            answer_path = base_dir / "output-view-refine" / f.name
-            if not answer_path.exists():
-                continue
-            answer = answer_path.read_text()
-            examples.append({
-                "query": input_content,
-                "answer": answer
-            })
+    try:
+        example_path = (
+            Path(self.config.get("example_path", "examples")) / "input-view-refine"
+        )
+        if example_path.exists():
+            for f in sorted(example_path.iterdir()):
+                if f.suffix == ".rs":
+                    input_content = f.read_text()
+                    answer_path = (
+                        Path(self.config.get("example_path", "examples"))
+                        / "output-view-refine"
+                        / f.name
+                    )
+                    answer = answer_path.read_text() if answer_path.exists() else ""
+                    examples.append({"query": input_content, "answer": answer})
+        else:
+            self.logger.warning(
+                "Example path does not exist - proceeding without examples"
+            )
+    except Exception as e:
+        self.logger.error(f"Error loading examples: {e}")
     return examples
 ```
 
 ### 3. Compilation Retry System
 
-Robust compilation error handling:
+Robust compilation error handling that requests new responses with caching disabled:
 
 ```python
 def _handle_compilation_retry(
     self,
     code: str,
     original_code: str,
-    attempt: int,
+    compile_attempt: int,
     max_compile_attempts: int,
     context,
-):
+) -> List[str]:
     """Handle compilation retry with fresh responses."""
-    if attempt >= max_compile_attempts:
+    if compile_attempt >= max_compile_attempts:
         return []
     retry_instruction = build_instruction(
         base_instruction=self.refinement_instruction +
@@ -108,10 +112,8 @@ def _handle_compilation_retry(
         retry_instruction,
         code,
         temperature_boost=0.3,
-        retry_attempt=attempt,
-        max_attempts=max_compile_attempts,
+        retry_attempt=compile_attempt,
         use_cache=False,
-        context=context,
     )
 ```
 
