@@ -10,8 +10,8 @@ The View Refinement Module is responsible for improving and optimizing View func
 graph TD
     A[Input Code] --> B[View Refinement]
     B --> C[LLM Processing]
-    C --> D[Safety Checking]
-    D --> E[Type Error Fixing]
+    C --> D[Type Error Fixing]
+    D --> E[Safety Checking]
     E --> F[Compilation Check]
     F --> G[Sample Evaluation]
     G --> H[Best Code Selection]
@@ -59,17 +59,24 @@ Sophisticated example handling system:
 def _load_examples(self) -> List[Dict[str, str]]:
     """Load example files for view refinement."""
     examples = []
-    example_path = Path(config["example_path"]) / "input-view-refine"
-    
+    base_dir = Path(self.config.get("example_path", "examples"))
+    example_path = base_dir / "input-view-refine"
+
+    if not example_path.exists():
+        return examples
+
     for f in sorted(example_path.iterdir()):
         if f.suffix == ".rs":
             input_content = f.read_text()
-            answer_path = Path("output-view-refine") / f.name
+            answer_path = base_dir / "output-view-refine" / f.name
+            if not answer_path.exists():
+                continue
             answer = answer_path.read_text()
             examples.append({
                 "query": input_content,
                 "answer": answer
             })
+    return examples
 ```
 
 ### 3. Compilation Retry System
@@ -77,23 +84,34 @@ def _load_examples(self) -> List[Dict[str, str]]:
 Robust compilation error handling:
 
 ```python
-def _handle_compilation_retry(self, code: str, original_code: str, attempt: int):
+def _handle_compilation_retry(
+    self,
+    code: str,
+    original_code: str,
+    attempt: int,
+    max_compile_attempts: int,
+    context,
+):
     """Handle compilation retry with fresh responses."""
+    if attempt >= max_compile_attempts:
+        return []
     retry_instruction = build_instruction(
-        base_instruction=self.refinement_instruction + 
+        base_instruction=self.refinement_instruction +
         "\n\nIMPORTANT: Previous attempts resulted in compilation errors.",
         add_common=True,
         add_view=True,
         code=code,
         knowledge=context.gen_knowledge(),
     )
-    
+
     responses = self._get_llm_responses(
         retry_instruction,
         code,
         temperature_boost=0.3,
         retry_attempt=attempt,
+        max_attempts=max_compile_attempts,
         use_cache=False,
+        context=context,
     )
 ```
 
