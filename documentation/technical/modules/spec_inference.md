@@ -10,8 +10,8 @@ The Specification Inference Module is responsible for inferring and implementing
 graph TD
     A[Input Code] --> B[Spec Inference]
     B --> C[LLM Processing]
-    C --> D[Safety Checking]
-    D --> E[Type Error Fixing]
+    C --> D[Type Error Fixing]
+    D --> E[Safety Checking]
     E --> F[Sample Evaluation]
     F --> G[Best Code Selection]
     
@@ -134,9 +134,11 @@ for retry_attempt in range(max_retries):
         add_common=True,
         add_requires_ensures=True,
         code=code,
-        knowledge=context.gen_knowledge(),
+        knowledge="",  # context.gen_knowledge() currently disabled
     )
 ```
+
+Note: `exec` currently sets `knowledge=""` instead of calling `context.gen_knowledge()`.
 
 3. Response Evaluation:
 ```python
