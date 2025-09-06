@@ -3,9 +3,9 @@
 
 import tempfile
 
-from src.modules.lynette import lynette
 from veval import VerusError, VerusErrorType, VEval
 
+from src.modules.lynette import lynette
 from utils import compress_nl_assertion
 
 

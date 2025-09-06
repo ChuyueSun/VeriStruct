@@ -49,19 +49,20 @@ config["example_path"] = Path(__file__).parent.parent / "examples"
 config["lemma_path"] = Path(__file__).parent.parent / "lemmas"
 config["util_path"] = Path(__file__).parent.parent.parent / "utils"
 
+
 def reset_config(config_name="config"):
     """
     Reset the global config by loading the specified config file.
-    
+
     Args:
         config_name: Name of the config file (without extension)
     """
     global config
-    
+
     # Determine config file path
     config_dir = Path(__file__).parent.absolute()
     config_file = config_dir / f"{config_name}.json"
-    
+
     # Load the requested configuration
     with open(config_file, "r") as f:
         new_conf = json.load(f)
@@ -74,7 +75,7 @@ def reset_config(config_name="config"):
     else:
         # If for some reason `config` isn't a dict yet, just replace it.
         config = new_conf
-    
+
     # Allow environment variable overrides for key settings
     # Project directory can be customized per machine via environment variable
     env_project_dir = os.environ.get("VERUS_PROJECT_DIR")
@@ -84,11 +85,11 @@ def reset_config(config_name="config"):
     elif "project_dir" not in config:
         # Default to current directory if not specified
         config["project_dir"] = "."
-        
+
     # Allow verus path override via environment variable as well
     env_verus_path = os.environ.get("VERUS_PATH")
     if env_verus_path:
         config["verus_path"] = env_verus_path
         print(f"Using Verus path from environment: {env_verus_path}")
-    
+
     return config

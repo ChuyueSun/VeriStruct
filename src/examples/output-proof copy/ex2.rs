@@ -3,7 +3,7 @@ fn main() {}
 verus!{
 
 pub fn myfun(a: &mut Vec<u32>, N: u32) -> (sum: u32)
-	requires 
+	requires
 		old(a).len() == N,
 		N <= 0x7FFF_FFFF,
 	ensures
@@ -11,14 +11,14 @@ pub fn myfun(a: &mut Vec<u32>, N: u32) -> (sum: u32)
 {
 	let mut i: usize = 0;
 	while (i < N as usize)
-	invariant 
+	invariant
 	    i<=N,
 	    a.len()==N,
 	    forall|j:int| 0<=j<i ==> a[j]<=2,
 	{
 		if (a[i] > 2) {
 			a.set(i, 2);
-		} 
+		}
 		i = i + 1;
 	}
 
@@ -26,7 +26,7 @@ pub fn myfun(a: &mut Vec<u32>, N: u32) -> (sum: u32)
 
 	i = 0;
     let mut sum: u32 = 0;
-	
+
 	while (i < N as usize)
 	invariant
 	    i<=N,

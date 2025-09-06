@@ -10,7 +10,7 @@ from src.infer import LLM
 from src.modules.baserepair import BaseRepairModule
 from src.modules.utils import clean_code, evaluate_samples, get_examples
 from src.modules.veval import VerusError, VerusErrorLabel, VerusErrorType, VEval
-from src.utils.path_utils import samples_dir, best_dir, debug_dir
+from src.utils.path_utils import best_dir, debug_dir, samples_dir
 
 
 class RepairModeModule(BaseRepairModule):
@@ -51,13 +51,13 @@ class RepairModeModule(BaseRepairModule):
             visibility_failures = last_trial.eval.get_failures(
                 error_type=VerusErrorType.PubSpecVisibility
             )
-            
+
             failures = mode_failures + visibility_failures
-            
+
             if not failures:
                 self.logger.warning("No mode-related failures found in the last trial.")
                 return code
-            
+
             failure_to_fix = self.get_one_failure(failures)
             if not failure_to_fix:
                 self.logger.warning("Could not select a failure to fix.")
@@ -151,51 +151,53 @@ Respond with the full corrected Rust code only, with no extra explanations."""
     def repair_pub_spec_visibility(self, context, failure_to_fix: VerusError) -> str:
         """
         Repair errors related to pub spec function visibility (open/closed).
-        
+
         Args:
             context: The current execution context
             failure_to_fix: The specific VerusError to fix
-            
+
         Returns:
             The potentially repaired code string.
         """
         code = context.trials[-1].code
-        
+
         instruction = """Your mission is to fix the pub spec visibility error in the following code.
-        
+
         The error indicates that a public spec function needs to be marked as either 'open' or 'closed':
         - Use 'pub open spec fn' when the function body should be public and visible to clients
         - Use 'pub closed spec fn' when the function body should be private and hidden from clients
-        
+
         Guidelines for choosing between open and closed:
         1. Use 'open' when:
            - The function's implementation is part of the public API
            - Clients need to know how the function works
            - The function is used in client's proofs
-        
+
         2. Use 'closed' when:
            - The implementation details should be hidden
            - Only the function's specification matters to clients
            - The function contains private implementation details
-        
+
         Make sure to preserve the overall functionality of the code.
         Respond with the full corrected Rust code only, with no extra explanations."""
-        
-        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
-        
+
+        instruction += (
+            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
+        )
+
         # Load examples
         examples = get_examples(self.config, "pub_spec", self.logger)
-        
+
         query_template = "Pub spec visibility error:\n```\n{}```\n"
         query_template += "\nCode:\n```\n{}```\n"
-        
+
         if failure_to_fix.trace:
             err_text = failure_to_fix.trace[0].get_text(snippet=False)
         else:
             err_text = failure_to_fix.error_text
-        
+
         query = query_template.format(err_text, code)
-        
+
         # Use the llm instance from the base class
         responses = self.llm.infer_llm(
             engine=self.config.get("aoai_generation_model", "gpt-4"),
@@ -207,7 +209,7 @@ Respond with the full corrected Rust code only, with no extra explanations."""
             max_tokens=8192,
             temp=1.0,
         )
-        
+
         # Evaluate samples and get the best one
         output_dir = samples_dir()
         best_code, _, _ = evaluate_samples(
@@ -216,8 +218,8 @@ Respond with the full corrected Rust code only, with no extra explanations."""
             prefix="repair_pub_spec_visibility",
             logger=self.logger,
         )
-        
+
         # Add the best result to context
         context.add_trial(best_code)
-        
+
         return best_code

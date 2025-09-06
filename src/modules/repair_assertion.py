@@ -14,8 +14,8 @@ from src.modules.utils import (  # Import necessary utilities
     get_examples,
 )
 from src.modules.veval import VerusError, VerusErrorLabel, VerusErrorType, VEval
-from src.utils.path_utils import samples_dir, best_dir, debug_dir
 from src.utils.lemma_utils import insert_lemma_func, insert_proof_func
+from src.utils.path_utils import best_dir, debug_dir, samples_dir
 
 
 class RepairAssertionModule(BaseRepairModule):
@@ -33,8 +33,10 @@ class RepairAssertionModule(BaseRepairModule):
             immutable_funcs=immutable_funcs,
         )
         # Get lemma path from config, or use default relative to project root
-        self.lemma_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 
-                                     config.get("lemma_path", "src/lemmas_for_repairs"))
+        self.lemma_path = os.path.join(
+            os.path.dirname(os.path.dirname(__file__)),
+            config.get("lemma_path", "src/lemmas_for_repairs"),
+        )
 
     def exec(self, context, failure_to_fix: Optional[VerusError] = None) -> str:
         """
@@ -86,7 +88,9 @@ class RepairAssertionModule(BaseRepairModule):
         elif failure_to_fix.error == VerusErrorType.TestAssertFail:
             return self.repair_test_assert_fail(context, failure_to_fix)
 
-    def repair_assert_fail(self, context, failure_to_fix: VerusError, num=1, temp=1.0) -> List[str]:
+    def repair_assert_fail(
+        self, context, failure_to_fix: VerusError, num=1, temp=1.0
+    ) -> List[str]:
         """
         Repair a regular assertion failure.
 
@@ -101,7 +105,9 @@ class RepairAssertionModule(BaseRepairModule):
         code = context.trials[-1].code
 
         # First try special assertion fixes for common patterns
-        newcode = self.repair_special_assertion_error(code, failure_to_fix, num=num, temp=temp)
+        newcode = self.repair_special_assertion_error(
+            code, failure_to_fix, num=num, temp=temp
+        )
         if newcode:
             return [newcode]
 
@@ -155,7 +161,7 @@ Response with the Rust code only, do not include any explanation."""
             instruction = """Please add `reveal(Seq::filter);' at the beginning of the function where the failed assert line is located. This will help Verus understand filter and hence prove anything related to filter."""
             query_template = "Failed assertion\n```\n{}```\n\nCode\n```\n{}```\n"
             query = query_template.format(assertion_info, code)
-            
+
             responses = self.llm.infer_llm(
                 engine=self.config.get("aoai_debug_model", "gpt-4"),
                 instruction=instruction,
@@ -166,7 +172,7 @@ Response with the Rust code only, do not include any explanation."""
                 max_tokens=8192,
                 temp=temp,
             )
-            
+
             if responses:
                 newcode = clean_code(responses[0])
                 if newcode:
@@ -174,12 +180,14 @@ Response with the Rust code only, do not include any explanation."""
                     code = newcode
 
         # Handle filter with subrange case
-        if ".filter(" in assertion_info and ".subrange(" in code and not ".subrange(" in assertion_info:
+        if (
+            ".filter(" in assertion_info
+            and ".subrange(" in code
+            and not ".subrange(" in assertion_info
+        ):
             self.logger.info("Special fix: adding subrange lemma for filter")
             if not "lemma_seq_subrange_all" in code:
-                newcode = insert_lemma_func(
-                    code, ["seq_subrange_all"], self.lemma_path
-                )
+                newcode = insert_lemma_func(code, ["seq_subrange_all"], self.lemma_path)
                 if newcode:
                     did_special_fix = True
                     code = newcode
@@ -192,13 +200,9 @@ Response with the Rust code only, do not include any explanation."""
                     code, ["seq_take_ascend", "seq_take_all"], self.lemma_path
                 )
             elif not "lemma_seq_take_all" in code:
-                newcode = insert_lemma_func(
-                    code, ["seq_take_all"], self.lemma_path
-                )
+                newcode = insert_lemma_func(code, ["seq_take_all"], self.lemma_path)
             elif not "lemma_seq_take_ascend" in code:
-                newcode = insert_lemma_func(
-                    code, ["seq_take_ascend"], self.lemma_path
-                )
+                newcode = insert_lemma_func(code, ["seq_take_ascend"], self.lemma_path)
             else:
                 newcode = code
 
@@ -209,16 +213,17 @@ Response with the Rust code only, do not include any explanation."""
         # Handle subrange operations
         if ".subrange(" in assertion_info:
             self.logger.info("Special fix: adding subrange lemmas")
-            if not "lemma_seq_subrange_ascend" in code and not "lemma_seq_subrange_all" in code:
+            if (
+                not "lemma_seq_subrange_ascend" in code
+                and not "lemma_seq_subrange_all" in code
+            ):
                 newcode = insert_lemma_func(
                     code,
                     ["seq_subrange_ascend", "seq_subrange_all"],
                     self.lemma_path,
                 )
             elif not "lemma_seq_subrange_all" in code:
-                newcode = insert_lemma_func(
-                    code, ["seq_subrange_all"], self.lemma_path
-                )
+                newcode = insert_lemma_func(code, ["seq_subrange_all"], self.lemma_path)
             elif not "lemma_seq_subrange_ascend" in code:
                 newcode = insert_lemma_func(
                     code, ["seq_subrange_ascend"], self.lemma_path

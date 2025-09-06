@@ -1,18 +1,18 @@
 import re
 from pathlib import Path
-from typing import List, Dict
+from typing import Dict, List
 
 from src.infer import LLM
 from src.modules.base import BaseModule
+from src.modules.lynette import lynette
 from src.modules.utils import (
+    code_change_is_safe,
     debug_type_error,
     evaluate_samples,
     update_checkpoint_best,
-    code_change_is_safe,
 )
-from src.modules.lynette import lynette
 from src.prompts.template import build_instruction
-from src.utils.path_utils import samples_dir, best_dir
+from src.utils.path_utils import best_dir, samples_dir
 
 
 class InvInferenceModule(BaseModule):
@@ -56,7 +56,7 @@ IMPORTANT:
 - If you find multiple invariant functions to implement (e.g., both `well_formed` and `inv`), implement all of them while preserving their original names."""
 
     def _get_llm_responses(
-        self, 
+        self,
         instruction: str,
         code: str,
         examples: List[Dict[str, str]] = None,
@@ -70,11 +70,13 @@ IMPORTANT:
             if retry_attempt > 0:
                 instruction = f"{instruction}\n[Retry Attempt: {retry_attempt}]"
                 use_cache = False  # Disable cache for retries
-            
+
             # Log the complete query content for debugging
             self.logger.debug("=== LLM Query Content ===")
             self.logger.debug(f"Retry Attempt: {retry_attempt}")
-            self.logger.debug(f"Temperature: {1.0 + (retry_attempt * temperature_boost)}")
+            self.logger.debug(
+                f"Temperature: {1.0 + (retry_attempt * temperature_boost)}"
+            )
             self.logger.debug(f"Cache Enabled: {use_cache}")
             self.logger.debug("\n=== Instruction ===\n" + instruction)
             self.logger.debug("\n=== Code ===\n" + code)
@@ -84,7 +86,7 @@ IMPORTANT:
                     self.logger.debug(f"\nExample {i+1} Query:\n" + ex["query"])
                     self.logger.debug(f"\nExample {i+1} Answer:\n" + ex["answer"])
             self.logger.debug("=====================")
-                
+
             return self.llm.infer_llm(
                 self.config.get("aoai_generation_model", "gpt-4"),
                 instruction,
@@ -101,10 +103,7 @@ IMPORTANT:
             return []
 
     def _process_responses(
-        self, 
-        responses: List[str], 
-        original_code: str,
-        context_msg: str = ""
+        self, responses: List[str], original_code: str, context_msg: str = ""
     ) -> List[str]:
         """Process and validate LLM responses."""
         safe_responses = []
@@ -117,9 +116,13 @@ IMPORTANT:
             # Check if the generated code is safe
             if self.check_code_safety(original_code, final_response):
                 safe_responses.append(final_response)
-                self.logger.info(f"Generated invariant code passed safety check{context_msg}")
+                self.logger.info(
+                    f"Generated invariant code passed safety check{context_msg}"
+                )
             else:
-                self.logger.warning(f"Generated invariant code failed safety check{context_msg}")
+                self.logger.warning(
+                    f"Generated invariant code failed safety check{context_msg}"
+                )
         return safe_responses
 
     def replace_at_len_in_type_invariant(self, content: str) -> str:
@@ -193,8 +196,8 @@ IMPORTANT:
 
             # Use cache only for first attempt
             responses = self._get_llm_responses(
-                instruction, 
-                code, 
+                instruction,
+                code,
                 retry_attempt=retry_attempt,
                 use_cache=True,
                 # use_cache=(retry_attempt == 0)
@@ -207,7 +210,10 @@ IMPORTANT:
             output_dir.mkdir(exist_ok=True, parents=True)
 
             for i, sample in enumerate(responses):
-                sample_path = output_dir / f"03_inv_inference_raw_sample_{i+1}_attempt_{retry_attempt+1}.rs"
+                sample_path = (
+                    output_dir
+                    / f"03_inv_inference_raw_sample_{i+1}_attempt_{retry_attempt+1}.rs"
+                )
                 try:
                     sample_path.write_text(sample)
                     self.logger.info(
@@ -219,7 +225,9 @@ IMPORTANT:
             safe_responses.extend(self._process_responses(responses, original_code))
 
             if safe_responses:
-                self.logger.info(f"Found {len(safe_responses)} safe responses after {retry_attempt + 1} attempts")
+                self.logger.info(
+                    f"Found {len(safe_responses)} safe responses after {retry_attempt + 1} attempts"
+                )
                 break
 
             if retry_attempt < max_retries - 1:
@@ -231,7 +239,9 @@ IMPORTANT:
 
         # If no safe responses found after all retries, fall back to original
         if not safe_responses:
-            self.logger.warning("No safe responses found after all retries, using original code")
+            self.logger.warning(
+                "No safe responses found after all retries, using original code"
+            )
             return original_code
 
         # Create a directory for tracking global best samples

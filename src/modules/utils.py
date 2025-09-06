@@ -20,17 +20,14 @@ try:
 except Exception:  # pragma: no cover - loguru is optional
     logger = logging.getLogger(__name__)
 
-# Import VEval from modules.veval rather than src.modules.veval
-from src.modules.veval import EvalScore, VEval
-
 # External helper for nonlinear-arithmetic analysis
-from src.modules.lynette import (
+from src.modules.lynette import (  # Provides code_detect_nonlinear, code_merge_invariant, etc.
     lynette,
-)  # Provides code_detect_nonlinear, code_merge_invariant, etc.
+)
 
+# Import VEval from modules.veval rather than src.modules.veval
 # Import VEval from modules.veval rather than src.modules.veval
 from src.modules.veval import EvalScore, VerusErrorType, VEval
-
 
 
 def write_candidate_code(
@@ -990,11 +987,11 @@ def insert_loop_isolation(code):
 
 # NOTE: Lemma/proof insertion helpers are defined in src/utils/lemma_utils.py
 from src.utils.lemma_utils import (
-    insert_lemma_func as insert_lemma_func,
-)  # re-export for compatibility
+    insert_lemma_func as insert_lemma_func,  # re-export for compatibility
+)
 from src.utils.lemma_utils import (
-    insert_proof_func as insert_proof_func,
-)  # re-export for compatibility
+    insert_proof_func as insert_proof_func,  # re-export for compatibility
+)
 
 
 def get_examples(

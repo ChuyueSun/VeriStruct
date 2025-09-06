@@ -29,4 +29,3 @@ fn func(arg) -> (retname: rettype)
 ```
 
 - When using if-else blocks in ensures clauses, always use `&&&` instead of `&&` to connect multiple conditions, as shown in the example above.
-

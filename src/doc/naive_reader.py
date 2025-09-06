@@ -32,7 +32,7 @@ def get_content(use_path: str):
     if use_path == "vstd" or use_path == "vstd/":
         return ""
     use_path = os.path.join(external_dir, use_path + ".rs")
-    #print(use_path)
+    # print(use_path)
     if os.path.exists(use_path):
         return open(use_path, "r").read()
     else:

@@ -35,12 +35,12 @@ from src.modules.veval import VerusError, VerusErrorType
 class RepairOldSelfModule(BaseRepairModule):
     # Number of lines to search before and after the error line
     SEARCH_CONTEXT = 5
-    
+
     # Patterns to identify requires clause components
     REQUIRES_KEYWORD = "requires"
     SELF_PATTERN = "self."
     OLD_SELF_PATTERN = "old(self)."
-    
+
     """
     Repair module for fixing requires clauses that need old(self) for &mut variables.
     This module handles cases where a requires clause needs to use old(self) to refer
@@ -176,7 +176,9 @@ class RepairOldSelfModule(BaseRepairModule):
 
         return "\n".join(lines)
 
-    def _find_requires_clause(self, lines: list[str], error_line: int) -> Optional[tuple[int, int]]:
+    def _find_requires_clause(
+        self, lines: list[str], error_line: int
+    ) -> Optional[tuple[int, int]]:
         """
         Find the requires clause containing or near the error line.
 
@@ -213,28 +215,38 @@ class RepairOldSelfModule(BaseRepairModule):
                 requires_end = i
                 in_requires = True
                 # Count opening parentheses in the rest of the line
-                paren_count = line[line.index(self.REQUIRES_KEYWORD):].count('(')
-                paren_count -= line[line.index(self.REQUIRES_KEYWORD):].count(')')
+                paren_count = line[line.index(self.REQUIRES_KEYWORD) :].count("(")
+                paren_count -= line[line.index(self.REQUIRES_KEYWORD) :].count(")")
                 self.logger.debug(f"Found requires clause starting at line {i + 1}")
                 continue
 
             # Inside requires clause
             if in_requires:
                 # Update parentheses count
-                paren_count += stripped.count('(') - stripped.count(')')
+                paren_count += stripped.count("(") - stripped.count(")")
 
                 # Check for end conditions
                 if stripped == "{":  # Function body start
                     in_requires = False
-                    self.logger.debug(f"Found end of requires clause at line {i + 1} (function body)")
-                elif paren_count == 0 and stripped.endswith(")"):  # Balanced parentheses
+                    self.logger.debug(
+                        f"Found end of requires clause at line {i + 1} (function body)"
+                    )
+                elif paren_count == 0 and stripped.endswith(
+                    ")"
+                ):  # Balanced parentheses
                     requires_end = i
                     in_requires = False
-                    self.logger.debug(f"Found end of requires clause at line {i + 1} (balanced parens)")
-                elif stripped and not stripped.endswith(","):  # Non-empty line without continuation
+                    self.logger.debug(
+                        f"Found end of requires clause at line {i + 1} (balanced parens)"
+                    )
+                elif stripped and not stripped.endswith(
+                    ","
+                ):  # Non-empty line without continuation
                     requires_end = i
                     in_requires = False
-                    self.logger.debug(f"Found end of requires clause at line {i + 1} (no continuation)")
+                    self.logger.debug(
+                        f"Found end of requires clause at line {i + 1} (no continuation)"
+                    )
                 elif stripped:  # Non-empty line with potential continuation
                     requires_end = i
                     self.logger.debug(f"Found requires clause content at line {i + 1}")

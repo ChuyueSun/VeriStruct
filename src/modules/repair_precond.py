@@ -14,7 +14,7 @@ from src.modules.utils import (  # Import necessary utilities
     get_examples,
 )
 from src.modules.veval import VerusError, VerusErrorLabel, VerusErrorType, VEval
-from src.utils.path_utils import samples_dir, best_dir, debug_dir
+from src.utils.path_utils import best_dir, debug_dir, samples_dir
 
 
 class RepairPrecondModule(BaseRepairModule):
@@ -59,9 +59,7 @@ class RepairPrecondModule(BaseRepairModule):
                 error_type=VerusErrorType.require_private
             )
 
-            failures = (
-                precond_failures + veclen_failures + private_failures
-            )
+            failures = precond_failures + veclen_failures + private_failures
 
             if not failures:
                 self.logger.warning("No precondition failures found in the last trial.")
@@ -185,8 +183,8 @@ Response with the Rust code only, do not include any explanation."""
 
         error_line = location_trace.lines[0]
         error_code = location_trace.get_text().strip()
-        
-        instruction = f"""Your mission is to fix the vector length precondition error in the following code. 
+
+        instruction = f"""Your mission is to fix the vector length precondition error in the following code.
 
 For the expression `{error_code}` on Line {error_line}, you need to:
 

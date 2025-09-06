@@ -15,7 +15,7 @@ from src.modules.utils import (
     get_nonlinear_lines,
 )
 from src.modules.veval import VerusError, VerusErrorLabel, VerusErrorType, VEval
-from src.utils.path_utils import samples_dir, best_dir, debug_dir
+from src.utils.path_utils import best_dir, debug_dir, samples_dir
 
 
 class RepairArithmeticModule(BaseRepairModule):

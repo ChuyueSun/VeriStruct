@@ -4,16 +4,16 @@ Module for repairing syntax errors in Verus code.
 
 import logging
 import os
+import re
 from pathlib import Path
 from typing import Any, Dict, List, Optional
-import re
 
 from src.infer import LLM
 from src.modules.baserepair import BaseRepairModule
 from src.modules.utils import clean_code, evaluate_samples, get_examples
 from src.modules.veval import VerusError, VerusErrorLabel, VerusErrorType, VEval
 from src.prompts.template import build_instruction
-from src.utils.path_utils import samples_dir, best_dir, debug_dir
+from src.utils.path_utils import best_dir, debug_dir, samples_dir
 
 
 class RepairSyntaxModule(BaseRepairModule):
@@ -195,14 +195,16 @@ Please make sure to change that wrong expression and do not change any other par
         safe_responses = []
 
         for retry_attempt in range(max_retries):
-            self.logger.info(f"Seq syntax repair attempt {retry_attempt + 1}/{max_retries}")
+            self.logger.info(
+                f"Seq syntax repair attempt {retry_attempt + 1}/{max_retries}"
+            )
 
             # Build complete instruction using the prompt system
             instruction = build_instruction(
                 base_instruction=base_instruction,
                 add_common=True,  # Add common Verus knowledge
                 code=code,  # For Seq detection
-                knowledge=self.general_knowledge  # Add general knowledge
+                knowledge=self.general_knowledge,  # Add general knowledge
             )
 
             # Debug log for complete instruction
@@ -229,7 +231,7 @@ Please make sure to change that wrong expression and do not change any other par
                 retry_attempt=retry_attempt,
                 use_cache=True,
                 #   use_cache=(retry_attempt == 0),
-                context=context  # Pass context for appending knowledge
+                context=context,  # Pass context for appending knowledge
             )
 
             if not responses and retry_attempt == max_retries - 1:
@@ -246,7 +248,9 @@ Please make sure to change that wrong expression and do not change any other par
 
             if best_code != code:  # If we got a potentially better solution
                 safe_responses.append(best_code)
-                self.logger.info(f"Found a potentially safe response after {retry_attempt + 1} attempts")
+                self.logger.info(
+                    f"Found a potentially safe response after {retry_attempt + 1} attempts"
+                )
                 break
 
             if retry_attempt < max_retries - 1:
@@ -257,7 +261,9 @@ Please make sure to change that wrong expression and do not change any other par
 
         # If no safe responses found after all retries, fall back to original
         if not safe_responses:
-            self.logger.warning("No safe responses found after all retries, using original code")
+            self.logger.warning(
+                "No safe responses found after all retries, using original code"
+            )
             return code
 
         # Use the last safe response (since we break after finding one)
@@ -267,8 +273,6 @@ Please make sure to change that wrong expression and do not change any other par
         context.add_trial(best_code)
 
         return best_code
-
-
 
     def repair_general_syntax_error(
         self, context, failure_to_fix: Optional[VerusError], rustc_out: str
@@ -341,7 +345,7 @@ Response with the Rust code only, do not include any explanation."""
                 base_instruction=base_instruction,
                 add_common=True,  # Add common Verus knowledge
                 code=code,  # For Seq detection
-                knowledge=self.general_knowledge  # Add general knowledge
+                knowledge=self.general_knowledge,  # Add general knowledge
             )
 
             # Debug log for complete instruction
@@ -368,7 +372,7 @@ Response with the Rust code only, do not include any explanation."""
                 retry_attempt=retry_attempt,
                 use_cache=True,
                 #   use_cache=(retry_attempt == 0),
-                context=context  # Pass context for appending knowledge
+                context=context,  # Pass context for appending knowledge
             )
 
             if not responses and retry_attempt == max_retries - 1:
@@ -385,7 +389,9 @@ Response with the Rust code only, do not include any explanation."""
 
             if best_code != code:  # If we got a potentially better solution
                 safe_responses.append(best_code)
-                self.logger.info(f"Found a potentially safe response after {retry_attempt + 1} attempts")
+                self.logger.info(
+                    f"Found a potentially safe response after {retry_attempt + 1} attempts"
+                )
                 break
 
             if retry_attempt < max_retries - 1:
@@ -396,7 +402,9 @@ Response with the Rust code only, do not include any explanation."""
 
         # If no safe responses found after all retries, fall back to original
         if not safe_responses:
-            self.logger.warning("No safe responses found after all retries, using original code")
+            self.logger.warning(
+                "No safe responses found after all retries, using original code"
+            )
             return code
 
         # Use the last safe response (since we break after finding one)
@@ -414,13 +422,15 @@ Response with the Rust code only, do not include any explanation."""
         Returns:
             List of example Seq usages
         """
-        examples_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "examples", "seq")
+        examples_dir = os.path.join(
+            os.path.dirname(os.path.dirname(__file__)), "examples", "seq"
+        )
         examples = []
         try:
             for file in os.listdir(examples_dir):
-                if file.endswith('.rs'):
+                if file.endswith(".rs"):
                     file_path = os.path.join(examples_dir, file)
-                    with open(file_path, 'r') as f:
+                    with open(file_path, "r") as f:
                         examples.extend(line.strip() for line in f if line.strip())
             return examples
         except Exception as e:

@@ -10,7 +10,7 @@ from src.infer import LLM
 from src.modules.baserepair import BaseRepairModule
 from src.modules.utils import clean_code, evaluate_samples, get_examples
 from src.modules.veval import VerusError, VerusErrorLabel, VerusErrorType, VEval
-from src.utils.path_utils import samples_dir, best_dir, debug_dir
+from src.utils.path_utils import best_dir, debug_dir, samples_dir
 
 
 class RepairRemoveInv(BaseRepairModule):

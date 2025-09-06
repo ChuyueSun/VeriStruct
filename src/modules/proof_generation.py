@@ -7,22 +7,22 @@ that proof stubs remain.  It analyzes the code and replaces every occurrence of
 helps Verus discharge the outstanding obligations.
 """
 
-from pathlib import Path
-from typing import List, Dict
 import re  # Added for regex detection of empty proof blocks
+from pathlib import Path
+from typing import Dict, List
 
 from src.infer import LLM
 from src.modules.base import BaseModule
+from src.modules.lynette import lynette
 from src.modules.utils import (
+    code_change_is_safe,
     debug_type_error,
     evaluate_samples,
-    update_checkpoint_best,
     get_examples,
-    code_change_is_safe,
+    update_checkpoint_best,
 )
-from src.modules.lynette import lynette
 from src.prompts.template import build_instruction
-from src.utils.path_utils import samples_dir, best_dir
+from src.utils.path_utils import best_dir, samples_dir
 
 
 class ProofGenerationModule(BaseModule):
@@ -89,7 +89,7 @@ class ProofGenerationModule(BaseModule):
         )
 
     def _get_llm_responses(
-        self, 
+        self,
         instruction: str,
         code: str,
         examples: List[Dict[str, str]] = None,
@@ -103,11 +103,13 @@ class ProofGenerationModule(BaseModule):
             if retry_attempt > 0:
                 instruction = f"{instruction}\n[Retry Attempt: {retry_attempt}]"
                 use_cache = False  # Disable cache for retries
-                
+
             # Log the complete query content for debugging
             self.logger.debug("=== LLM Query Content ===")
             self.logger.debug(f"Retry Attempt: {retry_attempt}")
-            self.logger.debug(f"Temperature: {1.0 + (retry_attempt * temperature_boost)}")
+            self.logger.debug(
+                f"Temperature: {1.0 + (retry_attempt * temperature_boost)}"
+            )
             self.logger.debug(f"Cache Enabled: {use_cache}")
             self.logger.debug("\n=== Instruction ===\n" + instruction)
             self.logger.debug("\n=== Code ===\n" + code)
@@ -117,7 +119,7 @@ class ProofGenerationModule(BaseModule):
                     self.logger.debug(f"\nExample {i+1} Query:\n" + ex["query"])
                     self.logger.debug(f"\nExample {i+1} Answer:\n" + ex["answer"])
             self.logger.debug("=====================")
-                
+
             return self.llm.infer_llm(
                 self.config.get("aoai_generation_model", "gpt-4"),
                 instruction,
@@ -134,8 +136,8 @@ class ProofGenerationModule(BaseModule):
             return []
 
     def _process_responses(
-        self, 
-        responses: List[str], 
+        self,
+        responses: List[str],
         original_code: str,
         context_msg: str = "",
         verus_path: str = "verus",
@@ -155,9 +157,13 @@ class ProofGenerationModule(BaseModule):
                 logger=self.logger,
             ):
                 safe_responses.append(final_response)
-                self.logger.info(f"Generated proof code passed safety check{context_msg}")
+                self.logger.info(
+                    f"Generated proof code passed safety check{context_msg}"
+                )
             else:
-                self.logger.warning(f"Generated proof code failed safety check{context_msg}")
+                self.logger.warning(
+                    f"Generated proof code failed safety check{context_msg}"
+                )
         return safe_responses
 
     # ---------------------------------------------------------------------
@@ -180,8 +186,9 @@ class ProofGenerationModule(BaseModule):
             return False
 
         # Detect empty proof blocks such as `proof{}`, `proof {}`, or `proof {\n}`
-        if re.search(r"proof\s*{\s*}\s*", code) or \
-           re.search(r"proof\s*{\s*//[^\n]*\n\s*}\s*", code):  # Matches proof blocks with only comments
+        if re.search(r"proof\s*{\s*}\s*", code) or re.search(
+            r"proof\s*{\s*//[^\n]*\n\s*}\s*", code
+        ):  # Matches proof blocks with only comments
             return False
 
         return True
@@ -205,7 +212,9 @@ class ProofGenerationModule(BaseModule):
         safe_responses = []
 
         for retry_attempt in range(max_retries):
-            self.logger.info(f"Proof generation attempt {retry_attempt + 1}/{max_retries}")
+            self.logger.info(
+                f"Proof generation attempt {retry_attempt + 1}/{max_retries}"
+            )
 
             # Build instruction with common Verus knowledge and match guidelines
             instruction = build_instruction(
@@ -221,25 +230,29 @@ class ProofGenerationModule(BaseModule):
 
             # Use cache only for first attempt
             responses = self._get_llm_responses(
-                instruction, 
-                code, 
-                examples, 
+                instruction,
+                code,
+                examples,
                 retry_attempt=retry_attempt,
                 use_cache=True,
-                # use_cache=(retry_attempt == 0)    
+                # use_cache=(retry_attempt == 0)
             )
             if not responses and retry_attempt == max_retries - 1:
                 return code
 
-            safe_responses.extend(self._process_responses(
-                responses, 
-                original_code,
-                context_msg="",
-                verus_path=self.config.get("verus_path", "verus")
-            ))
+            safe_responses.extend(
+                self._process_responses(
+                    responses,
+                    original_code,
+                    context_msg="",
+                    verus_path=self.config.get("verus_path", "verus"),
+                )
+            )
 
             if safe_responses:
-                self.logger.info(f"Found {len(safe_responses)} safe responses after {retry_attempt + 1} attempts")
+                self.logger.info(
+                    f"Found {len(safe_responses)} safe responses after {retry_attempt + 1} attempts"
+                )
                 break
 
             if retry_attempt < max_retries - 1:
@@ -251,7 +264,9 @@ class ProofGenerationModule(BaseModule):
 
         # If no safe responses found after all retries, fall back to original
         if not safe_responses:
-            self.logger.warning("No safe responses found after all retries, using original code")
+            self.logger.warning(
+                "No safe responses found after all retries, using original code"
+            )
             return original_code
 
         # Evaluate samples and select the best one

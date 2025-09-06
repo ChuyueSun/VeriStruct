@@ -5,16 +5,16 @@ from typing import Any, Dict, List, Optional, Tuple
 from src.infer import LLM
 from src.modules.base import BaseModule
 from src.modules.utils import (
+    code_change_is_safe,
     debug_type_error,
     evaluate_samples,
+    get_examples,
     save_selection_info,
     update_checkpoint_best,
-    get_examples,
-    code_change_is_safe,
 )
-from src.modules.veval import VEval, EvalScore
+from src.modules.veval import EvalScore, VEval
 from src.prompts.template import build_instruction
-from src.utils.path_utils import samples_dir, best_dir
+from src.utils.path_utils import best_dir, samples_dir
 
 
 class ViewRefinementModule(BaseModule):
@@ -84,7 +84,7 @@ Please provide only the complete Rust code of the file with no additional commen
         return examples
 
     def _get_llm_responses(
-        self, 
+        self,
         instruction: str,
         code: str,
         examples: List[Dict[str, str]] = None,
@@ -98,11 +98,13 @@ Please provide only the complete Rust code of the file with no additional commen
             if retry_attempt > 0:
                 instruction = f"{instruction}\n[Retry Attempt: {retry_attempt}]"
                 use_cache = False  # Disable cache for retries
-            
+
             # Log the complete query content for debugging
             self.logger.debug("=== LLM Query Content ===")
             self.logger.debug(f"Retry Attempt: {retry_attempt}")
-            self.logger.debug(f"Temperature: {1.0 + (retry_attempt * temperature_boost)}")
+            self.logger.debug(
+                f"Temperature: {1.0 + (retry_attempt * temperature_boost)}"
+            )
             self.logger.debug(f"Cache Enabled: {use_cache}")
             self.logger.debug("\n=== Instruction ===\n" + instruction)
             self.logger.debug("\n=== Code ===\n" + code)
@@ -112,7 +114,7 @@ Please provide only the complete Rust code of the file with no additional commen
                     self.logger.debug(f"\nExample {i+1} Query:\n" + ex["query"])
                     self.logger.debug(f"\nExample {i+1} Answer:\n" + ex["answer"])
             self.logger.debug("=====================")
-                
+
             return self.llm.infer_llm(
                 self.config.get("aoai_generation_model", "gpt-4"),
                 instruction,
@@ -129,10 +131,7 @@ Please provide only the complete Rust code of the file with no additional commen
             return []
 
     def _process_responses(
-        self, 
-        responses: List[str], 
-        original_code: str,
-        context_msg: str = ""
+        self, responses: List[str], original_code: str, context_msg: str = ""
     ) -> List[str]:
         """Process and validate LLM responses."""
         safe_responses = []
@@ -155,16 +154,19 @@ Please provide only the complete Rust code of the file with no additional commen
         context,  # Add context parameter
     ) -> List[str]:
         """Handle compilation retry by getting fresh responses."""
-        self.logger.info(f"Getting fresh responses for compilation attempt {compile_attempt + 1}/{max_compile_attempts}")
+        self.logger.info(
+            f"Getting fresh responses for compilation attempt {compile_attempt + 1}/{max_compile_attempts}"
+        )
         try:
             retry_instruction = build_instruction(
-                base_instruction=self.refinement_instruction + "\n\nIMPORTANT: Previous attempts resulted in compilation errors. Please ensure the code compiles correctly.",
+                base_instruction=self.refinement_instruction
+                + "\n\nIMPORTANT: Previous attempts resulted in compilation errors. Please ensure the code compiles correctly.",
                 add_common=True,
                 add_view=True,
                 code=code,
                 knowledge=context.gen_knowledge(),
             )
-            
+
             responses = self._get_llm_responses(
                 retry_instruction,
                 code,
@@ -172,11 +174,9 @@ Please provide only the complete Rust code of the file with no additional commen
                 retry_attempt=compile_attempt,
                 use_cache=False,  # Explicitly disable cache for compilation retries
             )
-            
+
             return self._process_responses(
-                responses, 
-                original_code,
-                context_msg=" in compilation retry"
+                responses, original_code, context_msg=" in compilation retry"
             )
         except Exception as e:
             self.logger.error(f"Error in compilation retry: {e}")
@@ -228,13 +228,15 @@ Please provide only the complete Rust code of the file with no additional commen
         safe_responses = []
 
         for retry_attempt in range(max_retries):
-            self.logger.info(f"View refinement attempt {retry_attempt + 1}/{max_retries}")
-            
+            self.logger.info(
+                f"View refinement attempt {retry_attempt + 1}/{max_retries}"
+            )
+
             # Use cache only for first attempt
             responses = self._get_llm_responses(
-                instruction, 
-                code, 
-                examples, 
+                instruction,
+                code,
+                examples,
                 retry_attempt=retry_attempt,
                 use_cache=True,
                 #   use_cache=(retry_attempt == 0)
@@ -245,7 +247,9 @@ Please provide only the complete Rust code of the file with no additional commen
             safe_responses.extend(self._process_responses(responses, original_code))
 
             if safe_responses:
-                self.logger.info(f"Found {len(safe_responses)} safe responses after {retry_attempt + 1} attempts")
+                self.logger.info(
+                    f"Found {len(safe_responses)} safe responses after {retry_attempt + 1} attempts"
+                )
                 break
 
             if retry_attempt < max_retries - 1:
@@ -253,7 +257,9 @@ Please provide only the complete Rust code of the file with no additional commen
 
         # If no safe responses found after all retries, fall back to original
         if not safe_responses:
-            self.logger.warning("No safe responses found after all retries, using original code")
+            self.logger.warning(
+                "No safe responses found after all retries, using original code"
+            )
             safe_responses = [original_code]
 
         # Setup directories
@@ -263,13 +269,13 @@ Please provide only the complete Rust code of the file with no additional commen
         # Compilation retry loop
         max_compile_attempts = 3
         compile_attempt = 0
-        
+
         while compile_attempt < max_compile_attempts:
             if compile_attempt > 0:
                 new_responses = self._handle_compilation_retry(
-                    code, 
-                    original_code, 
-                    compile_attempt, 
+                    code,
+                    original_code,
+                    compile_attempt,
                     max_compile_attempts,
                     context,  # Pass context to the method
                 )
@@ -288,14 +294,20 @@ Please provide only the complete Rust code of the file with no additional commen
 
             # Check if there's a compilation error
             if not best_score.compilation_error:
-                self.logger.info(f"Found compiling code on attempt {compile_attempt + 1}")
+                self.logger.info(
+                    f"Found compiling code on attempt {compile_attempt + 1}"
+                )
                 break
-                
+
             compile_attempt += 1
             if compile_attempt < max_compile_attempts:
-                self.logger.warning(f"Best code has compilation error, will try new responses... (attempt {compile_attempt + 1}/{max_compile_attempts})")
+                self.logger.warning(
+                    f"Best code has compilation error, will try new responses... (attempt {compile_attempt + 1}/{max_compile_attempts})"
+                )
             else:
-                self.logger.warning(f"Max compilation attempts reached, falling back to previous best code")
+                self.logger.warning(
+                    f"Max compilation attempts reached, falling back to previous best code"
+                )
                 best_code = context.get_best_code()
                 best_score = context.get_best_score()
 

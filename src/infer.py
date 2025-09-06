@@ -1,14 +1,14 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT license.
 
+import json as json_lib
 import logging
 import os
 import random
 import time
 import warnings
-from typing import List, Tuple, Union
-import json as json_lib
 from pathlib import Path
+from typing import List, Tuple, Union
 
 # Import our new cache
 from src.llm_cache import LLMCache
@@ -328,13 +328,16 @@ class LLM:
 
         # Create a descriptive name for the prompt file
         timestamp = time.strftime("%Y%m%d_%H%M%S")
-        
+
         # Extract module/task type from instruction
         module_type = "unknown"
         if instruction:
             if "fix the syntax error" in instruction.lower():
                 module_type = "syntax"
-            elif "fix the type" in instruction.lower() or "mismatched type" in instruction.lower():
+            elif (
+                "fix the type" in instruction.lower()
+                or "mismatched type" in instruction.lower()
+            ):
                 module_type = "type"
             elif "requires" in instruction.lower() and "ensures" in instruction.lower():
                 module_type = "spec"

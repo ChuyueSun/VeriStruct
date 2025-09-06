@@ -14,7 +14,7 @@ from src.modules.utils import (  # Import necessary utilities
     get_examples,
 )
 from src.modules.veval import VerusError, VerusErrorLabel, VerusErrorType, VEval
-from src.utils.path_utils import samples_dir, best_dir, debug_dir
+from src.utils.path_utils import best_dir, debug_dir, samples_dir
 
 
 class RepairPostcondModule(BaseRepairModule):
@@ -169,8 +169,6 @@ Response with the Rust code only, do not include any explanation."""
         context.add_trial(best_code)
 
         return best_code
-
-
 
     def repair_ensure_private(self, context, failure_to_fix: VerusError) -> str:
         """

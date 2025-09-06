@@ -9,19 +9,19 @@ from loguru import logger
 from src.configs.sconfig import config, reset_config
 from src.context import Context, HyperParams, Trial
 from src.modules.inv_inference import InvInferenceModule
+from src.modules.lemma_preprocessor import LemmaPreprocessor
 from src.modules.progress_logger import ProgressLogger
+from src.modules.proof_generation import ProofGenerationModule
 from src.modules.repair_assertion import RepairAssertionModule
 from src.modules.repair_postcond import RepairPostcondModule
 from src.modules.repair_precond import RepairPrecondModule
 from src.modules.repair_registry import RepairRegistry
 from src.modules.spec_inference import SpecInferenceModule
-from src.modules.veval import VerusErrorType, VEval, verus
 from src.modules.utils import parse_plan_execution_order
+from src.modules.veval import VerusErrorType, VEval, verus
 from src.modules.view_inference import ViewInferenceModule
 from src.modules.view_refinement import ViewRefinementModule
 from src.planner import Planner
-from src.modules.proof_generation import ProofGenerationModule
-from src.modules.lemma_preprocessor import LemmaPreprocessor
 
 # Simplified logging configuration: shorter format and controllable level
 log_level = os.getenv("LOG_LEVEL", "INFO").upper()
@@ -168,6 +168,7 @@ def main():
         logger.warning(f"Could not load config-azure or initialize verus path: {e}")
         logger.warning("Using default configuration")
         from src.configs import sconfig as _sconfig_module
+
         config = getattr(_sconfig_module, "config", {})
 
     # Check for custom test file from environment variable
@@ -196,7 +197,7 @@ def main():
     lemmas_dir = Path("src/lemmas")
     preprocessor = LemmaPreprocessor(str(lemmas_dir), logger)
     sample_code = preprocessor.preprocess(sample_code)
-    
+
     # Log the preprocessed code
     logger.info("Preprocessed code with lemmas:")
     logger.info("=" * 80)

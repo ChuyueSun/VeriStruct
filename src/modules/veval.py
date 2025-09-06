@@ -179,21 +179,23 @@ class VerusError:
         if self.error == VerusErrorType.Other:
             if "not all trait items implemented, missing" in self.error_text:
                 self.error = VerusErrorType.MissImpl
-        
+
         # Special case: TestAssertFail is an assertion failure inside a test function
         if self.error == VerusErrorType.AssertFail:
-            self.logger.info(f"Found assertion failure, checking if it's in a test function...")
+            self.logger.info(
+                f"Found assertion failure, checking if it's in a test function..."
+            )
             for trace in self.trace:
                 trace_text = trace.get_text().lower()
                 if trace.fname:
                     self.logger.info(f"Checking trace from file {trace.fname}")
                     self.logger.info(f"Trace text: {trace_text}")
                     if "test" in trace_text:
-                        self.logger.info("Found 'test' in trace, classifying as TestAssertFail")
+                        self.logger.info(
+                            "Found 'test' in trace, classifying as TestAssertFail"
+                        )
                         self.error = VerusErrorType.TestAssertFail
                         break
-
-
 
         # a subtype of precondfail that often requires separate treatment
         if self.error == VerusErrorType.PreCondFail:

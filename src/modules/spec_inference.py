@@ -3,19 +3,19 @@ Module for inferring requires and ensures clauses in Verus code.
 """
 
 from pathlib import Path
-from src.utils.path_utils import samples_dir, best_dir
+from typing import Dict, List
 
 from src.infer import LLM
 from src.modules.base import BaseModule
 from src.modules.utils import (
+    code_change_is_safe,
     debug_type_error,
     evaluate_samples,
-    update_checkpoint_best,
     get_examples,
-    code_change_is_safe,
+    update_checkpoint_best,
 )
 from src.prompts.template import build_instruction
-from typing import List, Dict
+from src.utils.path_utils import best_dir, samples_dir
 
 
 class SpecInferenceModule(BaseModule):
@@ -89,7 +89,7 @@ class SpecInferenceModule(BaseModule):
         )
 
     def _get_llm_responses(
-        self, 
+        self,
         instruction: str,
         code: str,
         examples: List[Dict[str, str]] = None,
@@ -104,11 +104,13 @@ class SpecInferenceModule(BaseModule):
                 instruction = f"{instruction}\n[Retry Attempt: {retry_attempt}]"
                 use_cache = True
                 # use_cache = False  # Disable cache for retries
-            
+
             # Log the complete query content for debugging
             self.logger.debug("=== LLM Query Content ===")
             self.logger.debug(f"Retry Attempt: {retry_attempt}")
-            self.logger.debug(f"Temperature: {1.0 + (retry_attempt * temperature_boost)}")
+            self.logger.debug(
+                f"Temperature: {1.0 + (retry_attempt * temperature_boost)}"
+            )
             self.logger.debug(f"Cache Enabled: {use_cache}")
             self.logger.debug("\n=== Instruction ===\n" + instruction)
             self.logger.debug("\n=== Code ===\n" + code)
@@ -118,7 +120,7 @@ class SpecInferenceModule(BaseModule):
                     self.logger.debug(f"\nExample {i+1} Query:\n" + ex["query"])
                     self.logger.debug(f"\nExample {i+1} Answer:\n" + ex["answer"])
             self.logger.debug("=====================")
-                
+
             return self.llm.infer_llm(
                 self.config.get("aoai_generation_model", "gpt-4"),
                 instruction,
@@ -141,31 +143,25 @@ class SpecInferenceModule(BaseModule):
             original_code, generated_code, self.immutable_funcs, self.logger
         ):
             return False
-            
+
         # Check for preservation of TODO markers
-        todo_markers = [
-            "// TODO: add proof",
-            "// TODO: add loop invariant"
-        ]
-        
+        todo_markers = ["// TODO: add proof", "// TODO: add loop invariant"]
+
         for marker in todo_markers:
             original_count = original_code.count(marker)
             generated_count = generated_code.count(marker)
-            
+
             if original_count > generated_count:
                 self.logger.warning(
                     f"Generated code removed {marker} marker(s). "
                     f"Original had {original_count}, generated has {generated_count}."
                 )
                 return False
-                
+
         return True
 
     def _process_responses(
-        self, 
-        responses: List[str], 
-        original_code: str,
-        context_msg: str = ""
+        self, responses: List[str], original_code: str, context_msg: str = ""
     ) -> List[str]:
         """Process and validate LLM responses."""
         safe_responses = []
@@ -177,12 +173,14 @@ class SpecInferenceModule(BaseModule):
             # Check if the generated code is safe
             if self.check_code_safety(original_code, final_response):
                 safe_responses.append(final_response)
-                self.logger.info(f"Generated spec code passed safety check{context_msg}")
+                self.logger.info(
+                    f"Generated spec code passed safety check{context_msg}"
+                )
             else:
-                self.logger.warning(f"Generated spec code failed safety check{context_msg}")
+                self.logger.warning(
+                    f"Generated spec code failed safety check{context_msg}"
+                )
         return safe_responses
-
-
 
     def exec(self, context) -> str:
         """
@@ -204,7 +202,9 @@ class SpecInferenceModule(BaseModule):
         safe_responses = []
 
         for retry_attempt in range(max_retries):
-            self.logger.info(f"Spec inference attempt {retry_attempt + 1}/{max_retries}")
+            self.logger.info(
+                f"Spec inference attempt {retry_attempt + 1}/{max_retries}"
+            )
 
             # Build the complete instruction using the prompt system
             instruction = build_instruction(
@@ -220,15 +220,15 @@ class SpecInferenceModule(BaseModule):
             self.logger.info("=== Complete Instruction for Debugging ===")
             self.logger.info(instruction)
             self.logger.info("=========================================")
-            
+
             # Load examples for spec inference
             examples = get_examples(self.config, "requires", self.logger)
-            
+
             # Use cache only for first attempt
             responses = self._get_llm_responses(
-                instruction, 
-                code, 
-                examples, 
+                instruction,
+                code,
+                examples,
                 retry_attempt=retry_attempt,
                 use_cache=True,
                 # use_cache=(retry_attempt == 0)
@@ -239,7 +239,9 @@ class SpecInferenceModule(BaseModule):
             safe_responses.extend(self._process_responses(responses, original_code))
 
             if safe_responses:
-                self.logger.info(f"Found {len(safe_responses)} safe responses after {retry_attempt + 1} attempts")
+                self.logger.info(
+                    f"Found {len(safe_responses)} safe responses after {retry_attempt + 1} attempts"
+                )
                 break
 
             if retry_attempt < max_retries - 1:
@@ -251,7 +253,9 @@ class SpecInferenceModule(BaseModule):
 
         # If no safe responses found after all retries, fall back to original
         if not safe_responses:
-            self.logger.warning("No safe responses found after all retries, using original code")
+            self.logger.warning(
+                "No safe responses found after all retries, using original code"
+            )
             return original_code
 
         # Save all generated samples
@@ -285,7 +289,10 @@ class SpecInferenceModule(BaseModule):
         if latest_trial.eval.compilation_error:
             self.logger.info("Detected compilation error, attempting repair...")
             from src.modules.repair_registry import RepairRegistry
-            repair_registry = RepairRegistry(self.config, self.logger, self.immutable_funcs)
+
+            repair_registry = RepairRegistry(
+                self.config, self.logger, self.immutable_funcs
+            )
             repaired_code = repair_registry.repair_compilation_error(context)
             if repaired_code and repaired_code != best_code:
                 self.logger.info("Successfully repaired compilation error")

@@ -167,7 +167,7 @@ You can use forall or exists for properties over sequences."""
         temperature_boost: float = 0.2,
         retry_attempt: int = 0,
         use_cache: bool = True,
-        context = None,  # Optional context for appending knowledge
+        context=None,  # Optional context for appending knowledge
     ) -> List[str]:
         """
         Get responses from LLM with error handling.
@@ -192,13 +192,15 @@ You can use forall or exists for properties over sequences."""
 
             # Append context knowledge to query if available
             final_query = query
-            if context and hasattr(context, 'gen_knowledge'):
+            if context and hasattr(context, "gen_knowledge"):
                 final_query += "\n\nAdditional Context:\n" + context.gen_knowledge()
 
             # Log the complete query content for debugging
             self.logger.debug("=== LLM Query Content ===")
             self.logger.debug(f"Retry Attempt: {retry_attempt}")
-            self.logger.debug(f"Temperature: {1.0 + (retry_attempt * temperature_boost)}")
+            self.logger.debug(
+                f"Temperature: {1.0 + (retry_attempt * temperature_boost)}"
+            )
             self.logger.debug(f"Cache Enabled: {use_cache}")
             self.logger.debug("\n=== Instruction ===\n" + instruction)
             self.logger.debug("\n=== Query ===\n" + final_query)

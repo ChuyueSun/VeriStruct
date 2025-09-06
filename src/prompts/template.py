@@ -37,30 +37,30 @@ def fill_template(name: str, keys: dict):
     :param name: The name of the template to use.
     :param keys: A dictionary of keys to use in the template.
     :return: The generated prompt.
-    
+
     Example:
         fill_template("plan_system", {"modules": "42", "task_overview": "42"})
         This will return the prompt with the keys replaced with the values, from
         "plan_system.md".
-        
+
     Note:
         This function supports both ${var} and {{var}} style template variables.
     """
     if name not in templates:
         print(f"Warning: Template {name} not found. Using empty template.")
         return ""
-    
+
     # Add default values
     keys["_blank"] = ""
     keys["_blanks"] = ""
-    
+
     # First use string.Template to handle ${var} style variables
     template_content = templates[name].substitute(keys)
-    
+
     # Then handle {{var}} style variables
     for key, value in keys.items():
         template_content = template_content.replace(f"{{{{{key}}}}}", str(value))
-    
+
     return template_content
 
 
@@ -114,7 +114,7 @@ def build_instruction(
     add_requires_ensures: bool = False,
     add_match: bool = False,
     code: Optional[str] = None,
-    knowledge: Optional[str] = None
+    knowledge: Optional[str] = None,
 ) -> str:
     """
     Build a complete instruction by combining various prompt components.
@@ -145,7 +145,7 @@ def build_instruction(
 
     if add_requires_ensures:
         instruction += f"\n\n{load_prompt('verus_requires_ensures')}"
-        
+
     if add_match:
         instruction += f"\n\n{load_prompt('verus_match')}"
 

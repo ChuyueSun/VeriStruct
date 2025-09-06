@@ -2,8 +2,8 @@ import json
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-from src.prompts.template import fill_template
 from src.modules.utils import code_change_is_safe
+from src.prompts.template import fill_template
 
 
 class BaseModule:

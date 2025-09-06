@@ -79,4 +79,4 @@ pub proof fn tracked_unwrap(tracked self) -> (tracked a: A)
         MyOption::None => proof_from_false(), // For unreachable branches in proof functions
     }
 }
-``` 
+```

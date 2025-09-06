@@ -501,28 +501,37 @@ class RepairRegistry:
                             f"{error_type.name} repair did not improve the score or made it worse."
                         )
                     # If repair made things worse, try fallback
-                    if context.trials[-1].eval.compilation_error and not before_score.compilation_error:
-                        self.logger.info("Repair introduced compilation errors. Attempting fallback...")
-                        
+                    if (
+                        context.trials[-1].eval.compilation_error
+                        and not before_score.compilation_error
+                    ):
+                        self.logger.info(
+                            "Repair introduced compilation errors. Attempting fallback..."
+                        )
+
                         # Remove the failed trial
                         context.trials.pop()
-                        
+
                         # Try fallback repair
                         fallback_result, fallback_score = self._try_fallback_repair(
                             context=context,
                             output_dir=output_dir,
                             max_attempts=3,
-                            preserve_trial=False
+                            preserve_trial=False,
                         )
-                        
+
                         if fallback_result and fallback_score:
-                            self.logger.info("Fallback repair improved score. Adding to trials.")
+                            self.logger.info(
+                                "Fallback repair improved score. Adding to trials."
+                            )
                             # Add successful fallback as new trial
                             context.add_trial(fallback_result)
                             result_map[error_type] = fallback_result
                             made_progress = True
                         else:
-                            self.logger.warning("Fallback repair failed. Continuing with original code.")
+                            self.logger.warning(
+                                "Fallback repair failed. Continuing with original code."
+                            )
                     else:
                         # Only add to result_map if repair was successful
                         result_map[error_type] = result
@@ -537,7 +546,7 @@ class RepairRegistry:
                                     output_path=output_path,
                                     result=result,
                                     repair_type=error_type.name,
-                                    repair_time=repair_time
+                                    repair_time=repair_time,
                                 )
 
                 # Log the repair in the progress logger
@@ -574,81 +583,90 @@ class RepairRegistry:
         else:
             # Split into lines for analysis
             lines = result.splitlines()
-        
+
         # Track braces
         open_braces = 0
         brace_positions = []  # Track line numbers of brace changes
-        
+
         self.logger.info("Starting file completeness check...")
-        
+
         for i, line in enumerate(lines):
             stripped = line.strip()
             if not stripped:
                 continue
-                
+
             # Track braces
             open_count = stripped.count("{")
             close_count = stripped.count("}")
-            
+
             if open_count > 0 or close_count > 0:
                 brace_positions.append((i + 1, open_count, close_count))
-                
+
             open_braces += open_count
             open_braces -= close_count
-            
+
             if open_braces < 0:
                 return False
-        
-        
+
         # Validate brace closure
         if open_braces != 0:
-            self.logger.warning(f"Unclosed blocks detected: {open_braces} unclosed braces")
+            self.logger.warning(
+                f"Unclosed blocks detected: {open_braces} unclosed braces"
+            )
             if open_braces > 0:
                 self.logger.warning("Some blocks were not closed")
             else:
                 self.logger.warning("Extra closing braces found")
             return False
-            
+
         self.logger.info("File structure validation passed: All blocks properly closed")
         return True
 
-    def _check_file_size(self, result: Union[str, List[str]], original_size: Optional[int] = None) -> bool:
+    def _check_file_size(
+        self, result: Union[str, List[str]], original_size: Optional[int] = None
+    ) -> bool:
         """
         Validate repair result size and completeness.
-        
+
         Args:
             result: The repair result (either a string or list of strings)
             original_size: Optional size of original file for comparison
-            
+
         Returns:
             bool: True if size and structure seem valid, False otherwise
         """
         # Basic size check - files shouldn't be tiny
         min_size = 100  # Minimum reasonable size for a Verus file
-        
+
         # Convert list to string if needed
         if isinstance(result, list):
-            result = '\n'.join(result)
-        
+            result = "\n".join(result)
+
         # Get size in bytes and lines
-        result_bytes = len(result.encode('utf-8'))
+        result_bytes = len(result.encode("utf-8"))
         result_lines = len(result.splitlines())
-        
+
         # Log sizes for debugging
-        self.logger.info(f"Repair result size: {result_bytes} bytes, {result_lines} lines")
-        
+        self.logger.info(
+            f"Repair result size: {result_bytes} bytes, {result_lines} lines"
+        )
+
         if result_bytes < min_size:
-            self.logger.warning(f"Repair result suspiciously small: {result_bytes} bytes")
+            self.logger.warning(
+                f"Repair result suspiciously small: {result_bytes} bytes"
+            )
             return False
-            
+
         # If we have original size, compare
         if original_size:
             # Allow some variance but catch major discrepancies
             size_ratio = result_bytes / original_size
             if size_ratio < 0.5:  # Less than 50% of original
-                self.logger.warning(f"Repair result much smaller than original: {size_ratio:.2%}")
+                self.logger.warning(
+                    f"Repair result much smaller than original: {size_ratio:.2%}"
+                )
                 return False
-        
+
         # Check structural completeness
         return self._check_file_completeness(result)
 
@@ -672,18 +690,22 @@ class RepairRegistry:
         """
         # Convert list to string if needed
         if isinstance(result, list):
-            result = '\n'.join(result)
-            
+            result = "\n".join(result)
+
         # Check file completeness first
         if not self._check_file_completeness(result):
-            self.logger.error(f"Skipping save of structurally incomplete repair result for {repair_type}")
+            self.logger.error(
+                f"Skipping save of structurally incomplete repair result for {repair_type}"
+            )
             return
-            
+
         # Then check size
         if not self._check_file_size(result):
-            self.logger.warning(f"Skipping save of invalid size repair result for {repair_type}")
+            self.logger.warning(
+                f"Skipping save of invalid size repair result for {repair_type}"
+            )
             return
-            
+
         # Get file ID from environment
         file_id = os.environ.get("VERUS_FILE_ID", "")
         if file_id:
@@ -692,25 +714,33 @@ class RepairRegistry:
             output_path = f"{base}_{file_id}{ext}"
 
         output_file = output_dir / output_path
-        
+
         # Log file sizes before writing
-        self.logger.info(f"Writing repair result: {len(result.encode('utf-8'))} bytes to {output_file}")
-        
+        self.logger.info(
+            f"Writing repair result: {len(result.encode('utf-8'))} bytes to {output_file}"
+        )
+
         # Final validation before write
         if self._check_file_completeness(result):  # Double-check to be safe
             output_file.write_text(result)
-            
+
             # Verify written file
             if output_file.exists():
                 written_size = output_file.stat().st_size
                 self.logger.info(f"Verified written file size: {written_size} bytes")
-                
+
                 if repair_time is not None:
-                    self.logger.info(f"Saved {repair_type} repair result to {output_file} after {repair_time:.2f}s")
+                    self.logger.info(
+                        f"Saved {repair_type} repair result to {output_file} after {repair_time:.2f}s"
+                    )
                 else:
-                    self.logger.info(f"Saved {repair_type} repair result to {output_file}")
+                    self.logger.info(
+                        f"Saved {repair_type} repair result to {output_file}"
+                    )
         else:
-            self.logger.error(f"Final validation failed - repair result became incomplete, skipping save")
+            self.logger.error(
+                f"Final validation failed - repair result became incomplete, skipping save"
+            )
 
     def get_registry_info(self) -> str:
         """
@@ -747,7 +777,7 @@ class RepairRegistry:
         context,
         output_dir: Optional[Path] = None,
         max_attempts: int = 3,
-        preserve_trial: bool = False
+        preserve_trial: bool = False,
     ) -> tuple[Optional[str], Optional[float]]:
         """
         Attempt fallback repair for compilation errors.
@@ -773,9 +803,9 @@ class RepairRegistry:
         # Store original state
         original_score = last_trial.eval.get_score()
         original_code = last_trial.code
-        original_size = len(original_code.encode('utf-8'))
+        original_size = len(original_code.encode("utf-8"))
         self.logger.info(f"Original code size: {original_size} bytes")
-        
+
         attempt = 0
 
         while attempt < max_attempts:
@@ -801,30 +831,35 @@ class RepairRegistry:
             if not result:
                 self.logger.warning(f"Fallback attempt {attempt} produced no result.")
                 continue
-                
+
             # Validate size before evaluating
             if not self._check_file_size(result, original_size):
-                self.logger.warning(f"Fallback attempt {attempt} produced incomplete/invalid result")
+                self.logger.warning(
+                    f"Fallback attempt {attempt} produced incomplete/invalid result"
+                )
                 continue
 
             # Evaluate result
             from src.modules.veval import VEval
+
             veval = VEval(result, self.logger)
             current_score = veval.eval_and_get_score()
 
             # Check if repair improved the score
             if current_score > original_score:
-                self.logger.info(f"Fallback attempt {attempt} improved score and passed size validation.")
-                
+                self.logger.info(
+                    f"Fallback attempt {attempt} improved score and passed size validation."
+                )
+
                 # Save result if directory provided
                 if output_dir:
                     self._save_repair_result(
                         output_dir=output_dir,
                         output_path=f"fallback_result_{len(context.trials)}.rs",
                         result=result,
-                        repair_type=f"fallback_attempt_{attempt}"
+                        repair_type=f"fallback_attempt_{attempt}",
                     )
-                
+
                 return result, current_score
 
             self.logger.warning(f"Fallback attempt {attempt} did not improve score.")
@@ -847,9 +882,6 @@ class RepairRegistry:
             The repaired code if successful, None otherwise
         """
         result, _ = self._try_fallback_repair(
-            context=context,
-            output_dir=output_dir,
-            max_attempts=3,
-            preserve_trial=True
+            context=context, output_dir=output_dir, max_attempts=3, preserve_trial=True
         )
         return result

@@ -16,7 +16,7 @@ from src.modules.utils import (
 )
 from src.modules.veval import VerusError, VerusErrorLabel, VerusErrorType, VEval
 from src.prompts.template import build_instruction
-from src.utils.path_utils import samples_dir, best_dir, debug_dir
+from src.utils.path_utils import best_dir, debug_dir, samples_dir
 
 
 class RepairTypeModule(BaseRepairModule):
@@ -124,7 +124,7 @@ class RepairTypeModule(BaseRepairModule):
                 self.logger.info("Automatically fixed type error.")
                 context.add_trial(newcode)
                 current_code = newcode
-            
+
             if current_code != code:
                 # Return if we made any progress
                 return current_code
@@ -157,7 +157,7 @@ Response with the Rust code only, do not include any explanation."""
             base_instruction=base_instruction,
             add_common=True,  # Add common Verus knowledge
             code=code,  # For Seq detection
-            knowledge=self.general_knowledge  # Add general knowledge
+            knowledge=self.general_knowledge,  # Add general knowledge
         )
 
         # Load examples
@@ -170,7 +170,7 @@ Response with the Rust code only, do not include any explanation."""
             examples,
             retry_attempt=0,  # First attempt
             use_cache=True,
-            context=context  # Pass context for appending knowledge
+            context=context,  # Pass context for appending knowledge
         )
 
         # Evaluate samples and get the best one
@@ -225,14 +225,16 @@ Respond with the **fixed Rust code only** and do not include any explanation."""
         safe_responses = []
 
         for retry_attempt in range(max_retries):
-            self.logger.info(f"Type annotation repair attempt {retry_attempt + 1}/{max_retries}")
+            self.logger.info(
+                f"Type annotation repair attempt {retry_attempt + 1}/{max_retries}"
+            )
 
             # Build complete instruction using the prompt system
             instruction = build_instruction(
                 base_instruction=base_instruction,
                 add_common=True,  # Add common Verus knowledge
                 code=code,  # For Seq detection
-                knowledge=self.general_knowledge  # Add general knowledge
+                knowledge=self.general_knowledge,  # Add general knowledge
             )
 
             # Debug log for complete instruction
@@ -258,8 +260,8 @@ Respond with the **fixed Rust code only** and do not include any explanation."""
                 examples,
                 retry_attempt=retry_attempt,
                 # use_cache=True,
-                  use_cache=(retry_attempt == 0),
-                context=context  # Pass context for appending knowledge
+                use_cache=(retry_attempt == 0),
+                context=context,  # Pass context for appending knowledge
             )
 
             if not responses and retry_attempt == max_retries - 1:
@@ -276,7 +278,9 @@ Respond with the **fixed Rust code only** and do not include any explanation."""
 
             if best_code != code:  # If we got a potentially better solution
                 safe_responses.append(best_code)
-                self.logger.info(f"Found a potentially safe response after {retry_attempt + 1} attempts")
+                self.logger.info(
+                    f"Found a potentially safe response after {retry_attempt + 1} attempts"
+                )
                 break
 
             if retry_attempt < max_retries - 1:
@@ -287,7 +291,9 @@ Respond with the **fixed Rust code only** and do not include any explanation."""
 
         # If no safe responses found after all retries, fall back to original
         if not safe_responses:
-            self.logger.warning("No safe responses found after all retries, using original code")
+            self.logger.warning(
+                "No safe responses found after all retries, using original code"
+            )
             return code
 
         # Use the last safe response (since we break after finding one)
@@ -334,14 +340,16 @@ Respond with the **fixed Rust code only** and do not include any explanation."""
         safe_responses = []
 
         for retry_attempt in range(max_retries):
-            self.logger.info(f"Constructor type invariant repair attempt {retry_attempt + 1}/{max_retries}")
+            self.logger.info(
+                f"Constructor type invariant repair attempt {retry_attempt + 1}/{max_retries}"
+            )
 
             # Build complete instruction using the prompt system
             instruction = build_instruction(
                 base_instruction=base_instruction,
                 add_common=True,  # Add common Verus knowledge
                 code=code,  # For Seq detection
-                knowledge=self.general_knowledge  # Add general knowledge
+                knowledge=self.general_knowledge,  # Add general knowledge
             )
 
             # Debug log for complete instruction
@@ -350,15 +358,20 @@ Respond with the **fixed Rust code only** and do not include any explanation."""
             self.logger.info("=========================================")
 
             # Load examples
-            examples = get_examples(self.config, "constructor_type_invariant", self.logger)
+            examples = get_examples(
+                self.config, "constructor_type_invariant", self.logger
+            )
 
             # Ensure debug directory exists for prompt saving
             dbg_dir = debug_dir()
             prompt_path2 = (
-                dbg_dir / f"repair_constructor_type_invariant_prompt_{len(context.trials)}.txt"
+                dbg_dir
+                / f"repair_constructor_type_invariant_prompt_{len(context.trials)}.txt"
             )
             prompt_path2.write_text(instruction + "\n\n---\n\n" + query)
-            self.logger.info(f"Saved constructor type invariant repair prompt to {prompt_path2}")
+            self.logger.info(
+                f"Saved constructor type invariant repair prompt to {prompt_path2}"
+            )
 
             # Get responses from LLM
             responses = self._get_llm_responses(
@@ -368,7 +381,7 @@ Respond with the **fixed Rust code only** and do not include any explanation."""
                 retry_attempt=retry_attempt,
                 use_cache=True,
                 #   use_cache=(retry_attempt == 0),
-                context=context  # Pass context for appending knowledge
+                context=context,  # Pass context for appending knowledge
             )
 
             if not responses and retry_attempt == max_retries - 1:
@@ -385,7 +398,9 @@ Respond with the **fixed Rust code only** and do not include any explanation."""
 
             if best_code != code:  # If we got a potentially better solution
                 safe_responses.append(best_code)
-                self.logger.info(f"Found a potentially safe response after {retry_attempt + 1} attempts")
+                self.logger.info(
+                    f"Found a potentially safe response after {retry_attempt + 1} attempts"
+                )
                 break
 
             if retry_attempt < max_retries - 1:
@@ -396,7 +411,9 @@ Respond with the **fixed Rust code only** and do not include any explanation."""
 
         # If no safe responses found after all retries, fall back to original
         if not safe_responses:
-            self.logger.warning("No safe responses found after all retries, using original code")
+            self.logger.warning(
+                "No safe responses found after all retries, using original code"
+            )
             return code
 
         # Use the last safe response (since we break after finding one)
@@ -441,14 +458,16 @@ Respond with the Rust code only, do not include any explanation."""
         safe_responses = []
 
         for retry_attempt in range(max_retries):
-            self.logger.info(f"Default type repair attempt {retry_attempt + 1}/{max_retries}")
+            self.logger.info(
+                f"Default type repair attempt {retry_attempt + 1}/{max_retries}"
+            )
 
             # Build complete instruction using the prompt system
             instruction = build_instruction(
                 base_instruction=base_instruction,
                 add_common=True,  # Add common Verus knowledge
                 code=code,  # For Seq detection
-                knowledge=self.general_knowledge  # Add general knowledge
+                knowledge=self.general_knowledge,  # Add general knowledge
             )
 
             # Debug log for complete instruction
@@ -488,7 +507,9 @@ Respond with the Rust code only, do not include any explanation."""
 
             if best_code != code:  # If we got a potentially better solution
                 safe_responses.append(best_code)
-                self.logger.info(f"Found a potentially safe response after {retry_attempt + 1} attempts")
+                self.logger.info(
+                    f"Found a potentially safe response after {retry_attempt + 1} attempts"
+                )
                 break
 
             if retry_attempt < max_retries - 1:
@@ -499,7 +520,9 @@ Respond with the Rust code only, do not include any explanation."""
 
         # If no safe responses found after all retries, fall back to original
         if not safe_responses:
-            self.logger.warning("No safe responses found after all retries, using original code")
+            self.logger.warning(
+                "No safe responses found after all retries, using original code"
+            )
             return code
 
         # Use the last safe response (since we break after finding one)
