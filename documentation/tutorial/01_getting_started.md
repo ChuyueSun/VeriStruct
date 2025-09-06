@@ -2,13 +2,14 @@
 
 ## Introduction
 
-This guide will help you understand how VerusAgent verifies Rust code. We'll start with a simple example and gradually move to more complex cases.
+Learn how VerusAgent checks Rust code.
+This tutorial covers a simple counter, core concepts, and common patterns.
 
 ## Basic Concepts
 
 ### 1. Mathematical Abstraction
 
-In formal verification, we represent data structures using mathematical abstractions:
+Formal verification models data structures with math:
 
 ```rust
 // Implementation
@@ -259,4 +260,4 @@ This introduction covered:
 - Common patterns and practices
 - Initial exercises
 
-Continue to [Basic Verification](02_basic_verification.md) for more complex examples.
+See [Basic Verification](02_basic_verification.md) for more examples.
