@@ -40,6 +40,11 @@ See the [RingBuffer Example](examples/rb_type_invariant.md) for a walkthrough sh
 - Handles proof assertions
 - Manages proof blocks
 
+### 6. [Lemma Preprocessor](lemma_preprocessor.md)
+- Loads lemma files based on keywords found in the code
+- Inserts lemmas after the `verus!{` marker before planning
+- Uses explicit keyword-to-file mapping for precise lemma selection
+
 ## Module Relationships
 
 ```mermaid
