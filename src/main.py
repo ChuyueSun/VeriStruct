@@ -59,7 +59,8 @@ def handle_checkpoint_best(context, output_dir, file_id, progress_logger, logger
 
     if not checkpoint_best_code:
         final_score = context.trials[-1].eval.get_score()
-        progress_logger.record_final_result(final_score)
+        final_code = context.trials[-1].code
+        progress_logger.record_final_result(final_score, final_code)
         logger.warning(
             "No checkpoint best code available. Check if checkpoint best tracking is working correctly."
         )
@@ -101,8 +102,9 @@ def handle_checkpoint_best(context, output_dir, file_id, progress_logger, logger
 
     # Compare with final result
     final_score = context.trials[-1].eval.get_score()
+    final_code = context.trials[-1].code
     logger.debug(f"Main - Final trial score: {final_score}")
-    progress_logger.record_final_result(final_score)
+    progress_logger.record_final_result(final_score, final_code)
 
     should_use_checkpoint_best = checkpoint_best_score > final_score or (
         not checkpoint_best_score.compilation_error and final_score.compilation_error
@@ -124,14 +126,12 @@ def handle_checkpoint_best(context, output_dir, file_id, progress_logger, logger
         write_and_verify_file(
             output_dir / "final_result.rs", checkpoint_best_with_score, logger
         )
-        progress_logger.record_final_result(checkpoint_best_score)
+        progress_logger.record_final_result(checkpoint_best_score, checkpoint_best_code)
     else:
         write_and_verify_file(
             output_dir / "final_result.rs", context.trials[-1].code, logger
         )
-
-    # Record final result in progress logger
-    progress_logger.record_final_result(final_score)
+        progress_logger.record_final_result(final_score, final_code)
 
 
 def main():
@@ -192,6 +192,15 @@ def main():
     logger.info("=" * 80)
     logger.info(sample_code)
     logger.info("=" * 80)
+
+    os.environ["VERUS_ADD_OPT_GUIDELINES"] = (
+        "true"
+        if (sample_code.find("Option<Box<") != -1 and sample_code.find("TreeMap") == -1)
+        else "false"
+    )
+    logger.info(
+        f"Should add Option guidelines: {os.environ['VERUS_ADD_OPT_GUIDELINES']}"
+    )
 
     # Preprocess with lemmas
     lemmas_dir = Path("src/lemmas")
@@ -306,9 +315,16 @@ def main():
     else:
         logger.info("No immutable functions specified")
 
-    # Initialize context with sample code
+    # Initialize context with sample code (pass progress_logger for tracking)
     params = HyperParams()
-    context = Context(sample_code, params, logger)
+    context = Context(sample_code, params, logger, progress_logger)
+
+    # Record initial state for statistics
+    initial_trial = context.trials[0]
+    initial_failures = initial_trial.eval.get_failures() if initial_trial.eval else []
+    progress_logger.record_initial_state(
+        sample_code, initial_trial.eval.get_score(), initial_failures
+    )
 
     # Initialize repair registry with all repair modules
     repair_registry = RepairRegistry.create(config, logger, immutable_functions)

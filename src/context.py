@@ -1,6 +1,7 @@
 import os
 import subprocess
 import sys
+import time
 import warnings
 from dataclasses import dataclass
 from typing import Dict, List, Optional
@@ -87,7 +88,9 @@ class Context:
     Context class to store the trials and modules.
     """
 
-    def __init__(self, raw_code: str, params: HyperParams, logger):
+    def __init__(
+        self, raw_code: str, params: HyperParams, logger, progress_logger=None
+    ):
         self.trials: List[Trial] = []
         self.modules: Dict[str, BaseModule] = {}
         self.knowledge: Dict[str, str] = {}
@@ -95,6 +98,7 @@ class Context:
         self.raw_code = raw_code
         self.params = params
         self.llm = LLM(config, logger)
+        self.progress_logger = progress_logger
 
         # Global best tracking
         self.best_code = None
@@ -261,3 +265,65 @@ class Context:
                 "failures": "\n\n".join(prev_descs),
             },
         )
+
+    def infer_llm_with_tracking(
+        self,
+        engine: str,
+        instruction: str,
+        exemplars: list,
+        query: str,
+        system_info: str = None,
+        answer_num: int = 5,
+        max_tokens: int = 8192,
+        temp: float = 0.7,
+        json: bool = False,
+        return_msg: bool = False,
+        verbose: bool = False,
+        use_cache: bool = True,
+        stage: str = None,
+        module: str = None,
+    ):
+        """
+        Wrapper around LLM.infer_llm that tracks statistics.
+
+        Args:
+            Same as LLM.infer_llm, plus:
+            stage: Stage name for tracking
+            module: Module name for tracking
+
+        Returns:
+            Same as LLM.infer_llm
+        """
+        start_time = time.time()
+
+        # Call the actual LLM
+        result = self.llm.infer_llm(
+            engine=engine,
+            instruction=instruction,
+            exemplars=exemplars,
+            query=query,
+            system_info=system_info,
+            answer_num=answer_num,
+            max_tokens=max_tokens,
+            temp=temp,
+            json=json,
+            return_msg=return_msg,
+            verbose=verbose,
+            use_cache=use_cache,
+        )
+
+        # Track the call
+        response_time = time.time() - start_time
+
+        # Determine if it was a cache hit (approximate)
+        cache_hit = response_time < 0.1  # If very fast, likely from cache
+
+        if self.progress_logger:
+            self.progress_logger.record_llm_call(
+                stage=stage,
+                module=module,
+                response_time=response_time,
+                cache_hit=cache_hit,
+            )
+
+        return result

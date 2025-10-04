@@ -6,6 +6,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
+from src.modules.statistics_collector import StatisticsCollector
 from src.modules.veval import EvalScore
 
 
@@ -58,6 +59,11 @@ class ProgressLogger:
             f"Progress logger initialized. Logs will be saved to {self.log_file}"
         )
 
+        # Initialize statistics collector
+        benchmark_name = os.environ.get("VERUS_INPUT_FILE", "unknown")
+        self.stats_collector = StatisticsCollector(output_dir, benchmark_name, logger)
+        self.logger.info("Statistics collector initialized")
+
         # Display file identification summary
         self.display_file_info()
 
@@ -93,6 +99,10 @@ class ProgressLogger:
         }
         self.current_step_start_time = time.time()
         self.logger.info(f"Starting step {step_number}: {step_name}")
+
+        # Track in statistics collector
+        self.stats_collector.start_stage(step_name, step_number)
+
         self._save_progress()
 
     def end_step(self, result_score: EvalScore, result_length: int) -> None:
@@ -128,6 +138,9 @@ class ProgressLogger:
             f"in {execution_time:.2f}s with score: {result_score}"
         )
 
+        # Track in statistics collector
+        self.stats_collector.end_stage(self.current_step["name"], result_score)
+
         self.current_step = None
         self.current_step_start_time = None
         self._save_progress()
@@ -149,6 +162,10 @@ class ProgressLogger:
 
         self.progress["repair_rounds"].append(repair_round)
         self.logger.info(f"Starting repair round {round_number}")
+
+        # Track in statistics collector
+        self.stats_collector.start_repair_round(round_number)
+
         self._save_progress()
 
     def add_repair(
@@ -202,6 +219,18 @@ class ProgressLogger:
             f"Completed repair {repair_module} for {error_type} "
             f"in {execution_time:.2f}s. Score improved from {before_score} to {after_score}"
         )
+
+        # Track in statistics collector
+        success = after_score > before_score
+        self.stats_collector.record_repair(
+            error_type,
+            repair_module,
+            execution_time,
+            success,
+            before_score,
+            after_score,
+        )
+
         self._save_progress()
 
     def end_repair_round(self) -> None:
@@ -238,12 +267,15 @@ class ProgressLogger:
         )
         self._save_progress()
 
-    def record_final_result(self, final_score: EvalScore) -> None:
+    def record_final_result(
+        self, final_score: EvalScore, final_code: str = None
+    ) -> None:
         """
         Record the final verification result.
 
         Args:
             final_score: The final EvalScore after all processing
+            final_code: The final code (optional)
         """
         self.progress["final_result"] = {
             "compilation_error": final_score.compilation_error,
@@ -263,10 +295,18 @@ class ProgressLogger:
         self.logger.info(
             f"VerusAgent completed in {total_time:.2f}s with final score: {final_score}"
         )
+
+        # Record final state in statistics collector
+        if final_code:
+            self.stats_collector.record_final_state(final_code, final_score)
+
         self._save_progress()
 
         # Also create a summary file with key metrics
         self._save_summary()
+
+        # Save detailed statistics
+        self._save_statistics()
 
     def _save_progress(self) -> None:
         """Save the current progress to the JSON log file."""
@@ -393,3 +433,45 @@ class ProgressLogger:
 
         except Exception as e:
             self.logger.error(f"Error saving summary: {e}")
+
+    def _save_statistics(self) -> None:
+        """Save detailed statistics collected during execution."""
+        try:
+            detailed_file, summary_file, report_file = self.stats_collector.save()
+            self.logger.info(f"Statistics saved:")
+            self.logger.info(f"  - Detailed: {detailed_file}")
+            self.logger.info(f"  - Summary: {summary_file}")
+            self.logger.info(f"  - Report: {report_file}")
+        except Exception as e:
+            self.logger.error(f"Error saving statistics: {e}")
+
+    def record_initial_state(
+        self, code: str, eval_score: EvalScore, failures: List = None
+    ):
+        """
+        Record the initial state of the benchmark.
+
+        Args:
+            code: Initial code
+            eval_score: Initial evaluation score
+            failures: List of initial failures
+        """
+        self.stats_collector.record_initial_state(code, eval_score, failures)
+
+    def record_llm_call(
+        self,
+        stage: Optional[str] = None,
+        module: Optional[str] = None,
+        response_time: Optional[float] = None,
+        cache_hit: bool = False,
+    ):
+        """
+        Record an LLM call for statistics.
+
+        Args:
+            stage: Stage/module name where the call was made
+            module: Specific module name (if different from stage)
+            response_time: Time taken for the LLM call
+            cache_hit: Whether this was a cache hit
+        """
+        self.stats_collector.record_llm_call(stage, module, response_time, cache_hit)
