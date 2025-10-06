@@ -1,0 +1,14 @@
+{
+  "total_benchmarks": 2,
+  "successful": 0,
+  "failed": 2,
+  "timeouts": 0,
+  "errors": 0,
+  "success_rate": 0.0,
+  "total_execution_time": 0.24954724311828613,
+  "average_execution_time": 0.12477362155914307,
+  "min_execution_time": 0.08069634437561035,
+  "max_execution_time": 0.16885089874267578,
+  "total_output_files": 0,
+  "total_log_size_bytes": 538
+}

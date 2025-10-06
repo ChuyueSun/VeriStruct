@@ -1,0 +1,22 @@
+[
+  {
+    "benchmark": "bst_map_todo",
+    "success": false,
+    "timeout": false,
+    "error": null,
+    "execution_time": 0.16885089874267578,
+    "exit_code": 1,
+    "output_files_count": 0,
+    "log_size_bytes": 269
+  },
+  {
+    "benchmark": "rb_type_invariant_todo",
+    "success": false,
+    "timeout": false,
+    "error": null,
+    "execution_time": 0.08069634437561035,
+    "exit_code": 1,
+    "output_files_count": 0,
+    "log_size_bytes": 269
+  }
+]

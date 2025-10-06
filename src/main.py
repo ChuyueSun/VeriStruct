@@ -350,6 +350,58 @@ def main():
 
     logger.info(f"Registered modules: {list(context.modules.keys())}")
 
+    # Check for baseline mode
+    baseline_mode = os.environ.get("VERUS_BASELINE_MODE", "0") == "1"
+    if baseline_mode:
+        logger.info("=== BASELINE MODE ENABLED ===")
+        logger.info("Skipping planner and multi-stage pipeline, using single-shot baseline approach")
+        
+        # Register and use baseline module instead of normal pipeline
+        from src.modules.baseline import BaselineModule
+        baseline_module = BaselineModule(config, logger, immutable_functions)
+        context.register_module("baseline", baseline_module)
+        
+        # Execute baseline module directly
+        progress_logger.start_step("baseline", 1)
+        step_start_time = time.time()
+        
+        logger.info("Step 1: Executing baseline module...")
+        baseline_result = baseline_module.exec(context)
+        
+        step_time = time.time() - step_start_time
+        logger.info(
+            f"Baseline completed with result length: {len(baseline_result)} in {step_time:.2f}s"
+        )
+        
+        # Save the baseline result
+        baseline_output_path = output_dir / f"01_baseline_{file_id}.rs"
+        
+        # Add score information if available
+        if context.trials and context.trials[-1].eval:
+            baseline_score = context.trials[-1].eval.get_score()
+            baseline_result_with_score = (
+                f"{baseline_result}\n\n"
+                f"// Baseline VEval Score: {baseline_score}\n"
+                f"// Verified: {baseline_score.verified}, Errors: {baseline_score.errors}, Verus Errors: {baseline_score.verus_errors}"
+            )
+            write_and_verify_file(baseline_output_path, baseline_result_with_score, logger)
+        else:
+            write_and_verify_file(baseline_output_path, baseline_result, logger)
+
+        logger.info(f"Baseline output saved to {baseline_output_path}")
+        
+        # Log baseline progress
+        if context.trials and context.trials[-1].eval:
+            progress_logger.end_step(
+                context.trials[-1].eval.get_score(), len(baseline_result)
+            )
+        
+        # Handle checkpoint best code
+        handle_checkpoint_best(context, output_dir, file_id, progress_logger, logger)
+        
+        logger.info("=== BASELINE MODE COMPLETE ===")
+        return
+
     # Create and execute planner to get a workflow strategy
     logger.info("Creating verification plan using the Planner...")
     planner = Planner(logger)
