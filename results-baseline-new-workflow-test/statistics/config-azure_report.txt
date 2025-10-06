@@ -1,0 +1,25 @@
+BASELINE EXECUTION REPORT - config-azure
+==================================================
+
+SUMMARY STATISTICS:
+  Total Benchmarks: 2
+  Successful: 0
+  Failed: 2
+  Timeouts: 0
+  Errors: 0
+  Success Rate: 0.0%
+
+PERFORMANCE STATISTICS:
+  Total Execution Time: 0.2s
+  Average Execution Time: 0.1s
+  Min Execution Time: 0.1s
+  Max Execution Time: 0.2s
+
+OUTPUT STATISTICS:
+  Total Output Files: 0
+  Total Log Size: 538 bytes
+
+INDIVIDUAL BENCHMARK RESULTS:
+--------------------------------------------------
+bst_map_todo                   FAILED          0.2s
+rb_type_invariant_todo         FAILED          0.1s
