@@ -1,0 +1,84 @@
+================================================================================
+VerusAgent Statistics Report - set_from_vec_todo
+================================================================================
+
+EXECUTION SUMMARY
+--------------------------------------------------------------------------------
+Benchmark: set_from_vec_todo
+Start Time: 2025-10-10T21:56:31.457135
+End Time: 2025-10-10T21:59:54.690033
+Total Execution Time: 203.23s
+Verification Success: Yes
+
+MODULE ACTIVATION
+--------------------------------------------------------------------------------
+Total Modules Activated: 5
+Modules: view_inference, view_refinement, inv_inference, spec_inference, proof_generation
+
+LLM CALLS
+--------------------------------------------------------------------------------
+Total LLM Calls: 0
+Average Response Time: 0.00s
+Cache Hit Rate: 0.00%
+
+Calls by Stage:
+
+ITERATIONS
+--------------------------------------------------------------------------------
+Iterations by Module:
+
+REPAIRS
+--------------------------------------------------------------------------------
+Total Repair Rounds: 0
+Total Repairs: 0
+Successful Repairs: 0
+Failed Repairs: 0
+Success Rate: 0.00%
+
+Repairs by Error Type:
+
+Repairs by Heuristic:
+
+ERROR TRACKING
+--------------------------------------------------------------------------------
+Initial Errors: 999
+Final Errors: 0
+Errors Fixed: 999
+
+Initial Errors by Type:
+  Other: 1
+
+STAGE DETAILS
+--------------------------------------------------------------------------------
+
+view_inference (Step 1)
+  Execution Time: 34.94s
+  LLM Calls: 0
+  Iterations: 1
+  Result: Verified=5, Errors=1
+
+view_refinement (Step 2)
+  Execution Time: 39.00s
+  LLM Calls: 0
+  Iterations: 1
+  Result: Verified=5, Errors=1
+
+inv_inference (Step 3)
+  Execution Time: 55.00s
+  LLM Calls: 0
+  Iterations: 1
+  Result: Verified=5, Errors=1
+
+spec_inference (Step 4)
+  Execution Time: 30.32s
+  LLM Calls: 0
+  Iterations: 1
+  Result: Verified=5, Errors=1
+
+proof_generation (Step 5)
+  Execution Time: 31.88s
+  LLM Calls: 0
+  Iterations: 1
+  Result: Verified=6, Errors=0
+
+================================================================================

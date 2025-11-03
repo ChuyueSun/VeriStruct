@@ -1,0 +1,28 @@
+```markdown
+## 1. Analysis Summary
+
+Current State:
+- The code consists of free functions (binary_search, reverse, binary_search_no_spinoff) without any user-defined struct/class data structure.
+- Each function includes “TODO: add specification” placeholders for missing requires/ensures.
+- There are also “TODO: add invariants” placeholders for loop invariants, but these refer to function/loop correctness rather than type invariants.
+- No references to “View” or other view-related functions.
+
+Dependencies:
+- All three functions rely on adding proper functional specifications and loop invariants.
+- No dependency on any custom data structure or view abstraction.
+
+## 2. Verification Plan
+
+**Selected Workflow:** Specification-Only Workflow
+
+**Justification:**
+This code does not define or use any custom data structures requiring type invariants, and it does not require view functions. The placeholders explicitly request function specifications (“TODO: add specification”) and loop invariants. As no struct/class invariants are needed or “View” support is requested, the specification-only workflow is sufficient.
+
+**Execution Steps:**
+1. spec_inference
+2. proof_generation  (appended because “TODO: add invariants” markers exist)
+
+**Module Conditions:**
+- inv_inference: No – there is no user-defined data structure requiring type invariants.
+- proof_generation: Yes – the code explicitly includes “TODO: add invariants” comments.
+```

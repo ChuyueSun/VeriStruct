@@ -1,0 +1,90 @@
+PROGRESSIVE TESTS ANALYSIS
+================================================================================
+
+atomics_todo:
+  Files processed: 30
+  Successful verifications: 2
+  Total functions verified (original): 10
+  Test variants available (progressive): 7
+  Average verified per file: 0.3
+  Potential with progressive tests: 210 function verifications
+
+bitmap_todo:
+  Files processed: 17
+  Successful verifications: 6
+  Total functions verified (original): 106
+  Test variants available (progressive): 14
+  Average verified per file: 6.2
+  Potential with progressive tests: 238 function verifications
+
+bst_map_todo:
+  Files processed: 11
+  Successful verifications: 0
+  Total functions verified (original): 0
+  Test variants available (progressive): 4
+  Average verified per file: 0.0
+  Potential with progressive tests: 44 function verifications
+
+invariants_todo:
+  Files processed: 18
+  Successful verifications: 18
+  Total functions verified (original): 36
+  Test variants available (progressive): 6
+  Average verified per file: 2.0
+  Potential with progressive tests: 108 function verifications
+
+node_todo:
+  Files processed: 3
+  Successful verifications: 0
+  Total functions verified (original): 0
+  Test variants available (progressive): 4
+  Average verified per file: 0.0
+  Potential with progressive tests: 12 function verifications
+
+option_todo:
+  Files processed: 18
+  Successful verifications: 0
+  Total functions verified (original): 0
+  Test variants available (progressive): 8
+  Average verified per file: 0.0
+  Potential with progressive tests: 144 function verifications
+
+rb_type_invariant_todo:
+  Files processed: 16
+  Successful verifications: 0
+  Total functions verified (original): 0
+  Test variants available (progressive): 4
+  Average verified per file: 0.0
+  Potential with progressive tests: 64 function verifications
+
+rwlock_vstd_todo:
+  Files processed: 18
+  Successful verifications: 0
+  Total functions verified (original): 0
+  Test variants available (progressive): 4
+  Average verified per file: 0.0
+  Potential with progressive tests: 72 function verifications
+
+set_from_vec_todo:
+  Files processed: 17
+  Successful verifications: 12
+  Total functions verified (original): 97
+  Test variants available (progressive): 5
+  Average verified per file: 5.7
+  Potential with progressive tests: 85 function verifications
+
+transfer_todo:
+  Files processed: 18
+  Successful verifications: 0
+  Total functions verified (original): 0
+  Test variants available (progressive): 3
+  Average verified per file: 0.0
+  Potential with progressive tests: 54 function verifications
+
+vectors_todo:
+  Files processed: 18
+  Successful verifications: 0
+  Total functions verified (original): 0
+  Test variants available (progressive): 6
+  Average verified per file: 0.0
+  Potential with progressive tests: 108 function verifications

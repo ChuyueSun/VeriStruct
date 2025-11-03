@@ -1,0 +1,15 @@
+{
+  "benchmark": "bitmap_todo",
+  "execution_time": 3030.3262796401978,
+  "modules_activated": 5,
+  "total_llm_calls": 15,
+  "avg_response_time": 198.05474932988486,
+  "cache_hit_rate": 26.666666666666668,
+  "total_repair_rounds": 5,
+  "total_repairs": 7,
+  "repair_success_rate": 14.285714285714285,
+  "initial_errors": 999,
+  "final_errors": 4,
+  "errors_fixed": 995,
+  "verification_success": false
+}

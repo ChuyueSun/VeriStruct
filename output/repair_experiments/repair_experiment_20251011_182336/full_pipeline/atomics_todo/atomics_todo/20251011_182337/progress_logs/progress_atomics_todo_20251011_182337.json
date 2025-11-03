@@ -1,0 +1,87 @@
+{
+  "start_time": "2025-10-11T18:23:37.020872",
+  "steps": [
+    {
+      "name": "inv_inference",
+      "number": 1,
+      "start_time": "2025-10-11T18:23:57.991864",
+      "result": {
+        "compilation_error": false,
+        "verified": 4,
+        "errors": 1,
+        "verus_errors": 2,
+        "is_correct": false,
+        "code_length": 4005
+      },
+      "execution_time": 53.31976366043091,
+      "end_time": "2025-10-11T18:24:51.311635"
+    },
+    {
+      "name": "spec_inference",
+      "number": 2,
+      "start_time": "2025-10-11T18:24:51.311755",
+      "result": {
+        "compilation_error": false,
+        "verified": 4,
+        "errors": 1,
+        "verus_errors": 2,
+        "is_correct": false,
+        "code_length": 4020
+      },
+      "execution_time": 58.05821490287781,
+      "end_time": "2025-10-11T18:25:49.369974"
+    },
+    {
+      "name": "proof_generation",
+      "number": 3,
+      "start_time": "2025-10-11T18:25:49.370102",
+      "result": {
+        "compilation_error": false,
+        "verified": 4,
+        "errors": 1,
+        "verus_errors": 1,
+        "is_correct": false,
+        "code_length": 4038
+      },
+      "execution_time": 52.298972368240356,
+      "end_time": "2025-10-11T18:26:41.669078"
+    }
+  ],
+  "repair_rounds": [
+    {
+      "round_number": 1,
+      "start_time": "2025-10-11T18:26:41.669253",
+      "repairs": [
+        {
+          "error_type": "InvFailFront",
+          "repair_module": "repair_invariant",
+          "before_score": {
+            "compilation_error": false,
+            "verified": 4,
+            "errors": 1,
+            "verus_errors": 1
+          },
+          "after_score": {
+            "compilation_error": false,
+            "verified": 5,
+            "errors": 0,
+            "verus_errors": 0
+          },
+          "success": true,
+          "execution_time": 46.57592296600342
+        }
+      ],
+      "end_time": "2025-10-11T18:27:28.254737",
+      "execution_time": 46.585484
+    }
+  ],
+  "final_result": {
+    "compilation_error": false,
+    "verified": 5,
+    "errors": 0,
+    "verus_errors": 0,
+    "is_correct": true
+  },
+  "total_execution_time": 231.243531,
+  "end_time": "2025-10-11T18:27:28.264403"
+}

@@ -1,0 +1,31 @@
+```markdown
+Current State:
+- The BitMap struct is defined but lacks a proper “spec fn view”.
+- The functions (from, get_bit, set_bit, or) have “TODO: add requires and ensures”.
+- There is a pending “TODO: add proof” in set_bit(), indicating additional proof obligations.
+- The code explicitly references a “view” function and a class/struct data structure, so a View is needed.
+
+Dependencies:
+- The BitMap::view() function is central for specifying how the internal bits map to a mathematical sequence of bool.
+- Invariants in BitMap (if any) can reference or refine the view function.
+- The functions from, get_bit, set_bit, and or all depend on having correct specifications and potentially rely on the Bitmap invariants.
+
+```
+
+```markdown
+**Selected Workflow:** Full Sequence Workflow
+
+**Justification:**
+The code includes a struct BitMap and explicitly requires a “view” function (“TODO: implement view”). Per the guidelines, the presence of a view function and a struct triggers the Full Sequence Workflow. Since BitMap is a data structure, we also include the inv_inference step. Additionally, we have “TODO: add proof”, so we will append proof_generation at the end.
+
+**Execution Steps:**
+1. view_inference
+2. view_refinement
+3. inv_inference
+4. spec_inference
+5. proof_generation
+
+**Module Conditions:**
+- inv_inference: Yes – BitMap is a struct requiring possible invariants.
+- proof_generation: Yes – “TODO: add proof” is present in the code.
+```

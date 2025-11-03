@@ -1,0 +1,87 @@
+{
+  "benchmark_name": "atomics_todo",
+  "start_time": "2025-10-09T21:34:15.068692",
+  "end_time": "2025-10-09T21:36:54.734585",
+  "total_execution_time": 159.66589546203613,
+  "modules_activated": [
+    "inv_inference",
+    "spec_inference"
+  ],
+  "modules_count": 2,
+  "stages": {
+    "inv_inference": {
+      "step_number": 1,
+      "start_time": "2025-10-09T21:34:35.734637",
+      "end_time": "2025-10-09T21:35:32.613390",
+      "execution_time": 56.8787567615509,
+      "llm_calls": 0,
+      "iterations": 1,
+      "result": {
+        "compilation_error": false,
+        "verified": 4,
+        "errors": 1,
+        "verus_errors": 2,
+        "is_correct": false
+      }
+    },
+    "spec_inference": {
+      "step_number": 2,
+      "start_time": "2025-10-09T21:35:32.613512",
+      "end_time": "2025-10-09T21:36:54.733223",
+      "execution_time": 82.1197144985199,
+      "llm_calls": 0,
+      "iterations": 1,
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 1,
+        "is_correct": false
+      }
+    }
+  },
+  "llm_calls": {
+    "total": 0,
+    "by_stage": {},
+    "by_module": {},
+    "response_times": [],
+    "cache_hits": 0,
+    "cache_misses": 0
+  },
+  "iterations": {
+    "by_module": {},
+    "by_stage": {
+      "inv_inference": 1,
+      "spec_inference": 1
+    }
+  },
+  "repairs": {
+    "total_rounds": 0,
+    "total_repairs": 0,
+    "repairs_by_type": {},
+    "repairs_by_heuristic": {},
+    "successful_repairs": 0,
+    "failed_repairs": 0,
+    "repair_times": []
+  },
+  "errors": {
+    "initial_error_count": 999,
+    "final_error_count": 1,
+    "errors_by_type": {
+      "Other": 2
+    },
+    "errors_fixed_by_type": {}
+  },
+  "verification": {
+    "initial_verified": -1,
+    "final_verified": 4,
+    "initial_errors": 999,
+    "final_errors": 1,
+    "compilation_errors": 1
+  },
+  "code_metrics": {
+    "initial_code_length": 4033,
+    "final_code_length": 4007,
+    "code_changes": 26
+  }
+}

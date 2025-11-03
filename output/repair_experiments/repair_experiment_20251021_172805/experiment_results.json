@@ -1,0 +1,38 @@
+{
+  "full_pipeline": [
+    {
+      "benchmark": "rwlock_vstd_todo",
+      "configuration": "full_pipeline",
+      "success": true,
+      "timeout": false,
+      "exit_code": 0,
+      "execution_time": 684.6085386276245,
+      "log_file": "output/repair_experiments/repair_experiment_20251021_172805/full_pipeline/rwlock_vstd_todo/output.log",
+      "output_dir": "output/repair_experiments/repair_experiment_20251021_172805/full_pipeline/rwlock_vstd_todo"
+    }
+  ],
+  "no_repairs": [
+    {
+      "benchmark": "rwlock_vstd_todo",
+      "configuration": "no_repairs",
+      "success": true,
+      "timeout": false,
+      "exit_code": 0,
+      "execution_time": 84.51457476615906,
+      "log_file": "output/repair_experiments/repair_experiment_20251021_172805/no_repairs/rwlock_vstd_todo/output.log",
+      "output_dir": "output/repair_experiments/repair_experiment_20251021_172805/no_repairs/rwlock_vstd_todo"
+    }
+  ],
+  "baseline": [
+    {
+      "benchmark": "rwlock_vstd_todo",
+      "configuration": "baseline",
+      "success": true,
+      "timeout": false,
+      "exit_code": 0,
+      "execution_time": 184.29780459403992,
+      "log_file": "output/repair_experiments/repair_experiment_20251021_172805/baseline/rwlock_vstd_todo/output.log",
+      "output_dir": "output/repair_experiments/repair_experiment_20251021_172805/baseline/rwlock_vstd_todo"
+    }
+  ]
+}

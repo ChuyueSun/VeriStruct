@@ -1,0 +1,178 @@
+{
+  "benchmark_name": "vectors_todo",
+  "start_time": "2025-10-11T22:53:01.306492",
+  "end_time": "2025-10-11T23:04:55.961680",
+  "total_execution_time": 714.6551899909973,
+  "modules_activated": [
+    "spec_inference",
+    "proof_generation"
+  ],
+  "modules_count": 2,
+  "stages": {
+    "spec_inference": {
+      "step_number": 1,
+      "start_time": "2025-10-11T22:53:20.250872",
+      "end_time": "2025-10-11T22:54:23.660151",
+      "execution_time": 63.409282207489014,
+      "llm_calls": 0,
+      "iterations": 1,
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 1,
+        "is_correct": false
+      }
+    },
+    "proof_generation": {
+      "step_number": 2,
+      "start_time": "2025-10-11T22:54:23.660307",
+      "end_time": "2025-10-11T22:55:35.340923",
+      "execution_time": 71.68061995506287,
+      "llm_calls": 0,
+      "iterations": 1,
+      "result": {
+        "compilation_error": false,
+        "verified": 9,
+        "errors": 1,
+        "verus_errors": 2,
+        "is_correct": false
+      }
+    }
+  },
+  "llm_calls": {
+    "total": 0,
+    "by_stage": {},
+    "by_module": {},
+    "response_times": [],
+    "cache_hits": 0,
+    "cache_misses": 0
+  },
+  "iterations": {
+    "by_module": {},
+    "by_stage": {
+      "spec_inference": 1,
+      "proof_generation": 1
+    }
+  },
+  "repairs": {
+    "total_rounds": 6,
+    "total_repairs": 6,
+    "repairs_by_type": {
+      "PreCondFail": 6
+    },
+    "repairs_by_heuristic": {
+      "repair_precond": 6
+    },
+    "successful_repairs": 1,
+    "failed_repairs": 5,
+    "repair_times": [
+      {
+        "error_type": "PreCondFail",
+        "heuristic": "repair_precond",
+        "time": 80.81042051315308,
+        "success": false,
+        "before": {
+          "verified": 9,
+          "errors": 1
+        },
+        "after": {
+          "verified": 9,
+          "errors": 1
+        }
+      },
+      {
+        "error_type": "PreCondFail",
+        "heuristic": "repair_precond",
+        "time": 141.45572304725647,
+        "success": false,
+        "before": {
+          "verified": 9,
+          "errors": 1
+        },
+        "after": {
+          "verified": 9,
+          "errors": 1
+        }
+      },
+      {
+        "error_type": "PreCondFail",
+        "heuristic": "repair_precond",
+        "time": 86.07308912277222,
+        "success": false,
+        "before": {
+          "verified": 9,
+          "errors": 1
+        },
+        "after": {
+          "verified": 9,
+          "errors": 1
+        }
+      },
+      {
+        "error_type": "PreCondFail",
+        "heuristic": "repair_precond",
+        "time": 80.20120406150818,
+        "success": false,
+        "before": {
+          "verified": 9,
+          "errors": 1
+        },
+        "after": {
+          "verified": 9,
+          "errors": 1
+        }
+      },
+      {
+        "error_type": "PreCondFail",
+        "heuristic": "repair_precond",
+        "time": 84.48285984992981,
+        "success": false,
+        "before": {
+          "verified": 9,
+          "errors": 1
+        },
+        "after": {
+          "verified": 9,
+          "errors": 1
+        }
+      },
+      {
+        "error_type": "PreCondFail",
+        "heuristic": "repair_precond",
+        "time": 87.5323600769043,
+        "success": true,
+        "before": {
+          "verified": 9,
+          "errors": 1
+        },
+        "after": {
+          "verified": 10,
+          "errors": 0
+        }
+      }
+    ]
+  },
+  "errors": {
+    "initial_error_count": 999,
+    "final_error_count": 0,
+    "errors_by_type": {
+      "Other": 1
+    },
+    "errors_fixed_by_type": {
+      "PreCondFail": 1
+    }
+  },
+  "verification": {
+    "initial_verified": -1,
+    "final_verified": 10,
+    "initial_errors": 999,
+    "final_errors": 0,
+    "compilation_errors": 0
+  },
+  "code_metrics": {
+    "initial_code_length": 3017,
+    "final_code_length": 4089,
+    "code_changes": 1072
+  }
+}

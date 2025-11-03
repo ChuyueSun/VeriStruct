@@ -1,0 +1,93 @@
+{
+  "benchmark_name": "transfer_todo",
+  "start_time": "2025-11-01T18:36:10.740674",
+  "end_time": "2025-11-01T18:36:13.973628",
+  "total_execution_time": 3.2329559326171875,
+  "modules_activated": [
+    "spec_inference"
+  ],
+  "modules_count": 1,
+  "stages": {
+    "spec_inference": {
+      "step_number": 1,
+      "start_time": "2025-11-01T18:36:11.716187",
+      "end_time": "2025-11-01T18:36:13.972439",
+      "execution_time": 2.2562549114227295,
+      "llm_calls": 1,
+      "iterations": 1,
+      "result": {
+        "compilation_error": false,
+        "verified": 3,
+        "errors": 0,
+        "verus_errors": 0,
+        "is_correct": true
+      }
+    }
+  },
+  "llm_calls": {
+    "total": 2,
+    "by_stage": {
+      "planning": 1,
+      "spec_inference": 1
+    },
+    "by_module": {
+      "planner": 1,
+      "spec_inference": 1
+    },
+    "response_times": [
+      {
+        "stage": "planning",
+        "module": "planner",
+        "time": 0.00017714500427246094,
+        "cache_hit": true
+      },
+      {
+        "stage": "spec_inference",
+        "module": "spec_inference",
+        "time": 0.0002071857452392578,
+        "cache_hit": true
+      }
+    ],
+    "cache_hits": 2,
+    "cache_misses": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "by_call": []
+  },
+  "iterations": {
+    "by_module": {},
+    "by_stage": {
+      "spec_inference": 1
+    }
+  },
+  "repairs": {
+    "total_rounds": 0,
+    "total_repairs": 0,
+    "repairs_by_type": {},
+    "repairs_by_heuristic": {},
+    "successful_repairs": 0,
+    "failed_repairs": 0,
+    "repair_times": []
+  },
+  "errors": {
+    "initial_error_count": 2,
+    "final_error_count": 0,
+    "errors_by_type": {
+      "ArithmeticFlow": 2,
+      "AssertFail": 2
+    },
+    "errors_fixed_by_type": {}
+  },
+  "verification": {
+    "initial_verified": 1,
+    "final_verified": 3,
+    "initial_errors": 2,
+    "final_errors": 0,
+    "compilation_errors": 0
+  },
+  "code_metrics": {
+    "initial_code_length": 757,
+    "final_code_length": 933,
+    "code_changes": 176
+  }
+}

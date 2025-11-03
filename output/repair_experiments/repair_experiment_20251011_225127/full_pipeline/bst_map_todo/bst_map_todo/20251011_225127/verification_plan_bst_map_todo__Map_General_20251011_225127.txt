@@ -1,0 +1,33 @@
+```markdown
+Current State:
+- The code is a TreeMap and Node data structure with BST properties, which already includes a type invariant.
+- "View" is explicitly implemented for TreeMap, but the view function is not fully specified (TODO markers).
+- Multiple TODOs require adding specifications (requires/ensures) and proofs.
+- Thus, both View-related steps and invariant/spec additions are needed.
+
+Dependencies:
+- TreeMap’s correctness depends on Node’s BST property invariants.
+- The View trait requires a complete map representation method.
+- Many functions require well-formedness proofs and updated specifications.
+
+```
+
+```markdown
+**Selected Workflow:** Full Sequence Workflow
+
+**Justification:**
+We see an explicit "impl View for TreeMap<V>" which triggers the Full Sequence Workflow.
+Additionally, TreeMap and Node are structs requiring invariants, so the optional inv_inference step must be included.
+There are also TODOs for proofs, thus final proof_generation is needed.
+
+**Execution Steps:**
+1. view_inference
+2. view_refinement
+3. inv_inference
+4. spec_inference
+5. proof_generation
+
+**Module Conditions:**
+- inv_inference: Yes, because TreeMap and Node are data structures with invariants.
+- proof_generation: Yes, because there are “TODO: add proof” placeholders present.
+```

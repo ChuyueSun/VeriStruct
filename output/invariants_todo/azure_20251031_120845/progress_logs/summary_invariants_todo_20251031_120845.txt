@@ -1,0 +1,42 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/invariants_todo.rs
+Input File Name: invariants_todo.rs
+File ID: invariants_todo___Invariant_20251031_120845
+Output Directory: /home/chuyue/VerusAgent/output/invariants_todo/azure_20251031_120845
+Progress Log: /home/chuyue/VerusAgent/output/invariants_todo/azure_20251031_120845/progress_logs/progress_invariants_todo_20251031_120845.json
+Summary File: /home/chuyue/VerusAgent/output/invariants_todo/azure_20251031_120845/progress_logs/summary_invariants_todo_20251031_120845.txt
+
+Start time: 2025-10-31T12:08:45.312067
+End time: 2025-10-31T12:11:03.056759
+Total execution time: 137.74s
+
+## Final Result
+
+Verified: 2
+Errors: 0
+Verus Errors: 0
+Compilation Error: False
+Is Correct: True
+
+## Statistics
+
+Total steps: 2
+Total repair rounds: 0
+Total repairs attempted: 0
+Successful repairs: 0
+Average step time: 52.86s
+Average repair time: 0.00s
+
+## Steps
+
+Step 1: inv_inference
+  Time: 51.25s
+  Score: Verified=2, Errors=0, Verus Errors=0
+Step 2: spec_inference
+  Time: 54.47s
+  Score: Verified=2, Errors=0, Verus Errors=0
+
+## Repair Rounds

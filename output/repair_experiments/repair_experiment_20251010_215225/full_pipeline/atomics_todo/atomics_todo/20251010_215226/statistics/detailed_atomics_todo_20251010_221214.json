@@ -1,0 +1,199 @@
+{
+  "benchmark_name": "atomics_todo",
+  "start_time": "2025-10-10T21:52:26.391038",
+  "end_time": "2025-10-10T22:12:14.721817",
+  "total_execution_time": 1188.3307809829712,
+  "modules_activated": [
+    "inv_inference",
+    "spec_inference",
+    "proof_generation"
+  ],
+  "modules_count": 3,
+  "stages": {
+    "inv_inference": {
+      "step_number": 1,
+      "start_time": "2025-10-10T21:52:40.545070",
+      "end_time": "2025-10-10T21:53:45.197734",
+      "execution_time": 64.65266752243042,
+      "llm_calls": 0,
+      "iterations": 1,
+      "result": {
+        "compilation_error": false,
+        "verified": 4,
+        "errors": 1,
+        "verus_errors": 2,
+        "is_correct": false
+      }
+    },
+    "spec_inference": {
+      "step_number": 2,
+      "start_time": "2025-10-10T21:53:45.197863",
+      "end_time": "2025-10-10T21:54:47.726188",
+      "execution_time": 62.52832770347595,
+      "llm_calls": 0,
+      "iterations": 1,
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 1,
+        "is_correct": false
+      }
+    },
+    "proof_generation": {
+      "step_number": 3,
+      "start_time": "2025-10-10T21:54:47.726321",
+      "end_time": "2025-10-10T21:54:47.735182",
+      "execution_time": 0.008863210678100586,
+      "llm_calls": 0,
+      "iterations": 1,
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 1,
+        "is_correct": false
+      }
+    }
+  },
+  "llm_calls": {
+    "total": 0,
+    "by_stage": {},
+    "by_module": {},
+    "response_times": [],
+    "cache_hits": 0,
+    "cache_misses": 0
+  },
+  "iterations": {
+    "by_module": {},
+    "by_stage": {
+      "inv_inference": 1,
+      "spec_inference": 1,
+      "proof_generation": 1
+    }
+  },
+  "repairs": {
+    "total_rounds": 5,
+    "total_repairs": 6,
+    "repairs_by_type": {
+      "CannotCallFunc": 1,
+      "Other": 4,
+      "MismatchedType": 1
+    },
+    "repairs_by_heuristic": {
+      "repair_mode": 1,
+      "repair_syntax": 4,
+      "repair_type": 1
+    },
+    "successful_repairs": 1,
+    "failed_repairs": 5,
+    "repair_times": [
+      {
+        "error_type": "CannotCallFunc",
+        "heuristic": "repair_mode",
+        "time": 159.64954495429993,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 137.77210426330566,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 54.10708498954773,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "MismatchedType",
+        "heuristic": "repair_type",
+        "time": 0.03899788856506348,
+        "success": true,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 425.8719685077667,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 269.51430225372314,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      }
+    ]
+  },
+  "errors": {
+    "initial_error_count": 999,
+    "final_error_count": 1,
+    "errors_by_type": {
+      "Other": 2
+    },
+    "errors_fixed_by_type": {
+      "MismatchedType": 1
+    }
+  },
+  "verification": {
+    "initial_verified": -1,
+    "final_verified": 4,
+    "initial_errors": 999,
+    "final_errors": 1,
+    "compilation_errors": 1
+  },
+  "code_metrics": {
+    "initial_code_length": 4034,
+    "final_code_length": 4005,
+    "code_changes": 29
+  }
+}

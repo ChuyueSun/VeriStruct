@@ -1,0 +1,27 @@
+```markdown
+Current State:
+- The code is a binary search tree node struct requiring an invariant for BST correctness (“TODO: add invariant”).
+- Multiple function placeholders also request requires/ensures (“TODO: add requires and ensures”).
+- No explicit “View” trait implementation or “TODO: add View” is present.
+
+Dependencies:
+- The Node<V> struct needs an invariant describing BST ordering.
+- Each insert/delete/get function depends on the BST invariant and must specify pre- and post-conditions accordingly.
+
+```
+
+```markdown
+**Selected Workflow:** Invariant-First Workflow
+
+**Justification:**
+The code contains a struct (Node<V>) and explicitly needs invariants (BST property). It also has “TODO: add requires and ensures,” so both invariants and specifications are needed. There is no direct requirement to implement a “View” trait, ruling out the Full Sequence Workflow.
+
+**Execution Steps:**
+1. inv_inference
+2. spec_inference
+3. proof_generation
+
+**Module Conditions:**
+- inv_inference: Yes – input is a class/struct data structure needing BST invariants.
+- proof_generation: Yes – there is a “TODO: add invariant” indicating proofs are required.
+```

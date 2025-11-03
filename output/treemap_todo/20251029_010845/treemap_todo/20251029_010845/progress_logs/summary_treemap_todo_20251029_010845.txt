@@ -1,0 +1,86 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/treemap_todo.rs
+Input File Name: treemap_todo.rs
+File ID: treemap_todo__Map_General_20251029_010845
+Output Directory: /home/chuyue/VerusAgent/output/treemap_todo/20251029_010845/treemap_todo/20251029_010845
+Progress Log: /home/chuyue/VerusAgent/output/treemap_todo/20251029_010845/treemap_todo/20251029_010845/progress_logs/progress_treemap_todo_20251029_010845.json
+Summary File: /home/chuyue/VerusAgent/output/treemap_todo/20251029_010845/treemap_todo/20251029_010845/progress_logs/summary_treemap_todo_20251029_010845.txt
+
+Start time: 2025-10-29T01:08:45.569215
+End time: 2025-10-29T01:39:53.724520
+Total execution time: 1868.16s
+
+## Final Result
+
+Verified: 15
+Errors: 1
+Verus Errors: 1
+Compilation Error: False
+Is Correct: False
+
+## Statistics
+
+Total steps: 5
+Total repair rounds: 5
+Total repairs attempted: 5
+Successful repairs: 1
+Average step time: 259.19s
+Average repair time: 114.00s
+
+## Steps
+
+Step 1: view_inference
+  Time: 360.89s
+  Score: Verified=14, Errors=2, Verus Errors=3
+Step 2: view_refinement
+  Time: 360.76s
+  Score: Verified=14, Errors=2, Verus Errors=3
+Step 3: inv_inference
+  Time: 360.79s
+  Score: Verified=14, Errors=2, Verus Errors=3
+Step 4: spec_inference
+  Time: 105.14s
+  Score: Verified=-1, Errors=999, Verus Errors=1
+Step 5: proof_generation
+  Time: 108.39s
+  Score: Verified=-1, Errors=999, Verus Errors=1
+
+## Repair Rounds
+
+Round 1
+  Time: 98.51s
+  repair_syntax for Other
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 97.97s
+
+Round 2
+  Time: 108.27s
+  repair_syntax for Other
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=15, Errors=1, Verus Errors=1
+    Time: 107.73s
+
+Round 3
+  Time: 121.45s
+  repair_precond for PreCondFail
+    Before: Verified=15, Errors=1, Verus Errors=1
+    After: Verified=15, Errors=1, Verus Errors=1
+    Time: 121.45s
+
+Round 4
+  Time: 121.42s
+  repair_precond for PreCondFail
+    Before: Verified=15, Errors=1, Verus Errors=1
+    After: Verified=15, Errors=1, Verus Errors=1
+    Time: 121.42s
+
+Round 5
+  Time: 121.46s
+  repair_precond for PreCondFail
+    Before: Verified=15, Errors=1, Verus Errors=1
+    After: Verified=15, Errors=1, Verus Errors=1
+    Time: 121.45s

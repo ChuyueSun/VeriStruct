@@ -1,0 +1,172 @@
+{
+  "start_time": "2025-11-01T11:25:07.249433",
+  "steps": [
+    {
+      "name": "view_inference",
+      "number": 1,
+      "start_time": "2025-11-01T11:25:08.062828",
+      "result": {
+        "compilation_error": false,
+        "verified": 4,
+        "errors": 6,
+        "verus_errors": 25,
+        "is_correct": false,
+        "code_length": 8491
+      },
+      "execution_time": 2.980156183242798,
+      "end_time": "2025-11-01T11:25:11.042992"
+    },
+    {
+      "name": "view_refinement",
+      "number": 2,
+      "start_time": "2025-11-01T11:25:11.043115",
+      "result": {
+        "compilation_error": false,
+        "verified": 4,
+        "errors": 6,
+        "verus_errors": 25,
+        "is_correct": false,
+        "code_length": 8488
+      },
+      "execution_time": 3.56518292427063,
+      "end_time": "2025-11-01T11:25:14.608303"
+    },
+    {
+      "name": "inv_inference",
+      "number": 3,
+      "start_time": "2025-11-01T11:25:14.608444",
+      "result": {
+        "compilation_error": false,
+        "verified": 3,
+        "errors": 7,
+        "verus_errors": 26,
+        "is_correct": false,
+        "code_length": 8552
+      },
+      "execution_time": 3.5850770473480225,
+      "end_time": "2025-11-01T11:25:18.193525"
+    },
+    {
+      "name": "spec_inference",
+      "number": 4,
+      "start_time": "2025-11-01T11:25:18.193666",
+      "result": {
+        "compilation_error": false,
+        "verified": 3,
+        "errors": 7,
+        "verus_errors": 25,
+        "is_correct": false,
+        "code_length": 7554
+      },
+      "execution_time": 126.83347296714783,
+      "end_time": "2025-11-01T11:27:25.027142"
+    },
+    {
+      "name": "proof_generation",
+      "number": 5,
+      "start_time": "2025-11-01T11:27:25.027288",
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 1,
+        "is_correct": false,
+        "code_length": 8347
+      },
+      "execution_time": 171.18221735954285,
+      "end_time": "2025-11-01T11:30:16.209511"
+    }
+  ],
+  "repair_rounds": [
+    {
+      "round_number": 1,
+      "start_time": "2025-11-01T11:30:16.209835",
+      "repairs": [
+        {
+          "error_type": "MismatchedType",
+          "repair_module": "repair_type",
+          "before_score": {
+            "compilation_error": true,
+            "verified": -1,
+            "errors": 999,
+            "verus_errors": 1
+          },
+          "after_score": {
+            "compilation_error": false,
+            "verified": 8,
+            "errors": 2,
+            "verus_errors": 10
+          },
+          "success": true,
+          "execution_time": 1.153972864151001
+        }
+      ],
+      "end_time": "2025-11-01T11:30:17.373190",
+      "execution_time": 1.163355
+    },
+    {
+      "round_number": 2,
+      "start_time": "2025-11-01T11:30:17.381648",
+      "repairs": [
+        {
+          "error_type": "ConstructorFailTypeInvariant",
+          "repair_module": "repair_type",
+          "before_score": {
+            "compilation_error": false,
+            "verified": 8,
+            "errors": 2,
+            "verus_errors": 10
+          },
+          "after_score": {
+            "compilation_error": false,
+            "verified": 8,
+            "errors": 2,
+            "verus_errors": 10
+          },
+          "success": false,
+          "execution_time": 97.09895586967468
+        },
+        {
+          "error_type": "AssertFail",
+          "repair_module": "repair_assertion",
+          "before_score": {
+            "compilation_error": false,
+            "verified": 8,
+            "errors": 2,
+            "verus_errors": 10
+          },
+          "after_score": {
+            "compilation_error": false,
+            "verified": 8,
+            "errors": 2,
+            "verus_errors": 10
+          },
+          "success": false,
+          "execution_time": 56.75094985961914
+        },
+        {
+          "error_type": "TestAssertFail",
+          "repair_module": "repair_assertion",
+          "before_score": {
+            "compilation_error": false,
+            "verified": 8,
+            "errors": 2,
+            "verus_errors": 10
+          },
+          "after_score": {
+            "compilation_error": true,
+            "verified": -1,
+            "errors": 999,
+            "verus_errors": 1
+          },
+          "success": false,
+          "execution_time": 237.11531925201416
+        }
+      ],
+      "end_time": null,
+      "execution_time": null
+    }
+  ],
+  "final_result": null,
+  "total_execution_time": null
+}

@@ -1,0 +1,138 @@
+{
+  "benchmark_name": "bst_map_todo",
+  "start_time": "2025-10-10T15:55:04.891189",
+  "end_time": "2025-10-10T16:07:07.213771",
+  "total_execution_time": 722.3225846290588,
+  "modules_activated": [
+    "view_inference",
+    "view_refinement",
+    "inv_inference",
+    "spec_inference",
+    "proof_generation"
+  ],
+  "modules_count": 5,
+  "stages": {
+    "view_inference": {
+      "step_number": 1,
+      "start_time": "2025-10-10T15:55:22.206689",
+      "end_time": "2025-10-10T15:57:47.727870",
+      "execution_time": 145.52118492126465,
+      "llm_calls": 0,
+      "iterations": 1,
+      "result": {
+        "compilation_error": false,
+        "verified": 9,
+        "errors": 7,
+        "verus_errors": 17,
+        "is_correct": false
+      }
+    },
+    "view_refinement": {
+      "step_number": 2,
+      "start_time": "2025-10-10T15:57:47.727995",
+      "end_time": "2025-10-10T15:59:51.373052",
+      "execution_time": 123.64506077766418,
+      "llm_calls": 0,
+      "iterations": 1,
+      "result": {
+        "compilation_error": false,
+        "verified": 9,
+        "errors": 7,
+        "verus_errors": 17,
+        "is_correct": false
+      }
+    },
+    "inv_inference": {
+      "step_number": 3,
+      "start_time": "2025-10-10T15:59:51.373181",
+      "end_time": "2025-10-10T16:01:58.774960",
+      "execution_time": 127.40178179740906,
+      "llm_calls": 0,
+      "iterations": 1,
+      "result": {
+        "compilation_error": false,
+        "verified": 9,
+        "errors": 7,
+        "verus_errors": 17,
+        "is_correct": false
+      }
+    },
+    "spec_inference": {
+      "step_number": 4,
+      "start_time": "2025-10-10T16:01:58.775093",
+      "end_time": "2025-10-10T16:04:54.689963",
+      "execution_time": 175.9148724079132,
+      "llm_calls": 0,
+      "iterations": 1,
+      "result": {
+        "compilation_error": false,
+        "verified": 8,
+        "errors": 8,
+        "verus_errors": 17,
+        "is_correct": false
+      }
+    },
+    "proof_generation": {
+      "step_number": 5,
+      "start_time": "2025-10-10T16:04:54.690104",
+      "end_time": "2025-10-10T16:07:07.204424",
+      "execution_time": 132.51432275772095,
+      "llm_calls": 0,
+      "iterations": 1,
+      "result": {
+        "compilation_error": false,
+        "verified": 8,
+        "errors": 8,
+        "verus_errors": 17,
+        "is_correct": false
+      }
+    }
+  },
+  "llm_calls": {
+    "total": 0,
+    "by_stage": {},
+    "by_module": {},
+    "response_times": [],
+    "cache_hits": 0,
+    "cache_misses": 0
+  },
+  "iterations": {
+    "by_module": {},
+    "by_stage": {
+      "view_inference": 1,
+      "view_refinement": 1,
+      "inv_inference": 1,
+      "spec_inference": 1,
+      "proof_generation": 1
+    }
+  },
+  "repairs": {
+    "total_rounds": 0,
+    "total_repairs": 0,
+    "repairs_by_type": {},
+    "repairs_by_heuristic": {},
+    "successful_repairs": 0,
+    "failed_repairs": 0,
+    "repair_times": []
+  },
+  "errors": {
+    "initial_error_count": 999,
+    "final_error_count": 7,
+    "errors_by_type": {
+      "Other": 2
+    },
+    "errors_fixed_by_type": {}
+  },
+  "verification": {
+    "initial_verified": -1,
+    "final_verified": 9,
+    "initial_errors": 999,
+    "final_errors": 7,
+    "compilation_errors": 0
+  },
+  "code_metrics": {
+    "initial_code_length": 15805,
+    "final_code_length": 15868,
+    "code_changes": 63
+  }
+}

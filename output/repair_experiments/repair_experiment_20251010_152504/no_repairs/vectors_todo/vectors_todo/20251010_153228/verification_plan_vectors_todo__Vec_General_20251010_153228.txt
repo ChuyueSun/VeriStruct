@@ -1,0 +1,29 @@
+```markdown
+## 1. Analysis Summary
+
+Current State:
+- Multiple functions (binary_search, reverse, binary_search_no_spinoff) have "TODO: add specification" placeholders.
+- There are also "TODO: add invariants" placeholders in loop bodies, indicating the need for loop proofs or invariants.
+- No user-defined struct or class data structure is present; only standard library Vec is used.
+
+Dependencies:
+- The primary verification need is to add appropriate requires/ensures specs and loop invariants for these functions.
+- Proof obligations arise from fulfilling these specification and invariant requirements.
+
+## 2. Verification Plan
+
+**Selected Workflow:** Specification-Only Workflow
+
+**Justification:**
+- No custom data structure means inv_inference is not needed.
+- No mention of "View" or view-related TODOs disqualifies the Full Sequence Workflow.
+- The code specifically requires function specs ("TODO: add specification"), making the Specification-Only Workflow appropriate.
+
+**Execution Steps:**
+1. spec_inference
+2. proof_generation (added because "TODO: add invariants" appears in the code)
+
+**Module Conditions:**
+- inv_inference: No (no custom class/struct data structure)
+- proof_generation: Yes (due to "TODO: add invariants" markers)
+```

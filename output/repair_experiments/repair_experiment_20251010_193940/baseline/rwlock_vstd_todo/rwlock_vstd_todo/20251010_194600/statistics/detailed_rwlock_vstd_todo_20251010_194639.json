@@ -1,0 +1,70 @@
+{
+  "benchmark_name": "rwlock_vstd_todo",
+  "start_time": "2025-10-10T19:46:00.896418",
+  "end_time": "2025-10-10T19:46:39.815271",
+  "total_execution_time": 38.91885542869568,
+  "modules_activated": [
+    "baseline"
+  ],
+  "modules_count": 1,
+  "stages": {
+    "baseline": {
+      "step_number": 1,
+      "start_time": "2025-10-10T19:46:01.690869",
+      "end_time": "2025-10-10T19:46:39.806059",
+      "execution_time": 38.115192890167236,
+      "llm_calls": 0,
+      "iterations": 1,
+      "result": {
+        "compilation_error": false,
+        "verified": 2,
+        "errors": 0,
+        "verus_errors": 0,
+        "is_correct": true
+      }
+    }
+  },
+  "llm_calls": {
+    "total": 0,
+    "by_stage": {},
+    "by_module": {},
+    "response_times": [],
+    "cache_hits": 0,
+    "cache_misses": 0
+  },
+  "iterations": {
+    "by_module": {},
+    "by_stage": {
+      "baseline": 1
+    }
+  },
+  "repairs": {
+    "total_rounds": 0,
+    "total_repairs": 0,
+    "repairs_by_type": {},
+    "repairs_by_heuristic": {},
+    "successful_repairs": 0,
+    "failed_repairs": 0,
+    "repair_times": []
+  },
+  "errors": {
+    "initial_error_count": 999,
+    "final_error_count": 0,
+    "errors_by_type": {
+      "Other": 1
+    },
+    "errors_fixed_by_type": {}
+  },
+  "verification": {
+    "initial_verified": -1,
+    "final_verified": 2,
+    "initial_errors": 999,
+    "final_errors": 0,
+    "compilation_errors": 0
+  },
+  "code_metrics": {
+    "initial_code_length": 1115,
+    "final_code_length": 1117,
+    "code_changes": 2
+  }
+}

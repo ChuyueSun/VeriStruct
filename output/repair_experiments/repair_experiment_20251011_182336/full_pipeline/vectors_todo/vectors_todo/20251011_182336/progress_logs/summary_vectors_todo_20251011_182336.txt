@@ -1,0 +1,113 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/vectors_todo.rs
+Input File Name: vectors_todo.rs
+File ID: vectors_todo__Vec_General_20251011_182336
+Output Directory: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/full_pipeline/vectors_todo/vectors_todo/20251011_182336
+Progress Log: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/full_pipeline/vectors_todo/vectors_todo/20251011_182336/progress_logs/progress_vectors_todo_20251011_182336.json
+Summary File: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/full_pipeline/vectors_todo/vectors_todo/20251011_182336/progress_logs/summary_vectors_todo_20251011_182336.txt
+
+Start time: 2025-10-11T18:23:36.970639
+End time: 2025-10-11T18:50:31.450415
+Total execution time: 1614.48s
+
+## Final Result
+
+Verified: -1
+Errors: 999
+Verus Errors: 1
+Compilation Error: True
+Is Correct: False
+
+## Statistics
+
+Total steps: 2
+Total repair rounds: 5
+Total repairs attempted: 14
+Successful repairs: 4
+Average step time: 337.71s
+Average repair time: 66.07s
+
+## Steps
+
+Step 1: spec_inference
+  Time: 675.41s
+  Score: Verified=-1, Errors=999, Verus Errors=1
+Step 2: proof_generation
+  Time: 0.01s
+  Score: Verified=-1, Errors=999, Verus Errors=1
+
+## Repair Rounds
+
+Round 1
+  Time: 61.66s
+  repair_syntax for Other
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=5, Errors=5, Verus Errors=21
+    Time: 61.02s
+
+Round 2
+  Time: 411.48s
+  repair_precond for PreCondFailVecLen
+    Before: Verified=5, Errors=5, Verus Errors=21
+    After: Verified=5, Errors=5, Verus Errors=19
+    Time: 62.94s
+  repair_arithmetic for ArithmeticFlow
+    Before: Verified=5, Errors=5, Verus Errors=19
+    After: Verified=6, Errors=4, Verus Errors=8
+    Time: 85.13s
+  repair_decrease for DecFailEnd
+    Before: Verified=6, Errors=4, Verus Errors=8
+    After: Verified=6, Errors=4, Verus Errors=8
+    Time: 79.90s
+  repair_assertion for AssertFail
+    Before: Verified=6, Errors=4, Verus Errors=8
+    After: Verified=6, Errors=4, Verus Errors=8
+    Time: 29.17s
+  repair_precond for PreCondFail
+    Before: Verified=6, Errors=4, Verus Errors=8
+    After: Verified=6, Errors=4, Verus Errors=8
+    Time: 77.59s
+  repair_postcond for PostCondFail
+    Before: Verified=6, Errors=4, Verus Errors=8
+    After: Verified=6, Errors=4, Verus Errors=8
+    Time: 76.76s
+
+Round 3
+  Time: 234.44s
+  repair_precond for PreCondFailVecLen
+    Before: Verified=6, Errors=4, Verus Errors=8
+    After: Verified=6, Errors=4, Verus Errors=5
+    Time: 60.60s
+  repair_precond for PreCondFail
+    Before: Verified=6, Errors=4, Verus Errors=5
+    After: Verified=6, Errors=4, Verus Errors=5
+    Time: 80.39s
+  repair_postcond for PostCondFail
+    Before: Verified=6, Errors=4, Verus Errors=5
+    After: Verified=6, Errors=4, Verus Errors=6
+    Time: 93.45s
+
+Round 4
+  Time: 110.23s
+  repair_assertion for AssertFail
+    Before: Verified=6, Errors=4, Verus Errors=6
+    After: Verified=6, Errors=4, Verus Errors=6
+    Time: 28.28s
+  repair_postcond for PostCondFail
+    Before: Verified=6, Errors=4, Verus Errors=6
+    After: Verified=6, Errors=4, Verus Errors=6
+    Time: 81.95s
+
+Round 5
+  Time: 107.80s
+  repair_assertion for AssertFail
+    Before: Verified=6, Errors=4, Verus Errors=6
+    After: Verified=6, Errors=4, Verus Errors=6
+    Time: 33.50s
+  repair_postcond for PostCondFail
+    Before: Verified=6, Errors=4, Verus Errors=6
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 74.30s

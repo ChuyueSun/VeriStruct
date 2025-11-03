@@ -1,0 +1,24 @@
+Current State:
+- The code contains a struct (FixedParity) that implements a trait defining an invariant function, but the invariant body is missing ("// TODO: add specification").
+- There is a specification-related placeholder present ("TODO: add specification").
+- No explicit references to a "View" implementation or "TODO: add View" appear in the code.
+
+Dependencies:
+- The FixedParity struct is used by RwLockPredicate<u64> to enforce constraints (inv function) on the locked value.
+- The correctness of test(n: u64) relies on the data-invariant stipulating that parity matches the integer’s modulo-2 result.
+
+```
+
+```markdown
+**Selected Workflow:** Invariant-First Workflow
+
+**Justification:**
+The code has a struct (FixedParity) needing a type invariant, and there is a specification-related placeholder ("TODO: add specification"). However, there is no explicit mention of needing a View function. This satisfies the conditions for the Invariant-First Workflow (inv_inference → spec_inference).
+
+**Execution Steps:**
+1. inv_inference
+2. spec_inference
+
+**Module Conditions:**
+- inv_inference: Yes – FixedParity is a data structure requiring a type invariant.
+- proof_generation: No – There is no "TODO: add proof" or "TODO: add invariants" marker in the code.

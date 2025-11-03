@@ -1,0 +1,38 @@
+{
+  "full_pipeline": [
+    {
+      "benchmark": "transfer_todo",
+      "configuration": "full_pipeline",
+      "success": true,
+      "timeout": false,
+      "exit_code": 0,
+      "execution_time": 562.7293128967285,
+      "log_file": "output/repair_experiments/repair_experiment_20251021_172809/full_pipeline/transfer_todo/output.log",
+      "output_dir": "output/repair_experiments/repair_experiment_20251021_172809/full_pipeline/transfer_todo"
+    }
+  ],
+  "no_repairs": [
+    {
+      "benchmark": "transfer_todo",
+      "configuration": "no_repairs",
+      "success": true,
+      "timeout": false,
+      "exit_code": 0,
+      "execution_time": 41.69258666038513,
+      "log_file": "output/repair_experiments/repair_experiment_20251021_172809/no_repairs/transfer_todo/output.log",
+      "output_dir": "output/repair_experiments/repair_experiment_20251021_172809/no_repairs/transfer_todo"
+    }
+  ],
+  "baseline": [
+    {
+      "benchmark": "transfer_todo",
+      "configuration": "baseline",
+      "success": true,
+      "timeout": false,
+      "exit_code": 0,
+      "execution_time": 160.9551384449005,
+      "log_file": "output/repair_experiments/repair_experiment_20251021_172809/baseline/transfer_todo/output.log",
+      "output_dir": "output/repair_experiments/repair_experiment_20251021_172809/baseline/transfer_todo"
+    }
+  ]
+}

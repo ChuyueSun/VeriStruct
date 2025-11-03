@@ -1,0 +1,697 @@
+Your mission is to fix the syntax error in the following Verus code.
+
+Look carefully at the error message and location to identify the syntax issue. Common syntax errors include:
+1. Missing or misplaced parentheses, braces, or brackets
+2. Missing or incorrect semicolons or commas
+3. Incorrect use of operators or methods
+4. Incorrect function or method call syntax
+5. Incorrect use of generics or type parameters
+6. Incorrect use of Verus-specific syntax (like @, spec, proof, etc.)
+
+Fix ONLY the part of the code with the syntax error, and leave the rest unchanged.
+Response with the Rust code only, do not include any explanation.
+
+# Verus Common Knowledge
+
+## Important Notes
+- ALWAYS use parentheses whenever possible for clarity!
+- Don't delete existing non-buggy `#[trigger]`!
+- Don't change "unwind" to `(unwind) as bool`!
+- Return the complete modified Rust code in your response without explanations.
+- Keep top level docstrings at the top of the file, before `verus! {`. Do not place them after the `verus! {` declaration.
+- Don't change any function signatures.
+
+## Spec Functions
+1. No Direct Method Calls:
+   In a spec function, you cannot directly call instance methods such as vector.is_full().
+2. Use the @ Operator:
+   To invoke methods on a variable within a spec, first convert it to its specification-level representation View with @.
+3. Always use vector.len() instead of vector@.len().
+4. Simplify Boolean Conjunctions:
+   When combining multiple conditions, avoid excessive &&&. Fewer (or well-structured) conjunctions make the spec code easier to read and debug.
+5. Parentheses Usage:
+   ALWAYS wrap conditions in parentheses, even for simple expressions. This makes precedence explicit and prevents errors.
+
+## Proof Blocks - CRITICAL SYNTAX RULES
+
+**🚫 NEVER use executable control flow (if/else/match) inside `proof { }` blocks!**
+
+Proof blocks are spec-level contexts. They can only contain:
+- `assert(...)` statements
+- `assume(...)` statements
+- Lemma/proof function calls
+- Variable bindings with spec expressions
+
+❌ **WRONG - Executable if/else in proof:**
+```rust
+proof {
+    if condition { assert(x); } else { assert(y); }  // SYNTAX ERROR!
+}
+```
+
+✅ **CORRECT - Use implication instead:**
+```rust
+proof {
+    assert(condition ==> x);
+    assert(!condition ==> y);
+}
+```
+
+❌ **WRONG - Executable match in proof:**
+```rust
+proof {
+    match opt { Some(v) => assert(v > 0), None => {} }  // SYNTAX ERROR!
+}
+```
+
+✅ **CORRECT - Use implication or spec-level reasoning:**
+```rust
+proof {
+    assert(opt.is_Some() ==> opt.unwrap() > 0);
+}
+```
+
+## Operators
+Verus extends Rust logical operators with low-precedence forms that are especially helpful in specification code:
+
+Standard Operators: &&, ||, ==>, <==>
+Low-Precedence Variants: &&& and |||
+
+The meaning of &&& is the same as && (logical AND), and ||| is the same as || (logical OR), but with lower precedence. This allows you to write conditions in a "bulleted list" style that remains grouped in a logical manner:
+
+```
+&&& a ==> b
+&&& c
+&&& d <==> e && f
+```
+
+is equivalent to:
+
+```
+(a ==> b) && c && (d <==> (e && f))
+```
+
+Note:
+- Implication (==>) and equivalence (<==>) bind more tightly than &&& and |||.
+- Using &&&/||| can make long specifications clearer by grouping logical clauses neatly.
+
+
+# Verus Sequence Knowledge
+
+Seq<T> is a mathematical sequence type used in specifications:
+
+- Building: Seq::empty(), seq![x, y, z], Seq::singleton(x)
+- Length: s.len()
+- Indexing: s[i] (0-based)
+- Subrange: s.subrange(lo, hi) gives elements from index lo (inclusive) to hi (exclusive)
+- Concatenation: s1 + s2
+- Update: s.update(i, v) returns a new sequence with index i updated to value v
+- Contains: s.contains(v) checks if v is in the sequence
+- Push/pop: s.push(v), s.pop() (returns new sequence, doesn't modify original)
+- Equality: Use `=~=` for sequence equality, NOT `==` (e.g., `seq1 =~= seq2`, `self@.0 =~= old(self)@.0.subrange(1, (old(self)@.0.len()) as int)`)
+
+You can use forall or exists for properties over sequences.
+
+## CRITICAL: Postconditions for Seq<T> Update Operations
+
+**For functions that update a single element in a sequence-based view**:
+
+**✅ PREFER** - Use `.update()` for succinct, provable specifications:
+```rust
+fn update_element(&mut self, idx: usize, value: T)
+    requires
+        idx < old(self)@.len(),
+    ensures
+        self@ == old(self)@.update(idx as int, value),  // ✅ Succinct!
+```
+
+**❌ AVOID** - Verbose element-wise specifications (makes proofs much harder):
+```rust
+ensures
+    self@.len() == old(self)@.len(),
+    forall|i: int| 0 <= i && i < self@.len() && i != idx as int ==> self@[i] == old(self)@[i],
+    self@[idx as int] == value,
+```
+
+**Why `.update()` is better**:
+1. More concise and readable
+2. Directly matches proof patterns (pairs with `assert_seqs_equal!`)
+3. Easier for Verus SMT solver to reason about
+4. Standard pattern in Verus for sequence modifications
+
+**When to use this pattern**:
+- Any function that modifies exactly one position in a Seq-based view
+- After operations that update a single element (e.g., `self.data.set(index, value)`)
+- Functions with postconditions about changing one element while preserving others
+
+## Subrange Usage
+
+1. Cast indices to `int`: `self.head as int`, not just `self.head`
+2. Use `.subrange(start, end)`, not `seq[start..end]`
+3. Wrap complex expressions: `(..).subrange((expression) as int, ...)`
+4. For full length: `(sequence.len()) as int`
+
+
+# Verus Map Knowledge
+
+## CRITICAL: Extensional Equality (=~=) for Maps ⚠️
+
+**ALWAYS use `=~=` for comparing Map types in specifications:**
+
+- ✅ **CORRECT**: `map1 =~= map2`
+- ❌ **WRONG**: `map1 == map2`
+
+**Why**: `=~=` is extensional equality that Verus reasons about effectively. Using `==` for maps will often fail verification even when the maps are logically equal.
+
+### Common Mistakes to Avoid
+
+```rust
+// ❌ WRONG - will fail verification:
+ensures self.as_map() == old(self).as_map().insert(key, value)
+ensures result_map == original_map.remove(key)
+ensures my_map_fn(*data) == my_map_fn(*old(data)).update(...)
+
+// ✅ CORRECT - will verify:
+ensures self.as_map() =~= old(self).as_map().insert(key, value)
+ensures result_map =~= original_map.remove(key)
+ensures my_map_fn(*data) =~= my_map_fn(*old(data)).update(...)
+```
+
+### Examples in Different Contexts
+
+```rust
+// In struct methods with View
+impl<K, V> MyMap<K, V> {
+    pub fn insert(&mut self, key: K, value: V)
+        ensures
+            self@ =~= old(self)@.insert(key, value)  // ✅ Use =~=
+}
+
+// In helper functions
+fn update_mapping<K, V>(map: &mut Map<K, V>, key: K, value: V)
+    ensures
+        *map =~= old(map).insert(key, value)  // ✅ Use =~=
+
+// In functions with custom map conversions
+fn modify_structure<T>(data: &mut SomeType<T>, key: u64, value: T)
+    ensures
+        data.to_map() =~= old(data).to_map().insert(key, value)  // ✅
+```
+
+---
+
+## Map<K, V> - Mathematical Map Type
+
+Map<K, V> is a mathematical map type used in specifications:
+
+### Construction
+- `Map::empty()` - Create empty map
+- `Map::new(...)` - Create map (if supported)
+
+### Operations (Return New Map)
+- `map.insert(key, value)` - Returns new map with key→value added/updated
+- `map.remove(key)` - Returns new map with key removed (if it existed)
+- `map.union_prefer_right(other)` - Union of two maps, preferring values from right on conflicts
+
+### Queries
+- `map[key]` - Get value for key (requires key exists in domain)
+- `map.dom()` - Returns `Set<K>` of all keys in the map
+- `map.dom().contains(key)` - Check if key exists in map
+
+### Common Patterns
+
+#### Checking Key Existence
+```rust
+// Check if key exists
+if map.dom().contains(key) {
+    let value = map[key];  // Safe - key is in domain
+}
+
+// In specifications
+requires map.dom().contains(key)
+ensures result == map[key]
+```
+
+#### Map Updates in Postconditions
+```rust
+// Insertion
+ensures self@ =~= old(self)@.insert(key, value)
+
+// Deletion
+ensures self@ =~= old(self)@.remove(key)
+
+// Conditional update
+ensures
+    if condition {
+        self@ =~= old(self)@.insert(key, new_value)
+    } else {
+        self@ =~= old(self)@
+    }
+```
+
+#### Map Equality Assertions
+```rust
+// In proof blocks
+assert(map1 =~= map2);  // ✅ Correct
+
+// In ensures
+ensures
+    map1 =~= map2,
+    map1.dom() == map2.dom(),  // Set equality uses ==
+```
+
+### Key-Value Relationships
+```rust
+// Accessing values
+ensures
+    result_map.dom().contains(key) ==> result_map[key] == value
+
+// Comparing with original
+ensures
+    forall |k| result_map.dom().contains(k) ==>
+        result_map[k] == original_map[k]
+```
+
+---
+
+## Important Notes
+
+### Equality Operators Summary
+
+| Type | Equality Operator | Example |
+|------|------------------|---------|
+| **Map<K, V>** | `=~=` | `map1 =~= map2` |
+| **Seq<T>** | `=~=` | `seq1 =~= seq2` |
+| **Set<T>** | `==` or `=~=` | Both work for sets |
+| **Primitive types** | `==` | `x == y` |
+| **Struct fields** | `==` | `self.field == value` |
+
+### When to Use Each
+
+- **`=~=`**: Use for Map, Seq, and other collection types in specifications
+- **`==`**: Use for primitive types, booleans, integers, and struct field comparisons
+
+### Common Verification Failures
+
+If you see "postcondition not satisfied" with map comparisons:
+1. Check if you used `==` instead of `=~=`
+2. Verify the map operations (insert/remove) are correct
+3. Ensure all required keys are in the domain
+
+---
+
+## Complete Example: Data Structure with Map Representation
+
+```rust
+// Generic example (not specific to any benchmark)
+pub struct MyDataStructure<K, V> {
+    // ... internal fields ...
+}
+
+impl<K, V> MyDataStructure<K, V> {
+    // Specification function that converts structure to map
+    pub spec fn to_map(self) -> Map<K, V> {
+        // ... conversion logic ...
+    }
+
+    pub fn insert(&mut self, key: K, value: V)
+        requires
+            old(self).well_formed(),
+        ensures
+            self.well_formed(),
+            self.to_map() =~= old(self).to_map().insert(key, value)  // ✅ Use =~=
+    {
+        // ... implementation ...
+    }
+
+    pub fn remove(&mut self, key: K)
+        requires
+            old(self).well_formed(),
+        ensures
+            self.well_formed(),
+            self.to_map() =~= old(self).to_map().remove(key)  // ✅ Use =~=
+    {
+        // ... implementation ...
+    }
+
+    pub fn get(&self, key: K) -> (result: Option<&V>)
+        requires
+            self.well_formed(),
+        ensures
+            result == (if self.to_map().dom().contains(key) {
+                Some(&self.to_map()[key])
+            } else {
+                None
+            })
+    {
+        // ... implementation ...
+    }
+}
+```
+
+**Key Point**: All insert/remove operations use `=~=` to compare map states before and after!
+
+
+
+# Verus Set Usage Guide
+
+## Overview
+`Set<A>` is a specification type representing mathematical sets. Sets can be finite or infinite and are used primarily in specifications (spec functions, requires/ensures clauses).
+
+## Construction
+
+```rust
+// Empty set
+let s1 = Set::<A>::empty();
+
+// Full set (all elements of type A)
+let s2 = Set::<A>::full();
+
+// Set from predicate
+let s3 = Set::new(|x: nat| x < 10);
+
+// Set literal using macro
+let s4 = set![1, 2, 3, 4];
+```
+
+## Core Operations
+
+```rust
+// Check membership
+s.contains(x)          // returns bool
+s has x                // alternative syntax
+
+// Insert/remove elements
+s.insert(x)            // returns new set with x added
+s.remove(x)            // returns new set with x removed
+
+// Set operations
+s1.union(s2)           // or s1 + s2
+s1.intersect(s2)       // or s1 * s2
+s1.difference(s2)      // or s1 - s2
+s.complement()         // returns complement of s
+s.filter(f)            // filter by predicate f
+
+// Subset relation
+s1.subset_of(s2)       // or s1 <= s2
+```
+
+## Finite Sets
+
+```rust
+// Check finiteness
+s.finite()             // returns bool
+
+// Operations on finite sets
+s.len()                // cardinality (requires s.finite())
+s.choose()             // picks arbitrary element
+
+// Useful predicates
+s.disjoint(s2)         // s and s2 have no common elements
+```
+
+## Equality
+
+Use extensional equality `=~=` to compare sets:
+```rust
+ensures s1 =~= s2      // s1 and s2 contain same elements
+```
+
+## Common Axioms
+
+Key broadcast axioms automatically available:
+- `axiom_set_insert_same`: `s.insert(a).contains(a)`
+- `axiom_set_remove_same`: `!s.remove(a).contains(a)`
+- `axiom_set_union`: `s1.union(s2).contains(a) == (s1.contains(a) || s2.contains(a))`
+- `axiom_set_ext_equal`: `s1 =~= s2 <==> forall|a| s1.contains(a) == s2.contains(a)`
+
+Use `broadcast use group_set_axioms;` to enable all set axioms in a proof block.
+
+## Example Usage
+
+```rust
+proof fn example_set_proof() {
+    let s1 = set![1, 2, 3];
+    let s2 = set![3, 4, 5];
+
+    assert(s1.insert(4).contains(4));
+    assert(s1.union(s2).contains(1));
+    assert(s1.intersect(s2) =~= set![3]);
+    assert(s1.finite() && s1.len() == 3);
+}
+```
+
+
+
+additional knowledge:
+IMPORTANT:
+1. Don't change the anything in immutable function(s): . Instead, consider adjusting the preconditions or postconditions of other functions or methods.
+2. Don't delete existing non-buggy `#[trigger]`, `use` statements, main function.
+
+
+---
+
+Syntax error:
+```
+the trait bound `bool: builtin::Integer` is not satisfied (the trait `builtin::Integer` is not implemented for `bool`)
+                0 <= i < ret@.len()
+                === ret@[i] == (((v@[i / 64]) >> (i % 64)) & 0x1) == 1
+
+{"$message_type":"diagnostic","message":"unused import: `vstd::seq_lib::*`","code":{"code":"unused_imports","explanation":null},"level":"warning","spans":[{"file_name":"<TMP_PATH>","byte_start":125,"byte_end":141,"line_start":4,"line_end":4,"column_start":5,"column_end":21,"is_primary":true,"text":[{"text":"use vstd::seq_lib::*;","highlight_start":5,"highlight_end":21}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[{"message":"`#[warn(unused_imports)]` on by default","code":null,"level":"note","spans":[],"children":[],"rendered":null},{"message":"remove the whole `use` item","code":null,"level":"help","spans":[{"file_name":"<TMP_PATH>","byte_start":121,"byte_end":143,"line_start":4,"line_end":5,"column_start":1,"column_end":1,"is_primary":true,"text":[{"text":"use vstd::seq_lib::*;","highlight_start":1,"highlight_end":22},{"text":"","highlight_start":1,"highlight_end":1}],"label":null,"suggested_replacement":"","suggestion_applicability":"MachineApplicable","expansion":null}],"children":[],"rendered":null}],"rendered":"warning: unused import: `vstd::seq_lib::*`\n --> <TMP_PATH>:4:5\n  |\n4 | use vstd::seq_lib::*;\n  |     ^^^^^^^^^^^^^^^^\n  |\n  = note: `#[warn(unused_imports)]` on by default\n\n"}
+{"$message_type":"diagnostic","message":"the trait bound `bool: builtin::Integer` is not satisfied","code":{"code":"E0277","explanation":"You tried to use a type which doesn't implement some trait in a place which\nexpected that trait.\n\nErroneous code example:\n\n```compile_fail,E0277\n// here we declare the Foo trait with a bar method\ntrait Foo {\n    fn bar(&self);\n}\n\n// we now declare a function which takes an object implementing the Foo trait\nfn some_func<T: Foo>(foo: T) {\n    foo.bar();\n}\n\nfn main() {\n    // we now call the method with the i32 type, which doesn't implement\n    // the Foo trait\n    some_func(5i32); // error: the trait bound `i32 : Foo` is not satisfied\n}\n```\n\nIn order to fix this error, verify that the type you're using does implement\nthe trait. Example:\n\n```\ntrait Foo {\n    fn bar(&self);\n}\n\n// we implement the trait on the i32 type\nimpl Foo for i32 {\n    fn bar(&self) {}\n}\n\nfn some_func<T: Foo>(foo: T) {\n    foo.bar(); // we can now use this method since i32 implements the\n               // Foo trait\n}\n\nfn main() {\n    some_func(5i32); // ok!\n}\n```\n\nOr in a generic context, an erroneous code example would look like:\n\n```compile_fail,E0277\nfn some_func<T>(foo: T) {\n    println!(\"{:?}\", foo); // error: the trait `core::fmt::Debug` is not\n                           //        implemented for the type `T`\n}\n\nfn main() {\n    // We now call the method with the i32 type,\n    // which *does* implement the Debug trait.\n    some_func(5i32);\n}\n```\n\nNote that the error here is in the definition of the generic function. Although\nwe only call it with a parameter that does implement `Debug`, the compiler\nstill rejects the function. It must work with all possible input types. In\norder to make this example compile, we need to restrict the generic type we're\naccepting:\n\n```\nuse std::fmt;\n\n// Restrict the input type to types that implement Debug.\nfn some_func<T: fmt::Debug>(foo: T) {\n    println!(\"{:?}\", foo);\n}\n\nfn main() {\n    // Calling the method is still fine, as i32 implements Debug.\n    some_func(5i32);\n\n    // This would fail to compile now:\n    // struct WithoutDebug;\n    // some_func(WithoutDebug);\n}\n```\n\nRust only looks at the signature of the called function, as such it must\nalready specify all requirements that will be used for every type parameter.\n"},"level":"error","spans":[{"file_name":"<TMP_PATH>","byte_start":2587,"byte_end":2634,"line_start":87,"line_end":88,"column_start":17,"column_end":28,"is_primary":true,"text":[{"text":"                0 <= i < ret@.len()","highlight_start":17,"highlight_end":36},{"text":"                === ret@[i] == (((v@[i / 64]) >> (i % 64)) & 0x1) == 1","highlight_start":1,"highlight_end":28}],"label":"the trait `builtin::Integer` is not implemented for `bool`","suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[{"message":"required by a bound in `builtin::spec_chained_value`","code":null,"level":"note","spans":[{"file_name":"/home/chuyue/verus/source/builtin/src/lib.rs","byte_start":29373,"byte_end":29380,"line_start":1110,"line_end":1110,"column_start":40,"column_end":47,"is_primary":true,"text":[{"text":"pub fn spec_chained_value<IntegerType: Integer>(_a: IntegerType) -> SpecChain {","highlight_start":40,"highlight_end":47}],"label":"required by this bound in `spec_chained_value`","suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":null}],"rendered":"error[E0277]: the trait bound `bool: builtin::Integer` is not satisfied\n    --> <TMP_PATH>:87:17\n     |\n87   | /                 0 <= i < ret@.len()\n88   | |                 === ret@[i] == (((v@[i / 64]) >> (i % 64)) & 0x1) == 1\n     | |___________________________^ the trait `builtin::Integer` is not implemented for `bool`\n     |\nnote: required by a bound in `builtin::spec_chained_value`\n    --> /home/chuyue/verus/source/builtin/src/lib.rs:1110:40\n     |\n1110 | pub fn spec_chained_value<IntegerType: Integer>(_a: IntegerType) -> SpecChain {\n     |                                        ^^^^^^^ required by this bound in `spec_chained_value`\n\n"}
+{"$message_type":"diagnostic","message":"aborting due to 1 previous error; 1 warning emitted","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error; 1 warning emitted\n\n"}
+{"$message_type":"diagnostic","message":"For more information about this error, try `rustc --explain E0277`.","code":null,"level":"failure-note","spans":[],"children":[],"rendered":"For more information about this error, try `rustc --explain E0277`.\n"}```
+
+Code
+```
+#![cfg_attr(verus_keep_ghost, verifier::exec_allows_no_decreases_clause)]
+#[allow(unused_imports)]
+use vstd::prelude::*;
+use vstd::seq_lib::*;
+
+macro_rules! set_bit64 {
+    ($bv:expr, $index:expr, $bit:expr) => {
+        if $bit {
+            $bv | (1u64 << $index)
+        } else {
+            $bv & !(1u64 << $index)
+        }
+    };
+}
+
+macro_rules! get_bit64 {
+    ($bv:expr, $index:expr) => {
+        (($bv >> $index) & 1u64) == 1
+    };
+}
+
+verus! {
+
+// A proof that setting a bit in a 64-bit integer works correctly.
+#[verifier::bit_vector]
+proof fn set_bit64_proof(bv_new: u64, bv_old: u64, index: u64, bit: bool)
+    requires
+        bv_new == set_bit64!(bv_old, index, bit),
+        index < 64
+    ensures
+        get_bit64!(bv_new, index) == bit,
+        forall|loc2: u64| #![auto]
+            (loc2 < 64 && loc2 != index) === (get_bit64!(bv_new, loc2) == get_bit64!(bv_old, loc2))
+{
+}
+
+// A proof that bitwise OR of two 64-bit integers works correctly.
+#[verifier::bit_vector]
+proof fn bit_or_64_proof(bv1: u64, bv2: u64, bv_new: u64)
+    requires
+        bv_new == bv1 | bv2
+    ensures
+        forall|i: u64| #![auto]
+            (i < 64) === (get_bit64!(bv_new, i) == (get_bit64!(bv1, i) || get_bit64!(bv2, i)))
+{
+}
+
+
+// TODO: Add any additional bit vector proof functions here if needed
+
+/*
+u64 bit vector library ends
+bitmap impl begins
+*/
+
+pub struct BitMap {
+    bits: Vec<u64>,
+}
+
+impl BitMap {
+    // -------------------------------------------------------
+    //   VIEW
+    // -------------------------------------------------------
+    /// The logical (spec) view of the BitMap is a sequence of booleans,
+    /// representing each bit in self.bits.
+    pub closed spec fn view(&self) -> Seq<bool> {
+        let total_bits = self.bits@.len() * 64; // number of booleans
+        Seq::new(total_bits, |i: int| {
+            let ci = i / 64;
+            let bi = i % 64;
+            ((self.bits@[ci] >> (bi as u64)) & 0x1) == 1
+        })
+    }
+
+    // -------------------------------------------------------
+    //   from(v: Vec<u64>) -> BitMap
+    // -------------------------------------------------------
+    /// Constructs a BitMap from a vector of u64.
+    /// Ensures that the returned bitmap's logical view corresponds to these 64-bit chunks.
+    pub fn from(v: Vec<u64>) -> (ret: BitMap)
+        ensures
+            // The returned bitmap's view has length = v@.len() * 64
+            ret@.len() == v@.len() * 64,
+            // And for each bit in that view, it properly corresponds
+            // to the bits in 'v'
+            forall|i: int|
+                0 <= i < ret@.len()
+                === ret@[i] == (((v@[i / 64]) >> (i % 64)) & 0x1) == 1
+    {
+        BitMap { bits: v }
+    }
+
+    // -------------------------------------------------------
+    //   get_bit(&self, index: u32) -> bool
+    // -------------------------------------------------------
+    /// Reads a bit from the bitmap at the given index (0-based).
+    /// The index must be strictly less than the total number of bits,
+    /// which is self.bits@.len() * 64.
+    pub fn get_bit(&self, index: u32) -> (bit: bool)
+        requires
+            (index as int) < self@.len()
+        ensures
+            bit === self@[(index as int)]
+    {
+        let seq_index: usize = (index / 64) as usize;
+        let bit_index: u32 = index % 64;
+        let bucket: u64 = self.bits[seq_index];
+        ((0x1u64 & (bucket >> (bit_index as u64))) == 1)
+    }
+
+    // -------------------------------------------------------
+    //   set_bit(&mut self, index: u32, bit: bool)
+    // -------------------------------------------------------
+    /// Sets the bit at the given index to 'bit'.
+    /// The index must be strictly less than the total number of bits,
+    /// which is self.bits@.len() * 64.
+    /// Postcondition: the updated view matches the old view in all positions except 'index',
+    /// which is updated to 'bit'.
+    pub fn set_bit(&mut self, index: u32, bit: bool)
+        requires
+            (index as int) < old(self)@.len()
+        ensures
+            self@ === old(self)@.update(index as int, bit)
+    {
+        let seq_index: usize = (index / 64) as usize;
+        let bit_index: u32 = index % 64;
+        let bv_old: u64 = self.bits[seq_index];
+        let bv_new: u64 = if bit {
+            bv_old | (1u64 << (bit_index as u64))
+        } else {
+            bv_old & !(1u64 << (bit_index as u64))
+        };
+        // Proof for setting a single bit
+        set_bit64_proof(bv_new, bv_old, bit_index as u64, bit);
+        self.bits.set(seq_index, bv_new);
+        // The sequence now has the updated bit
+        // Postcondition: self@ == old(self)@.update(index, bit)
+    }
+
+    // -------------------------------------------------------
+    //   or(&self, bm: &BitMap) -> BitMap
+    // -------------------------------------------------------
+    /// Returns a new BitMap that is the bitwise-OR of 'self' and 'bm'.
+    /// We require that both bitmaps have the same number of bits.
+    /// Ensures that each bit in the result is the OR of corresponding bits in 'self' and 'bm'.
+    pub fn or(&self, bm: &BitMap) -> (ret: BitMap)
+        requires
+            self@.len() == bm@.len()
+        ensures
+            ret@.len() == self@.len(),
+            forall|i: int| 0 <= i < ret@.len() === ret@[i] == (self@[i] || bm@[i])
+    {
+        let n: usize = self.bits.len();
+        let mut i: usize = 0;
+        let mut res_bits: Vec<u64>= Vec::new();
+        let mut result = BitMap { bits: res_bits };
+
+        while i < n
+            invariant
+                // The partial result's length is i, so so far we have i 64-bit words.
+                result.bits@.len() == i,
+                // Each bit in the result so far is properly OR-ed
+                forall|k: int|
+                    0 <= k < result@.len()
+                    === result@[k] == (self@[k] || bm@[k]),
+                // i is bounded
+                i <= n,
+        {
+            res_bits = result.bits;
+            let u1: u64 = self.bits[i];
+            let u2: u64 = bm.bits[i];
+            let or_int: u64 = u1 | u2;
+            // Bitwise OR proof
+            bit_or_64_proof(u1, u2, or_int);
+            res_bits.push(or_int);
+            result = BitMap { bits: res_bits };
+            i = i + 1;
+        }
+        result
+    }
+
+    /// Test function that verifies the correctness of BitMap operations
+    ///
+    /// This function tests the basic operations of the BitMap implementation:
+    /// - Creating new bitmaps
+    /// - Setting bits
+    /// - Getting bits
+    /// - Performing OR operations between bitmaps
+    ///
+    /// # Arguments
+    /// * `x1`, `x2`, `x3` - Test indices for bit operations
+    ///
+    /// # Verification
+    /// The function includes formal verification requirements:
+    /// - All indices must be positive and less than 128
+    /// - Verifies that set bits can be retrieved correctly
+    /// - Verifies that OR operations combine bits as expected
+    fn test(x1: u32, x2: u32, x3: u32)
+        requires
+            0 < x1 < 128,
+            0 < x2 < 128,
+            0 < x3 < 128
+        ensures
+            // No particular postcondition needed or derived.
+            // This is a test function returning unit, so no ensures beyond correctness checks.
+            true
+    {
+        let mut bm1 = BitMap::from(vec![0u64, 0u64]);
+        let mut bm2 = BitMap::from(vec![0u64, 0u64]);
+
+        bm1.set_bit(x1, true);
+        bm1.set_bit(x2, true);
+        bm2.set_bit(x2, true);
+        bm2.set_bit(x3, true);
+        let bm1_x1 = bm1.get_bit(x1);
+        let bm1_x2 = bm1.get_bit(x2);
+        assert(bm1_x1 && bm1_x2);
+        let bm2_x2 = bm2.get_bit(x2);
+        let bm2_x3 = bm2.get_bit(x3);
+        assert(bm2_x2 && bm2_x3);
+
+        let bm3 = bm1.or(&bm2);
+        let bm3_x1 = bm3.get_bit(x1);
+        let bm3_x2 = bm3.get_bit(x2);
+        let bm3_x3 = bm3.get_bit(x3);
+        assert(bm3_x1 && bm3_x2 && bm3_x3);
+    }
+}
+
+fn main() {}
+} // <-- Closing brace for verus! block```

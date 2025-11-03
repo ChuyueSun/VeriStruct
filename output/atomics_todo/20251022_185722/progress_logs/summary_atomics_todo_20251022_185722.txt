@@ -1,0 +1,60 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/atomics_todo.rs
+Input File Name: atomics_todo.rs
+File ID: atomics_todo___General_20251022_185722
+Output Directory: /home/chuyue/VerusAgent/output/atomics_todo/20251022_185722
+Progress Log: /home/chuyue/VerusAgent/output/atomics_todo/20251022_185722/progress_logs/progress_atomics_todo_20251022_185722.json
+Summary File: /home/chuyue/VerusAgent/output/atomics_todo/20251022_185722/progress_logs/summary_atomics_todo_20251022_185722.txt
+
+Start time: 2025-10-22T18:57:22.902533
+End time: 2025-10-22T19:03:40.708239
+Total execution time: 377.81s
+
+## Final Result
+
+Verified: 5
+Errors: 0
+Verus Errors: 0
+Compilation Error: False
+Is Correct: True
+
+## Statistics
+
+Total steps: 3
+Total repair rounds: 1
+Total repairs attempted: 3
+Successful repairs: 1
+Average step time: 39.59s
+Average repair time: 79.83s
+
+## Steps
+
+Step 1: inv_inference
+  Time: 53.70s
+  Score: Verified=4, Errors=1, Verus Errors=2
+Step 2: spec_inference
+  Time: 65.07s
+  Score: Verified=4, Errors=1, Verus Errors=3
+Step 3: proof_generation
+  Time: 0.01s
+  Score: Verified=4, Errors=1, Verus Errors=3
+
+## Repair Rounds
+
+Round 1
+  Time: 239.49s
+  repair_precond for PreCondFail
+    Before: Verified=4, Errors=1, Verus Errors=3
+    After: Verified=4, Errors=1, Verus Errors=3
+    Time: 97.89s
+  repair_postcond for PostCondFail
+    Before: Verified=4, Errors=1, Verus Errors=3
+    After: Verified=5, Errors=0, Verus Errors=0
+    Time: 69.02s
+  repair_syntax for Other
+    Before: Verified=5, Errors=0, Verus Errors=0
+    After: Verified=5, Errors=0, Verus Errors=0
+    Time: 72.59s

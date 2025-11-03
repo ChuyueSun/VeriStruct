@@ -1,0 +1,61 @@
+================================================================================
+VerusAgent Statistics Report - transfer_todo
+================================================================================
+
+EXECUTION SUMMARY
+--------------------------------------------------------------------------------
+Benchmark: transfer_todo
+Start Time: 2025-10-10T15:25:45.253426
+End Time: 2025-10-10T15:27:44.171545
+Total Execution Time: 118.92s
+Verification Success: Yes
+
+MODULE ACTIVATION
+--------------------------------------------------------------------------------
+Total Modules Activated: 1
+Modules: spec_inference
+
+LLM CALLS
+--------------------------------------------------------------------------------
+Total LLM Calls: 0
+Average Response Time: 0.00s
+Cache Hit Rate: 0.00%
+
+Calls by Stage:
+
+ITERATIONS
+--------------------------------------------------------------------------------
+Iterations by Module:
+
+REPAIRS
+--------------------------------------------------------------------------------
+Total Repair Rounds: 0
+Total Repairs: 0
+Successful Repairs: 0
+Failed Repairs: 0
+Success Rate: 0.00%
+
+Repairs by Error Type:
+
+Repairs by Heuristic:
+
+ERROR TRACKING
+--------------------------------------------------------------------------------
+Initial Errors: 2
+Final Errors: 0
+Errors Fixed: 2
+
+Initial Errors by Type:
+  ArithmeticFlow: 2
+  AssertFail: 2
+
+STAGE DETAILS
+--------------------------------------------------------------------------------
+
+spec_inference (Step 1)
+  Execution Time: 16.86s
+  LLM Calls: 0
+  Iterations: 1
+  Result: Verified=3, Errors=0
+
+================================================================================

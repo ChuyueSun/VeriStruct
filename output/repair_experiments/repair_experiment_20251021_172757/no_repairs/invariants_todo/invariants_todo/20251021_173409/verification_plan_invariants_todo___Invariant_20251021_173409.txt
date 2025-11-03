@@ -1,0 +1,25 @@
+```markdown
+Current State:
+- The code defines a struct (ModPredicate) implementing InvariantPredicate<int, u32> but leaves its specification body empty with "TODO: add specification".
+- There is a data structure present (ModPredicate) that needs an invariant definition, and the user explicitly requests adding specifications in the code.
+- No "View" requirements or keywords are present.
+
+Dependencies:
+- The ModPredicate struct’s inv function must satisfy the InvariantPredicate trait requirements.
+- The test function depends on ModPredicate’s invariant to ensure invariants about even/odd values.
+
+```
+```markdown
+**Selected Workflow:** Invariant-First Workflow
+
+**Justification:**
+The code contains a struct (ModPredicate) requiring an invariant function and also has a "TODO: add specification" placeholder. This indicates that both an invariant and a specification are needed. There is no mention of a View function, so a full View-based sequence is unnecessary.
+
+**Execution Steps:**
+1. inv_inference
+2. spec_inference
+
+**Module Conditions:**
+- inv_inference: Yes - ModPredicate is a data structure (struct) requiring invariants.
+- proof_generation: No - "TODO: add specification" is present, but there's no "TODO: add proof" or "TODO: add invariants" marker.
+```

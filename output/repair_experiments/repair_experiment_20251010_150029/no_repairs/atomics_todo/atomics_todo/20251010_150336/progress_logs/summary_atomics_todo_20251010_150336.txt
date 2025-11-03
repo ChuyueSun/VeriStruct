@@ -1,0 +1,45 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/atomics_todo.rs
+Input File Name: atomics_todo.rs
+File ID: atomics_todo___General_20251010_150336
+Output Directory: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_150029/no_repairs/atomics_todo/atomics_todo/20251010_150336
+Progress Log: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_150029/no_repairs/atomics_todo/atomics_todo/20251010_150336/progress_logs/progress_atomics_todo_20251010_150336.json
+Summary File: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_150029/no_repairs/atomics_todo/atomics_todo/20251010_150336/progress_logs/summary_atomics_todo_20251010_150336.txt
+
+Start time: 2025-10-10T15:03:36.237678
+End time: 2025-10-10T15:06:11.327672
+Total execution time: 155.09s
+
+## Final Result
+
+Verified: 4
+Errors: 1
+Verus Errors: 2
+Compilation Error: False
+Is Correct: False
+
+## Statistics
+
+Total steps: 3
+Total repair rounds: 0
+Total repairs attempted: 0
+Successful repairs: 0
+Average step time: 44.00s
+Average repair time: 0.00s
+
+## Steps
+
+Step 1: inv_inference
+  Time: 56.03s
+  Score: Verified=4, Errors=1, Verus Errors=2
+Step 2: spec_inference
+  Time: 75.95s
+  Score: Verified=4, Errors=1, Verus Errors=3
+Step 3: proof_generation
+  Time: 0.01s
+  Score: Verified=4, Errors=1, Verus Errors=3
+
+## Repair Rounds

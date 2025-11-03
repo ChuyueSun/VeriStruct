@@ -1,0 +1,38 @@
+{
+  "full_pipeline": [
+    {
+      "benchmark": "set_from_vec_todo",
+      "configuration": "full_pipeline",
+      "success": true,
+      "timeout": false,
+      "exit_code": 0,
+      "execution_time": 1607.1506433486938,
+      "log_file": "output/repair_experiments/repair_experiment_20251021_172807/full_pipeline/set_from_vec_todo/output.log",
+      "output_dir": "output/repair_experiments/repair_experiment_20251021_172807/full_pipeline/set_from_vec_todo"
+    }
+  ],
+  "no_repairs": [
+    {
+      "benchmark": "set_from_vec_todo",
+      "configuration": "no_repairs",
+      "success": true,
+      "timeout": false,
+      "exit_code": 0,
+      "execution_time": 1162.6428990364075,
+      "log_file": "output/repair_experiments/repair_experiment_20251021_172807/no_repairs/set_from_vec_todo/output.log",
+      "output_dir": "output/repair_experiments/repair_experiment_20251021_172807/no_repairs/set_from_vec_todo"
+    }
+  ],
+  "baseline": [
+    {
+      "benchmark": "set_from_vec_todo",
+      "configuration": "baseline",
+      "success": false,
+      "timeout": true,
+      "exit_code": -1,
+      "execution_time": 1800.0066986083984,
+      "log_file": "output/repair_experiments/repair_experiment_20251021_172807/baseline/set_from_vec_todo/output.log",
+      "output_dir": "output/repair_experiments/repair_experiment_20251021_172807/baseline/set_from_vec_todo"
+    }
+  ]
+}

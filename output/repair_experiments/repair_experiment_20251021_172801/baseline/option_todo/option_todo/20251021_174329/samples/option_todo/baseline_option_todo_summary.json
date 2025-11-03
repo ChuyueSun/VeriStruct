@@ -1,0 +1,68 @@
+{
+  "run_timestamp": "20251021_174330",
+  "completed_at": "2025-10-21T17:46:37.488413",
+  "total_attempts": 2,
+  "total_candidates_evaluated": 4,
+  "final_score": {
+    "verified": 8,
+    "errors": 0,
+    "verus_errors": 0,
+    "compilation_error": false,
+    "is_correct": true
+  },
+  "success": true,
+  "per_attempt_stats": [
+    {
+      "attempt": 1,
+      "llm_time_seconds": 105.012583,
+      "total_time_seconds": 106.122311,
+      "eval_time_seconds": 1.1097279999999898,
+      "num_candidates": 3,
+      "candidates": [
+        {
+          "candidate_num": 2,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 1,
+          "compilation_error": true,
+          "is_correct": false
+        },
+        {
+          "candidate_num": 3,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 1,
+          "compilation_error": true,
+          "is_correct": false
+        },
+        {
+          "candidate_num": 4,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 1,
+          "compilation_error": true,
+          "is_correct": false
+        }
+      ],
+      "best_verus_errors": 1,
+      "best_candidate_num": 2,
+      "timestamp": "2025-10-21T17:43:30.733480"
+    }
+  ],
+  "timing": {
+    "total_llm_time_seconds": 105.012583,
+    "total_eval_time_seconds": 1.1097279999999898,
+    "total_time_seconds": 106.122311,
+    "average_llm_time_per_attempt": 105.012583
+  },
+  "successful_candidate": {
+    "candidate_idx": 1,
+    "attempt_num": 2,
+    "score": {
+      "verified": 8,
+      "errors": 0,
+      "verus_errors": 0,
+      "compilation_error": false
+    }
+  }
+}

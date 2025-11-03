@@ -1,0 +1,15 @@
+{
+  "benchmark": "vectors_todo",
+  "execution_time": 292.1935205459595,
+  "modules_activated": 2,
+  "total_llm_calls": 6,
+  "avg_response_time": 41.49875565369924,
+  "cache_hit_rate": 0.0,
+  "total_repair_rounds": 5,
+  "total_repairs": 5,
+  "repair_success_rate": 20.0,
+  "initial_errors": 999,
+  "final_errors": 1,
+  "errors_fixed": 998,
+  "verification_success": false
+}

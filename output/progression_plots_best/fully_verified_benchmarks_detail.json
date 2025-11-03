@@ -1,0 +1,350 @@
+{
+  "atomics_todo": {
+    "ground_truth": 11,
+    "experiment": "repair_experiment_20251011_135504",
+    "progression": [
+      {
+        "llm_calls": 0,
+        "stage": "preprocessed",
+        "verified": 0,
+        "errors": 0,
+        "success": false
+      },
+      {
+        "llm_calls": 1,
+        "stage": "inv_inference",
+        "verified": 0,
+        "errors": 0,
+        "success": false
+      },
+      {
+        "llm_calls": 2,
+        "stage": "spec_inference",
+        "verified": 0,
+        "errors": 0,
+        "success": false
+      },
+      {
+        "llm_calls": 3,
+        "stage": "proof_generation",
+        "verified": 0,
+        "errors": 0,
+        "success": false
+      },
+      {
+        "llm_calls": 3,
+        "stage": "final_result",
+        "verified": 11,
+        "errors": 0,
+        "success": true
+      }
+    ]
+  },
+  "bitmap_todo": {
+    "ground_truth": 14,
+    "experiment": "repair_experiment_20251011_135504",
+    "progression": [
+      {
+        "llm_calls": 0,
+        "stage": "preprocessed",
+        "verified": 0,
+        "errors": 999,
+        "success": false
+      },
+      {
+        "llm_calls": 1,
+        "stage": "view_inference",
+        "verified": 4,
+        "errors": 4,
+        "success": false
+      },
+      {
+        "llm_calls": 2,
+        "stage": "view_refinement",
+        "verified": 4,
+        "errors": 4,
+        "success": false
+      },
+      {
+        "llm_calls": 3,
+        "stage": "inv_inference",
+        "verified": 4,
+        "errors": 4,
+        "success": false
+      },
+      {
+        "llm_calls": 4,
+        "stage": "spec_inference",
+        "verified": 5,
+        "errors": 3,
+        "success": false
+      },
+      {
+        "llm_calls": 5,
+        "stage": "proof_generation",
+        "verified": 8,
+        "errors": 0,
+        "success": false
+      },
+      {
+        "llm_calls": 5,
+        "stage": "final_result",
+        "verified": 14,
+        "errors": 0,
+        "success": true
+      }
+    ]
+  },
+  "invariants_todo": {
+    "ground_truth": 7,
+    "experiment": "repair_experiment_20251010_152504",
+    "progression": [
+      {
+        "llm_calls": 0,
+        "stage": "preprocessed",
+        "verified": 0,
+        "errors": 0,
+        "success": false
+      },
+      {
+        "llm_calls": 1,
+        "stage": "spec_inference",
+        "verified": 7,
+        "errors": 0,
+        "success": true
+      },
+      {
+        "llm_calls": 1,
+        "stage": "checkpoint_best",
+        "verified": 7,
+        "errors": 0,
+        "success": true
+      },
+      {
+        "llm_calls": 1,
+        "stage": "final_result",
+        "verified": 7,
+        "errors": 0,
+        "success": true
+      }
+    ]
+  },
+  "option_todo": {
+    "ground_truth": 15,
+    "experiment": "repair_experiment_20251011_135504",
+    "progression": [
+      {
+        "llm_calls": 0,
+        "stage": "preprocessed",
+        "verified": 0,
+        "errors": 0,
+        "success": false
+      },
+      {
+        "llm_calls": 1,
+        "stage": "spec_inference",
+        "verified": 0,
+        "errors": 0,
+        "success": false
+      },
+      {
+        "llm_calls": 1,
+        "stage": "final_result",
+        "verified": 15,
+        "errors": 0,
+        "success": true
+      }
+    ]
+  },
+  "rb_type_invariant_todo": {
+    "ground_truth": 13,
+    "experiment": "repair_experiment_20251011_135504",
+    "progression": [
+      {
+        "llm_calls": 0,
+        "stage": "preprocessed",
+        "verified": 0,
+        "errors": 999,
+        "success": false
+      },
+      {
+        "llm_calls": 1,
+        "stage": "view_inference",
+        "verified": 4,
+        "errors": 6,
+        "success": false
+      },
+      {
+        "llm_calls": 2,
+        "stage": "view_refinement",
+        "verified": 4,
+        "errors": 6,
+        "success": false
+      },
+      {
+        "llm_calls": 3,
+        "stage": "inv_inference",
+        "verified": 3,
+        "errors": 7,
+        "success": false
+      },
+      {
+        "llm_calls": 4,
+        "stage": "spec_inference",
+        "verified": 4,
+        "errors": 6,
+        "success": false
+      },
+      {
+        "llm_calls": 5,
+        "stage": "proof_generation",
+        "verified": 10,
+        "errors": 0,
+        "success": false
+      },
+      {
+        "llm_calls": 5,
+        "stage": "final_result",
+        "verified": 13,
+        "errors": 0,
+        "success": true
+      }
+    ]
+  },
+  "rwlock_vstd_todo": {
+    "ground_truth": 5,
+    "experiment": "repair_experiment_20251010_215225",
+    "progression": [
+      {
+        "llm_calls": 0,
+        "stage": "preprocessed",
+        "verified": 0,
+        "errors": 0,
+        "success": false
+      },
+      {
+        "llm_calls": 1,
+        "stage": "spec_inference",
+        "verified": 0,
+        "errors": 0,
+        "success": false
+      },
+      {
+        "llm_calls": 1,
+        "stage": "final_result",
+        "verified": 5,
+        "errors": 0,
+        "success": true
+      }
+    ]
+  },
+  "transfer_todo": {
+    "ground_truth": 5,
+    "experiment": "repair_experiment_20251011_135504",
+    "progression": [
+      {
+        "llm_calls": 0,
+        "stage": "preprocessed",
+        "verified": 0,
+        "errors": 0,
+        "success": false
+      },
+      {
+        "llm_calls": 1,
+        "stage": "spec_inference",
+        "verified": 0,
+        "errors": 0,
+        "success": false
+      },
+      {
+        "llm_calls": 1,
+        "stage": "final_result",
+        "verified": 5,
+        "errors": 0,
+        "success": true
+      }
+    ]
+  },
+  "vectors_todo": {
+    "ground_truth": 16,
+    "experiment": "repair_experiment_20251011_160501",
+    "progression": [
+      {
+        "llm_calls": 0,
+        "stage": "preprocessed",
+        "verified": 0,
+        "errors": 999,
+        "success": false
+      },
+      {
+        "llm_calls": 1,
+        "stage": "spec_inference",
+        "verified": -1,
+        "errors": 999,
+        "success": false
+      },
+      {
+        "llm_calls": 2,
+        "stage": "proof_generation",
+        "verified": 10,
+        "errors": 0,
+        "success": false
+      },
+      {
+        "llm_calls": 2,
+        "stage": "final_result",
+        "verified": 16,
+        "errors": 0,
+        "success": true
+      }
+    ]
+  },
+  "set_from_vec_todo": {
+    "ground_truth": 10,
+    "experiment": "repair_experiment_20251011_160518",
+    "progression": [
+      {
+        "llm_calls": 0,
+        "stage": "preprocessed",
+        "verified": 0,
+        "errors": 0,
+        "success": false
+      },
+      {
+        "llm_calls": 1,
+        "stage": "view_inference",
+        "verified": 6,
+        "errors": 5,
+        "success": false
+      },
+      {
+        "llm_calls": 2,
+        "stage": "view_refinement",
+        "verified": 5,
+        "errors": 1,
+        "success": false
+      },
+      {
+        "llm_calls": 3,
+        "stage": "inv_inference",
+        "verified": 6,
+        "errors": 5,
+        "success": false
+      },
+      {
+        "llm_calls": 4,
+        "stage": "spec_inference",
+        "verified": 9,
+        "errors": 2,
+        "success": false
+      },
+      {
+        "llm_calls": 5,
+        "stage": "proof_generation",
+        "verified": 10,
+        "errors": 1,
+        "success": true
+      }
+    ]
+  }
+}

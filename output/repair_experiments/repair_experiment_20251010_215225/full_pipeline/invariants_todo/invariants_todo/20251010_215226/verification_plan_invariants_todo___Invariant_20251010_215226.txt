@@ -1,0 +1,25 @@
+```markdown
+Current State:
+- The code defines a trivial struct "ModPredicate" implementing "InvariantPredicate<int, u32>" with a placeholder "TODO: add specification" for the inv function.
+- There are no fields in "ModPredicate" that require a type invariant; the only missing piece is the specification logic (i.e., the body of inv).
+- No references to "View" or "TODO: add View" are found, and there is no mention of needing a data-structure-level invariant.
+
+Dependencies:
+- The "inv" function in "ModPredicate" must reflect the odd/even logic corresponding to the given "k" values in the test code.
+- The other functions rely on "ModPredicate::inv" being correctly specified but do not require additional invariants or proofs outside of that specification.
+
+```
+
+```markdown
+**Selected Workflow:** Specification-Only Workflow
+
+**Justification:**
+Since "ModPredicate" is an empty struct and does not need a type invariant, and there is a “TODO: add specification” placeholder but no mention of "View" or type invariants, the Specification-Only Workflow is sufficient. We only need to provide the function specification for the "inv" function.
+
+**Execution Steps:**
+1. spec_inference
+
+**Module Conditions:**
+- inv_inference: No – "ModPredicate" does not store any fields needing a type invariant.
+- proof_generation: No – there is no "TODO: add proof" or "TODO: add invariants" marker.
+```

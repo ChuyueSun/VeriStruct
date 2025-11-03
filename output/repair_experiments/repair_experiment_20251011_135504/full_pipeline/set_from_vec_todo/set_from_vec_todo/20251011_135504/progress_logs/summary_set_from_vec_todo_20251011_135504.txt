@@ -1,0 +1,51 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/set_from_vec_todo.rs
+Input File Name: set_from_vec_todo.rs
+File ID: set_from_vec_todo__Vec_General_20251011_135504
+Output Directory: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_135504/full_pipeline/set_from_vec_todo/set_from_vec_todo/20251011_135504
+Progress Log: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_135504/full_pipeline/set_from_vec_todo/set_from_vec_todo/20251011_135504/progress_logs/progress_set_from_vec_todo_20251011_135504.json
+Summary File: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_135504/full_pipeline/set_from_vec_todo/set_from_vec_todo/20251011_135504/progress_logs/summary_set_from_vec_todo_20251011_135504.txt
+
+Start time: 2025-10-11T13:55:04.917530
+End time: 2025-10-11T14:03:42.386878
+Total execution time: 517.47s
+
+## Final Result
+
+Verified: 6
+Errors: 0
+Verus Errors: 0
+Compilation Error: False
+Is Correct: True
+
+## Statistics
+
+Total steps: 5
+Total repair rounds: 0
+Total repairs attempted: 0
+Successful repairs: 0
+Average step time: 52.72s
+Average repair time: 0.00s
+
+## Steps
+
+Step 1: view_inference
+  Time: 39.06s
+  Score: Verified=5, Errors=1, Verus Errors=1
+Step 2: view_refinement
+  Time: 39.70s
+  Score: Verified=5, Errors=1, Verus Errors=1
+Step 3: inv_inference
+  Time: 47.92s
+  Score: Verified=5, Errors=1, Verus Errors=1
+Step 4: spec_inference
+  Time: 26.63s
+  Score: Verified=5, Errors=1, Verus Errors=1
+Step 5: proof_generation
+  Time: 110.27s
+  Score: Verified=6, Errors=0, Verus Errors=0
+
+## Repair Rounds

@@ -1,0 +1,34 @@
+Benchmark Summary - 2025-11-01 21:48:32
+================================================================================
+Total time: 920.36s
+Total benchmarks: 13
+Successful: 13
+Failed: 0
+
+Results:
+  ✓ atomics_todo                   SUCCESS         9.66s
+      Output: output/atomics_todo/20251101_213311
+  ✓ bitmap_2_todo                  SUCCESS       920.36s
+      Output: output/bitmap_2_todo/20251101_213311
+  ✓ bitmap_todo                    SUCCESS       336.37s
+      Output: output/bitmap_todo/20251101_213311
+  ✓ bst_map_todo                   SUCCESS        20.81s
+      Output: output/bst_map_todo/20251101_213311
+  ✓ invariants_todo                SUCCESS         5.60s
+      Output: output/invariants_todo/20251101_213311
+  ✓ node_todo                      SUCCESS       450.21s
+      Output: output/node_todo/20251101_213311
+  ✓ option_todo                    SUCCESS         4.23s
+      Output: output/option_todo/20251101_213311
+  ✓ rb_type_invariant_todo         SUCCESS       497.54s
+      Output: output/rb_type_invariant_todo/20251101_213311
+  ✓ rwlock_vstd_todo               SUCCESS         5.34s
+      Output: output/rwlock_vstd_todo/20251101_213315
+  ✓ set_from_vec_todo              SUCCESS        13.20s
+      Output: output/set_from_vec_todo/20251101_213317
+  ✓ transfer_todo                  SUCCESS         3.90s
+      Output: output/transfer_todo/20251101_213321
+  ✓ treemap_todo                   SUCCESS        20.30s
+      Output: output/treemap_todo/20251101_213321
+  ✓ vectors_todo                   SUCCESS         6.08s
+      Output: output/vectors_todo/20251101_213325

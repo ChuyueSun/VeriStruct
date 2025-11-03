@@ -1,0 +1,28 @@
+```markdown
+## 1. Analysis Summary
+
+Current State:
+- The code defines multiple functions (binary_search, reverse, binary_search_no_spinoff) with “TODO: add specification” comments, but it does not define any custom class or struct requiring a type invariant.
+- There are “TODO: add invariants” markers referring to needed loop invariants, not type invariants.
+
+Dependencies:
+- No user-defined data structures exist, so no View or type-invariant routines are required.
+- All “TODO: add specification” placeholders point to missing requires/ensures clauses for existing functions.
+
+## 2. Verification Plan
+
+**Selected Workflow:** Specification-Only Workflow
+
+**Justification:**
+- The code does not include any user-defined struct or class that needs type invariants, so inv_inference is not applicable.
+- There is no mention of Views or “View” implementation requirements.
+- The primary placeholders are “TODO: add specification” for each function, indicating the need for requires/ensures clauses only.
+
+**Execution Steps:**
+1. spec_inference
+2. proof_generation
+
+**Module Conditions:**
+- inv_inference: No – there is no custom class/struct data structure to require type invariants.
+- proof_generation: Yes – there are “TODO: add invariants” comments, indicating a need for proof steps (loop invariants).
+```

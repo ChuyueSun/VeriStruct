@@ -1,0 +1,172 @@
+{
+  "run_timestamp": "20251009_213656",
+  "completed_at": "2025-10-09T21:42:35.254846",
+  "total_attempts": 4,
+  "total_candidates_evaluated": 14,
+  "final_score": {
+    "verified": 5,
+    "errors": 0,
+    "verus_errors": 0,
+    "compilation_error": false,
+    "is_correct": true
+  },
+  "success": true,
+  "per_attempt_stats": [
+    {
+      "attempt": 1,
+      "llm_time_seconds": 89.010027,
+      "total_time_seconds": 90.401432,
+      "eval_time_seconds": 1.391405000000006,
+      "num_candidates": 4,
+      "candidates": [
+        {
+          "candidate_num": 1,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 2,
+          "compilation_error": true,
+          "is_correct": false
+        },
+        {
+          "candidate_num": 2,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 6,
+          "compilation_error": true,
+          "is_correct": false
+        },
+        {
+          "candidate_num": 3,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 5,
+          "compilation_error": true,
+          "is_correct": false
+        },
+        {
+          "candidate_num": 4,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 5,
+          "compilation_error": true,
+          "is_correct": false
+        }
+      ],
+      "best_verus_errors": 2,
+      "best_candidate_num": 1,
+      "timestamp": "2025-10-09T21:36:56.058187"
+    },
+    {
+      "attempt": 2,
+      "llm_time_seconds": 81.564969,
+      "total_time_seconds": 83.087136,
+      "eval_time_seconds": 1.522166999999996,
+      "num_candidates": 5,
+      "candidates": [
+        {
+          "candidate_num": 1,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 5,
+          "compilation_error": true,
+          "is_correct": false
+        },
+        {
+          "candidate_num": 2,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 4,
+          "compilation_error": true,
+          "is_correct": false
+        },
+        {
+          "candidate_num": 3,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 3,
+          "compilation_error": true,
+          "is_correct": false
+        },
+        {
+          "candidate_num": 4,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 1,
+          "compilation_error": true,
+          "is_correct": false
+        },
+        {
+          "candidate_num": 5,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 5,
+          "compilation_error": true,
+          "is_correct": false
+        }
+      ],
+      "best_verus_errors": 1,
+      "best_candidate_num": 4,
+      "timestamp": "2025-10-09T21:38:26.459648"
+    },
+    {
+      "attempt": 3,
+      "llm_time_seconds": 84.05419,
+      "total_time_seconds": 85.233022,
+      "eval_time_seconds": 1.1788319999999999,
+      "num_candidates": 4,
+      "candidates": [
+        {
+          "candidate_num": 1,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 5,
+          "compilation_error": true,
+          "is_correct": false
+        },
+        {
+          "candidate_num": 2,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 6,
+          "compilation_error": true,
+          "is_correct": false
+        },
+        {
+          "candidate_num": 3,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 5,
+          "compilation_error": true,
+          "is_correct": false
+        },
+        {
+          "candidate_num": 4,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 3,
+          "compilation_error": true,
+          "is_correct": false
+        }
+      ],
+      "best_verus_errors": 3,
+      "best_candidate_num": 4,
+      "timestamp": "2025-10-09T21:39:49.546849"
+    }
+  ],
+  "timing": {
+    "total_llm_time_seconds": 254.629186,
+    "total_eval_time_seconds": 4.092403999999988,
+    "total_time_seconds": 258.72159,
+    "average_llm_time_per_attempt": 84.87639533333333
+  },
+  "successful_candidate": {
+    "candidate_idx": 1,
+    "attempt_num": 4,
+    "score": {
+      "verified": 5,
+      "errors": 0,
+      "verus_errors": 0,
+      "compilation_error": false
+    }
+  }
+}

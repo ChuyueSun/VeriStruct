@@ -1,0 +1,2745 @@
+[
+  {
+    "experiment": "repair_experiment_20251009_212826",
+    "baseline": {
+      "atomics_todo": [
+        {
+          "verified": 5,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/atomics_todo/atomics_todo/20251009_213655/final_result.rs",
+          "benchmark": "atomics_todo"
+        },
+        {
+          "verified": 5,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/atomics_todo/atomics_todo/20251009_213655/best/best.rs",
+          "benchmark": "atomics_todo"
+        }
+      ]
+    },
+    "full_pipeline": {
+      "atomics_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/atomics_todo/atomics_todo/20251009_212826/final_result.rs",
+          "benchmark": "atomics_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/atomics_todo/atomics_todo/20251009_212826/best/best.rs",
+          "benchmark": "atomics_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251010_150029",
+    "baseline": {
+      "atomics_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/atomics_todo/atomics_todo/20251010_150611/final_result.rs",
+          "benchmark": "atomics_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/atomics_todo/atomics_todo/20251010_150611/best/best.rs",
+          "benchmark": "atomics_todo"
+        }
+      ]
+    },
+    "full_pipeline": {
+      "atomics_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/atomics_todo/atomics_todo/20251010_150029/final_result.rs",
+          "benchmark": "atomics_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/atomics_todo/atomics_todo/20251010_150029/best/best.rs",
+          "benchmark": "atomics_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251010_152426",
+    "baseline": {},
+    "full_pipeline": {
+      "atomics_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/atomics_todo/atomics_todo/20251010_152427/final_result.rs",
+          "benchmark": "atomics_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/atomics_todo/atomics_todo/20251010_152427/best/best.rs",
+          "benchmark": "atomics_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251010_152504",
+    "baseline": {
+      "rb_type_invariant_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/rb_type_invariant_todo/rb_type_invariant_todo/20251010_155843/final_result.rs",
+          "benchmark": "rb_type_invariant_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/rb_type_invariant_todo/rb_type_invariant_todo/20251010_155843/best/best.rs",
+          "benchmark": "rb_type_invariant_todo"
+        }
+      ],
+      "rwlock_vstd_todo": [
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/rwlock_vstd_todo/rwlock_vstd_todo/20251010_152836/final_result.rs",
+          "benchmark": "rwlock_vstd_todo"
+        },
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/rwlock_vstd_todo/rwlock_vstd_todo/20251010_152836/best/best.rs",
+          "benchmark": "rwlock_vstd_todo"
+        }
+      ],
+      "vectors_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/vectors_todo/vectors_todo/20251010_153733/final_result.rs",
+          "benchmark": "vectors_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/vectors_todo/vectors_todo/20251010_153733/best/best.rs",
+          "benchmark": "vectors_todo"
+        }
+      ],
+      "atomics_todo": [
+        {
+          "verified": 5,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/atomics_todo/atomics_todo/20251010_154649/final_result.rs",
+          "benchmark": "atomics_todo"
+        },
+        {
+          "verified": 5,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/atomics_todo/atomics_todo/20251010_154649/best/best.rs",
+          "benchmark": "atomics_todo"
+        }
+      ],
+      "transfer_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/transfer_todo/transfer_todo/20251010_152744/final_result.rs",
+          "benchmark": "transfer_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/transfer_todo/transfer_todo/20251010_152744/best/best.rs",
+          "benchmark": "transfer_todo"
+        }
+      ],
+      "set_from_vec_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/set_from_vec_todo/set_from_vec_todo/20251010_153526/final_result.rs",
+          "benchmark": "set_from_vec_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/set_from_vec_todo/set_from_vec_todo/20251010_153526/best/best.rs",
+          "benchmark": "set_from_vec_todo"
+        }
+      ],
+      "bitmap_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/bitmap_todo/bitmap_todo/20251010_160420/final_result.rs",
+          "benchmark": "bitmap_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/bitmap_todo/bitmap_todo/20251010_160420/best/best.rs",
+          "benchmark": "bitmap_todo"
+        }
+      ],
+      "invariants_todo": [
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/invariants_todo/invariants_todo/20251010_152854/final_result.rs",
+          "benchmark": "invariants_todo"
+        },
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/invariants_todo/invariants_todo/20251010_152854/best/best.rs",
+          "benchmark": "invariants_todo"
+        }
+      ],
+      "option_todo": [
+        {
+          "verified": 8,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/option_todo/option_todo/20251010_152901/final_result.rs",
+          "benchmark": "option_todo"
+        },
+        {
+          "verified": 8,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/option_todo/option_todo/20251010_152901/best/best.rs",
+          "benchmark": "option_todo"
+        }
+      ]
+    },
+    "full_pipeline": {
+      "rb_type_invariant_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rb_type_invariant_todo/rb_type_invariant_todo/20251010_152505/final_result.rs",
+          "benchmark": "rb_type_invariant_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rb_type_invariant_todo/rb_type_invariant_todo/20251010_152505/best/best.rs",
+          "benchmark": "rb_type_invariant_todo"
+        }
+      ],
+      "rwlock_vstd_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rwlock_vstd_todo/rwlock_vstd_todo/20251010_152505/final_result.rs",
+          "benchmark": "rwlock_vstd_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rwlock_vstd_todo/rwlock_vstd_todo/20251010_152505/best/best.rs",
+          "benchmark": "rwlock_vstd_todo"
+        }
+      ],
+      "vectors_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/vectors_todo/vectors_todo/20251010_152505/final_result.rs",
+          "benchmark": "vectors_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/vectors_todo/vectors_todo/20251010_152505/best/best.rs",
+          "benchmark": "vectors_todo"
+        }
+      ],
+      "atomics_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/atomics_todo/atomics_todo/20251010_152505/final_result.rs",
+          "benchmark": "atomics_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/atomics_todo/atomics_todo/20251010_152505/best/best.rs",
+          "benchmark": "atomics_todo"
+        }
+      ],
+      "transfer_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/transfer_todo/transfer_todo/20251010_152505/final_result.rs",
+          "benchmark": "transfer_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/transfer_todo/transfer_todo/20251010_152505/best/best.rs",
+          "benchmark": "transfer_todo"
+        }
+      ],
+      "set_from_vec_todo": [
+        {
+          "verified": 6,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/set_from_vec_todo/set_from_vec_todo/20251010_152505/final_result.rs",
+          "benchmark": "set_from_vec_todo"
+        },
+        {
+          "verified": 6,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/set_from_vec_todo/set_from_vec_todo/20251010_152505/best/best.rs",
+          "benchmark": "set_from_vec_todo"
+        }
+      ],
+      "invariants_todo": [
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/invariants_todo/invariants_todo/20251010_152505/final_result.rs",
+          "benchmark": "invariants_todo"
+        },
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/invariants_todo/invariants_todo/20251010_152505/best/best.rs",
+          "benchmark": "invariants_todo"
+        }
+      ],
+      "option_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/option_todo/option_todo/20251010_152505/final_result.rs",
+          "benchmark": "option_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/option_todo/option_todo/20251010_152505/best/best.rs",
+          "benchmark": "option_todo"
+        }
+      ],
+      "bitmap_todo": [
+        {
+          "verified": 4,
+          "errors": 4,
+          "success": false,
+          "file": "full_pipeline/bitmap_todo/bitmap_todo/20251010_152505/best/best.rs",
+          "benchmark": "bitmap_todo"
+        }
+      ],
+      "bst_map_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/bst_map_todo/bst_map_todo/20251010_152505/best/best.rs",
+          "benchmark": "bst_map_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251010_191429",
+    "baseline": {
+      "atomics_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/atomics_todo/atomics_todo/20251010_192304/final_result.rs",
+          "benchmark": "atomics_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/atomics_todo/atomics_todo/20251010_192304/best/best.rs",
+          "benchmark": "atomics_todo"
+        }
+      ]
+    },
+    "full_pipeline": {
+      "atomics_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/atomics_todo/atomics_todo/20251010_191430/final_result.rs",
+          "benchmark": "atomics_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/atomics_todo/atomics_todo/20251010_191430/best/best.rs",
+          "benchmark": "atomics_todo"
+        }
+      ],
+      "bitmap_todo": [
+        {
+          "verified": 5,
+          "errors": 3,
+          "success": false,
+          "file": "full_pipeline/bitmap_todo/bitmap_todo/20251010_191430/final_result.rs",
+          "benchmark": "bitmap_todo"
+        },
+        {
+          "verified": 5,
+          "errors": 3,
+          "success": false,
+          "file": "full_pipeline/bitmap_todo/bitmap_todo/20251010_191430/best/best.rs",
+          "benchmark": "bitmap_todo"
+        }
+      ],
+      "bst_map_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/bst_map_todo/bst_map_todo/20251010_191430/final_result.rs",
+          "benchmark": "bst_map_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/bst_map_todo/bst_map_todo/20251010_191430/best/best.rs",
+          "benchmark": "bst_map_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251010_193705",
+    "baseline": {},
+    "full_pipeline": {
+      "atomics_todo": [
+        {
+          "verified": 5,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/atomics_todo/atomics_todo/20251010_193705/final_result.rs",
+          "benchmark": "atomics_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/atomics_todo/atomics_todo/20251010_193705/best/best.rs",
+          "benchmark": "atomics_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251010_193940",
+    "baseline": {
+      "rwlock_vstd_todo": [
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/rwlock_vstd_todo/rwlock_vstd_todo/20251010_194600/final_result.rs",
+          "benchmark": "rwlock_vstd_todo"
+        },
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/rwlock_vstd_todo/rwlock_vstd_todo/20251010_194600/best/best.rs",
+          "benchmark": "rwlock_vstd_todo"
+        }
+      ],
+      "vectors_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/vectors_todo/vectors_todo/20251010_202950/final_result.rs",
+          "benchmark": "vectors_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/vectors_todo/vectors_todo/20251010_202950/best/best.rs",
+          "benchmark": "vectors_todo"
+        }
+      ],
+      "atomics_todo": [
+        {
+          "verified": 5,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/atomics_todo/atomics_todo/20251010_195326/final_result.rs",
+          "benchmark": "atomics_todo"
+        },
+        {
+          "verified": 5,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/atomics_todo/atomics_todo/20251010_195326/best/best.rs",
+          "benchmark": "atomics_todo"
+        }
+      ],
+      "transfer_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/transfer_todo/transfer_todo/20251010_194313/final_result.rs",
+          "benchmark": "transfer_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/transfer_todo/transfer_todo/20251010_194313/best/best.rs",
+          "benchmark": "transfer_todo"
+        }
+      ],
+      "set_from_vec_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/set_from_vec_todo/set_from_vec_todo/20251010_200346/final_result.rs",
+          "benchmark": "set_from_vec_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/set_from_vec_todo/set_from_vec_todo/20251010_200346/best/best.rs",
+          "benchmark": "set_from_vec_todo"
+        }
+      ],
+      "bitmap_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/bitmap_todo/bitmap_todo/20251010_200017/final_result.rs",
+          "benchmark": "bitmap_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/bitmap_todo/bitmap_todo/20251010_200017/best/best.rs",
+          "benchmark": "bitmap_todo"
+        }
+      ],
+      "invariants_todo": [
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/invariants_todo/invariants_todo/20251010_194441/final_result.rs",
+          "benchmark": "invariants_todo"
+        },
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/invariants_todo/invariants_todo/20251010_194441/best/best.rs",
+          "benchmark": "invariants_todo"
+        }
+      ],
+      "option_todo": [
+        {
+          "verified": 8,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/option_todo/option_todo/20251010_194748/final_result.rs",
+          "benchmark": "option_todo"
+        },
+        {
+          "verified": 8,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/option_todo/option_todo/20251010_194748/best/best.rs",
+          "benchmark": "option_todo"
+        }
+      ]
+    },
+    "full_pipeline": {
+      "rb_type_invariant_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rb_type_invariant_todo/rb_type_invariant_todo/20251010_193941/final_result.rs",
+          "benchmark": "rb_type_invariant_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rb_type_invariant_todo/rb_type_invariant_todo/20251010_193941/best/best.rs",
+          "benchmark": "rb_type_invariant_todo"
+        }
+      ],
+      "rwlock_vstd_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rwlock_vstd_todo/rwlock_vstd_todo/20251010_193941/final_result.rs",
+          "benchmark": "rwlock_vstd_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rwlock_vstd_todo/rwlock_vstd_todo/20251010_193941/best/best.rs",
+          "benchmark": "rwlock_vstd_todo"
+        }
+      ],
+      "vectors_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/vectors_todo/vectors_todo/20251010_193941/final_result.rs",
+          "benchmark": "vectors_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/vectors_todo/vectors_todo/20251010_193941/best/best.rs",
+          "benchmark": "vectors_todo"
+        }
+      ],
+      "atomics_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/atomics_todo/atomics_todo/20251010_193941/final_result.rs",
+          "benchmark": "atomics_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/atomics_todo/atomics_todo/20251010_193941/best/best.rs",
+          "benchmark": "atomics_todo"
+        }
+      ],
+      "transfer_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/transfer_todo/transfer_todo/20251010_193941/final_result.rs",
+          "benchmark": "transfer_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/transfer_todo/transfer_todo/20251010_193941/best/best.rs",
+          "benchmark": "transfer_todo"
+        }
+      ],
+      "set_from_vec_todo": [
+        {
+          "verified": 5,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/set_from_vec_todo/set_from_vec_todo/20251010_193941/final_result.rs",
+          "benchmark": "set_from_vec_todo"
+        },
+        {
+          "verified": 5,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/set_from_vec_todo/set_from_vec_todo/20251010_193941/best/best.rs",
+          "benchmark": "set_from_vec_todo"
+        }
+      ],
+      "bitmap_todo": [
+        {
+          "verified": 8,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/bitmap_todo/bitmap_todo/20251010_193941/final_result.rs",
+          "benchmark": "bitmap_todo"
+        },
+        {
+          "verified": 8,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/bitmap_todo/bitmap_todo/20251010_193941/best/best.rs",
+          "benchmark": "bitmap_todo"
+        }
+      ],
+      "invariants_todo": [
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/invariants_todo/invariants_todo/20251010_193941/final_result.rs",
+          "benchmark": "invariants_todo"
+        },
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/invariants_todo/invariants_todo/20251010_193941/best/best.rs",
+          "benchmark": "invariants_todo"
+        }
+      ],
+      "option_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/option_todo/option_todo/20251010_193941/final_result.rs",
+          "benchmark": "option_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/option_todo/option_todo/20251010_193941/best/best.rs",
+          "benchmark": "option_todo"
+        }
+      ],
+      "bst_map_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/bst_map_todo/bst_map_todo/20251010_193941/best/best.rs",
+          "benchmark": "bst_map_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251010_215225",
+    "baseline": {
+      "rb_type_invariant_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/rb_type_invariant_todo/rb_type_invariant_todo/20251010_223651/final_result.rs",
+          "benchmark": "rb_type_invariant_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/rb_type_invariant_todo/rb_type_invariant_todo/20251010_223651/best/best.rs",
+          "benchmark": "rb_type_invariant_todo"
+        }
+      ],
+      "rwlock_vstd_todo": [
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/rwlock_vstd_todo/rwlock_vstd_todo/20251010_215833/final_result.rs",
+          "benchmark": "rwlock_vstd_todo"
+        },
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/rwlock_vstd_todo/rwlock_vstd_todo/20251010_215833/best/best.rs",
+          "benchmark": "rwlock_vstd_todo"
+        }
+      ],
+      "vectors_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/vectors_todo/vectors_todo/20251010_220957/final_result.rs",
+          "benchmark": "vectors_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/vectors_todo/vectors_todo/20251010_220957/best/best.rs",
+          "benchmark": "vectors_todo"
+        }
+      ],
+      "atomics_todo": [
+        {
+          "verified": 5,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/atomics_todo/atomics_todo/20251010_224215/final_result.rs",
+          "benchmark": "atomics_todo"
+        },
+        {
+          "verified": 5,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/atomics_todo/atomics_todo/20251010_224215/best/best.rs",
+          "benchmark": "atomics_todo"
+        }
+      ],
+      "transfer_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/transfer_todo/transfer_todo/20251010_220213/final_result.rs",
+          "benchmark": "transfer_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/transfer_todo/transfer_todo/20251010_220213/best/best.rs",
+          "benchmark": "transfer_todo"
+        }
+      ],
+      "set_from_vec_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/set_from_vec_todo/set_from_vec_todo/20251010_215955/final_result.rs",
+          "benchmark": "set_from_vec_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/set_from_vec_todo/set_from_vec_todo/20251010_215955/best/best.rs",
+          "benchmark": "set_from_vec_todo"
+        }
+      ],
+      "bitmap_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/bitmap_todo/bitmap_todo/20251010_221011/final_result.rs",
+          "benchmark": "bitmap_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/bitmap_todo/bitmap_todo/20251010_221011/best/best.rs",
+          "benchmark": "bitmap_todo"
+        }
+      ],
+      "invariants_todo": [
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/invariants_todo/invariants_todo/20251010_215605/final_result.rs",
+          "benchmark": "invariants_todo"
+        },
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/invariants_todo/invariants_todo/20251010_215605/best/best.rs",
+          "benchmark": "invariants_todo"
+        }
+      ],
+      "option_todo": [
+        {
+          "verified": 8,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/option_todo/option_todo/20251010_220156/final_result.rs",
+          "benchmark": "option_todo"
+        },
+        {
+          "verified": 8,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/option_todo/option_todo/20251010_220156/best/best.rs",
+          "benchmark": "option_todo"
+        }
+      ]
+    },
+    "full_pipeline": {
+      "rwlock_vstd_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rwlock_vstd_todo/rwlock_vstd_todo/20251010_215226/final_result.rs",
+          "benchmark": "rwlock_vstd_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rwlock_vstd_todo/rwlock_vstd_todo/20251010_215226/best/best.rs",
+          "benchmark": "rwlock_vstd_todo"
+        }
+      ],
+      "vectors_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/vectors_todo/vectors_todo/20251010_215226/final_result.rs",
+          "benchmark": "vectors_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/vectors_todo/vectors_todo/20251010_215226/best/best.rs",
+          "benchmark": "vectors_todo"
+        }
+      ],
+      "atomics_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/atomics_todo/atomics_todo/20251010_215226/final_result.rs",
+          "benchmark": "atomics_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/atomics_todo/atomics_todo/20251010_215226/best/best.rs",
+          "benchmark": "atomics_todo"
+        }
+      ],
+      "transfer_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/transfer_todo/transfer_todo/20251010_215226/final_result.rs",
+          "benchmark": "transfer_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/transfer_todo/transfer_todo/20251010_215226/best/best.rs",
+          "benchmark": "transfer_todo"
+        }
+      ],
+      "set_from_vec_todo": [
+        {
+          "verified": 6,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/set_from_vec_todo/set_from_vec_todo/20251010_215226/final_result.rs",
+          "benchmark": "set_from_vec_todo"
+        },
+        {
+          "verified": 6,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/set_from_vec_todo/set_from_vec_todo/20251010_215226/best/best.rs",
+          "benchmark": "set_from_vec_todo"
+        }
+      ],
+      "bitmap_todo": [
+        {
+          "verified": 8,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/bitmap_todo/bitmap_todo/20251010_215226/final_result.rs",
+          "benchmark": "bitmap_todo"
+        },
+        {
+          "verified": 8,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/bitmap_todo/bitmap_todo/20251010_215226/best/best.rs",
+          "benchmark": "bitmap_todo"
+        }
+      ],
+      "invariants_todo": [
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/invariants_todo/invariants_todo/20251010_215226/final_result.rs",
+          "benchmark": "invariants_todo"
+        },
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/invariants_todo/invariants_todo/20251010_215226/best/best.rs",
+          "benchmark": "invariants_todo"
+        }
+      ],
+      "option_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/option_todo/option_todo/20251010_215226/final_result.rs",
+          "benchmark": "option_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/option_todo/option_todo/20251010_215226/best/best.rs",
+          "benchmark": "option_todo"
+        }
+      ],
+      "rb_type_invariant_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rb_type_invariant_todo/rb_type_invariant_todo/20251010_215226/best/best.rs",
+          "benchmark": "rb_type_invariant_todo"
+        }
+      ],
+      "bst_map_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/bst_map_todo/bst_map_todo/20251010_215226/best/best.rs",
+          "benchmark": "bst_map_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251011_135504",
+    "baseline": {
+      "rwlock_vstd_todo": [
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/rwlock_vstd_todo/rwlock_vstd_todo/20251011_140042/final_result.rs",
+          "benchmark": "rwlock_vstd_todo"
+        },
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/rwlock_vstd_todo/rwlock_vstd_todo/20251011_140042/best/best.rs",
+          "benchmark": "rwlock_vstd_todo"
+        }
+      ],
+      "atomics_todo": [
+        {
+          "verified": 5,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/atomics_todo/atomics_todo/20251011_140015/final_result.rs",
+          "benchmark": "atomics_todo"
+        },
+        {
+          "verified": 5,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/atomics_todo/atomics_todo/20251011_140015/best/best.rs",
+          "benchmark": "atomics_todo"
+        }
+      ],
+      "transfer_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/transfer_todo/transfer_todo/20251011_140159/final_result.rs",
+          "benchmark": "transfer_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/transfer_todo/transfer_todo/20251011_140159/best/best.rs",
+          "benchmark": "transfer_todo"
+        }
+      ],
+      "set_from_vec_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/set_from_vec_todo/set_from_vec_todo/20251011_140812/final_result.rs",
+          "benchmark": "set_from_vec_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/set_from_vec_todo/set_from_vec_todo/20251011_140812/best/best.rs",
+          "benchmark": "set_from_vec_todo"
+        }
+      ],
+      "bitmap_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/bitmap_todo/bitmap_todo/20251011_143048/final_result.rs",
+          "benchmark": "bitmap_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/bitmap_todo/bitmap_todo/20251011_143048/best/best.rs",
+          "benchmark": "bitmap_todo"
+        }
+      ],
+      "invariants_todo": [
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/invariants_todo/invariants_todo/20251011_140159/final_result.rs",
+          "benchmark": "invariants_todo"
+        },
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/invariants_todo/invariants_todo/20251011_140159/best/best.rs",
+          "benchmark": "invariants_todo"
+        }
+      ],
+      "option_todo": [
+        {
+          "verified": 8,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/option_todo/option_todo/20251011_140115/final_result.rs",
+          "benchmark": "option_todo"
+        },
+        {
+          "verified": 8,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/option_todo/option_todo/20251011_140115/best/best.rs",
+          "benchmark": "option_todo"
+        }
+      ]
+    },
+    "full_pipeline": {
+      "rb_type_invariant_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rb_type_invariant_todo/rb_type_invariant_todo/20251011_135504/final_result.rs",
+          "benchmark": "rb_type_invariant_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rb_type_invariant_todo/rb_type_invariant_todo/20251011_135504/best/best.rs",
+          "benchmark": "rb_type_invariant_todo"
+        }
+      ],
+      "rwlock_vstd_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rwlock_vstd_todo/rwlock_vstd_todo/20251011_135504/final_result.rs",
+          "benchmark": "rwlock_vstd_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rwlock_vstd_todo/rwlock_vstd_todo/20251011_135504/best/best.rs",
+          "benchmark": "rwlock_vstd_todo"
+        }
+      ],
+      "vectors_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/vectors_todo/vectors_todo/20251011_135504/final_result.rs",
+          "benchmark": "vectors_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/vectors_todo/vectors_todo/20251011_135504/best/best.rs",
+          "benchmark": "vectors_todo"
+        }
+      ],
+      "atomics_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/atomics_todo/atomics_todo/20251011_135504/final_result.rs",
+          "benchmark": "atomics_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/atomics_todo/atomics_todo/20251011_135504/best/best.rs",
+          "benchmark": "atomics_todo"
+        }
+      ],
+      "transfer_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/transfer_todo/transfer_todo/20251011_135504/final_result.rs",
+          "benchmark": "transfer_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/transfer_todo/transfer_todo/20251011_135504/best/best.rs",
+          "benchmark": "transfer_todo"
+        }
+      ],
+      "set_from_vec_todo": [
+        {
+          "verified": 6,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/set_from_vec_todo/set_from_vec_todo/20251011_135504/final_result.rs",
+          "benchmark": "set_from_vec_todo"
+        },
+        {
+          "verified": 6,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/set_from_vec_todo/set_from_vec_todo/20251011_135504/best/best.rs",
+          "benchmark": "set_from_vec_todo"
+        }
+      ],
+      "bitmap_todo": [
+        {
+          "verified": 7,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/bitmap_todo/bitmap_todo/20251011_135504/final_result.rs",
+          "benchmark": "bitmap_todo"
+        },
+        {
+          "verified": 7,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/bitmap_todo/bitmap_todo/20251011_135504/best/best.rs",
+          "benchmark": "bitmap_todo"
+        }
+      ],
+      "invariants_todo": [
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/invariants_todo/invariants_todo/20251011_135504/final_result.rs",
+          "benchmark": "invariants_todo"
+        },
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/invariants_todo/invariants_todo/20251011_135504/best/best.rs",
+          "benchmark": "invariants_todo"
+        }
+      ],
+      "option_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/option_todo/option_todo/20251011_135504/final_result.rs",
+          "benchmark": "option_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/option_todo/option_todo/20251011_135504/best/best.rs",
+          "benchmark": "option_todo"
+        }
+      ],
+      "bst_map_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/bst_map_todo/bst_map_todo/20251011_135504/best/best.rs",
+          "benchmark": "bst_map_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251011_160501",
+    "baseline": {
+      "rwlock_vstd_todo": [
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/rwlock_vstd_todo/rwlock_vstd_todo/20251011_161117/final_result.rs",
+          "benchmark": "rwlock_vstd_todo"
+        },
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/rwlock_vstd_todo/rwlock_vstd_todo/20251011_161117/best/best.rs",
+          "benchmark": "rwlock_vstd_todo"
+        }
+      ],
+      "vectors_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/vectors_todo/vectors_todo/20251011_160944/final_result.rs",
+          "benchmark": "vectors_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/vectors_todo/vectors_todo/20251011_160944/best/best.rs",
+          "benchmark": "vectors_todo"
+        }
+      ],
+      "atomics_todo": [
+        {
+          "verified": 5,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/atomics_todo/atomics_todo/20251011_161048/final_result.rs",
+          "benchmark": "atomics_todo"
+        },
+        {
+          "verified": 5,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/atomics_todo/atomics_todo/20251011_161048/best/best.rs",
+          "benchmark": "atomics_todo"
+        }
+      ],
+      "transfer_todo": [
+        {
+          "verified": 3,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/transfer_todo/transfer_todo/20251011_160812/final_result.rs",
+          "benchmark": "transfer_todo"
+        },
+        {
+          "verified": 3,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/transfer_todo/transfer_todo/20251011_160812/best/best.rs",
+          "benchmark": "transfer_todo"
+        }
+      ],
+      "set_from_vec_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/set_from_vec_todo/set_from_vec_todo/20251011_162629/final_result.rs",
+          "benchmark": "set_from_vec_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/set_from_vec_todo/set_from_vec_todo/20251011_162629/best/best.rs",
+          "benchmark": "set_from_vec_todo"
+        }
+      ],
+      "invariants_todo": [
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/invariants_todo/invariants_todo/20251011_161825/final_result.rs",
+          "benchmark": "invariants_todo"
+        },
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/invariants_todo/invariants_todo/20251011_161825/best/best.rs",
+          "benchmark": "invariants_todo"
+        }
+      ],
+      "option_todo": [
+        {
+          "verified": 8,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/option_todo/option_todo/20251011_160802/final_result.rs",
+          "benchmark": "option_todo"
+        },
+        {
+          "verified": 8,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/option_todo/option_todo/20251011_160802/best/best.rs",
+          "benchmark": "option_todo"
+        }
+      ]
+    },
+    "full_pipeline": {
+      "rb_type_invariant_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rb_type_invariant_todo/rb_type_invariant_todo/20251011_160502/final_result.rs",
+          "benchmark": "rb_type_invariant_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rb_type_invariant_todo/rb_type_invariant_todo/20251011_160502/best/best.rs",
+          "benchmark": "rb_type_invariant_todo"
+        }
+      ],
+      "rwlock_vstd_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rwlock_vstd_todo/rwlock_vstd_todo/20251011_160502/final_result.rs",
+          "benchmark": "rwlock_vstd_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rwlock_vstd_todo/rwlock_vstd_todo/20251011_160502/best/best.rs",
+          "benchmark": "rwlock_vstd_todo"
+        }
+      ],
+      "vectors_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/vectors_todo/vectors_todo/20251011_160502/final_result.rs",
+          "benchmark": "vectors_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/vectors_todo/vectors_todo/20251011_160502/best/best.rs",
+          "benchmark": "vectors_todo"
+        }
+      ],
+      "atomics_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/atomics_todo/atomics_todo/20251011_160502/final_result.rs",
+          "benchmark": "atomics_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/atomics_todo/atomics_todo/20251011_160502/best/best.rs",
+          "benchmark": "atomics_todo"
+        }
+      ],
+      "transfer_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/transfer_todo/transfer_todo/20251011_160502/final_result.rs",
+          "benchmark": "transfer_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/transfer_todo/transfer_todo/20251011_160502/best/best.rs",
+          "benchmark": "transfer_todo"
+        }
+      ],
+      "set_from_vec_todo": [
+        {
+          "verified": 6,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/set_from_vec_todo/set_from_vec_todo/20251011_160502/final_result.rs",
+          "benchmark": "set_from_vec_todo"
+        },
+        {
+          "verified": 6,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/set_from_vec_todo/set_from_vec_todo/20251011_160502/best/best.rs",
+          "benchmark": "set_from_vec_todo"
+        }
+      ],
+      "bitmap_todo": [
+        {
+          "verified": 4,
+          "errors": 4,
+          "success": false,
+          "file": "full_pipeline/bitmap_todo/bitmap_todo/20251011_160502/final_result.rs",
+          "benchmark": "bitmap_todo"
+        },
+        {
+          "verified": 4,
+          "errors": 4,
+          "success": false,
+          "file": "full_pipeline/bitmap_todo/bitmap_todo/20251011_160502/best/best.rs",
+          "benchmark": "bitmap_todo"
+        }
+      ],
+      "invariants_todo": [
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/invariants_todo/invariants_todo/20251011_160502/final_result.rs",
+          "benchmark": "invariants_todo"
+        },
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/invariants_todo/invariants_todo/20251011_160502/best/best.rs",
+          "benchmark": "invariants_todo"
+        }
+      ],
+      "option_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/option_todo/option_todo/20251011_160502/final_result.rs",
+          "benchmark": "option_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/option_todo/option_todo/20251011_160502/best/best.rs",
+          "benchmark": "option_todo"
+        }
+      ],
+      "bst_map_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/bst_map_todo/bst_map_todo/20251011_160502/best/best.rs",
+          "benchmark": "bst_map_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251011_160518",
+    "baseline": {
+      "rb_type_invariant_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/rb_type_invariant_todo/rb_type_invariant_todo/20251011_162344/final_result.rs",
+          "benchmark": "rb_type_invariant_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/rb_type_invariant_todo/rb_type_invariant_todo/20251011_162344/best/best.rs",
+          "benchmark": "rb_type_invariant_todo"
+        }
+      ],
+      "rwlock_vstd_todo": [
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/rwlock_vstd_todo/rwlock_vstd_todo/20251011_161402/final_result.rs",
+          "benchmark": "rwlock_vstd_todo"
+        },
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/rwlock_vstd_todo/rwlock_vstd_todo/20251011_161402/best/best.rs",
+          "benchmark": "rwlock_vstd_todo"
+        }
+      ],
+      "vectors_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/vectors_todo/vectors_todo/20251011_161314/final_result.rs",
+          "benchmark": "vectors_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/vectors_todo/vectors_todo/20251011_161314/best/best.rs",
+          "benchmark": "vectors_todo"
+        }
+      ],
+      "atomics_todo": [
+        {
+          "verified": 5,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/atomics_todo/atomics_todo/20251011_161208/final_result.rs",
+          "benchmark": "atomics_todo"
+        },
+        {
+          "verified": 5,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/atomics_todo/atomics_todo/20251011_161208/best/best.rs",
+          "benchmark": "atomics_todo"
+        }
+      ],
+      "transfer_todo": [
+        {
+          "verified": 3,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/transfer_todo/transfer_todo/20251011_161059/final_result.rs",
+          "benchmark": "transfer_todo"
+        },
+        {
+          "verified": 3,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/transfer_todo/transfer_todo/20251011_161059/best/best.rs",
+          "benchmark": "transfer_todo"
+        }
+      ],
+      "bitmap_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/bitmap_todo/bitmap_todo/20251011_164803/final_result.rs",
+          "benchmark": "bitmap_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/bitmap_todo/bitmap_todo/20251011_164803/best/best.rs",
+          "benchmark": "bitmap_todo"
+        }
+      ],
+      "invariants_todo": [
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/invariants_todo/invariants_todo/20251011_161206/final_result.rs",
+          "benchmark": "invariants_todo"
+        },
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/invariants_todo/invariants_todo/20251011_161206/best/best.rs",
+          "benchmark": "invariants_todo"
+        }
+      ],
+      "option_todo": [
+        {
+          "verified": 8,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/option_todo/option_todo/20251011_160803/final_result.rs",
+          "benchmark": "option_todo"
+        },
+        {
+          "verified": 8,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/option_todo/option_todo/20251011_160803/best/best.rs",
+          "benchmark": "option_todo"
+        }
+      ]
+    },
+    "full_pipeline": {
+      "rb_type_invariant_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rb_type_invariant_todo/rb_type_invariant_todo/20251011_160518/final_result.rs",
+          "benchmark": "rb_type_invariant_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rb_type_invariant_todo/rb_type_invariant_todo/20251011_160518/best/best.rs",
+          "benchmark": "rb_type_invariant_todo"
+        }
+      ],
+      "rwlock_vstd_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rwlock_vstd_todo/rwlock_vstd_todo/20251011_160518/final_result.rs",
+          "benchmark": "rwlock_vstd_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rwlock_vstd_todo/rwlock_vstd_todo/20251011_160518/best/best.rs",
+          "benchmark": "rwlock_vstd_todo"
+        }
+      ],
+      "vectors_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/vectors_todo/vectors_todo/20251011_160518/final_result.rs",
+          "benchmark": "vectors_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/vectors_todo/vectors_todo/20251011_160518/best/best.rs",
+          "benchmark": "vectors_todo"
+        }
+      ],
+      "atomics_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/atomics_todo/atomics_todo/20251011_160518/final_result.rs",
+          "benchmark": "atomics_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/atomics_todo/atomics_todo/20251011_160518/best/best.rs",
+          "benchmark": "atomics_todo"
+        }
+      ],
+      "transfer_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/transfer_todo/transfer_todo/20251011_160518/final_result.rs",
+          "benchmark": "transfer_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/transfer_todo/transfer_todo/20251011_160518/best/best.rs",
+          "benchmark": "transfer_todo"
+        }
+      ],
+      "invariants_todo": [
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/invariants_todo/invariants_todo/20251011_160518/final_result.rs",
+          "benchmark": "invariants_todo"
+        },
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/invariants_todo/invariants_todo/20251011_160518/best/best.rs",
+          "benchmark": "invariants_todo"
+        }
+      ],
+      "option_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/option_todo/option_todo/20251011_160518/final_result.rs",
+          "benchmark": "option_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/option_todo/option_todo/20251011_160518/best/best.rs",
+          "benchmark": "option_todo"
+        }
+      ],
+      "set_from_vec_todo": [
+        {
+          "verified": 5,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/set_from_vec_todo/set_from_vec_todo/20251011_160518/best/best.rs",
+          "benchmark": "set_from_vec_todo"
+        }
+      ],
+      "bitmap_todo": [
+        {
+          "verified": 4,
+          "errors": 4,
+          "success": false,
+          "file": "full_pipeline/bitmap_todo/bitmap_todo/20251011_160518/best/best.rs",
+          "benchmark": "bitmap_todo"
+        }
+      ],
+      "bst_map_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/bst_map_todo/bst_map_todo/20251011_160518/best/best.rs",
+          "benchmark": "bst_map_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251011_170341",
+    "baseline": {},
+    "full_pipeline": {
+      "node_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/node_todo/node_todo/20251011_170342/final_result.rs",
+          "benchmark": "node_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/node_todo/node_todo/20251011_170342/best/best.rs",
+          "benchmark": "node_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251011_182336",
+    "baseline": {
+      "rb_type_invariant_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/rb_type_invariant_todo/rb_type_invariant_todo/20251011_185743/final_result.rs",
+          "benchmark": "rb_type_invariant_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/rb_type_invariant_todo/rb_type_invariant_todo/20251011_185743/best/best.rs",
+          "benchmark": "rb_type_invariant_todo"
+        }
+      ],
+      "rwlock_vstd_todo": [
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/rwlock_vstd_todo/rwlock_vstd_todo/20251011_182522/final_result.rs",
+          "benchmark": "rwlock_vstd_todo"
+        },
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/rwlock_vstd_todo/rwlock_vstd_todo/20251011_182522/best/best.rs",
+          "benchmark": "rwlock_vstd_todo"
+        }
+      ],
+      "atomics_todo": [
+        {
+          "verified": 5,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/atomics_todo/atomics_todo/20251011_183036/final_result.rs",
+          "benchmark": "atomics_todo"
+        },
+        {
+          "verified": 5,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/atomics_todo/atomics_todo/20251011_183036/best/best.rs",
+          "benchmark": "atomics_todo"
+        }
+      ],
+      "transfer_todo": [
+        {
+          "verified": 3,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/transfer_todo/transfer_todo/20251011_183624/final_result.rs",
+          "benchmark": "transfer_todo"
+        },
+        {
+          "verified": 3,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/transfer_todo/transfer_todo/20251011_183624/best/best.rs",
+          "benchmark": "transfer_todo"
+        }
+      ],
+      "bitmap_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/bitmap_todo/bitmap_todo/20251011_190708/final_result.rs",
+          "benchmark": "bitmap_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/bitmap_todo/bitmap_todo/20251011_190708/best/best.rs",
+          "benchmark": "bitmap_todo"
+        }
+      ],
+      "invariants_todo": [
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/invariants_todo/invariants_todo/20251011_183548/final_result.rs",
+          "benchmark": "invariants_todo"
+        },
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/invariants_todo/invariants_todo/20251011_183548/best/best.rs",
+          "benchmark": "invariants_todo"
+        }
+      ],
+      "option_todo": [
+        {
+          "verified": 8,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/option_todo/option_todo/20251011_182547/final_result.rs",
+          "benchmark": "option_todo"
+        },
+        {
+          "verified": 8,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/option_todo/option_todo/20251011_182547/best/best.rs",
+          "benchmark": "option_todo"
+        }
+      ]
+    },
+    "full_pipeline": {
+      "rb_type_invariant_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rb_type_invariant_todo/rb_type_invariant_todo/20251011_182336/final_result.rs",
+          "benchmark": "rb_type_invariant_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rb_type_invariant_todo/rb_type_invariant_todo/20251011_182336/best/best.rs",
+          "benchmark": "rb_type_invariant_todo"
+        }
+      ],
+      "rwlock_vstd_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rwlock_vstd_todo/rwlock_vstd_todo/20251011_182336/final_result.rs",
+          "benchmark": "rwlock_vstd_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rwlock_vstd_todo/rwlock_vstd_todo/20251011_182336/best/best.rs",
+          "benchmark": "rwlock_vstd_todo"
+        }
+      ],
+      "vectors_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/vectors_todo/vectors_todo/20251011_182336/final_result.rs",
+          "benchmark": "vectors_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/vectors_todo/vectors_todo/20251011_182336/best/best.rs",
+          "benchmark": "vectors_todo"
+        }
+      ],
+      "atomics_todo": [
+        {
+          "verified": 5,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/atomics_todo/atomics_todo/20251011_182337/final_result.rs",
+          "benchmark": "atomics_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/atomics_todo/atomics_todo/20251011_182337/best/best.rs",
+          "benchmark": "atomics_todo"
+        }
+      ],
+      "transfer_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/transfer_todo/transfer_todo/20251011_182337/final_result.rs",
+          "benchmark": "transfer_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/transfer_todo/transfer_todo/20251011_182337/best/best.rs",
+          "benchmark": "transfer_todo"
+        }
+      ],
+      "set_from_vec_todo": [
+        {
+          "verified": 6,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/set_from_vec_todo/set_from_vec_todo/20251011_182336/final_result.rs",
+          "benchmark": "set_from_vec_todo"
+        },
+        {
+          "verified": 6,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/set_from_vec_todo/set_from_vec_todo/20251011_182336/best/best.rs",
+          "benchmark": "set_from_vec_todo"
+        }
+      ],
+      "bitmap_todo": [
+        {
+          "verified": 7,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/bitmap_todo/bitmap_todo/20251011_182337/final_result.rs",
+          "benchmark": "bitmap_todo"
+        },
+        {
+          "verified": 7,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/bitmap_todo/bitmap_todo/20251011_182337/best/best.rs",
+          "benchmark": "bitmap_todo"
+        }
+      ],
+      "invariants_todo": [
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/invariants_todo/invariants_todo/20251011_182336/final_result.rs",
+          "benchmark": "invariants_todo"
+        },
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/invariants_todo/invariants_todo/20251011_182336/best/best.rs",
+          "benchmark": "invariants_todo"
+        }
+      ],
+      "option_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/option_todo/option_todo/20251011_182337/final_result.rs",
+          "benchmark": "option_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/option_todo/option_todo/20251011_182337/best/best.rs",
+          "benchmark": "option_todo"
+        }
+      ],
+      "bst_map_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/bst_map_todo/bst_map_todo/20251011_182336/best/best.rs",
+          "benchmark": "bst_map_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251011_224359",
+    "baseline": {},
+    "full_pipeline": {
+      "atomics_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/atomics_todo/atomics_todo/20251011_224359/final_result.rs",
+          "benchmark": "atomics_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/atomics_todo/atomics_todo/20251011_224359/best/best.rs",
+          "benchmark": "atomics_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251011_225123",
+    "baseline": {},
+    "full_pipeline": {
+      "atomics_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/atomics_todo/atomics_todo/20251011_225123/final_result.rs",
+          "benchmark": "atomics_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/atomics_todo/atomics_todo/20251011_225123/best/best.rs",
+          "benchmark": "atomics_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251011_225125",
+    "baseline": {},
+    "full_pipeline": {
+      "bitmap_todo": [
+        {
+          "verified": 8,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/bitmap_todo/bitmap_todo/20251011_225125/final_result.rs",
+          "benchmark": "bitmap_todo"
+        },
+        {
+          "verified": 8,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/bitmap_todo/bitmap_todo/20251011_225125/best/best.rs",
+          "benchmark": "bitmap_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251011_225127",
+    "baseline": {},
+    "full_pipeline": {
+      "bst_map_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/bst_map_todo/bst_map_todo/20251011_225127/best/best.rs",
+          "benchmark": "bst_map_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251011_225129",
+    "baseline": {},
+    "full_pipeline": {
+      "invariants_todo": [
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/invariants_todo/invariants_todo/20251011_225129/final_result.rs",
+          "benchmark": "invariants_todo"
+        },
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/invariants_todo/invariants_todo/20251011_225129/best/best.rs",
+          "benchmark": "invariants_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251011_225131",
+    "baseline": {},
+    "full_pipeline": {
+      "option_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/option_todo/option_todo/20251011_225131/final_result.rs",
+          "benchmark": "option_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/option_todo/option_todo/20251011_225131/best/best.rs",
+          "benchmark": "option_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251011_225133",
+    "baseline": {},
+    "full_pipeline": {
+      "rb_type_invariant_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rb_type_invariant_todo/rb_type_invariant_todo/20251011_225133/final_result.rs",
+          "benchmark": "rb_type_invariant_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rb_type_invariant_todo/rb_type_invariant_todo/20251011_225133/best/best.rs",
+          "benchmark": "rb_type_invariant_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251011_225135",
+    "baseline": {},
+    "full_pipeline": {
+      "rwlock_vstd_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rwlock_vstd_todo/rwlock_vstd_todo/20251011_225135/final_result.rs",
+          "benchmark": "rwlock_vstd_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rwlock_vstd_todo/rwlock_vstd_todo/20251011_225135/best/best.rs",
+          "benchmark": "rwlock_vstd_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251011_225137",
+    "baseline": {},
+    "full_pipeline": {
+      "set_from_vec_todo": [
+        {
+          "verified": 5,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/set_from_vec_todo/set_from_vec_todo/20251011_225137/final_result.rs",
+          "benchmark": "set_from_vec_todo"
+        },
+        {
+          "verified": 5,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/set_from_vec_todo/set_from_vec_todo/20251011_225137/best/best.rs",
+          "benchmark": "set_from_vec_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251011_225139",
+    "baseline": {},
+    "full_pipeline": {
+      "transfer_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/transfer_todo/transfer_todo/20251011_225139/final_result.rs",
+          "benchmark": "transfer_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/transfer_todo/transfer_todo/20251011_225139/best/best.rs",
+          "benchmark": "transfer_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251011_225141",
+    "baseline": {},
+    "full_pipeline": {
+      "vectors_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/vectors_todo/vectors_todo/20251011_225141/final_result.rs",
+          "benchmark": "vectors_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/vectors_todo/vectors_todo/20251011_225141/best/best.rs",
+          "benchmark": "vectors_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251011_225238",
+    "baseline": {
+      "atomics_todo": [
+        {
+          "verified": 5,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/atomics_todo/atomics_todo/20251011_230959/final_result.rs",
+          "benchmark": "atomics_todo"
+        },
+        {
+          "verified": 5,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/atomics_todo/atomics_todo/20251011_230959/best/best.rs",
+          "benchmark": "atomics_todo"
+        }
+      ]
+    },
+    "full_pipeline": {
+      "atomics_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/atomics_todo/atomics_todo/20251011_225239/final_result.rs",
+          "benchmark": "atomics_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/atomics_todo/atomics_todo/20251011_225239/best/best.rs",
+          "benchmark": "atomics_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251011_225240",
+    "baseline": {},
+    "full_pipeline": {
+      "bitmap_todo": [
+        {
+          "verified": 4,
+          "errors": 4,
+          "success": false,
+          "file": "full_pipeline/bitmap_todo/bitmap_todo/20251011_225241/best/best.rs",
+          "benchmark": "bitmap_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251011_225242",
+    "baseline": {},
+    "full_pipeline": {
+      "bst_map_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/bst_map_todo/bst_map_todo/20251011_225243/best/best.rs",
+          "benchmark": "bst_map_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251011_225244",
+    "baseline": {
+      "invariants_todo": [
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/invariants_todo/invariants_todo/20251011_225623/final_result.rs",
+          "benchmark": "invariants_todo"
+        },
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/invariants_todo/invariants_todo/20251011_225623/best/best.rs",
+          "benchmark": "invariants_todo"
+        }
+      ]
+    },
+    "full_pipeline": {
+      "invariants_todo": [
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/invariants_todo/invariants_todo/20251011_225245/final_result.rs",
+          "benchmark": "invariants_todo"
+        },
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/invariants_todo/invariants_todo/20251011_225245/best/best.rs",
+          "benchmark": "invariants_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251011_225246",
+    "baseline": {},
+    "full_pipeline": {
+      "node_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/node_todo/node_todo/20251011_225247/best/best.rs",
+          "benchmark": "node_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251011_225248",
+    "baseline": {
+      "option_todo": [
+        {
+          "verified": 8,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/option_todo/option_todo/20251011_225507/final_result.rs",
+          "benchmark": "option_todo"
+        },
+        {
+          "verified": 8,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/option_todo/option_todo/20251011_225507/best/best.rs",
+          "benchmark": "option_todo"
+        }
+      ]
+    },
+    "full_pipeline": {
+      "option_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/option_todo/option_todo/20251011_225249/final_result.rs",
+          "benchmark": "option_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/option_todo/option_todo/20251011_225249/best/best.rs",
+          "benchmark": "option_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251011_225250",
+    "baseline": {},
+    "full_pipeline": {
+      "rb_type_invariant_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rb_type_invariant_todo/rb_type_invariant_todo/20251011_225251/best/best.rs",
+          "benchmark": "rb_type_invariant_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251011_225252",
+    "baseline": {
+      "rwlock_vstd_todo": [
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/rwlock_vstd_todo/rwlock_vstd_todo/20251011_225614/final_result.rs",
+          "benchmark": "rwlock_vstd_todo"
+        },
+        {
+          "verified": 2,
+          "errors": 0,
+          "success": true,
+          "file": "baseline/rwlock_vstd_todo/rwlock_vstd_todo/20251011_225614/best/best.rs",
+          "benchmark": "rwlock_vstd_todo"
+        }
+      ]
+    },
+    "full_pipeline": {
+      "rwlock_vstd_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rwlock_vstd_todo/rwlock_vstd_todo/20251011_225253/final_result.rs",
+          "benchmark": "rwlock_vstd_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/rwlock_vstd_todo/rwlock_vstd_todo/20251011_225253/best/best.rs",
+          "benchmark": "rwlock_vstd_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251011_225254",
+    "baseline": {},
+    "full_pipeline": {
+      "set_from_vec_todo": [
+        {
+          "verified": 6,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/set_from_vec_todo/set_from_vec_todo/20251011_225255/final_result.rs",
+          "benchmark": "set_from_vec_todo"
+        },
+        {
+          "verified": 6,
+          "errors": 0,
+          "success": true,
+          "file": "full_pipeline/set_from_vec_todo/set_from_vec_todo/20251011_225255/best/best.rs",
+          "benchmark": "set_from_vec_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251011_225256",
+    "baseline": {
+      "transfer_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/transfer_todo/transfer_todo/20251011_225433/final_result.rs",
+          "benchmark": "transfer_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/transfer_todo/transfer_todo/20251011_225433/best/best.rs",
+          "benchmark": "transfer_todo"
+        }
+      ]
+    },
+    "full_pipeline": {
+      "transfer_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/transfer_todo/transfer_todo/20251011_225257/final_result.rs",
+          "benchmark": "transfer_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/transfer_todo/transfer_todo/20251011_225257/best/best.rs",
+          "benchmark": "transfer_todo"
+        }
+      ]
+    }
+  },
+  {
+    "experiment": "repair_experiment_20251011_225258",
+    "baseline": {},
+    "full_pipeline": {}
+  },
+  {
+    "experiment": "repair_experiment_20251011_225300",
+    "baseline": {
+      "vectors_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/vectors_todo/vectors_todo/20251011_230748/final_result.rs",
+          "benchmark": "vectors_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "baseline/vectors_todo/vectors_todo/20251011_230748/best/best.rs",
+          "benchmark": "vectors_todo"
+        }
+      ]
+    },
+    "full_pipeline": {
+      "vectors_todo": [
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/vectors_todo/vectors_todo/20251011_225301/final_result.rs",
+          "benchmark": "vectors_todo"
+        },
+        {
+          "verified": 0,
+          "errors": 1,
+          "success": false,
+          "file": "full_pipeline/vectors_todo/vectors_todo/20251011_225301/best/best.rs",
+          "benchmark": "vectors_todo"
+        }
+      ]
+    }
+  }
+]

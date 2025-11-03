@@ -1,0 +1,449 @@
+{
+  "benchmark_name": "rb_type_invariant_todo",
+  "start_time": "2025-10-30T21:33:41.629957",
+  "end_time": "2025-10-30T21:33:51.766077",
+  "total_execution_time": 10.13612174987793,
+  "modules_activated": [
+    "view_inference",
+    "spec_inference",
+    "proof_generation"
+  ],
+  "modules_count": 3,
+  "stages": {
+    "view_inference": {
+      "step_number": 1,
+      "start_time": "2025-10-30T21:33:42.355501",
+      "end_time": "2025-10-30T21:33:42.732946",
+      "execution_time": 0.37744808197021484,
+      "llm_calls": 3,
+      "iterations": 1,
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 2,
+        "is_correct": false
+      }
+    },
+    "spec_inference": {
+      "step_number": 2,
+      "start_time": "2025-10-30T21:33:42.733058",
+      "end_time": "2025-10-30T21:33:43.225225",
+      "execution_time": 0.4921698570251465,
+      "llm_calls": 3,
+      "iterations": 1,
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 2,
+        "is_correct": false
+      }
+    },
+    "proof_generation": {
+      "step_number": 3,
+      "start_time": "2025-10-30T21:33:43.225358",
+      "end_time": "2025-10-30T21:33:43.618842",
+      "execution_time": 0.39348697662353516,
+      "llm_calls": 3,
+      "iterations": 1,
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 2,
+        "is_correct": false
+      }
+    }
+  },
+  "llm_calls": {
+    "total": 30,
+    "by_stage": {
+      "planning": 1,
+      "view_inference": 3,
+      "spec_inference": 3,
+      "proof_generation": 3,
+      "repair": 20
+    },
+    "by_module": {
+      "planner": 1,
+      "view_inference": 3,
+      "spec_inference": 3,
+      "proof_generation": 3,
+      "repair_missing": 5,
+      "repair_syntax": 15
+    },
+    "response_times": [
+      {
+        "stage": "planning",
+        "module": "planner",
+        "time": 0.13998627662658691,
+        "cache_hit": false
+      },
+      {
+        "stage": "view_inference",
+        "module": "view_inference",
+        "time": 0.1126868724822998,
+        "cache_hit": false
+      },
+      {
+        "stage": "view_inference",
+        "module": "view_inference",
+        "time": 0.11833381652832031,
+        "cache_hit": false
+      },
+      {
+        "stage": "view_inference",
+        "module": "view_inference",
+        "time": 0.14533758163452148,
+        "cache_hit": false
+      },
+      {
+        "stage": "spec_inference",
+        "module": "spec_inference",
+        "time": 0.17400574684143066,
+        "cache_hit": false
+      },
+      {
+        "stage": "spec_inference",
+        "module": "spec_inference",
+        "time": 0.1342017650604248,
+        "cache_hit": false
+      },
+      {
+        "stage": "spec_inference",
+        "module": "spec_inference",
+        "time": 0.18121743202209473,
+        "cache_hit": false
+      },
+      {
+        "stage": "proof_generation",
+        "module": "proof_generation",
+        "time": 0.13205695152282715,
+        "cache_hit": false
+      },
+      {
+        "stage": "proof_generation",
+        "module": "proof_generation",
+        "time": 0.11672830581665039,
+        "cache_hit": false
+      },
+      {
+        "stage": "proof_generation",
+        "module": "proof_generation",
+        "time": 0.14294695854187012,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_missing",
+        "time": 0.1453838348388672,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.11588048934936523,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.12257885932922363,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.13788557052612305,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_missing",
+        "time": 0.11361932754516602,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.13544011116027832,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.22652316093444824,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.1525859832763672,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_missing",
+        "time": 0.2942848205566406,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.16746902465820312,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.10465693473815918,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.11794853210449219,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_missing",
+        "time": 0.12251639366149902,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.11798310279846191,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.10664796829223633,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.10148382186889648,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_missing",
+        "time": 0.09534978866577148,
+        "cache_hit": true
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.11234092712402344,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.11452126502990723,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.11675691604614258,
+        "cache_hit": false
+      }
+    ],
+    "cache_hits": 1,
+    "cache_misses": 29,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "by_call": []
+  },
+  "iterations": {
+    "by_module": {},
+    "by_stage": {
+      "view_inference": 1,
+      "spec_inference": 1,
+      "proof_generation": 1
+    }
+  },
+  "repairs": {
+    "total_rounds": 5,
+    "total_repairs": 10,
+    "repairs_by_type": {
+      "MissImpl": 5,
+      "Other": 5
+    },
+    "repairs_by_heuristic": {
+      "repair_missing": 5,
+      "repair_syntax": 5
+    },
+    "successful_repairs": 0,
+    "failed_repairs": 10,
+    "repair_times": [
+      {
+        "error_type": "MissImpl",
+        "heuristic": "repair_missing",
+        "time": 0.6613929271697998,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 1.074831247329712,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "MissImpl",
+        "heuristic": "repair_missing",
+        "time": 0.629511833190918,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 1.0275325775146484,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "MissImpl",
+        "heuristic": "repair_missing",
+        "time": 0.8243062496185303,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 1.0178956985473633,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "MissImpl",
+        "heuristic": "repair_missing",
+        "time": 0.6288959980010986,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 0.8206479549407959,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "MissImpl",
+        "heuristic": "repair_missing",
+        "time": 0.5929157733917236,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 0.8579623699188232,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      }
+    ]
+  },
+  "errors": {
+    "initial_error_count": 999,
+    "final_error_count": 999,
+    "errors_by_type": {
+      "MissImpl": 1,
+      "Other": 1
+    },
+    "errors_fixed_by_type": {}
+  },
+  "verification": {
+    "initial_verified": -1,
+    "final_verified": -1,
+    "initial_errors": 999,
+    "final_errors": 999,
+    "compilation_errors": 1
+  },
+  "code_metrics": {
+    "initial_code_length": 7614,
+    "final_code_length": 7613,
+    "code_changes": 1
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "full_pipeline": [
+    {
+      "benchmark": "rb_type_invariant_todo",
+      "configuration": "full_pipeline",
+      "success": false,
+      "timeout": true,
+      "exit_code": -1,
+      "execution_time": 1800.0068972110748,
+      "log_file": "output/repair_experiments/repair_experiment_20251021_172803/full_pipeline/rb_type_invariant_todo/output.log",
+      "output_dir": "output/repair_experiments/repair_experiment_20251021_172803/full_pipeline/rb_type_invariant_todo"
+    }
+  ],
+  "no_repairs": [
+    {
+      "benchmark": "rb_type_invariant_todo",
+      "configuration": "no_repairs",
+      "success": false,
+      "timeout": true,
+      "exit_code": -1,
+      "execution_time": 1800.0065851211548,
+      "log_file": "output/repair_experiments/repair_experiment_20251021_172803/no_repairs/rb_type_invariant_todo/output.log",
+      "output_dir": "output/repair_experiments/repair_experiment_20251021_172803/no_repairs/rb_type_invariant_todo"
+    }
+  ],
+  "baseline": [
+    {
+      "benchmark": "rb_type_invariant_todo",
+      "configuration": "baseline",
+      "success": false,
+      "timeout": true,
+      "exit_code": -1,
+      "execution_time": 1800.0076327323914,
+      "log_file": "output/repair_experiments/repair_experiment_20251021_172803/baseline/rb_type_invariant_todo/output.log",
+      "output_dir": "output/repair_experiments/repair_experiment_20251021_172803/baseline/rb_type_invariant_todo"
+    }
+  ]
+}

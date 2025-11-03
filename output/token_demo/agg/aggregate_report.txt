@@ -1,0 +1,59 @@
+================================================================================
+AGGREGATE STATISTICS REPORT
+================================================================================
+
+OVERALL SUMMARY
+--------------------------------------------------------------------------------
+Total Benchmarks: 1
+Successfully Verified: 0 (0.0%)
+
+EXECUTION TIME STATISTICS
+--------------------------------------------------------------------------------
+Mean: 0.00s
+Median: 0.00s
+Std Dev: N/A
+Min: 0.00s
+Max: 0.00s
+Total: 0.00s
+
+LLM CALL STATISTICS
+--------------------------------------------------------------------------------
+Total LLM Calls: 1
+Mean per Benchmark: 1.0
+Median per Benchmark: 1.0
+Min: 1
+Max: 1
+Cache Hit Rate: 0.0%
+Total Input Tokens: 36
+Total Output Tokens: 87
+
+RESPONSE TIME STATISTICS
+--------------------------------------------------------------------------------
+Mean: 0.42s
+Median: 0.42s
+Min: 0.42s
+Max: 0.42s
+
+MODULE ACTIVATION STATISTICS
+--------------------------------------------------------------------------------
+Mean Modules per Benchmark: 0.0
+Median: 0.0
+Min: 0
+Max: 0
+
+REPAIR STATISTICS
+--------------------------------------------------------------------------------
+Total Repair Rounds: 0
+Mean Rounds per Benchmark: 0.0
+Total Repairs Attempted: 0
+Successful Repairs: 0
+Overall Repair Success Rate: 0.0%
+
+ERROR FIXING STATISTICS
+--------------------------------------------------------------------------------
+Total Initial Errors: 1
+Total Final Errors: 1
+Total Errors Fixed: 0
+Error Fix Rate: 0.0%
+
+================================================================================

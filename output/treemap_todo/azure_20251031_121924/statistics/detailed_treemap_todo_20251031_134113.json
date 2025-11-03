@@ -1,0 +1,573 @@
+{
+  "benchmark_name": "treemap_todo",
+  "start_time": "2025-10-31T12:19:24.393023",
+  "end_time": "2025-10-31T13:41:13.085685",
+  "total_execution_time": 4908.692664384842,
+  "modules_activated": [
+    "view_inference",
+    "view_refinement",
+    "inv_inference",
+    "spec_inference",
+    "proof_generation"
+  ],
+  "modules_count": 5,
+  "stages": {
+    "view_inference": {
+      "step_number": 1,
+      "start_time": "2025-10-31T12:19:44.992398",
+      "end_time": "2025-10-31T12:42:29.149790",
+      "execution_time": 1364.1573967933655,
+      "llm_calls": 3,
+      "iterations": 1,
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 1,
+        "is_correct": false
+      }
+    },
+    "view_refinement": {
+      "step_number": 2,
+      "start_time": "2025-10-31T12:42:29.150003",
+      "end_time": "2025-10-31T12:57:19.041021",
+      "execution_time": 889.8910219669342,
+      "llm_calls": 3,
+      "iterations": 1,
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 1,
+        "is_correct": false
+      }
+    },
+    "inv_inference": {
+      "step_number": 3,
+      "start_time": "2025-10-31T12:57:19.041159",
+      "end_time": "2025-10-31T12:59:40.858415",
+      "execution_time": 141.81726121902466,
+      "llm_calls": 1,
+      "iterations": 1,
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 1,
+        "is_correct": false
+      }
+    },
+    "spec_inference": {
+      "step_number": 4,
+      "start_time": "2025-10-31T12:59:40.858613",
+      "end_time": "2025-10-31T13:02:22.098711",
+      "execution_time": 161.24010062217712,
+      "llm_calls": 1,
+      "iterations": 1,
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 1,
+        "is_correct": false
+      }
+    },
+    "proof_generation": {
+      "step_number": 5,
+      "start_time": "2025-10-31T13:02:22.098866",
+      "end_time": "2025-10-31T13:04:57.609131",
+      "execution_time": 155.51026701927185,
+      "llm_calls": 1,
+      "iterations": 1,
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 1,
+        "is_correct": false
+      }
+    }
+  },
+  "llm_calls": {
+    "total": 24,
+    "by_stage": {
+      "planning": 1,
+      "view_inference": 3,
+      "view_refinement": 3,
+      "inv_inference": 1,
+      "spec_inference": 1,
+      "proof_generation": 1,
+      "repair": 14
+    },
+    "by_module": {
+      "planner": 1,
+      "view_inference": 3,
+      "view_refinement": 3,
+      "inv_inference": 1,
+      "spec_inference": 1,
+      "proof_generation": 1,
+      "repair_syntax": 10,
+      "repair_type": 4
+    },
+    "response_times": [
+      {
+        "stage": "planning",
+        "module": "planner",
+        "time": 19.565683603286743,
+        "cache_hit": false
+      },
+      {
+        "stage": "view_inference",
+        "module": "view_inference",
+        "time": 600.2431859970093,
+        "cache_hit": false
+      },
+      {
+        "stage": "view_inference",
+        "module": "view_inference",
+        "time": 600.1419191360474,
+        "cache_hit": false
+      },
+      {
+        "stage": "view_inference",
+        "module": "view_inference",
+        "time": 162.87032890319824,
+        "cache_hit": false
+      },
+      {
+        "stage": "view_refinement",
+        "module": "view_refinement",
+        "time": 126.01670598983765,
+        "cache_hit": false
+      },
+      {
+        "stage": "view_refinement",
+        "module": "view_refinement",
+        "time": 166.0750093460083,
+        "cache_hit": false
+      },
+      {
+        "stage": "view_refinement",
+        "module": "view_refinement",
+        "time": 596.5338129997253,
+        "cache_hit": false
+      },
+      {
+        "stage": "inv_inference",
+        "module": "inv_inference",
+        "time": 141.3072235584259,
+        "cache_hit": false
+      },
+      {
+        "stage": "spec_inference",
+        "module": "spec_inference",
+        "time": 160.0291178226471,
+        "cache_hit": false
+      },
+      {
+        "stage": "proof_generation",
+        "module": "proof_generation",
+        "time": 154.9759500026703,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 210.40217995643616,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_type",
+        "time": 156.22378849983215,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_type",
+        "time": 104.67222714424133,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_type",
+        "time": 221.54576325416565,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_type",
+        "time": 102.35726881027222,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 157.4198076725006,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 119.71542191505432,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 173.82443594932556,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 137.08200073242188,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 231.1757357120514,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 122.26761817932129,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 186.4769971370697,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 114.65338516235352,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 132.04950666427612,
+        "cache_hit": false
+      }
+    ],
+    "cache_hits": 0,
+    "cache_misses": 24,
+    "input_tokens": 161771,
+    "output_tokens": 345555,
+    "by_call": [
+      {
+        "stage": "planning",
+        "module": "planner",
+        "input_tokens": 5267,
+        "output_tokens": 1283,
+        "cache_hit": false,
+        "time": 19.565683603286743
+      },
+      {
+        "stage": "view_inference",
+        "module": "view_inference",
+        "input_tokens": 9203,
+        "output_tokens": 17254,
+        "cache_hit": false,
+        "time": 162.87032890319824
+      },
+      {
+        "stage": "view_refinement",
+        "module": "view_refinement",
+        "input_tokens": 8106,
+        "output_tokens": 14273,
+        "cache_hit": false,
+        "time": 126.01670598983765
+      },
+      {
+        "stage": "view_refinement",
+        "module": "view_refinement",
+        "input_tokens": 8130,
+        "output_tokens": 14834,
+        "cache_hit": false,
+        "time": 166.0750093460083
+      },
+      {
+        "stage": "view_refinement",
+        "module": "view_refinement",
+        "input_tokens": 8130,
+        "output_tokens": 14642,
+        "cache_hit": false,
+        "time": 596.5338129997253
+      },
+      {
+        "stage": "inv_inference",
+        "module": "inv_inference",
+        "input_tokens": 9025,
+        "output_tokens": 15536,
+        "cache_hit": false,
+        "time": 141.3072235584259
+      },
+      {
+        "stage": "spec_inference",
+        "module": "spec_inference",
+        "input_tokens": 15404,
+        "output_tokens": 15360,
+        "cache_hit": false,
+        "time": 160.0291178226471
+      },
+      {
+        "stage": "proof_generation",
+        "module": "proof_generation",
+        "input_tokens": 17908,
+        "output_tokens": 15790,
+        "cache_hit": false,
+        "time": 154.9759500026703
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "input_tokens": 7614,
+        "output_tokens": 19126,
+        "cache_hit": false,
+        "time": 210.40217995643616
+      },
+      {
+        "stage": "repair",
+        "module": "repair_type",
+        "input_tokens": 6886,
+        "output_tokens": 22205,
+        "cache_hit": false,
+        "time": 156.22378849983215
+      },
+      {
+        "stage": "repair",
+        "module": "repair_type",
+        "input_tokens": 5046,
+        "output_tokens": 13754,
+        "cache_hit": false,
+        "time": 104.67222714424133
+      },
+      {
+        "stage": "repair",
+        "module": "repair_type",
+        "input_tokens": 5077,
+        "output_tokens": 15148,
+        "cache_hit": false,
+        "time": 221.54576325416565
+      },
+      {
+        "stage": "repair",
+        "module": "repair_type",
+        "input_tokens": 5101,
+        "output_tokens": 14892,
+        "cache_hit": false,
+        "time": 102.35726881027222
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "input_tokens": 5625,
+        "output_tokens": 17923,
+        "cache_hit": false,
+        "time": 157.4198076725006
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "input_tokens": 5655,
+        "output_tokens": 14030,
+        "cache_hit": false,
+        "time": 119.71542191505432
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "input_tokens": 5678,
+        "output_tokens": 17033,
+        "cache_hit": false,
+        "time": 173.82443594932556
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "input_tokens": 5625,
+        "output_tokens": 17782,
+        "cache_hit": false,
+        "time": 137.08200073242188
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "input_tokens": 5655,
+        "output_tokens": 17610,
+        "cache_hit": false,
+        "time": 231.1757357120514
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "input_tokens": 5678,
+        "output_tokens": 14526,
+        "cache_hit": false,
+        "time": 122.26761817932129
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "input_tokens": 5625,
+        "output_tokens": 17929,
+        "cache_hit": false,
+        "time": 186.4769971370697
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "input_tokens": 5655,
+        "output_tokens": 17462,
+        "cache_hit": false,
+        "time": 114.65338516235352
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "input_tokens": 5678,
+        "output_tokens": 17163,
+        "cache_hit": false,
+        "time": 132.04950666427612
+      }
+    ]
+  },
+  "iterations": {
+    "by_module": {},
+    "by_stage": {
+      "view_inference": 1,
+      "view_refinement": 1,
+      "inv_inference": 1,
+      "spec_inference": 1,
+      "proof_generation": 1
+    }
+  },
+  "repairs": {
+    "total_rounds": 5,
+    "total_repairs": 6,
+    "repairs_by_type": {
+      "Other": 4,
+      "MismatchedType": 1,
+      "TypeAnnotation": 1
+    },
+    "repairs_by_heuristic": {
+      "repair_syntax": 4,
+      "repair_type": 2
+    },
+    "successful_repairs": 0,
+    "failed_repairs": 6,
+    "repair_times": [
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 211.6134650707245,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "MismatchedType",
+        "heuristic": "repair_type",
+        "time": 156.52187824249268,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "TypeAnnotation",
+        "heuristic": "repair_type",
+        "time": 429.5668466091156,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 451.9612879753113,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 491.6264178752899,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 434.1705696582794,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      }
+    ]
+  },
+  "errors": {
+    "initial_error_count": 2,
+    "final_error_count": 999,
+    "errors_by_type": {
+      "PreCondFail": 1,
+      "AssertFail": 2
+    },
+    "errors_fixed_by_type": {}
+  },
+  "verification": {
+    "initial_verified": 14,
+    "final_verified": -1,
+    "initial_errors": 2,
+    "final_errors": 999,
+    "compilation_errors": 1
+  },
+  "code_metrics": {
+    "initial_code_length": 17986,
+    "final_code_length": 19426,
+    "code_changes": 1440
+  }
+}

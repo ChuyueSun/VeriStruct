@@ -1,0 +1,326 @@
+{
+  "benchmark_name": "vectors_todo",
+  "start_time": "2025-10-30T08:48:25.805734",
+  "end_time": "2025-10-30T09:01:49.523141",
+  "total_execution_time": 803.7174110412598,
+  "modules_activated": [
+    "spec_inference",
+    "proof_generation"
+  ],
+  "modules_count": 2,
+  "stages": {
+    "spec_inference": {
+      "step_number": 1,
+      "start_time": "2025-10-30T08:48:42.549725",
+      "end_time": "2025-10-30T08:50:00.073744",
+      "execution_time": 77.52402186393738,
+      "llm_calls": 1,
+      "iterations": 1,
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 1,
+        "is_correct": false
+      }
+    },
+    "proof_generation": {
+      "step_number": 2,
+      "start_time": "2025-10-30T08:50:00.073905",
+      "end_time": "2025-10-30T08:50:58.364345",
+      "execution_time": 58.29044318199158,
+      "llm_calls": 1,
+      "iterations": 1,
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 1,
+        "is_correct": false
+      }
+    }
+  },
+  "llm_calls": {
+    "total": 9,
+    "by_stage": {
+      "planning": 1,
+      "spec_inference": 1,
+      "proof_generation": 1,
+      "repair": 6
+    },
+    "by_module": {
+      "planner": 1,
+      "spec_inference": 1,
+      "proof_generation": 1,
+      "repair_syntax": 1,
+      "repair_invariant": 4,
+      "repair_postcond": 1
+    },
+    "response_times": [
+      {
+        "stage": "planning",
+        "module": "planner",
+        "time": 15.912200212478638,
+        "cache_hit": false
+      },
+      {
+        "stage": "spec_inference",
+        "module": "spec_inference",
+        "time": 74.54801034927368,
+        "cache_hit": false
+      },
+      {
+        "stage": "proof_generation",
+        "module": "proof_generation",
+        "time": 57.893410444259644,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 52.576594829559326,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_invariant",
+        "time": 133.05095791816711,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_postcond",
+        "time": 113.81716561317444,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_invariant",
+        "time": 91.6764144897461,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_invariant",
+        "time": 112.84064865112305,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_invariant",
+        "time": 137.35226225852966,
+        "cache_hit": false
+      }
+    ],
+    "cache_hits": 0,
+    "cache_misses": 9,
+    "input_tokens": 55470,
+    "output_tokens": 105253,
+    "by_call": [
+      {
+        "stage": "planning",
+        "module": "planner",
+        "input_tokens": 2229,
+        "output_tokens": 1234,
+        "cache_hit": false,
+        "time": 15.912200212478638
+      },
+      {
+        "stage": "spec_inference",
+        "module": "spec_inference",
+        "input_tokens": 10766,
+        "output_tokens": 9460,
+        "cache_hit": false,
+        "time": 74.54801034927368
+      },
+      {
+        "stage": "proof_generation",
+        "module": "proof_generation",
+        "input_tokens": 16577,
+        "output_tokens": 6423,
+        "cache_hit": false,
+        "time": 57.893410444259644
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "input_tokens": 3110,
+        "output_tokens": 6513,
+        "cache_hit": false,
+        "time": 52.576594829559326
+      },
+      {
+        "stage": "repair",
+        "module": "repair_invariant",
+        "input_tokens": 4602,
+        "output_tokens": 18174,
+        "cache_hit": false,
+        "time": 133.05095791816711
+      },
+      {
+        "stage": "repair",
+        "module": "repair_postcond",
+        "input_tokens": 4042,
+        "output_tokens": 13705,
+        "cache_hit": false,
+        "time": 113.81716561317444
+      },
+      {
+        "stage": "repair",
+        "module": "repair_invariant",
+        "input_tokens": 4692,
+        "output_tokens": 13670,
+        "cache_hit": false,
+        "time": 91.6764144897461
+      },
+      {
+        "stage": "repair",
+        "module": "repair_invariant",
+        "input_tokens": 4731,
+        "output_tokens": 15858,
+        "cache_hit": false,
+        "time": 112.84064865112305
+      },
+      {
+        "stage": "repair",
+        "module": "repair_invariant",
+        "input_tokens": 4721,
+        "output_tokens": 20216,
+        "cache_hit": false,
+        "time": 137.35226225852966
+      }
+    ]
+  },
+  "iterations": {
+    "by_module": {},
+    "by_stage": {
+      "spec_inference": 1,
+      "proof_generation": 1
+    }
+  },
+  "repairs": {
+    "total_rounds": 5,
+    "total_repairs": 6,
+    "repairs_by_type": {
+      "Other": 1,
+      "InvFailEnd": 4,
+      "PostCondFail": 1
+    },
+    "repairs_by_heuristic": {
+      "repair_syntax": 1,
+      "repair_invariant": 4,
+      "repair_postcond": 1
+    },
+    "successful_repairs": 2,
+    "failed_repairs": 4,
+    "repair_times": [
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 54.709439754486084,
+        "success": true,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": 7,
+          "errors": 3
+        }
+      },
+      {
+        "error_type": "InvFailEnd",
+        "heuristic": "repair_invariant",
+        "time": 134.74268794059753,
+        "success": false,
+        "before": {
+          "verified": 7,
+          "errors": 3
+        },
+        "after": {
+          "verified": 7,
+          "errors": 3
+        }
+      },
+      {
+        "error_type": "PostCondFail",
+        "heuristic": "repair_postcond",
+        "time": 115.21153044700623,
+        "success": true,
+        "before": {
+          "verified": 7,
+          "errors": 3
+        },
+        "after": {
+          "verified": 9,
+          "errors": 1
+        }
+      },
+      {
+        "error_type": "InvFailEnd",
+        "heuristic": "repair_invariant",
+        "time": 93.35139489173889,
+        "success": false,
+        "before": {
+          "verified": 9,
+          "errors": 1
+        },
+        "after": {
+          "verified": 9,
+          "errors": 1
+        }
+      },
+      {
+        "error_type": "InvFailEnd",
+        "heuristic": "repair_invariant",
+        "time": 114.53101873397827,
+        "success": false,
+        "before": {
+          "verified": 9,
+          "errors": 1
+        },
+        "after": {
+          "verified": 9,
+          "errors": 1
+        }
+      },
+      {
+        "error_type": "InvFailEnd",
+        "heuristic": "repair_invariant",
+        "time": 138.5626482963562,
+        "success": false,
+        "before": {
+          "verified": 9,
+          "errors": 1
+        },
+        "after": {
+          "verified": 9,
+          "errors": 1
+        }
+      }
+    ]
+  },
+  "errors": {
+    "initial_error_count": 999,
+    "final_error_count": 1,
+    "errors_by_type": {
+      "Other": 1
+    },
+    "errors_fixed_by_type": {
+      "Other": 1,
+      "PostCondFail": 1
+    }
+  },
+  "verification": {
+    "initial_verified": -1,
+    "final_verified": 9,
+    "initial_errors": 999,
+    "final_errors": 1,
+    "compilation_errors": 0
+  },
+  "code_metrics": {
+    "initial_code_length": 3017,
+    "final_code_length": 4308,
+    "code_changes": 1291
+  }
+}

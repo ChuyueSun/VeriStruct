@@ -1,0 +1,27 @@
+{
+  "timestamp": "20251011_225242",
+  "start_time": "2025-10-11T22:52:42.911678",
+  "benchmarks_dir": "benchmarks-complete",
+  "num_repair_rounds": 10,
+  "configs": [
+    "config-azure"
+  ],
+  "parallel": false,
+  "configurations": {
+    "full_pipeline": {
+      "description": "Full VerusAgent pipeline with all repair modules",
+      "num_repair_rounds": 10,
+      "baseline_mode": false
+    },
+    "no_repairs": {
+      "description": "Pipeline without repair rounds",
+      "num_repair_rounds": 0,
+      "baseline_mode": false
+    },
+    "baseline": {
+      "description": "Single-shot baseline approach",
+      "num_repair_rounds": 0,
+      "baseline_mode": true
+    }
+  }
+}

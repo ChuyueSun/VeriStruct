@@ -1,0 +1,79 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/rb_type_invariant_todo.rs
+Input File Name: rb_type_invariant_todo.rs
+File ID: rb_type_invariant_todo__RB_TypeInv_20251101_041900
+Output Directory: /home/chuyue/VerusAgent/output/rb_type_invariant_todo/azure_20251101_041900
+Progress Log: /home/chuyue/VerusAgent/output/rb_type_invariant_todo/azure_20251101_041900/progress_logs/progress_rb_type_invariant_todo_20251101_041900.json
+Summary File: /home/chuyue/VerusAgent/output/rb_type_invariant_todo/azure_20251101_041900/progress_logs/summary_rb_type_invariant_todo_20251101_041900.txt
+
+Start time: 2025-11-01T04:19:00.129195
+End time: 2025-11-01T04:28:53.804273
+Total execution time: 593.68s
+
+## Final Result
+
+Verified: 10
+Errors: 0
+Verus Errors: 0
+Compilation Error: False
+Is Correct: True
+
+## Statistics
+
+Total steps: 5
+Total repair rounds: 4
+Total repairs attempted: 4
+Successful repairs: 4
+Average step time: 36.66s
+Average repair time: 102.38s
+
+## Steps
+
+Step 1: view_inference
+  Time: 2.97s
+  Score: Verified=4, Errors=6, Verus Errors=25
+Step 2: view_refinement
+  Time: 3.53s
+  Score: Verified=4, Errors=6, Verus Errors=25
+Step 3: inv_inference
+  Time: 3.61s
+  Score: Verified=3, Errors=7, Verus Errors=26
+Step 4: spec_inference
+  Time: 7.69s
+  Score: Verified=3, Errors=7, Verus Errors=24
+Step 5: proof_generation
+  Time: 165.51s
+  Score: Verified=9, Errors=1, Verus Errors=7
+
+## Repair Rounds
+
+Round 1
+  Time: 98.13s
+  repair_assertion for TestAssertFail
+    Before: Verified=9, Errors=1, Verus Errors=7
+    After: Verified=9, Errors=1, Verus Errors=5
+    Time: 98.13s
+
+Round 2
+  Time: 97.50s
+  repair_assertion for TestAssertFail
+    Before: Verified=9, Errors=1, Verus Errors=5
+    After: Verified=9, Errors=1, Verus Errors=3
+    Time: 97.49s
+
+Round 3
+  Time: 118.15s
+  repair_assertion for TestAssertFail
+    Before: Verified=9, Errors=1, Verus Errors=3
+    After: Verified=9, Errors=1, Verus Errors=1
+    Time: 118.15s
+
+Round 4
+  Time: 95.75s
+  repair_assertion for TestAssertFail
+    Before: Verified=9, Errors=1, Verus Errors=1
+    After: Verified=10, Errors=0, Verus Errors=0
+    Time: 95.75s

@@ -1,0 +1,36 @@
+## 1. Analysis Summary
+
+Current State:
+- The code defines free-standing functions (binary_search, reverse, binary_search_no_spinoff) with "TODO: add specification" placeholders.
+- There is no class or struct data structure present.
+- There are also "TODO: add invariants" placeholders (for loops), but these refer to loop invariants, not type invariants.
+- No mention of "View" or related keywords.
+
+Identified Missing Components:
+- Formal requires/ensures specifications for the functions.
+- Loop invariants to ensure the correctness of while/for loops.
+
+Critical Verification Challenges:
+- Ensuring that the missing specifications accurately capture preconditions/postconditions.
+- Adding loop invariants that maintain correct behavior throughout the iterations.
+
+Dependencies:
+- The three functions (binary_search, reverse, binary_search_no_spinoff) each need appropriate specifications.
+- Loop invariants in these functions depend on the tasks performed inside the loops.
+
+## 2. Verification Plan
+
+**Selected Workflow:** Specification-Only Workflow
+
+**Justification:**
+- No class/struct data structure requiring type invariants is present.
+- There are "TODO: add specification" placeholders indicating a need for function specifications.
+- No "View" implementation or "View" keyword usage is found.
+
+**Execution Steps:**
+1. spec_inference
+2. proof_generation  (added because "TODO: add invariants" triggers the optional final proof step)
+
+**Module Conditions:**
+- inv_inference: No (no class/struct data structure is present)
+- proof_generation: Yes (due to the "TODO: add invariants" markers in the code)

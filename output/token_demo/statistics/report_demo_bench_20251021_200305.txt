@@ -1,0 +1,54 @@
+================================================================================
+VerusAgent Statistics Report - demo_bench
+================================================================================
+
+EXECUTION SUMMARY
+--------------------------------------------------------------------------------
+Benchmark: demo_bench
+Start Time: 2025-10-21T20:03:05.976848
+End Time: 2025-10-21T20:03:05.976937
+Total Execution Time: 0.00s
+Verification Success: No
+
+MODULE ACTIVATION
+--------------------------------------------------------------------------------
+Total Modules Activated: 0
+Modules:
+
+LLM CALLS
+--------------------------------------------------------------------------------
+Total LLM Calls: 1
+Average Response Time: 0.42s
+Cache Hit Rate: 0.00%
+
+Calls by Stage:
+  demo: 1
+
+ITERATIONS
+--------------------------------------------------------------------------------
+Iterations by Module:
+
+REPAIRS
+--------------------------------------------------------------------------------
+Total Repair Rounds: 0
+Total Repairs: 0
+Successful Repairs: 0
+Failed Repairs: 0
+Success Rate: 0.00%
+
+Repairs by Error Type:
+
+Repairs by Heuristic:
+
+ERROR TRACKING
+--------------------------------------------------------------------------------
+Initial Errors: 1
+Final Errors: 1
+Errors Fixed: 0
+
+Initial Errors by Type:
+
+STAGE DETAILS
+--------------------------------------------------------------------------------
+
+================================================================================

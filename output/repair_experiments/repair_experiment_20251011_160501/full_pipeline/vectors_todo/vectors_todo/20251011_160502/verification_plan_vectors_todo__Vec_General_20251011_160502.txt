@@ -1,0 +1,28 @@
+```markdown
+## 1. Analysis Summary
+
+Current State:
+- The code consists of functions (binary_search, reverse, binary_search_no_spinoff) needing specifications and loop invariants.
+- No new data structures (classes/structs) are introduced, so there is no need for type invariants.
+- Multiple "TODO: add specification" markers indicate missing requires/ensures clauses.
+- Multiple "TODO: add invariants" markers indicate missing loop invariants.
+
+Dependencies:
+- The functions themselves depend on sufficiently strong specifications to prove correctness.
+- The loops in each function need proper loop invariants to enable verification.
+
+## 2. Verification Plan
+
+**Selected Workflow:** Specification-Only Workflow
+
+**Justification:**
+No struct/class data structures were found, so inv_inference does not apply. There are explicit "TODO: add specification" markers but no references to "View" functions. Therefore, the Specification-Only Workflow is appropriate. The presence of "TODO: add invariants" requires an additional proof_generation step.
+
+**Execution Steps:**
+1. spec_inference
+2. proof_generation
+
+**Module Conditions:**
+- inv_inference: No – There is no class/struct data structure requiring a type invariant.
+- proof_generation: Yes – Because "TODO: add invariants" exists, indicating the need for proofs of loop correctness.
+```

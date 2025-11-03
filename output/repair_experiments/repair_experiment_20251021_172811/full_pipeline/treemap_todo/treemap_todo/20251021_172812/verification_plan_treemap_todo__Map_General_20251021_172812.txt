@@ -1,0 +1,31 @@
+```markdown
+Current State:
+- This code defines a TreeMap data structure and a corresponding Node struct, along with a View implementation for TreeMap.
+- Several "TODO: add specification" markers indicate missing requires/ensures clauses.
+- There is also a "TODO: add proof" marker in the insert method.
+- A well_formed type invariant is already present, but additional invariants may be desired.
+
+Dependencies:
+- The TreeMap<V> struct depends on the Node<V> struct for maintaining the BST.
+- The TreeMap<V> implements View, tying the BST to a Map<u64, V> abstraction.
+- The "TODO: add proof" depends on structural proofs (e.g., well_formed invariants).
+
+```
+
+```markdown
+**Selected Workflow:** Full Sequence Workflow
+
+**Justification:**
+The code explicitly contains a View implementation and uses the "View" keyword. Therefore, it requires the generation and refinement of a View function. Additionally, there is a Node/TreeMap data structure, which means inv_inference is needed. Because "TODO: add specification" text appears, we also need spec_inference. Finally, we append proof_generation because the code has a "TODO: add proof" marker.
+
+**Execution Steps:**
+1. view_inference
+2. view_refinement
+3. inv_inference
+4. spec_inference
+5. proof_generation
+
+**Module Conditions:**
+- inv_inference: Yes – the code defines a struct data structure (TreeMap, Node) that includes type invariants.
+- proof_generation: Yes – "TODO: add proof" is present.
+```

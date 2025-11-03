@@ -1,0 +1,345 @@
+{
+  "benchmark_name": "set_from_vec_todo",
+  "start_time": "2025-10-30T21:33:48.522214",
+  "end_time": "2025-10-30T21:33:54.556788",
+  "total_execution_time": 6.034577369689941,
+  "modules_activated": [
+    "view_inference",
+    "spec_inference",
+    "proof_generation"
+  ],
+  "modules_count": 3,
+  "stages": {
+    "view_inference": {
+      "step_number": 1,
+      "start_time": "2025-10-30T21:33:49.241368",
+      "end_time": "2025-10-30T21:33:49.584200",
+      "execution_time": 0.3428354263305664,
+      "llm_calls": 3,
+      "iterations": 1,
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 1,
+        "is_correct": false
+      }
+    },
+    "spec_inference": {
+      "step_number": 2,
+      "start_time": "2025-10-30T21:33:49.584325",
+      "end_time": "2025-10-30T21:33:49.984535",
+      "execution_time": 0.40021419525146484,
+      "llm_calls": 3,
+      "iterations": 1,
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 1,
+        "is_correct": false
+      }
+    },
+    "proof_generation": {
+      "step_number": 3,
+      "start_time": "2025-10-30T21:33:49.984674",
+      "end_time": "2025-10-30T21:33:50.366100",
+      "execution_time": 0.38142871856689453,
+      "llm_calls": 3,
+      "iterations": 1,
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 1,
+        "is_correct": false
+      }
+    }
+  },
+  "llm_calls": {
+    "total": 25,
+    "by_stage": {
+      "planning": 1,
+      "view_inference": 3,
+      "spec_inference": 3,
+      "proof_generation": 3,
+      "repair": 15
+    },
+    "by_module": {
+      "planner": 1,
+      "view_inference": 3,
+      "spec_inference": 3,
+      "proof_generation": 3,
+      "repair_syntax": 15
+    },
+    "response_times": [
+      {
+        "stage": "planning",
+        "module": "planner",
+        "time": 0.09917902946472168,
+        "cache_hit": true
+      },
+      {
+        "stage": "view_inference",
+        "module": "view_inference",
+        "time": 0.13773298263549805,
+        "cache_hit": false
+      },
+      {
+        "stage": "view_inference",
+        "module": "view_inference",
+        "time": 0.09796810150146484,
+        "cache_hit": true
+      },
+      {
+        "stage": "view_inference",
+        "module": "view_inference",
+        "time": 0.10619020462036133,
+        "cache_hit": false
+      },
+      {
+        "stage": "spec_inference",
+        "module": "spec_inference",
+        "time": 0.12079644203186035,
+        "cache_hit": false
+      },
+      {
+        "stage": "spec_inference",
+        "module": "spec_inference",
+        "time": 0.1313326358795166,
+        "cache_hit": false
+      },
+      {
+        "stage": "spec_inference",
+        "module": "spec_inference",
+        "time": 0.14520001411437988,
+        "cache_hit": false
+      },
+      {
+        "stage": "proof_generation",
+        "module": "proof_generation",
+        "time": 0.12203359603881836,
+        "cache_hit": false
+      },
+      {
+        "stage": "proof_generation",
+        "module": "proof_generation",
+        "time": 0.1088707447052002,
+        "cache_hit": false
+      },
+      {
+        "stage": "proof_generation",
+        "module": "proof_generation",
+        "time": 0.14022350311279297,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.1240689754486084,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.11629867553710938,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.11173510551452637,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.10026097297668457,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.12217354774475098,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.10564231872558594,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.11889147758483887,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.11894536018371582,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.10715150833129883,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.1148064136505127,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.1185293197631836,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.14751696586608887,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.11278200149536133,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.09293341636657715,
+        "cache_hit": true
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.13062214851379395,
+        "cache_hit": false
+      }
+    ],
+    "cache_hits": 3,
+    "cache_misses": 22,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "by_call": []
+  },
+  "iterations": {
+    "by_module": {},
+    "by_stage": {
+      "view_inference": 1,
+      "spec_inference": 1,
+      "proof_generation": 1
+    }
+  },
+  "repairs": {
+    "total_rounds": 5,
+    "total_repairs": 5,
+    "repairs_by_type": {
+      "Other": 5
+    },
+    "repairs_by_heuristic": {
+      "repair_syntax": 5
+    },
+    "successful_repairs": 0,
+    "failed_repairs": 5,
+    "repair_times": [
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 0.8374836444854736,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 0.813838005065918,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 0.826801061630249,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 0.8501083850860596,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 0.8560283184051514,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      }
+    ]
+  },
+  "errors": {
+    "initial_error_count": 999,
+    "final_error_count": 999,
+    "errors_by_type": {
+      "Other": 1
+    },
+    "errors_fixed_by_type": {}
+  },
+  "verification": {
+    "initial_verified": -1,
+    "final_verified": -1,
+    "initial_errors": 999,
+    "final_errors": 999,
+    "compilation_errors": 1
+  },
+  "code_metrics": {
+    "initial_code_length": 1115,
+    "final_code_length": 1115,
+    "code_changes": 0
+  }
+}

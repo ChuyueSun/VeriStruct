@@ -1,0 +1,15 @@
+{
+  "benchmark": "rb_type_invariant_todo",
+  "execution_time": 1193.8848950862885,
+  "modules_activated": 5,
+  "total_llm_calls": 10,
+  "avg_response_time": 56.52183432579041,
+  "cache_hit_rate": 50.0,
+  "total_repair_rounds": 2,
+  "total_repairs": 5,
+  "repair_success_rate": 20.0,
+  "initial_errors": 999,
+  "final_errors": 2,
+  "errors_fixed": 997,
+  "verification_success": false
+}

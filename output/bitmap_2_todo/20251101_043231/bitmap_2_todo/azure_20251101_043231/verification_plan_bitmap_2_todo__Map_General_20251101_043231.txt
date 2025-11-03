@@ -1,0 +1,32 @@
+```markdown
+Current State:
+- The BitMap struct defines a data structure with a "bits" field of type Vec<u64>, along with functions that manipulate bits, but the "view" function is only declared as a TODO.
+- Multiple functions (from, get_bit, set_bit, or) also have "TODO: Add requires and ensures" markers, indicating missing function specifications.
+- There are explicit "TODO: add proof" comments (e.g., for set_bit64, bit_or_64), indicating proof obligations.
+- The code clearly contains a struct requiring a View implementation.
+- No invariants are defined yet, but the data structure is present, so type invariants may be needed.
+
+Dependencies:
+- The BitMap::view function depends on BitMap data and must produce a Seq<bool>.
+- The functions from, get_bit, set_bit, or all need requires/ensures clauses.
+- Proofs (for set_bit64, bit_or_64, and updating the BitMap) rely on verifying correct bit manipulation and correctness of the updated data structure.
+- All these functions also relate to the conceptual "view" of BitMap.
+
+```
+Verification Plan
+```
+**Selected Workflow:** Full Sequence Workflow
+
+**Justification:**
+The code explicitly mentions "view" requirements and has “TODO: Implement the view function”. It also has a struct (BitMap) requiring invariants and function specifications. Since there's an explicit need for a View function, we must use the Full Sequence Workflow. Because the code defines a struct, the inv_inference step is included in the chain.
+
+**Execution Steps:**
+1. view_inference
+2. view_refinement
+3. inv_inference
+4. spec_inference
+5. proof_generation
+
+**Module Conditions:**
+- inv_inference: Yes (the code defines a struct, so we generate and refine type invariants).
+- proof_generation: Yes ("TODO: add proof" markers are present).

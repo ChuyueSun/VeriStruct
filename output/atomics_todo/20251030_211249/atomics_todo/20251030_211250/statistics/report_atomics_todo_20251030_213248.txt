@@ -1,0 +1,82 @@
+================================================================================
+VerusAgent Statistics Report - atomics_todo
+================================================================================
+
+EXECUTION SUMMARY
+--------------------------------------------------------------------------------
+Benchmark: atomics_todo
+Start Time: 2025-10-30T21:12:50.167398
+End Time: 2025-10-30T21:32:48.799830
+Total Execution Time: 1198.63s
+Verification Success: Yes
+
+MODULE ACTIVATION
+--------------------------------------------------------------------------------
+Total Modules Activated: 3
+Modules: inv_inference, spec_inference, proof_generation
+
+LLM CALLS
+--------------------------------------------------------------------------------
+Total LLM Calls: 9
+Average Response Time: 131.60s
+Cache Hit Rate: 11.11%
+
+Calls by Stage:
+  inv_inference: 1
+  planning: 1
+  repair: 6
+  spec_inference: 1
+
+ITERATIONS
+--------------------------------------------------------------------------------
+Iterations by Module:
+
+REPAIRS
+--------------------------------------------------------------------------------
+Total Repair Rounds: 2
+Total Repairs: 6
+Successful Repairs: 1
+Failed Repairs: 5
+Success Rate: 16.67%
+
+Repairs by Error Type:
+  Other: 2
+  PostCondFail: 2
+  PreCondFail: 2
+
+Repairs by Heuristic:
+  repair_postcond: 2
+  repair_precond: 2
+  repair_syntax: 2
+
+ERROR TRACKING
+--------------------------------------------------------------------------------
+Initial Errors: 999
+Final Errors: 0
+Errors Fixed: 999
+
+Initial Errors by Type:
+  Other: 2
+
+STAGE DETAILS
+--------------------------------------------------------------------------------
+
+inv_inference (Step 1)
+  Execution Time: 79.90s
+  LLM Calls: 1
+  Iterations: 1
+  Result: Verified=4, Errors=1
+
+spec_inference (Step 2)
+  Execution Time: 80.88s
+  LLM Calls: 1
+  Iterations: 1
+  Result: Verified=4, Errors=1
+
+proof_generation (Step 3)
+  Execution Time: 0.01s
+  LLM Calls: 0
+  Iterations: 1
+  Result: Verified=4, Errors=1
+
+================================================================================

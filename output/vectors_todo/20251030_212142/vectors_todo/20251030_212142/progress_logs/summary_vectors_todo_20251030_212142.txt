@@ -1,0 +1,77 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/vectors_todo.rs
+Input File Name: vectors_todo.rs
+File ID: vectors_todo__Vec_General_20251030_212142
+Output Directory: /home/chuyue/VerusAgent/output/vectors_todo/20251030_212142/vectors_todo/20251030_212142
+Progress Log: /home/chuyue/VerusAgent/output/vectors_todo/20251030_212142/vectors_todo/20251030_212142/progress_logs/progress_vectors_todo_20251030_212142.json
+Summary File: /home/chuyue/VerusAgent/output/vectors_todo/20251030_212142/vectors_todo/20251030_212142/progress_logs/summary_vectors_todo_20251030_212142.txt
+
+Start time: 2025-10-30T21:21:42.876250
+End time: 2025-10-30T21:30:01.329497
+Total execution time: 498.45s
+
+## Final Result
+
+Verified: -1
+Errors: 999
+Verus Errors: 1
+Compilation Error: True
+Is Correct: False
+
+## Statistics
+
+Total steps: 2
+Total repair rounds: 5
+Total repairs attempted: 5
+Successful repairs: 1
+Average step time: 72.71s
+Average repair time: 70.16s
+
+## Steps
+
+Step 1: spec_inference
+  Time: 58.01s
+  Score: Verified=-1, Errors=999, Verus Errors=1
+Step 2: proof_generation
+  Time: 87.41s
+  Score: Verified=-1, Errors=999, Verus Errors=1
+
+## Repair Rounds
+
+Round 1
+  Time: 71.93s
+  repair_syntax for Other
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 71.26s
+
+Round 2
+  Time: 71.40s
+  repair_syntax for Other
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=9, Errors=1, Verus Errors=1
+    Time: 70.73s
+
+Round 3
+  Time: 96.96s
+  repair_postcond for PostCondFail
+    Before: Verified=9, Errors=1, Verus Errors=1
+    After: Verified=9, Errors=1, Verus Errors=1
+    Time: 96.96s
+
+Round 4
+  Time: 29.14s
+  repair_assertion for AssertFail
+    Before: Verified=9, Errors=1, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 29.14s
+
+Round 5
+  Time: 82.73s
+  repair_syntax for Other
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 82.72s

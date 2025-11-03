@@ -1,0 +1,106 @@
+{
+  "atomics_todo": {
+    "total_llm_calls": 7,
+    "by_module": {
+      "inv_inference": 3,
+      "proof_generation": 1,
+      "spec_inference": 2,
+      "planner": 1
+    },
+    "samples_dir": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_224359/full_pipeline/atomics_todo/atomics_todo/20251011_224359/samples"
+  },
+  "bitmap_todo": {
+    "total_llm_calls": 12,
+    "by_module": {
+      "inv_inference": 3,
+      "proof_generation": 2,
+      "spec_inference": 2,
+      "view_inference": 2,
+      "view_refinement": 2,
+      "planner": 1
+    },
+    "samples_dir": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_215225/full_pipeline/bitmap_todo/bitmap_todo/20251010_215226/samples"
+  },
+  "invariants_todo": {
+    "total_llm_calls": 2,
+    "by_module": {
+      "spec_inference": 1,
+      "planner": 1
+    },
+    "samples_dir": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_215225/full_pipeline/invariants_todo/invariants_todo/20251010_215226/samples"
+  },
+  "node_todo": {
+    "total_llm_calls": 11,
+    "by_module": {
+      "inv_inference": 3,
+      "repair_postcond": 1,
+      "spec_inference": 2,
+      "view_inference": 2,
+      "view_refinement": 2,
+      "planner": 1
+    },
+    "samples_dir": "/home/chuyue/VerusAgent/output/node_test_v3/node_todo/20251011_160727/samples"
+  },
+  "option_todo": {
+    "total_llm_calls": 2,
+    "by_module": {
+      "spec_inference": 1,
+      "planner": 1
+    },
+    "samples_dir": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/full_pipeline/option_todo/option_todo/20251011_182337/samples"
+  },
+  "rb_type_invariant_todo": {
+    "total_llm_calls": 11,
+    "by_module": {
+      "inv_inference": 3,
+      "proof_generation": 1,
+      "spec_inference": 2,
+      "view_inference": 2,
+      "view_refinement": 2,
+      "planner": 1
+    },
+    "samples_dir": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160518/full_pipeline/rb_type_invariant_todo/rb_type_invariant_todo/20251011_160518/samples"
+  },
+  "rwlock_vstd_todo": {
+    "total_llm_calls": 2,
+    "by_module": {
+      "spec_inference": 1,
+      "planner": 1
+    },
+    "samples_dir": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193940/full_pipeline/rwlock_vstd_todo/rwlock_vstd_todo/20251010_193941/samples"
+  },
+  "set_from_vec_todo": {
+    "total_llm_calls": 12,
+    "by_module": {
+      "inv_inference": 3,
+      "proof_generation": 2,
+      "spec_inference": 2,
+      "view_inference": 2,
+      "view_refinement": 2,
+      "planner": 1
+    },
+    "samples_dir": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/full_pipeline/set_from_vec_todo/set_from_vec_todo/20251011_182336/samples"
+  },
+  "transfer_todo": {
+    "total_llm_calls": 3,
+    "by_module": {
+      "spec_inference": 2,
+      "planner": 1
+    },
+    "samples_dir": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152504/full_pipeline/transfer_todo/transfer_todo/20251010_152505/samples"
+  },
+  "treemap_todo": {
+    "total_llm_calls": 0,
+    "note": "No samples directory",
+    "by_module": {}
+  },
+  "vectors_todo": {
+    "total_llm_calls": 5,
+    "by_module": {
+      "proof_generation": 2,
+      "spec_inference": 2,
+      "planner": 1
+    },
+    "samples_dir": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160501/full_pipeline/vectors_todo/vectors_todo/20251011_160502/samples"
+  }
+}

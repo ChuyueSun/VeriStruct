@@ -1,0 +1,375 @@
+Your mission is to fix the syntax error in the following Verus code.
+
+Look carefully at the error message and location to identify the syntax issue. Common syntax errors include:
+1. Missing or misplaced parentheses, braces, or brackets
+2. Missing or incorrect semicolons or commas
+3. Incorrect use of operators or methods
+4. Incorrect function or method call syntax
+5. Incorrect use of generics or type parameters
+6. Incorrect use of Verus-specific syntax (like @, spec, proof, etc.)
+
+Fix ONLY the part of the code with the syntax error, and leave the rest unchanged.
+Response with the Rust code only, do not include any explanation.
+
+IMPORTANT: Previous attempt failed to fix the syntax error. Please try a different approach. Attempt 2/3.
+
+IMPORTANT: Previous attempt failed to fix the syntax error. Please try a different approach. Attempt 3/3.
+
+# Verus Common Knowledge
+
+## Important Notes
+- ALWAYS use parentheses whenever possible for clarity!
+- Don't delete existing non-buggy `#[trigger]`!
+- Don't change "unwind" to `(unwind) as bool`!
+- Return the complete modified Rust code in your response without explanations.
+- Keep top level docstrings at the top of the file, before `verus! {`. Do not place them after the `verus! {` declaration.
+- Don't change any function signatures.
+
+## Spec Functions
+1. No Direct Method Calls:
+   In a spec function, you cannot directly call instance methods such as vector.is_full().
+2. Use the @ Operator:
+   To invoke methods on a variable within a spec, first convert it to its specification-level representation View with @.
+3. Always use vector.len() instead of vector@.len().
+4. Simplify Boolean Conjunctions:
+   When combining multiple conditions, avoid excessive &&&. Fewer (or well-structured) conjunctions make the spec code easier to read and debug.
+5. Parentheses Usage:
+   ALWAYS wrap conditions in parentheses, even for simple expressions. This makes precedence explicit and prevents errors.
+
+## Operators
+Verus extends Rust logical operators with low-precedence forms that are especially helpful in specification code:
+
+Standard Operators: &&, ||, ==>, <==>
+Low-Precedence Variants: &&& and |||
+
+The meaning of &&& is the same as && (logical AND), and ||| is the same as || (logical OR), but with lower precedence. This allows you to write conditions in a "bulleted list" style that remains grouped in a logical manner:
+
+```
+&&& a ==> b
+&&& c
+&&& d <==> e && f
+```
+
+is equivalent to:
+
+```
+(a ==> b) && c && (d <==> (e && f))
+```
+
+Note:
+- Implication (==>) and equivalence (<==>) bind more tightly than &&& and |||.
+- Using &&&/||| can make long specifications clearer by grouping logical clauses neatly.
+
+
+# Verus Sequence Knowledge
+
+Seq<T> is a mathematical sequence type used in specifications:
+
+- Building: Seq::empty(), seq![x, y, z], Seq::singleton(x)
+- Length: s.len()
+- Indexing: s[i] (0-based)
+- Subrange: s.subrange(lo, hi) gives elements from index lo (inclusive) to hi (exclusive)
+- Concatenation: s1 + s2
+- Update: s.update(i, v) returns a new sequence with index i updated to value v
+- Contains: s.contains(v) checks if v is in the sequence
+- Push/pop: s.push(v), s.pop() (returns new sequence, doesn't modify original)
+- Equality: Use `=~=` for sequence equality, NOT `==` (e.g., `seq1 =~= seq2`, `self@.0 =~= old(self)@.0.subrange(1, (old(self)@.0.len()) as int)`)
+
+You can use forall or exists for properties over sequences.
+
+## Subrange Usage
+
+1. Cast indices to `int`: `self.head as int`, not just `self.head`
+2. Use `.subrange(start, end)`, not `seq[start..end]`
+3. Wrap complex expressions: `(..).subrange((expression) as int, ...)`
+4. For full length: `(sequence.len()) as int`
+
+
+additional knowledge:
+IMPORTANT:
+1. Don't change the anything in immutable function(s): test. Instead, consider adjusting the preconditions or postconditions of other functions or methods.
+2. Don't delete existing non-buggy `#[trigger]`, `use` statements, main function.
+
+
+---
+
+Syntax error:
+```
+unclosed delimiter
+
+{"$message_type":"diagnostic","message":"this file contains an unclosed delimiter","code":null,"level":"error","spans":[{"file_name":"<TMP_PATH>","byte_start":30,"byte_end":31,"line_start":3,"line_end":3,"column_start":8,"column_end":9,"is_primary":false,"text":[{"text":"verus! {","highlight_start":8,"highlight_end":9}],"label":"unclosed delimiter","suggested_replacement":null,"suggestion_applicability":null,"expansion":null},{"file_name":"<TMP_PATH>","byte_start":6496,"byte_end":6496,"line_start":271,"line_end":271,"column_start":2,"column_end":2,"is_primary":true,"text":[{"text":"}","highlight_start":2,"highlight_end":2}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: this file contains an unclosed delimiter\n   --> <TMP_PATH>:271:2\n    |\n3   | verus! {\n    |        - unclosed delimiter\n...\n271 | }\n    |  ^\n\n"}
+{"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}```
+
+Code
+```
+use vstd::prelude::*;
+
+verus! {
+
+pub open spec fn ex_saturating_sub_spec(a: int, b: int) -> (ret: nat)
+{
+    if (a > b) {
+        (a - b) as nat
+    } else {
+        0
+    }
+}
+
+#[verifier::external_fn_specification]
+pub fn ex_saturating_sub(a: usize, b: usize) -> (ret: usize)
+ensures
+    ex_saturating_sub_spec(a as int, b as int) == ret as int
+{
+    a.saturating_sub(b)
+}
+
+pub open spec fn mod_auto_plus(n: int) -> bool
+    recommends
+        n > 0,
+{
+    forall|x: int, y: int|
+    {
+        let z = (x % n) + (y % n);
+        ((0 <= z < n && #[trigger] ((x + y) % n) == z)
+            || (n <= z < n + n && ((x + y) % n) == z - n))
+    }
+}
+
+pub open spec fn mod_auto_minus(n: int) -> bool
+    recommends
+        n > 0,
+{
+    forall|x: int, y: int|
+    {
+        let z = (x % n) - (y % n);
+        ((0 <= z < n && #[trigger] ((x - y) % n) == z)
+            || (-n <= z < 0 && ((x - y) % n) == z + n))
+    }
+}
+
+pub open spec fn mod_auto(n: int) -> bool
+    recommends
+        n > 0,
+{
+    &&& (n % n == 0 && (-n) % n == 0)
+    &&& (forall|x: int| #[trigger] ((x % n) % n) == x % n)
+    &&& (forall|x: int| 0 <= x < n <==> #[trigger] (x % n) == x)
+    &&& mod_auto_plus(n)
+    &&& mod_auto_minus(n)
+}
+
+pub proof fn lemma_mod_auto(n: int)
+    requires
+        n > 0,
+    ensures
+        mod_auto(n),
+{
+    admit()
+}
+
+pub struct RingBuffer<T: Copy> {
+    ring: Vec<T>,
+    head: usize,
+    tail: usize,
+}
+
+impl<T: Copy> View for RingBuffer<T> {
+    type V = (Seq<T>, nat, nat);
+
+    closed spec fn view(&self) -> Self::V {
+        let used = if self.tail >= self.head {
+            (self.tail - self.head) as nat
+        } else {
+            (self.ring.len() - self.head + self.tail) as nat
+        };
+        (self.ring@, self.head as nat, used)
+    }
+}
+
+#[verifier::external_body]
+fn my_set<T: Copy>(vec: &mut Vec<T>, i: usize, value: T)
+    requires
+        i < old(vec).len(),
+    ensures
+        vec@ == old(vec)@.update(i as int, value),
+        vec@.len() == old(vec).len(),
+        no_unwind
+{
+    vec[i] = value;
+}
+
+impl<T: Copy> RingBuffer<T> {
+    #[verifier::type_invariant]
+    closed spec fn inv(&self) -> bool {
+        (self.ring.len() > 0)
+        && (self.head < self.ring.len())
+        && (self.tail < self.ring.len())
+    }
+
+    pub fn len(&self) -> (ret: usize)
+        ensures
+            ret as nat == self.view().2,
+    {
+        proof {
+            use_type_invariant(&*self);
+            lemma_mod_auto(self.ring.len() as int);
+        }
+        if self.tail > self.head {
+            self.tail - self.head
+        } else if self.tail < self.head {
+            (self.ring.len() - self.head) + self.tail
+        } else {
+            0
+        }
+    }
+
+    pub fn has_elements(&self) -> (ret: bool)
+        ensures
+            ret <==> (self.view().2 > 0),
+    {
+        proof {
+            use_type_invariant(&*self);
+            lemma_mod_auto(self.ring.len() as int);
+        }
+        self.head != self.tail
+    }
+
+    pub fn is_full(&self) -> (ret: bool)
+        ensures
+            ret <==> (self.view().2 == self.view().0.len() - 1),
+    {
+        proof {
+            use_type_invariant(&*self);
+            lemma_mod_auto(self.ring.len() as int);
+        }
+        self.head == ((self.tail + 1) % self.ring.len())
+    }
+
+    pub fn new(ring: Vec<T>) -> (ret: RingBuffer<T>)
+        requires
+            ring.len() > 0,
+        ensures
+            ret.view().0 =~= ring@,
+            ret.view().1 == 0,
+            ret.view().2 == 0,
+            ret.view().0.len() == ring@.len(),
+    {
+        RingBuffer {
+            head: 0,
+            tail: 0,
+            ring,
+        }
+    }
+
+    pub fn enqueue(&mut self, val: T) -> (succ: bool)
+        ensures
+            succ ==> (self.view().2 == old(self).view().2 + 1),
+            !succ ==> (self.view().2 == old(self).view().2),
+    {
+        if self.is_full() {
+            false
+        } else {
+            proof {
+                use_type_invariant(&*self);
+                lemma_mod_auto(self.ring.len() as int);
+            }
+            my_set(&mut self.ring, self.tail, val);
+            self.tail = (self.tail + 1) % self.ring.len();
+            true
+        }
+    }
+
+    pub fn dequeue(&mut self) -> (ret: Option<T>)
+        ensures
+            ret.is_Some() ==> (self.view().2 == old(self).view().2 - 1),
+            ret.is_None() ==> (self.view().2 == old(self).view().2),
+    {
+        proof {
+            use_type_invariant(&*self);
+            lemma_mod_auto(self.ring.len() as int);
+        }
+        if self.has_elements() {
+            let val = self.ring[self.head];
+            self.head = (self.head + 1) % self.ring.len();
+            Some(val)
+        } else {
+            None
+        }
+    }
+
+    pub fn available_len(&self) -> (ret: usize)
+        ensures
+            ret as int == self.view().0.len() as int - 1 - self.view().2,
+    {
+        proof {
+            use_type_invariant(&*self);
+            lemma_mod_auto(self.ring.len() as int);
+        }
+        self.ring.len().saturating_sub(1 + self.len())
+    }
+}
+
+#[verifier::loop_isolation(false)]
+fn test(len: usize, value: i32, iterations: usize)
+    requires
+        1 < len < usize::MAX - 1,
+        iterations * 2 < usize::MAX,
+{
+    let mut ring: Vec<i32> = Vec::new();
+
+    if len == 0 {
+        return;
+    }
+
+    for i in 0..(len + 1)
+    invariant
+        ring.len() == i,
+    {
+        ring.push(0);
+    }
+
+    assert(ring.len() == len + 1);
+    let mut buf = RingBuffer::new(ring);
+
+    proof {
+        assert(buf@.0.len() == len + 1);
+    }
+
+    let ret = buf.dequeue();
+    let buf_len = buf.len();
+    let has_elements = buf.has_elements();
+    assert(!has_elements);
+    assert(ret == None::<i32>);
+    assert(buf_len == 0);
+    assert(len > 1);
+
+    assert(buf@.0.len() == len + 1); // Added by AI
+
+    for i in 0..len
+    invariant
+        buf@.0.len() == len + 1,
+        buf@.2 == i
+    {
+        let enqueue_res = buf.enqueue(value);
+        assert(enqueue_res);
+        let has_elements = buf.has_elements();
+        assert(has_elements);
+        let available_len = buf.available_len();
+        assert(available_len == len - 1 - i);
+        proof {
+            assert(buf@.0.len() == len + 1);
+        }
+    }
+
+    let dequeue_res = buf.dequeue();
+    assert(dequeue_res.is_some());
+    let enqueue_res = buf.enqueue(value);
+    assert(enqueue_res);
+    let enqueue_res = buf.enqueue(value);
+    assert(!enqueue_res);
+    let dequeue_res = buf.dequeue();
+    assert(dequeue_res.is_some());
+}
+
+pub fn main() {
+}```

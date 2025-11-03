@@ -1,0 +1,245 @@
+Your mission is to fix the syntax error in the following Verus code.
+
+Look carefully at the error message and location to identify the syntax issue. Common syntax errors include:
+1. Missing or misplaced parentheses, braces, or brackets
+2. Missing or incorrect semicolons or commas
+3. Incorrect use of operators or methods
+4. Incorrect function or method call syntax
+5. Incorrect use of generics or type parameters
+6. Incorrect use of Verus-specific syntax (like @, spec, proof, etc.)
+
+Fix ONLY the part of the code with the syntax error, and leave the rest unchanged.
+Response with the Rust code only, do not include any explanation.
+
+# Verus Common Knowledge
+
+## Important Notes
+- ALWAYS use parentheses whenever possible for clarity!
+- Don't delete existing non-buggy `#[trigger]`!
+- Don't change "unwind" to `(unwind) as bool`!
+- Return the complete modified Rust code in your response without explanations.
+- Keep top level docstrings at the top of the file, before `verus! {`. Do not place them after the `verus! {` declaration.
+- Don't change any function signatures.
+
+## Spec Functions
+1. No Direct Method Calls:
+   In a spec function, you cannot directly call instance methods such as vector.is_full().
+2. Use the @ Operator:
+   To invoke methods on a variable within a spec, first convert it to its specification-level representation View with @.
+3. Always use vector.len() instead of vector@.len().
+4. Simplify Boolean Conjunctions:
+   When combining multiple conditions, avoid excessive &&&. Fewer (or well-structured) conjunctions make the spec code easier to read and debug.
+5. Parentheses Usage:
+   ALWAYS wrap conditions in parentheses, even for simple expressions. This makes precedence explicit and prevents errors.
+
+## Operators
+Verus extends Rust logical operators with low-precedence forms that are especially helpful in specification code:
+
+Standard Operators: &&, ||, ==>, <==>
+Low-Precedence Variants: &&& and |||
+
+The meaning of &&& is the same as && (logical AND), and ||| is the same as || (logical OR), but with lower precedence. This allows you to write conditions in a "bulleted list" style that remains grouped in a logical manner:
+
+```
+&&& a ==> b
+&&& c
+&&& d <==> e && f
+```
+
+is equivalent to:
+
+```
+(a ==> b) && c && (d <==> (e && f))
+```
+
+Note:
+- Implication (==>) and equivalence (<==>) bind more tightly than &&& and |||.
+- Using &&&/||| can make long specifications clearer by grouping logical clauses neatly.
+
+
+additional knowledge:
+IMPORTANT:
+1. Don't change the anything in immutable function(s): test. Instead, consider adjusting the preconditions or postconditions of other functions or methods.
+2. Don't delete existing non-buggy `#[trigger]`, `use` statements, main function.
+
+
+---
+
+Syntax error:
+```
+the trait bound `&mut _: builtin::Integer` is not satisfied (the trait `builtin::Integer` is not implemented for `&mut _`)
+            a == get_Some_0(old(( self ) as &mut _)),
+
+{"$message_type":"diagnostic","message":"the trait bound `MyOption<_>: builtin::Integer` is not satisfied","code":{"code":"E0277","explanation":"You tried to use a type which doesn't implement some trait in a place which\nexpected that trait.\n\nErroneous code example:\n\n```compile_fail,E0277\n// here we declare the Foo trait with a bar method\ntrait Foo {\n    fn bar(&self);\n}\n\n// we now declare a function which takes an object implementing the Foo trait\nfn some_func<T: Foo>(foo: T) {\n    foo.bar();\n}\n\nfn main() {\n    // we now call the method with the i32 type, which doesn't implement\n    // the Foo trait\n    some_func(5i32); // error: the trait bound `i32 : Foo` is not satisfied\n}\n```\n\nIn order to fix this error, verify that the type you're using does implement\nthe trait. Example:\n\n```\ntrait Foo {\n    fn bar(&self);\n}\n\n// we implement the trait on the i32 type\nimpl Foo for i32 {\n    fn bar(&self) {}\n}\n\nfn some_func<T: Foo>(foo: T) {\n    foo.bar(); // we can now use this method since i32 implements the\n               // Foo trait\n}\n\nfn main() {\n    some_func(5i32); // ok!\n}\n```\n\nOr in a generic context, an erroneous code example would look like:\n\n```compile_fail,E0277\nfn some_func<T>(foo: T) {\n    println!(\"{:?}\", foo); // error: the trait `core::fmt::Debug` is not\n                           //        implemented for the type `T`\n}\n\nfn main() {\n    // We now call the method with the i32 type,\n    // which *does* implement the Debug trait.\n    some_func(5i32);\n}\n```\n\nNote that the error here is in the definition of the generic function. Although\nwe only call it with a parameter that does implement `Debug`, the compiler\nstill rejects the function. It must work with all possible input types. In\norder to make this example compile, we need to restrict the generic type we're\naccepting:\n\n```\nuse std::fmt;\n\n// Restrict the input type to types that implement Debug.\nfn some_func<T: fmt::Debug>(foo: T) {\n    println!(\"{:?}\", foo);\n}\n\nfn main() {\n    // Calling the method is still fine, as i32 implements Debug.\n    some_func(5i32);\n\n    // This would fail to compile now:\n    // struct WithoutDebug;\n    // some_func(WithoutDebug);\n}\n```\n\nRust only looks at the signature of the called function, as such it must\nalready specify all requirements that will be used for every type parameter.\n"},"level":"error","spans":[{"file_name":"<TMP_PATH>","byte_start":2318,"byte_end":2329,"line_start":103,"line_end":103,"column_start":60,"column_end":71,"is_primary":true,"text":[{"text":"            a == get_Some_0(( old(( self ) as &mut _) ) as MyOption<_>),","highlight_start":60,"highlight_end":71}],"label":"the trait `builtin::Integer` is not implemented for `MyOption<_>`","suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[{"message":"required by a bound in `builtin::spec_cast_integer`","code":null,"level":"note","spans":[{"file_name":"/home/chuyue/verus/source/builtin/src/lib.rs","byte_start":25734,"byte_end":25741,"line_start":970,"line_end":970,"column_start":48,"column_end":55,"is_primary":true,"text":[{"text":"pub const fn spec_cast_integer<From: Copy, To: Integer>(_from: From) -> To {","highlight_start":48,"highlight_end":55}],"label":"required by this bound in `spec_cast_integer`","suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":null}],"rendered":"error[E0277]: the trait bound `MyOption<_>: builtin::Integer` is not satisfied\n   --> <TMP_PATH>:103:60\n    |\n103 |             a == get_Some_0(( old(( self ) as &mut _) ) as MyOption<_>),\n    |                                                            ^^^^^^^^^^^ the trait `builtin::Integer` is not implemented for `MyOption<_>`\n    |\nnote: required by a bound in `builtin::spec_cast_integer`\n   --> /home/chuyue/verus/source/builtin/src/lib.rs:970:48\n    |\n970 | pub const fn spec_cast_integer<From: Copy, To: Integer>(_from: From) -> To {\n    |                                                ^^^^^^^ required by this bound in `spec_cast_integer`\n\n"}
+{"$message_type":"diagnostic","message":"the trait bound `&mut _: builtin::Integer` is not satisfied","code":{"code":"E0277","explanation":"You tried to use a type which doesn't implement some trait in a place which\nexpected that trait.\n\nErroneous code example:\n\n```compile_fail,E0277\n// here we declare the Foo trait with a bar method\ntrait Foo {\n    fn bar(&self);\n}\n\n// we now declare a function which takes an object implementing the Foo trait\nfn some_func<T: Foo>(foo: T) {\n    foo.bar();\n}\n\nfn main() {\n    // we now call the method with the i32 type, which doesn't implement\n    // the Foo trait\n    some_func(5i32); // error: the trait bound `i32 : Foo` is not satisfied\n}\n```\n\nIn order to fix this error, verify that the type you're using does implement\nthe trait. Example:\n\n```\ntrait Foo {\n    fn bar(&self);\n}\n\n// we implement the trait on the i32 type\nimpl Foo for i32 {\n    fn bar(&self) {}\n}\n\nfn some_func<T: Foo>(foo: T) {\n    foo.bar(); // we can now use this method since i32 implements the\n               // Foo trait\n}\n\nfn main() {\n    some_func(5i32); // ok!\n}\n```\n\nOr in a generic context, an erroneous code example would look like:\n\n```compile_fail,E0277\nfn some_func<T>(foo: T) {\n    println!(\"{:?}\", foo); // error: the trait `core::fmt::Debug` is not\n                           //        implemented for the type `T`\n}\n\nfn main() {\n    // We now call the method with the i32 type,\n    // which *does* implement the Debug trait.\n    some_func(5i32);\n}\n```\n\nNote that the error here is in the definition of the generic function. Although\nwe only call it with a parameter that does implement `Debug`, the compiler\nstill rejects the function. It must work with all possible input types. In\norder to make this example compile, we need to restrict the generic type we're\naccepting:\n\n```\nuse std::fmt;\n\n// Restrict the input type to types that implement Debug.\nfn some_func<T: fmt::Debug>(foo: T) {\n    println!(\"{:?}\", foo);\n}\n\nfn main() {\n    // Calling the method is still fine, as i32 implements Debug.\n    some_func(5i32);\n\n    // This would fail to compile now:\n    // struct WithoutDebug;\n    // some_func(WithoutDebug);\n}\n```\n\nRust only looks at the signature of the called function, as such it must\nalready specify all requirements that will be used for every type parameter.\n"},"level":"error","spans":[{"file_name":"<TMP_PATH>","byte_start":2305,"byte_end":2311,"line_start":103,"line_end":103,"column_start":47,"column_end":53,"is_primary":true,"text":[{"text":"            a == get_Some_0(( old(( self ) as &mut _) ) as MyOption<_>),","highlight_start":47,"highlight_end":53}],"label":"the trait `builtin::Integer` is not implemented for `&mut _`","suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[{"message":"required by a bound in `builtin::spec_cast_integer`","code":null,"level":"note","spans":[{"file_name":"/home/chuyue/verus/source/builtin/src/lib.rs","byte_start":25734,"byte_end":25741,"line_start":970,"line_end":970,"column_start":48,"column_end":55,"is_primary":true,"text":[{"text":"pub const fn spec_cast_integer<From: Copy, To: Integer>(_from: From) -> To {","highlight_start":48,"highlight_end":55}],"label":"required by this bound in `spec_cast_integer`","suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":null},{"message":"consider removing the leading `&`-reference","code":null,"level":"help","spans":[{"file_name":"<TMP_PATH>","byte_start":2305,"byte_end":2310,"line_start":103,"line_end":103,"column_start":47,"column_end":52,"is_primary":true,"text":[{"text":"            a == get_Some_0(( old(( self ) as &mut _) ) as MyOption<_>),","highlight_start":47,"highlight_end":52}],"label":null,"suggested_replacement":"","suggestion_applicability":"MachineApplicable","expansion":null}],"children":[],"rendered":null}],"rendered":"error[E0277]: the trait bound `&mut _: builtin::Integer` is not satisfied\n   --> <TMP_PATH>:103:47\n    |\n103 |             a == get_Some_0(( old(( self ) as &mut _) ) as MyOption<_>),\n    |                                               ^^^^^^ the trait `builtin::Integer` is not implemented for `&mut _`\n    |\nnote: required by a bound in `builtin::spec_cast_integer`\n   --> /home/chuyue/verus/source/builtin/src/lib.rs:970:48\n    |\n970 | pub const fn spec_cast_integer<From: Copy, To: Integer>(_from: From) -> To {\n    |                                                ^^^^^^^ required by this bound in `spec_cast_integer`\nhelp: consider removing the leading `&`-reference\n    |\n103 -             a == get_Some_0(( old(( self ) as &mut _) ) as MyOption<_>),\n103 +             a == get_Some_0(( old(( self ) as _) ) as MyOption<_>),\n    |\n\n"}
+{"$message_type":"diagnostic","message":"the trait bound `A: std::marker::Copy` is not satisfied","code":{"code":"E0277","explanation":"You tried to use a type which doesn't implement some trait in a place which\nexpected that trait.\n\nErroneous code example:\n\n```compile_fail,E0277\n// here we declare the Foo trait with a bar method\ntrait Foo {\n    fn bar(&self);\n}\n\n// we now declare a function which takes an object implementing the Foo trait\nfn some_func<T: Foo>(foo: T) {\n    foo.bar();\n}\n\nfn main() {\n    // we now call the method with the i32 type, which doesn't implement\n    // the Foo trait\n    some_func(5i32); // error: the trait bound `i32 : Foo` is not satisfied\n}\n```\n\nIn order to fix this error, verify that the type you're using does implement\nthe trait. Example:\n\n```\ntrait Foo {\n    fn bar(&self);\n}\n\n// we implement the trait on the i32 type\nimpl Foo for i32 {\n    fn bar(&self) {}\n}\n\nfn some_func<T: Foo>(foo: T) {\n    foo.bar(); // we can now use this method since i32 implements the\n               // Foo trait\n}\n\nfn main() {\n    some_func(5i32); // ok!\n}\n```\n\nOr in a generic context, an erroneous code example would look like:\n\n```compile_fail,E0277\nfn some_func<T>(foo: T) {\n    println!(\"{:?}\", foo); // error: the trait `core::fmt::Debug` is not\n                           //        implemented for the type `T`\n}\n\nfn main() {\n    // We now call the method with the i32 type,\n    // which *does* implement the Debug trait.\n    some_func(5i32);\n}\n```\n\nNote that the error here is in the definition of the generic function. Although\nwe only call it with a parameter that does implement `Debug`, the compiler\nstill rejects the function. It must work with all possible input types. In\norder to make this example compile, we need to restrict the generic type we're\naccepting:\n\n```\nuse std::fmt;\n\n// Restrict the input type to types that implement Debug.\nfn some_func<T: fmt::Debug>(foo: T) {\n    println!(\"{:?}\", foo);\n}\n\nfn main() {\n    // Calling the method is still fine, as i32 implements Debug.\n    some_func(5i32);\n\n    // This would fail to compile now:\n    // struct WithoutDebug;\n    // some_func(WithoutDebug);\n}\n```\n\nRust only looks at the signature of the called function, as such it must\nalready specify all requirements that will be used for every type parameter.\n"},"level":"error","spans":[{"file_name":"<TMP_PATH>","byte_start":2293,"byte_end":2311,"line_start":103,"line_end":103,"column_start":35,"column_end":53,"is_primary":true,"text":[{"text":"            a == get_Some_0(( old(( self ) as &mut _) ) as MyOption<_>),","highlight_start":35,"highlight_end":53}],"label":"the trait `std::marker::Copy` is not implemented for `A`","suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[{"message":"required for `MyOption<A>` to implement `std::marker::Copy`","code":null,"level":"note","spans":[{"file_name":"<TMP_PATH>","byte_start":755,"byte_end":759,"line_start":39,"line_end":39,"column_start":9,"column_end":13,"is_primary":false,"text":[{"text":"impl<A: Copy> Copy for MyOption<A> {","highlight_start":9,"highlight_end":13}],"label":"unsatisfied trait bound introduced here","suggested_replacement":null,"suggestion_applicability":null,"expansion":null},{"file_name":"<TMP_PATH>","byte_start":761,"byte_end":765,"line_start":39,"line_end":39,"column_start":15,"column_end":19,"is_primary":true,"text":[{"text":"impl<A: Copy> Copy for MyOption<A> {","highlight_start":15,"highlight_end":19}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null},{"file_name":"<TMP_PATH>","byte_start":770,"byte_end":781,"line_start":39,"line_end":39,"column_start":24,"column_end":35,"is_primary":true,"text":[{"text":"impl<A: Copy> Copy for MyOption<A> {","highlight_start":24,"highlight_end":35}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":null},{"message":"required by a bound in `builtin::spec_cast_integer`","code":null,"level":"note","spans":[{"file_name":"/home/chuyue/verus/source/builtin/src/lib.rs","byte_start":25724,"byte_end":25728,"line_start":970,"line_end":970,"column_start":38,"column_end":42,"is_primary":true,"text":[{"text":"pub const fn spec_cast_integer<From: Copy, To: Integer>(_from: From) -> To {","highlight_start":38,"highlight_end":42}],"label":"required by this bound in `spec_cast_integer`","suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":null},{"message":"consider restricting type parameter `A` with trait `Copy`","code":null,"level":"help","spans":[{"file_name":"<TMP_PATH>","byte_start":794,"byte_end":794,"line_start":43,"line_end":43,"column_start":7,"column_end":7,"is_primary":true,"text":[{"text":"impl<A> MyOption<A> {","highlight_start":7,"highlight_end":7}],"label":null,"suggested_replacement":": std::marker::Copy","suggestion_applicability":"MachineApplicable","expansion":null}],"children":[],"rendered":null}],"rendered":"error[E0277]: the trait bound `A: std::marker::Copy` is not satisfied\n   --> <TMP_PATH>:103:35\n    |\n103 |             a == get_Some_0(( old(( self ) as &mut _) ) as MyOption<_>),\n    |                                   ^^^^^^^^^^^^^^^^^^ the trait `std::marker::Copy` is not implemented for `A`\n    |\nnote: required for `MyOption<A>` to implement `std::marker::Copy`\n   --> <TMP_PATH>:39:15\n    |\n39  | impl<A: Copy> Copy for MyOption<A> {\n    |         ----  ^^^^     ^^^^^^^^^^^\n    |         |\n    |         unsatisfied trait bound introduced here\nnote: required by a bound in `builtin::spec_cast_integer`\n   --> /home/chuyue/verus/source/builtin/src/lib.rs:970:38\n    |\n970 | pub const fn spec_cast_integer<From: Copy, To: Integer>(_from: From) -> To {\n    |                                      ^^^^ required by this bound in `spec_cast_integer`\nhelp: consider restricting type parameter `A` with trait `Copy`\n    |\n43  | impl<A: std::marker::Copy> MyOption<A> {\n    |       +++++++++++++++++++\n\n"}
+{"$message_type":"diagnostic","message":"the trait bound `&mut _: std::marker::Copy` is not satisfied","code":{"code":"E0277","explanation":"You tried to use a type which doesn't implement some trait in a place which\nexpected that trait.\n\nErroneous code example:\n\n```compile_fail,E0277\n// here we declare the Foo trait with a bar method\ntrait Foo {\n    fn bar(&self);\n}\n\n// we now declare a function which takes an object implementing the Foo trait\nfn some_func<T: Foo>(foo: T) {\n    foo.bar();\n}\n\nfn main() {\n    // we now call the method with the i32 type, which doesn't implement\n    // the Foo trait\n    some_func(5i32); // error: the trait bound `i32 : Foo` is not satisfied\n}\n```\n\nIn order to fix this error, verify that the type you're using does implement\nthe trait. Example:\n\n```\ntrait Foo {\n    fn bar(&self);\n}\n\n// we implement the trait on the i32 type\nimpl Foo for i32 {\n    fn bar(&self) {}\n}\n\nfn some_func<T: Foo>(foo: T) {\n    foo.bar(); // we can now use this method since i32 implements the\n               // Foo trait\n}\n\nfn main() {\n    some_func(5i32); // ok!\n}\n```\n\nOr in a generic context, an erroneous code example would look like:\n\n```compile_fail,E0277\nfn some_func<T>(foo: T) {\n    println!(\"{:?}\", foo); // error: the trait `core::fmt::Debug` is not\n                           //        implemented for the type `T`\n}\n\nfn main() {\n    // We now call the method with the i32 type,\n    // which *does* implement the Debug trait.\n    some_func(5i32);\n}\n```\n\nNote that the error here is in the definition of the generic function. Although\nwe only call it with a parameter that does implement `Debug`, the compiler\nstill rejects the function. It must work with all possible input types. In\norder to make this example compile, we need to restrict the generic type we're\naccepting:\n\n```\nuse std::fmt;\n\n// Restrict the input type to types that implement Debug.\nfn some_func<T: fmt::Debug>(foo: T) {\n    println!(\"{:?}\", foo);\n}\n\nfn main() {\n    // Calling the method is still fine, as i32 implements Debug.\n    some_func(5i32);\n\n    // This would fail to compile now:\n    // struct WithoutDebug;\n    // some_func(WithoutDebug);\n}\n```\n\nRust only looks at the signature of the called function, as such it must\nalready specify all requirements that will be used for every type parameter.\n"},"level":"error","spans":[{"file_name":"<TMP_PATH>","byte_start":2287,"byte_end":2329,"line_start":103,"line_end":103,"column_start":29,"column_end":71,"is_primary":true,"text":[{"text":"            a == get_Some_0(( old(( self ) as &mut _) ) as MyOption<_>),","highlight_start":29,"highlight_end":71}],"label":"the trait `std::marker::Copy` is not implemented for `&mut _`","suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[{"message":"required by a bound in `builtin::spec_cast_integer`","code":null,"level":"note","spans":[{"file_name":"/home/chuyue/verus/source/builtin/src/lib.rs","byte_start":25724,"byte_end":25728,"line_start":970,"line_end":970,"column_start":38,"column_end":42,"is_primary":true,"text":[{"text":"pub const fn spec_cast_integer<From: Copy, To: Integer>(_from: From) -> To {","highlight_start":38,"highlight_end":42}],"label":"required by this bound in `spec_cast_integer`","suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":null}],"rendered":"error[E0277]: the trait bound `&mut _: std::marker::Copy` is not satisfied\n   --> <TMP_PATH>:103:29\n    |\n103 |             a == get_Some_0(( old(( self ) as &mut _) ) as MyOption<_>),\n    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `std::marker::Copy` is not implemented for `&mut _`\n    |\nnote: required by a bound in `builtin::spec_cast_integer`\n   --> /home/chuyue/verus/source/builtin/src/lib.rs:970:38\n    |\n970 | pub const fn spec_cast_integer<From: Copy, To: Integer>(_from: From) -> To {\n    |                                      ^^^^ required by this bound in `spec_cast_integer`\n\n"}
+{"$message_type":"diagnostic","message":"aborting due to 4 previous errors","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 4 previous errors\n\n"}
+{"$message_type":"diagnostic","message":"For more information about this error, try `rustc --explain E0277`.","code":null,"level":"failure-note","spans":[],"children":[],"rendered":"For more information about this error, try `rustc --explain E0277`.\n"}```
+
+Code
+```
+use vstd::pervasive::*;
+use builtin_macros::*;
+use vstd::prelude::*;
+
+verus! {
+
+#[verifier::ext_equal]
+#[verifier::accept_recursive_types(A)]
+pub enum MyOption<A> {
+    None,
+    Some(A),
+}
+
+pub open spec fn is_Some<A>(opt: MyOption<A>) -> bool {
+    matches!(opt, MyOption::Some(_))
+}
+
+pub open spec fn is_None<A>(opt: MyOption<A>) -> bool {
+    matches!(opt, MyOption::None)
+}
+
+pub open spec fn get_Some_0<A>(opt: MyOption<A>) -> A
+{
+    match opt {
+        MyOption::Some(a) => a,
+        MyOption::None => arbitrary(),
+    }
+}
+
+impl<A: Clone> Clone for MyOption<A> {
+    fn clone(&self) -> Self {
+        match self {
+            MyOption::None => MyOption::None,
+            MyOption::Some(a) => MyOption::Some(a.clone()),
+        }
+    }
+}
+
+impl<A: Copy> Copy for MyOption<A> {
+
+}
+
+impl<A> MyOption<A> {
+    pub open spec fn Or(self, optb: MyOption<A>) -> MyOption<A> {
+        match self {
+            MyOption::Some(_) => self,
+            MyOption::None => optb,
+        }
+    }
+
+    pub fn or(self, optb: MyOption<A>) -> (res: MyOption<A>)
+        ensures
+            if is_Some(self) {
+                res == self
+            } else {
+                res == optb
+            },
+            is_Some(res) ==> (is_Some(self) || is_Some(optb)),
+    {
+        match self {
+            MyOption::None => optb,
+            MyOption::Some(_) => self,
+        }
+    }
+
+    #[inline(always)]
+    pub const fn is_some(&self) -> (res: bool)
+        ensures
+            res == is_Some(*self),
+    {
+        match self {
+            MyOption::Some(_) => true,
+            MyOption::None => false,
+        }
+    }
+
+    #[inline(always)]
+    pub const fn is_none(&self) -> (res: bool)
+        ensures
+            res == is_None(*self),
+    {
+        match self {
+            MyOption::Some(_) => false,
+            MyOption::None => true,
+        }
+    }
+
+    pub fn as_ref(&self) -> (a: MyOption<&A>)
+        ensures
+            is_Some(a) <==> is_Some(*self),
+            is_Some(a) ==> (get_Some_0(a) == &get_Some_0(*self)),
+    {
+        match self {
+            MyOption::Some(x) => MyOption::Some(x),
+            MyOption::None => MyOption::None,
+        }
+    }
+
+    pub fn unwrap(self) -> (a: A)
+        requires
+            is_Some(self),
+        ensures
+            a == get_Some_0(( old(( self ) as &mut _) ) as MyOption<_>),
+    {
+        match self {
+            MyOption::Some(a) => a,
+            MyOption::None => unreached(),
+        }
+    }
+}
+
+/* TEST CODE BELOW */
+
+fn test(n: i32) {
+    let opt: MyOption<i32> = MyOption::None;
+    let is_none = opt.is_none();
+    let is_some = opt.is_some();
+    assert(is_none);
+    assert(!is_some);
+
+    let opt2: MyOption<i32> = MyOption::Some(n);
+    let is_none = opt2.is_none();
+    let is_some = opt2.is_some();
+    assert(!is_none);
+    assert(is_some);
+
+    let opt3 = opt.or(opt2);
+    let is_some = opt3.is_some();
+    let val = opt3.unwrap();
+    assert(is_some);
+    assert(val == n);
+
+    let opt4 = opt2.or(opt);
+    let is_some = opt4.is_some();
+    let val = opt4.unwrap();
+    assert(is_some);
+    assert(val == n);
+
+    let opt5 = opt.or(MyOption::None);
+    let is_none = opt5.is_none();
+    let is_some = opt5.is_some();
+    assert(is_none);
+    assert(!is_some);
+
+    let opt_some: MyOption<i32> = MyOption::Some(n);
+    let opt_ref = opt_some.as_ref();
+    let ref_some = opt_ref.is_some();
+    let val = *opt_ref.unwrap();
+    assert(ref_some);
+    assert(val == n);
+
+    let opt_none: MyOption<i32> = MyOption::None;
+    let opt_ref_none = opt_none.as_ref();
+    let ref_none = opt_none.is_none();
+    assert(ref_none);
+}
+
+pub fn main() {
+}
+
+} // verus!
+
+
+```

@@ -1,0 +1,298 @@
+\documentclass{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{amsmath}
+\usepackage{xcolor}
+
+\title{VerusAgent: Main Execution Loop Pseudo-code}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Overview}
+
+The main execution loop orchestrates the verification workflow by executing a planned sequence of modules based on the planner's decision. It tracks progress, saves intermediate results, and manages the verification state through the context.
+
+\section{Main Execution Algorithm}
+
+\begin{algorithm}[H]
+\caption{Main Execution Loop}
+\begin{algorithmic}[1]
+\Require Context $ctx$ with registered modules and initial code
+\Require Output directory $output\_dir$ for saving results
+\Require Progress logger $progress\_logger$ for tracking execution
+\Ensure Final verified code or best attempt
+
+\Procedure{ExecuteVerificationWorkflow}{$ctx$, $output\_dir$, $progress\_logger$}
+    \State \textcolor{gray}{// Step 1: Generate verification plan using Planner}
+    \State $planner \gets$ Planner($logger$)
+    \State $plan\_result \gets planner.exec(ctx)$
+    \State $plan\_text \gets$ ExtractTextFromData($plan\_result$)
+
+    \If{$plan\_text$ is empty}
+        \State $plan\_text \gets$ \texttt{"No plan generated. Proceeding with default execution order."}
+        \State Log.Warning($plan\_text$)
+    \EndIf
+
+    \State \textcolor{gray}{// Save plan to file}
+    \State $plan\_file \gets output\_dir$ / \texttt{"verification\_plan\_\{file\_id\}.txt"}
+    \State WriteFile($plan\_file$, $plan\_text$)
+    \State Log.Info(\texttt{"Saved verification plan to "} + $plan\_file$)
+
+    \State \textcolor{gray}{// Add plan to context knowledge for future reference}
+    \State $ctx.add\_knowledge($\texttt{"verification\_plan"}$, plan\_text)$
+
+    \State \textcolor{gray}{// Step 2: Parse plan to determine execution order}
+    \State $available\_modules \gets$ List($ctx.modules.keys()$)
+    \State $execution\_order \gets$ ParsePlanExecutionOrder($plan\_text$, $available\_modules$)
+    \State Log.Info(\texttt{"Determined execution order: "} + $execution\_order$)
+
+    \State \textcolor{gray}{// Track where spec\_inference trials begin for fallback logic}
+    \State $spec\_trial\_start\_index \gets$ None
+    \State $step\_number \gets 1$
+
+    \State \textcolor{gray}{// Step 3: Execute modules according to plan}
+    \For{$module\_name$ \textbf{in} $execution\_order$}
+        \If{$module\_name \notin ctx.modules$}
+            \State Log.Warning(\texttt{"Module not found: "} + $module\_name$ + \texttt{". Skipping."})
+            \State \textbf{continue}
+        \EndIf
+
+        \State $module \gets ctx.modules[module\_name]$
+
+        \State \textcolor{gray}{// Record trial index before spec\_inference for fallback}
+        \If{$module\_name == $ \texttt{"spec\_inference"} \textbf{and} $spec\_trial\_start\_index == $ None}
+            \State $spec\_trial\_start\_index \gets$ len($ctx.trials$)
+        \EndIf
+
+        \State \textcolor{gray}{// Execute module step}
+        \State $progress\_logger.start\_step(module\_name, step\_number)$
+        \State $step\_start\_time \gets$ CurrentTime()
+
+        \State Log.Info(\texttt{"Step "} + $step\_number$ + \texttt{": Executing "} + $module\_name$ + \texttt{"..."})
+        \State $step\_result \gets module.exec(ctx)$
+
+        \State $step\_time \gets$ CurrentTime() $- step\_start\_time$
+        \State Log.Info($module\_name$ + \texttt{" completed in "} + $step\_time$ + \texttt{" seconds"})
+
+        \State \textcolor{gray}{// Save intermediate result with score}
+        \State SaveStepResult($output\_dir$, $step\_number$, $module\_name$, $step\_result$, $ctx$)
+
+        \State \textcolor{gray}{// Log progress}
+        \If{$ctx.trials$ is not empty \textbf{and} $ctx.trials[-1].eval$ is not None}
+            \State $score \gets ctx.trials[-1].eval.get\_score()$
+            \State $progress\_logger.end\_step(score, $ len($step\_result$)$)$
+        \EndIf
+
+        \State $step\_number \gets step\_number + 1$
+    \EndFor
+
+    \State \Return $ctx.trials[-1].code$
+\EndProcedure
+
+\end{algorithmic}
+\end{algorithm}
+
+\newpage
+
+\section{Helper Procedures}
+
+\begin{algorithm}[H]
+\caption{Extract Text from Plan Result}
+\begin{algorithmic}[1]
+\Require $data$ - Plan result from LLM (can be string, list, tuple, or dict)
+\Ensure Extracted text string
+
+\Procedure{ExtractTextFromData}{$data$}
+    \If{$data$ is string}
+        \State \Return $data$
+    \ElsIf{$data$ is list or tuple}
+        \If{len($data$) $== 0$}
+            \State \Return \texttt{""}
+        \EndIf
+
+        \State $first\_item \gets data[0]$
+        \If{$first\_item$ is string}
+            \State \Return $first\_item$
+        \ElsIf{$first\_item$ is list, tuple, or dict}
+            \State \Return ExtractTextFromData($first\_item$)
+        \EndIf
+    \ElsIf{$data$ is dict}
+        \If{\texttt{"content"} $\in data$}
+            \State \Return ExtractTextFromData($data[$\texttt{"content"}$]$)
+        \ElsIf{$data$ is not empty}
+            \State $first\_value \gets$ next(iter($data.values()$))
+            \State \Return ExtractTextFromData($first\_value$)
+        \EndIf
+    \EndIf
+
+    \State \Return str($data$) \Comment{Fallback: convert to string}
+\EndProcedure
+
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+\caption{Parse Plan Execution Order}
+\begin{algorithmic}[1]
+\Require $plan\_text$ - Text description of the verification plan
+\Require $available\_modules$ - List of available module names
+\Ensure Ordered list of module names to execute
+
+\Procedure{ParsePlanExecutionOrder}{$plan\_text$, $available\_modules$}
+    \State $execution\_steps \gets []$
+
+    \State \textcolor{gray}{// Search for module names in the plan text}
+    \For{$module$ \textbf{in} $available\_modules$}
+        \If{$module$ found in $plan\_text$}
+            \State $execution\_steps$.append($module$)
+        \EndIf
+    \EndFor
+
+    \State \textcolor{gray}{// Apply standard workflow ordering if present}
+    \State $standard\_order \gets [$ \texttt{"view\_inference"}, \texttt{"view\_refinement"},
+    \State \hspace{8em} \texttt{"inv\_inference"}, \texttt{"spec\_inference"}, \texttt{"proof\_generation"}$]$
+
+    \State $ordered\_steps \gets []$
+    \For{$module$ \textbf{in} $standard\_order$}
+        \If{$module \in execution\_steps$}
+            \State $ordered\_steps$.append($module$)
+        \EndIf
+    \EndFor
+
+    \State \textcolor{gray}{// Add any remaining modules not in standard order}
+    \For{$module$ \textbf{in} $execution\_steps$}
+        \If{$module \notin ordered\_steps$}
+            \State $ordered\_steps$.append($module$)
+        \EndIf
+    \EndFor
+
+    \If{$ordered\_steps$ is empty}
+        \State Log.Warning(\texttt{"No modules found in plan. Using default: spec\_inference"})
+        \State \Return [\texttt{"spec\_inference"}]
+    \EndIf
+
+    \State \Return $ordered\_steps$
+\EndProcedure
+
+\end{algorithmic}
+\end{algorithm}
+
+\newpage
+
+\begin{algorithm}[H]
+\caption{Save Step Result}
+\begin{algorithmic}[1]
+\Require $output\_dir$ - Directory for saving results
+\Require $step\_number$ - Current step number
+\Require $module\_name$ - Name of the executed module
+\Require $step\_result$ - Generated code from module
+\Require $ctx$ - Context with trials and evaluation results
+\Ensure Step result saved to file with metadata
+
+\Procedure{SaveStepResult}{$output\_dir$, $step\_number$, $module\_name$, $step\_result$, $ctx$}
+    \State $step\_file \gets output\_dir$ / format(\texttt{"\{:02\}\_\{\}\_\{file\_id\}.rs"}, $step\_number$, $module\_name$)
+
+    \State \textcolor{gray}{// Add score information if available}
+    \If{$ctx.trials$ is not empty \textbf{and} $ctx.trials[-1].eval$ is not None}
+        \State $score \gets ctx.trials[-1].eval.get\_score()$
+
+        \State $metadata \gets$ format(
+        \State \hspace{2em} \texttt{"// Step \{\} (\{\}) VEval Score: \{\}"},
+        \State \hspace{2em} $step\_number$, $module\_name$, $score$
+        \State )
+        \State $metadata \gets metadata$ + format(
+        \State \hspace{2em} \texttt{"// Verified: \{\}, Errors: \{\}, Verus Errors: \{\}"},
+        \State \hspace{2em} $score.verified$, $score.errors$, $score.verus\_errors$
+        \State )
+
+        \State $content \gets step\_result$ + \texttt{"\textbackslash n\textbackslash n"} + $metadata$
+        \State WriteFile($step\_file$, $content$)
+    \Else
+        \State WriteFile($step\_file$, $step\_result$)
+    \EndIf
+
+    \State Log.Info(\texttt{"Step "} + $step\_number$ + \texttt{" output saved to "} + $step\_file$)
+\EndProcedure
+
+\end{algorithmic}
+\end{algorithm}
+
+\section{Execution Flow Diagram}
+
+The main execution follows this workflow:
+
+\begin{enumerate}
+    \item \textbf{Planning Phase:}
+    \begin{itemize}
+        \item Execute planner to analyze code and determine optimal workflow
+        \item Extract and save verification plan
+        \item Add plan to context knowledge base
+    \end{itemize}
+
+    \item \textbf{Parsing Phase:}
+    \begin{itemize}
+        \item Parse plan text to extract module execution order
+        \item Validate modules exist in registered modules
+        \item Apply standard ordering constraints
+    \end{itemize}
+
+    \item \textbf{Execution Phase:}
+    \begin{itemize}
+        \item For each module in execution order:
+        \begin{itemize}
+            \item Track progress and timing
+            \item Execute module with current context
+            \item Save intermediate results with scores
+            \item Update context with new trial
+        \end{itemize}
+    \end{itemize}
+
+    \item \textbf{Finalization Phase:}
+    \begin{itemize}
+        \item Compare checkpoint best with final result
+        \item Select highest scoring solution
+        \item Save final result
+    \end{itemize}
+\end{enumerate}
+
+\section{Key Design Features}
+
+\subsection{Trial Tracking}
+The system tracks a special index $spec\_trial\_start\_index$ to mark when the \texttt{spec\_inference} module begins. This enables fallback logic to distinguish between:
+\begin{itemize}
+    \item Early-stage trials (view/invariant inference) - may be incomplete
+    \item Later-stage trials (specification inference) - more complete and reliable
+\end{itemize}
+
+\subsection{Progressive Refinement}
+Each module builds upon the previous module's output:
+\begin{itemize}
+    \item \texttt{view\_inference} $\rightarrow$ mathematical abstractions
+    \item \texttt{view\_refinement} $\rightarrow$ optimized abstractions
+    \item \texttt{inv\_inference} $\rightarrow$ data structure invariants
+    \item \texttt{spec\_inference} $\rightarrow$ function specifications
+    \item \texttt{proof\_generation} $\rightarrow$ verification proofs
+\end{itemize}
+
+\subsection{Intermediate Checkpointing}
+Each step's output is saved with:
+\begin{itemize}
+    \item Step number and module name for identification
+    \item Complete generated code
+    \item Evaluation scores (verified, errors, verus\_errors)
+    \item Timing information
+\end{itemize}
+
+This enables:
+\begin{itemize}
+    \item Debugging and analysis of individual steps
+    \item Recovery from failures at any stage
+    \item Comparison of different workflow strategies
+\end{itemize}
+
+\end{document}

@@ -1,0 +1,293 @@
+{
+  "run_timestamp": "20251010_155844",
+  "completed_at": "2025-10-10T16:20:13.708148",
+  "total_attempts": 10,
+  "total_candidates_evaluated": 19,
+  "final_score": {
+    "verified": -1,
+    "errors": 999,
+    "verus_errors": 1,
+    "compilation_error": true,
+    "is_correct": false
+  },
+  "success": false,
+  "per_attempt_stats": [
+    {
+      "attempt": 1,
+      "llm_time_seconds": 127.079877,
+      "total_time_seconds": 127.717041,
+      "eval_time_seconds": 0.6371639999999985,
+      "num_candidates": 1,
+      "candidates": [
+        {
+          "candidate_num": 4,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 1,
+          "compilation_error": true,
+          "is_correct": false
+        }
+      ],
+      "best_verus_errors": 1,
+      "best_candidate_num": 4,
+      "timestamp": "2025-10-10T15:58:44.594260"
+    },
+    {
+      "attempt": 2,
+      "llm_time_seconds": 123.522278,
+      "total_time_seconds": 124.154002,
+      "eval_time_seconds": 0.6317240000000055,
+      "num_candidates": 2,
+      "candidates": [
+        {
+          "candidate_num": 3,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 3,
+          "compilation_error": true,
+          "is_correct": false
+        },
+        {
+          "candidate_num": 5,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 2,
+          "compilation_error": true,
+          "is_correct": false
+        }
+      ],
+      "best_verus_errors": 2,
+      "best_candidate_num": 5,
+      "timestamp": "2025-10-10T16:00:52.311351"
+    },
+    {
+      "attempt": 3,
+      "llm_time_seconds": 131.54603,
+      "total_time_seconds": 132.240298,
+      "eval_time_seconds": 0.6942679999999939,
+      "num_candidates": 3,
+      "candidates": [
+        {
+          "candidate_num": 1,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 1,
+          "compilation_error": true,
+          "is_correct": false
+        },
+        {
+          "candidate_num": 4,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 3,
+          "compilation_error": true,
+          "is_correct": false
+        },
+        {
+          "candidate_num": 5,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 6,
+          "compilation_error": true,
+          "is_correct": false
+        }
+      ],
+      "best_verus_errors": 1,
+      "best_candidate_num": 1,
+      "timestamp": "2025-10-10T16:02:56.465397"
+    },
+    {
+      "attempt": 4,
+      "llm_time_seconds": 115.239466,
+      "total_time_seconds": 116.017473,
+      "eval_time_seconds": 0.7780070000000023,
+      "num_candidates": 2,
+      "candidates": [
+        {
+          "candidate_num": 2,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 1,
+          "compilation_error": true,
+          "is_correct": false
+        },
+        {
+          "candidate_num": 4,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 10,
+          "compilation_error": true,
+          "is_correct": false
+        }
+      ],
+      "best_verus_errors": 1,
+      "best_candidate_num": 2,
+      "timestamp": "2025-10-10T16:05:08.705747"
+    },
+    {
+      "attempt": 5,
+      "llm_time_seconds": 164.013497,
+      "total_time_seconds": 164.948829,
+      "eval_time_seconds": 0.9353319999999883,
+      "num_candidates": 3,
+      "candidates": [
+        {
+          "candidate_num": 1,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 6,
+          "compilation_error": true,
+          "is_correct": false
+        },
+        {
+          "candidate_num": 3,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 3,
+          "compilation_error": true,
+          "is_correct": false
+        },
+        {
+          "candidate_num": 5,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 7,
+          "compilation_error": true,
+          "is_correct": false
+        }
+      ],
+      "best_verus_errors": 3,
+      "best_candidate_num": 3,
+      "timestamp": "2025-10-10T16:07:04.723249"
+    },
+    {
+      "attempt": 6,
+      "llm_time_seconds": 121.511471,
+      "total_time_seconds": 122.397407,
+      "eval_time_seconds": 0.885936000000001,
+      "num_candidates": 2,
+      "candidates": [
+        {
+          "candidate_num": 1,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 10,
+          "compilation_error": true,
+          "is_correct": false
+        },
+        {
+          "candidate_num": 2,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 8,
+          "compilation_error": true,
+          "is_correct": false
+        }
+      ],
+      "best_verus_errors": 8,
+      "best_candidate_num": 2,
+      "timestamp": "2025-10-10T16:09:49.672118"
+    },
+    {
+      "attempt": 7,
+      "llm_time_seconds": 158.74708,
+      "total_time_seconds": 159.44564,
+      "eval_time_seconds": 0.6985599999999863,
+      "num_candidates": 1,
+      "candidates": [
+        {
+          "candidate_num": 1,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 9,
+          "compilation_error": true,
+          "is_correct": false
+        }
+      ],
+      "best_verus_errors": 9,
+      "best_candidate_num": 1,
+      "timestamp": "2025-10-10T16:11:52.069551"
+    },
+    {
+      "attempt": 8,
+      "llm_time_seconds": 115.942048,
+      "total_time_seconds": 116.456802,
+      "eval_time_seconds": 0.5147539999999964,
+      "num_candidates": 0,
+      "candidates": [],
+      "best_verus_errors": null,
+      "best_candidate_num": null,
+      "timestamp": "2025-10-10T16:14:31.515218"
+    },
+    {
+      "attempt": 9,
+      "llm_time_seconds": 108.070805,
+      "total_time_seconds": 108.818325,
+      "eval_time_seconds": 0.7475200000000086,
+      "num_candidates": 2,
+      "candidates": [
+        {
+          "candidate_num": 2,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 1,
+          "compilation_error": true,
+          "is_correct": false
+        },
+        {
+          "candidate_num": 3,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 3,
+          "compilation_error": true,
+          "is_correct": false
+        }
+      ],
+      "best_verus_errors": 1,
+      "best_candidate_num": 2,
+      "timestamp": "2025-10-10T16:16:27.972047"
+    },
+    {
+      "attempt": 10,
+      "llm_time_seconds": 115.844656,
+      "total_time_seconds": 116.91771,
+      "eval_time_seconds": 1.073053999999999,
+      "num_candidates": 3,
+      "candidates": [
+        {
+          "candidate_num": 1,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 7,
+          "compilation_error": true,
+          "is_correct": false
+        },
+        {
+          "candidate_num": 2,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 9,
+          "compilation_error": true,
+          "is_correct": false
+        },
+        {
+          "candidate_num": 3,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 6,
+          "compilation_error": true,
+          "is_correct": false
+        }
+      ],
+      "best_verus_errors": 6,
+      "best_candidate_num": 3,
+      "timestamp": "2025-10-10T16:18:16.790397"
+    }
+  ],
+  "timing": {
+    "total_llm_time_seconds": 1281.517208,
+    "total_eval_time_seconds": 7.596318999999994,
+    "total_time_seconds": 1289.113527,
+    "average_llm_time_per_attempt": 128.1517208
+  }
+}

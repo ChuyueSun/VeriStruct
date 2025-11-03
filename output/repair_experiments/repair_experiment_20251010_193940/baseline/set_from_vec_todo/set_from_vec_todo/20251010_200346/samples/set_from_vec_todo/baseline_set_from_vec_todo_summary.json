@@ -1,0 +1,141 @@
+{
+  "run_timestamp": "20251010_200347",
+  "completed_at": "2025-10-10T20:19:27.935651",
+  "total_attempts": 10,
+  "total_candidates_evaluated": 1,
+  "final_score": {
+    "verified": -1,
+    "errors": 999,
+    "verus_errors": 4,
+    "compilation_error": true,
+    "is_correct": false
+  },
+  "success": false,
+  "per_attempt_stats": [
+    {
+      "attempt": 1,
+      "llm_time_seconds": 57.415791,
+      "total_time_seconds": 57.958774,
+      "eval_time_seconds": 0.5429829999999995,
+      "num_candidates": 0,
+      "candidates": [],
+      "best_verus_errors": null,
+      "best_candidate_num": null,
+      "timestamp": "2025-10-10T20:03:47.700115"
+    },
+    {
+      "attempt": 2,
+      "llm_time_seconds": 53.810645,
+      "total_time_seconds": 54.296089,
+      "eval_time_seconds": 0.4854440000000011,
+      "num_candidates": 0,
+      "candidates": [],
+      "best_verus_errors": null,
+      "best_candidate_num": null,
+      "timestamp": "2025-10-10T20:04:45.658915"
+    },
+    {
+      "attempt": 3,
+      "llm_time_seconds": 130.887259,
+      "total_time_seconds": 131.373457,
+      "eval_time_seconds": 0.4861980000000017,
+      "num_candidates": 0,
+      "candidates": [],
+      "best_verus_errors": null,
+      "best_candidate_num": null,
+      "timestamp": "2025-10-10T20:05:39.955030"
+    },
+    {
+      "attempt": 4,
+      "llm_time_seconds": 68.52277,
+      "total_time_seconds": 69.01097,
+      "eval_time_seconds": 0.4882000000000062,
+      "num_candidates": 0,
+      "candidates": [],
+      "best_verus_errors": null,
+      "best_candidate_num": null,
+      "timestamp": "2025-10-10T20:07:51.328510"
+    },
+    {
+      "attempt": 5,
+      "llm_time_seconds": 72.087217,
+      "total_time_seconds": 72.614201,
+      "eval_time_seconds": 0.5269839999999988,
+      "num_candidates": 0,
+      "candidates": [],
+      "best_verus_errors": null,
+      "best_candidate_num": null,
+      "timestamp": "2025-10-10T20:09:00.339503"
+    },
+    {
+      "attempt": 6,
+      "llm_time_seconds": 62.299903,
+      "total_time_seconds": 62.780924,
+      "eval_time_seconds": 0.48102099999999837,
+      "num_candidates": 0,
+      "candidates": [],
+      "best_verus_errors": null,
+      "best_candidate_num": null,
+      "timestamp": "2025-10-10T20:10:12.953727"
+    },
+    {
+      "attempt": 7,
+      "llm_time_seconds": 58.788122,
+      "total_time_seconds": 59.273396,
+      "eval_time_seconds": 0.4852739999999969,
+      "num_candidates": 0,
+      "candidates": [],
+      "best_verus_errors": null,
+      "best_candidate_num": null,
+      "timestamp": "2025-10-10T20:11:15.734673"
+    },
+    {
+      "attempt": 8,
+      "llm_time_seconds": 57.454705,
+      "total_time_seconds": 57.958289,
+      "eval_time_seconds": 0.5035840000000036,
+      "num_candidates": 0,
+      "candidates": [],
+      "best_verus_errors": null,
+      "best_candidate_num": null,
+      "timestamp": "2025-10-10T20:12:15.008092"
+    },
+    {
+      "attempt": 9,
+      "llm_time_seconds": 322.875915,
+      "total_time_seconds": 323.355513,
+      "eval_time_seconds": 0.4795979999999531,
+      "num_candidates": 0,
+      "candidates": [],
+      "best_verus_errors": null,
+      "best_candidate_num": null,
+      "timestamp": "2025-10-10T20:13:12.966404"
+    },
+    {
+      "attempt": 10,
+      "llm_time_seconds": 50.779771,
+      "total_time_seconds": 51.613668,
+      "eval_time_seconds": 0.8338970000000003,
+      "num_candidates": 1,
+      "candidates": [
+        {
+          "candidate_num": 2,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 4,
+          "compilation_error": true,
+          "is_correct": false
+        }
+      ],
+      "best_verus_errors": 4,
+      "best_candidate_num": 2,
+      "timestamp": "2025-10-10T20:18:36.321942"
+    }
+  ],
+  "timing": {
+    "total_llm_time_seconds": 934.922098,
+    "total_eval_time_seconds": 5.313182999999981,
+    "total_time_seconds": 940.235281,
+    "average_llm_time_per_attempt": 93.4922098
+  }
+}

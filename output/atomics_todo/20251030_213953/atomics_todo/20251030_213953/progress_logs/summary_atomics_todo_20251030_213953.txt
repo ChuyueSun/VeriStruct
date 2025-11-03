@@ -1,0 +1,80 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/atomics_todo.rs
+Input File Name: atomics_todo.rs
+File ID: atomics_todo___General_20251030_213953
+Output Directory: /home/chuyue/VerusAgent/output/atomics_todo/20251030_213953/atomics_todo/20251030_213953
+Progress Log: /home/chuyue/VerusAgent/output/atomics_todo/20251030_213953/atomics_todo/20251030_213953/progress_logs/progress_atomics_todo_20251030_213953.json
+Summary File: /home/chuyue/VerusAgent/output/atomics_todo/20251030_213953/atomics_todo/20251030_213953/progress_logs/summary_atomics_todo_20251030_213953.txt
+
+Start time: 2025-10-30T21:39:53.952860
+End time: 2025-10-30T21:45:12.988973
+Total execution time: 319.04s
+
+## Final Result
+
+Verified: 4
+Errors: 1
+Verus Errors: 2
+Compilation Error: False
+Is Correct: False
+
+## Statistics
+
+Total steps: 3
+Total repair rounds: 5
+Total repairs attempted: 5
+Successful repairs: 1
+Average step time: 40.88s
+Average repair time: 36.76s
+
+## Steps
+
+Step 1: inv_inference
+  Time: 32.94s
+  Score: Verified=4, Errors=1, Verus Errors=2
+Step 2: spec_inference
+  Time: 50.06s
+  Score: Verified=-1, Errors=999, Verus Errors=1
+Step 3: proof_generation
+  Time: 39.62s
+  Score: Verified=-1, Errors=999, Verus Errors=1
+
+## Repair Rounds
+
+Round 1
+  Time: 47.73s
+  repair_syntax for Other
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 47.72s
+
+Round 2
+  Time: 59.70s
+  repair_syntax for Other
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 59.70s
+
+Round 3
+  Time: 0.13s
+  repair_type for MismatchedType
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 0.13s
+
+Round 4
+  Time: 34.31s
+  repair_syntax for Other
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=2
+    Time: 34.31s
+
+Round 5
+  Time: 41.94s
+  repair_syntax for Other
+    Before: Verified=-1, Errors=999, Verus Errors=2
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 41.94s

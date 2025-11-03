@@ -1,0 +1,39 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/set_from_vec_todo.rs
+Input File Name: set_from_vec_todo.rs
+File ID: set_from_vec_todo__Vec_General_20251011_230056
+Output Directory: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225254/baseline/set_from_vec_todo/set_from_vec_todo/20251011_230056
+Progress Log: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225254/baseline/set_from_vec_todo/set_from_vec_todo/20251011_230056/progress_logs/progress_set_from_vec_todo_20251011_230056.json
+Summary File: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225254/baseline/set_from_vec_todo/set_from_vec_todo/20251011_230056/progress_logs/summary_set_from_vec_todo_20251011_230056.txt
+
+Start time: 2025-10-11T23:00:56.347274
+End time: 2025-10-11T23:11:18.161759
+Total execution time: 621.81s
+
+## Final Result
+
+Verified: -1
+Errors: 999
+Verus Errors: 1
+Compilation Error: True
+Is Correct: False
+
+## Statistics
+
+Total steps: 1
+Total repair rounds: 0
+Total repairs attempted: 0
+Successful repairs: 0
+Average step time: 621.02s
+Average repair time: 0.00s
+
+## Steps
+
+Step 1: baseline
+  Time: 621.02s
+  Score: Verified=-1, Errors=999, Verus Errors=1
+
+## Repair Rounds

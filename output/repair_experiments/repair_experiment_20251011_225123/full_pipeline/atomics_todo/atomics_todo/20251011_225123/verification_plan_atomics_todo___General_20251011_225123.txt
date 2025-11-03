@@ -1,0 +1,30 @@
+```markdown
+Current State:
+- The code defines a struct Lock<T> requiring type invariants (notably for the AtomicBool field).
+- There are multiple TODO markers for adding specifications ("TODO: add specification", "TODO: add requires and ensures") and for adding invariants in the loop.
+- No explicit "View" implementation or "TODO: add View" is present.
+- The code thus needs both invariants and function specifications, but does not require a View function.
+
+Dependencies:
+- Lock<T> is a data structure that depends on its field invariant being well-formed.
+- The take() function depends on Lock<T> being well-formed, and it also requires loop invariants to prove correctness.
+- The atomic ghost operations for Lock<T> depend on the correctness of the well_formed() spec and on the function-level specifications.
+
+```
+
+```markdown
+**Selected Workflow:** Invariant-First Workflow
+
+**Justification:**
+This code contains a struct (Lock<T>) that needs type invariants as well as function specifications (e.g., requires/ensures clauses) for correctness.
+There is no mention of "View" or a need to implement a View function, so the Full Sequence Workflow is not required.
+
+**Execution Steps:**
+1. inv_inference
+2. spec_inference
+3. proof_generation  (added because of "TODO: add invariants" markers)
+
+**Module Conditions:**
+- inv_inference: Yes (Lock<T> is a struct requiring invariants)
+- proof_generation: Yes (the code has "TODO: add invariants" which triggers proof_generation)
+```

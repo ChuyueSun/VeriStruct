@@ -1,0 +1,27 @@
+# Task Overview
+
+Your task is to enhance Verus code by adding missing specifications, such as:
+
+1. Implementing View functions for mathematical abstractions
+2. Implementing invariant functions to capture data structure constraints
+3. Adding requires/ensures clauses to methods
+4. Fixing verification failures
+
+### Verus Specification Synthesis Task
+
+Below, we introduce the verus specification synthesis task.
+
+#### Input
+
+The input of this task consists of five parts:
+
+1. **Verus Code:** The verus code that is not fully verified.
+2. **Compilation Error:** The compiler error reported from the verus code above.
+3. **Knowledge**: The knowledge of the components mentioned in the code.
+4. **Failures:**: The previous failures that the LLM should avoid to do again, each failure consists of:
+   - the verus code and,
+   - the compilation error.
+
+#### Output
+
+The output of this task consists of a verus code that can be fully verified.

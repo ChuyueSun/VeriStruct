@@ -1,0 +1,434 @@
+{
+  "benchmark_name": "node_todo",
+  "start_time": "2025-10-30T21:59:52.641477",
+  "end_time": "2025-10-30T22:03:02.986581",
+  "total_execution_time": 190.34510564804077,
+  "modules_activated": [
+    "inv_inference",
+    "spec_inference",
+    "proof_generation"
+  ],
+  "modules_count": 3,
+  "stages": {
+    "inv_inference": {
+      "step_number": 1,
+      "start_time": "2025-10-30T21:59:53.424298",
+      "end_time": "2025-10-30T21:59:54.159865",
+      "execution_time": 0.7355802059173584,
+      "llm_calls": 3,
+      "iterations": 1,
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 1,
+        "is_correct": false
+      }
+    },
+    "spec_inference": {
+      "step_number": 2,
+      "start_time": "2025-10-30T21:59:54.160058",
+      "end_time": "2025-10-30T21:59:54.871413",
+      "execution_time": 0.711357593536377,
+      "llm_calls": 3,
+      "iterations": 1,
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 1,
+        "is_correct": false
+      }
+    },
+    "proof_generation": {
+      "step_number": 3,
+      "start_time": "2025-10-30T21:59:54.871536",
+      "end_time": "2025-10-30T21:59:55.687138",
+      "execution_time": 0.8156039714813232,
+      "llm_calls": 3,
+      "iterations": 1,
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 1,
+        "is_correct": false
+      }
+    }
+  },
+  "llm_calls": {
+    "total": 25,
+    "by_stage": {
+      "planning": 1,
+      "inv_inference": 3,
+      "spec_inference": 3,
+      "proof_generation": 3,
+      "repair": 15
+    },
+    "by_module": {
+      "planner": 1,
+      "inv_inference": 3,
+      "spec_inference": 3,
+      "proof_generation": 3,
+      "repair_syntax": 15
+    },
+    "response_times": [
+      {
+        "stage": "planning",
+        "module": "planner",
+        "time": 0.00022149085998535156,
+        "cache_hit": true
+      },
+      {
+        "stage": "inv_inference",
+        "module": "inv_inference",
+        "time": 0.2078707218170166,
+        "cache_hit": false
+      },
+      {
+        "stage": "inv_inference",
+        "module": "inv_inference",
+        "time": 0.20425891876220703,
+        "cache_hit": false
+      },
+      {
+        "stage": "inv_inference",
+        "module": "inv_inference",
+        "time": 0.32175731658935547,
+        "cache_hit": false
+      },
+      {
+        "stage": "spec_inference",
+        "module": "spec_inference",
+        "time": 0.2205498218536377,
+        "cache_hit": false
+      },
+      {
+        "stage": "spec_inference",
+        "module": "spec_inference",
+        "time": 0.23490095138549805,
+        "cache_hit": false
+      },
+      {
+        "stage": "spec_inference",
+        "module": "spec_inference",
+        "time": 0.24459242820739746,
+        "cache_hit": false
+      },
+      {
+        "stage": "proof_generation",
+        "module": "proof_generation",
+        "time": 0.2263641357421875,
+        "cache_hit": false
+      },
+      {
+        "stage": "proof_generation",
+        "module": "proof_generation",
+        "time": 0.3219437599182129,
+        "cache_hit": false
+      },
+      {
+        "stage": "proof_generation",
+        "module": "proof_generation",
+        "time": 0.2569880485534668,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 16.194128036499023,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 18.62048602104187,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 18.004011154174805,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.0002377033233642578,
+        "cache_hit": true
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 14.425617218017578,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 16.785333156585693,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.00022363662719726562,
+        "cache_hit": true
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 17.308053493499756,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 16.550211191177368,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.0002505779266357422,
+        "cache_hit": true
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 16.203838109970093,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 16.329700469970703,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 0.0002238750457763672,
+        "cache_hit": true
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 16.23468589782715,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 15.059098958969116,
+        "cache_hit": false
+      }
+    ],
+    "cache_hits": 5,
+    "cache_misses": 20,
+    "input_tokens": 69160,
+    "output_tokens": 69897,
+    "by_call": [
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "input_tokens": 6245,
+        "output_tokens": 4541,
+        "cache_hit": false,
+        "time": 16.194128036499023
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "input_tokens": 6279,
+        "output_tokens": 7233,
+        "cache_hit": false,
+        "time": 18.62048602104187
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "input_tokens": 6304,
+        "output_tokens": 7684,
+        "cache_hit": false,
+        "time": 18.004011154174805
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "input_tokens": 6279,
+        "output_tokens": 4024,
+        "cache_hit": false,
+        "time": 14.425617218017578
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "input_tokens": 6304,
+        "output_tokens": 6779,
+        "cache_hit": false,
+        "time": 16.785333156585693
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "input_tokens": 6279,
+        "output_tokens": 4102,
+        "cache_hit": false,
+        "time": 17.308053493499756
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "input_tokens": 6304,
+        "output_tokens": 6789,
+        "cache_hit": false,
+        "time": 16.550211191177368
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "input_tokens": 6279,
+        "output_tokens": 6846,
+        "cache_hit": false,
+        "time": 16.203838109970093
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "input_tokens": 6304,
+        "output_tokens": 9409,
+        "cache_hit": false,
+        "time": 16.329700469970703
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "input_tokens": 6279,
+        "output_tokens": 8712,
+        "cache_hit": false,
+        "time": 16.23468589782715
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "input_tokens": 6304,
+        "output_tokens": 3778,
+        "cache_hit": false,
+        "time": 15.059098958969116
+      }
+    ]
+  },
+  "iterations": {
+    "by_module": {},
+    "by_stage": {
+      "inv_inference": 1,
+      "spec_inference": 1,
+      "proof_generation": 1
+    }
+  },
+  "repairs": {
+    "total_rounds": 5,
+    "total_repairs": 5,
+    "repairs_by_type": {
+      "Other": 5
+    },
+    "repairs_by_heuristic": {
+      "repair_syntax": 5
+    },
+    "successful_repairs": 0,
+    "failed_repairs": 5,
+    "repair_times": [
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 54.10712480545044,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 32.276015758514404,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 34.913063287734985,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 33.589239835739136,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 32.35800909996033,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      }
+    ]
+  },
+  "errors": {
+    "initial_error_count": 999,
+    "final_error_count": 999,
+    "errors_by_type": {
+      "Other": 1
+    },
+    "errors_fixed_by_type": {}
+  },
+  "verification": {
+    "initial_verified": -1,
+    "final_verified": -1,
+    "initial_errors": 999,
+    "final_errors": 999,
+    "compilation_errors": 1
+  },
+  "code_metrics": {
+    "initial_code_length": 10905,
+    "final_code_length": 10904,
+    "code_changes": 1
+  }
+}

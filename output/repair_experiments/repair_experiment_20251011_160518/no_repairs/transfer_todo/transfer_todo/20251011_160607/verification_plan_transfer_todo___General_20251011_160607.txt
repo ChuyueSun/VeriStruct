@@ -1,0 +1,26 @@
+```markdown
+Current State:
+- The code defines a struct (Account) and a function (transfer) with a "TODO: add requires and ensures" placeholder.
+- There is no mention of any View function or invariant statements, but the presence of a struct suggests invariants may be needed.
+- No explicit "View" or "TODO: add View" references exist, so a View-based workflow is not indicated.
+
+Dependencies:
+- The struct Account might require invariants (e.g., ensuring balance remains nonnegative).
+- The transfer function requires specification clauses (requires/ensures) for correctness.
+
+```
+
+```markdown
+**Selected Workflow:** Invariant-First Workflow
+
+**Justification:**
+Because the code defines a struct (Account) and there is a "TODO: add requires and ensures" placeholder, this indicates that both invariants and function specifications may be needed. There are no references to Views, so the Full Sequence Workflow is not appropriate. Hence, we use the Invariant-First approach (inv_inference → spec_inference) for struct-based verification needs.
+
+**Execution Steps:**
+1. inv_inference
+2. spec_inference
+
+**Module Conditions:**
+- inv_inference: Yes - Account is a struct that may require type invariants.
+- proof_generation: No - There is no "TODO: add proof" or "TODO: add invariants" marker.
+```

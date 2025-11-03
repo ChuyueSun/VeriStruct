@@ -1,0 +1,91 @@
+BASELINE vs FULL WORKFLOW COMPARISON
+====================================================================================================
+
+Files Processed                          128                  184                  56++++++++++++++++++
+Successful Verifications                 72                   38                   -34+++++++++++++++++
+Success Rate                             56.2                % 20.7                % -35.6++++++++++++++%
+Functions Verified                       300                  249                  -51+++++++++++++++++
+  Files: Baseline=22, Full=30, Diff=+8
+  Success: Baseline=18, Full=2, Diff=-16
+  Success Rate: Baseline=81.8%, Full=6.7%, Diff=-75.2%
+  Functions Verified: Baseline=90, Full=10, Diff=-80
+  Avg Functions/File: Baseline=4.1, Full=0.3, Diff=-3.8
+  Progressive Test Variants Available: 7
+  Potential with Progressive Tests: Baseline=154, Full=210
+  Files: Baseline=12, Full=17, Diff=+5
+  Success: Baseline=0, Full=6, Diff=+6
+  Success Rate: Baseline=0.0%, Full=35.3%, Diff=+35.3%
+  Functions Verified: Baseline=0, Full=106, Diff=+106
+  Avg Functions/File: Baseline=0.0, Full=6.2, Diff=+6.2
+  Progressive Test Variants Available: 14
+  Potential with Progressive Tests: Baseline=168, Full=238
+  Files: Baseline=0, Full=11, Diff=+11
+  Success: Baseline=0, Full=0, Diff=+0
+  Success Rate: Baseline=0.0%, Full=0.0%, Diff=+0.0%
+  Functions Verified: Baseline=0, Full=0, Diff=+0
+  Avg Functions/File: Baseline=0.0, Full=0.0, Diff=+0.0
+  Progressive Test Variants Available: 4
+  Potential with Progressive Tests: Baseline=0, Full=44
+  Files: Baseline=16, Full=18, Diff=+2
+  Success: Baseline=16, Full=18, Diff=+2
+  Success Rate: Baseline=100.0%, Full=100.0%, Diff=+0.0%
+  Functions Verified: Baseline=32, Full=36, Diff=+4
+  Avg Functions/File: Baseline=2.0, Full=2.0, Diff=+0.0
+  Progressive Test Variants Available: 6
+  Potential with Progressive Tests: Baseline=96, Full=108
+  Files: Baseline=0, Full=3, Diff=+3
+  Success: Baseline=0, Full=0, Diff=+0
+  Success Rate: Baseline=0.0%, Full=0.0%, Diff=+0.0%
+  Functions Verified: Baseline=0, Full=0, Diff=+0
+  Avg Functions/File: Baseline=0.0, Full=0.0, Diff=+0.0
+  Progressive Test Variants Available: 4
+  Potential with Progressive Tests: Baseline=0, Full=12
+  Files: Baseline=16, Full=18, Diff=+2
+  Success: Baseline=16, Full=0, Diff=-16
+  Success Rate: Baseline=100.0%, Full=0.0%, Diff=-100.0%
+  Functions Verified: Baseline=128, Full=0, Diff=-128
+  Avg Functions/File: Baseline=8.0, Full=0.0, Diff=-8.0
+  Progressive Test Variants Available: 8
+  Potential with Progressive Tests: Baseline=128, Full=144
+  Files: Baseline=8, Full=16, Diff=+8
+  Success: Baseline=0, Full=0, Diff=+0
+  Success Rate: Baseline=0.0%, Full=0.0%, Diff=+0.0%
+  Functions Verified: Baseline=0, Full=0, Diff=+0
+  Avg Functions/File: Baseline=0.0, Full=0.0, Diff=+0.0
+  Progressive Test Variants Available: 4
+  Potential with Progressive Tests: Baseline=32, Full=64
+  Files: Baseline=16, Full=18, Diff=+2
+  Success: Baseline=16, Full=0, Diff=-16
+  Success Rate: Baseline=100.0%, Full=0.0%, Diff=-100.0%
+  Functions Verified: Baseline=32, Full=0, Diff=-32
+  Avg Functions/File: Baseline=2.0, Full=0.0, Diff=-2.0
+  Progressive Test Variants Available: 4
+  Potential with Progressive Tests: Baseline=64, Full=72
+  Files: Baseline=10, Full=17, Diff=+7
+  Success: Baseline=0, Full=12, Diff=+12
+  Success Rate: Baseline=0.0%, Full=70.6%, Diff=+70.6%
+  Functions Verified: Baseline=0, Full=97, Diff=+97
+  Avg Functions/File: Baseline=0.0, Full=5.7, Diff=+5.7
+  Progressive Test Variants Available: 5
+  Potential with Progressive Tests: Baseline=50, Full=85
+  Files: Baseline=16, Full=18, Diff=+2
+  Success: Baseline=6, Full=0, Diff=-6
+  Success Rate: Baseline=37.5%, Full=0.0%, Diff=-37.5%
+  Functions Verified: Baseline=18, Full=0, Diff=-18
+  Avg Functions/File: Baseline=1.1, Full=0.0, Diff=-1.1
+  Progressive Test Variants Available: 3
+  Potential with Progressive Tests: Baseline=48, Full=54
+  Files: Baseline=12, Full=18, Diff=+6
+  Success: Baseline=0, Full=0, Diff=+0
+  Success Rate: Baseline=0.0%, Full=0.0%, Diff=+0.0%
+  Functions Verified: Baseline=0, Full=0, Diff=+0
+  Avg Functions/File: Baseline=0.0, Full=0.0, Diff=+0.0
+  Progressive Test Variants Available: 6
+  Potential with Progressive Tests: Baseline=72, Full=108
+Improvement: bitmap_todo: 0 → 6 (+6)
+Improvement: invariants_todo: 16 → 18 (+2)
+Improvement: set_from_vec_todo: 0 → 12 (+12)
+Regression: atomics_todo: 18 → 2 (-16)
+Regression: option_todo: 16 → 0 (-16)
+Regression: rwlock_vstd_todo: 16 → 0 (-16)
+Regression: transfer_todo: 6 → 0 (-6)

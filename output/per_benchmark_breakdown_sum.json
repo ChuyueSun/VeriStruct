@@ -1,0 +1,593 @@
+{
+  "repair_experiment_20251011_135504": {
+    "benchmarks": {
+      "atomics_todo": {
+        "verified": 11,
+        "total_files": 2,
+        "breakdown": [
+          0,
+          11
+        ]
+      },
+      "bitmap_todo": {
+        "verified": 14,
+        "total_files": 2,
+        "breakdown": [
+          7,
+          7
+        ]
+      },
+      "bst_map_todo": {
+        "verified": 10,
+        "total_files": 1,
+        "breakdown": [
+          10
+        ]
+      },
+      "invariants_todo": {
+        "verified": 14,
+        "total_files": 2,
+        "breakdown": [
+          7,
+          7
+        ]
+      },
+      "option_todo": {
+        "verified": 15,
+        "total_files": 2,
+        "breakdown": [
+          0,
+          15
+        ]
+      },
+      "rb_type_invariant_todo": {
+        "verified": 13,
+        "total_files": 2,
+        "breakdown": [
+          0,
+          13
+        ]
+      },
+      "rwlock_vstd_todo": {
+        "verified": 5,
+        "total_files": 2,
+        "breakdown": [
+          0,
+          5
+        ]
+      },
+      "set_from_vec_todo": {
+        "verified": 22,
+        "total_files": 2,
+        "breakdown": [
+          11,
+          11
+        ]
+      },
+      "transfer_todo": {
+        "verified": 5,
+        "total_files": 2,
+        "breakdown": [
+          5,
+          0
+        ]
+      },
+      "vectors_todo": {
+        "verified": 7,
+        "total_files": 2,
+        "breakdown": [
+          0,
+          7
+        ]
+      }
+    },
+    "total_verified": 116,
+    "num_benchmarks": 10
+  },
+  "repair_experiment_20251011_160501": {
+    "benchmarks": {
+      "atomics_todo": {
+        "verified": 11,
+        "total_files": 2,
+        "breakdown": [
+          11,
+          0
+        ]
+      },
+      "bitmap_todo": {
+        "verified": 8,
+        "total_files": 2,
+        "breakdown": [
+          4,
+          4
+        ]
+      },
+      "bst_map_todo": {
+        "verified": 10,
+        "total_files": 1,
+        "breakdown": [
+          10
+        ]
+      },
+      "invariants_todo": {
+        "verified": 14,
+        "total_files": 2,
+        "breakdown": [
+          7,
+          7
+        ]
+      },
+      "option_todo": {
+        "verified": 15,
+        "total_files": 2,
+        "breakdown": [
+          15,
+          0
+        ]
+      },
+      "rb_type_invariant_todo": {
+        "verified": 13,
+        "total_files": 2,
+        "breakdown": [
+          0,
+          13
+        ]
+      },
+      "rwlock_vstd_todo": {
+        "verified": 5,
+        "total_files": 2,
+        "breakdown": [
+          0,
+          5
+        ]
+      },
+      "set_from_vec_todo": {
+        "verified": 22,
+        "total_files": 2,
+        "breakdown": [
+          11,
+          11
+        ]
+      },
+      "transfer_todo": {
+        "verified": 4,
+        "total_files": 2,
+        "breakdown": [
+          0,
+          4
+        ]
+      },
+      "vectors_todo": {
+        "verified": 7,
+        "total_files": 2,
+        "breakdown": [
+          0,
+          7
+        ]
+      }
+    },
+    "total_verified": 109,
+    "num_benchmarks": 10
+  },
+  "repair_experiment_20251010_152504": {
+    "benchmarks": {
+      "atomics_todo": {
+        "verified": 11,
+        "total_files": 2,
+        "breakdown": [
+          11,
+          0
+        ]
+      },
+      "bitmap_todo": {
+        "verified": 4,
+        "total_files": 1,
+        "breakdown": [
+          4
+        ]
+      },
+      "bst_map_todo": {
+        "verified": 10,
+        "total_files": 1,
+        "breakdown": [
+          10
+        ]
+      },
+      "invariants_todo": {
+        "verified": 14,
+        "total_files": 2,
+        "breakdown": [
+          7,
+          7
+        ]
+      },
+      "option_todo": {
+        "verified": 15,
+        "total_files": 2,
+        "breakdown": [
+          15,
+          0
+        ]
+      },
+      "rb_type_invariant_todo": {
+        "verified": 13,
+        "total_files": 2,
+        "breakdown": [
+          0,
+          13
+        ]
+      },
+      "rwlock_vstd_todo": {
+        "verified": 5,
+        "total_files": 2,
+        "breakdown": [
+          5,
+          0
+        ]
+      },
+      "set_from_vec_todo": {
+        "verified": 22,
+        "total_files": 2,
+        "breakdown": [
+          11,
+          11
+        ]
+      },
+      "transfer_todo": {
+        "verified": 5,
+        "total_files": 2,
+        "breakdown": [
+          5,
+          0
+        ]
+      },
+      "vectors_todo": {
+        "verified": 7,
+        "total_files": 2,
+        "breakdown": [
+          7,
+          0
+        ]
+      }
+    },
+    "total_verified": 106,
+    "num_benchmarks": 10
+  },
+  "repair_experiment_20251010_215225": {
+    "benchmarks": {
+      "atomics_todo": {
+        "verified": 11,
+        "total_files": 2,
+        "breakdown": [
+          11,
+          0
+        ]
+      },
+      "bitmap_todo": {
+        "verified": 16,
+        "total_files": 2,
+        "breakdown": [
+          8,
+          8
+        ]
+      },
+      "bst_map_todo": {
+        "verified": 10,
+        "total_files": 1,
+        "breakdown": [
+          10
+        ]
+      },
+      "invariants_todo": {
+        "verified": 14,
+        "total_files": 2,
+        "breakdown": [
+          7,
+          7
+        ]
+      },
+      "option_todo": {
+        "verified": 15,
+        "total_files": 2,
+        "breakdown": [
+          0,
+          15
+        ]
+      },
+      "rb_type_invariant_todo": {
+        "verified": 0,
+        "total_files": 1,
+        "breakdown": [
+          0
+        ]
+      },
+      "rwlock_vstd_todo": {
+        "verified": 5,
+        "total_files": 2,
+        "breakdown": [
+          0,
+          5
+        ]
+      },
+      "set_from_vec_todo": {
+        "verified": 22,
+        "total_files": 2,
+        "breakdown": [
+          11,
+          11
+        ]
+      },
+      "transfer_todo": {
+        "verified": 5,
+        "total_files": 2,
+        "breakdown": [
+          5,
+          0
+        ]
+      },
+      "vectors_todo": {
+        "verified": 6,
+        "total_files": 2,
+        "breakdown": [
+          0,
+          6
+        ]
+      }
+    },
+    "total_verified": 104,
+    "num_benchmarks": 10
+  },
+  "repair_experiment_20251011_160518": {
+    "benchmarks": {
+      "atomics_todo": {
+        "verified": 11,
+        "total_files": 2,
+        "breakdown": [
+          11,
+          0
+        ]
+      },
+      "bitmap_todo": {
+        "verified": 4,
+        "total_files": 1,
+        "breakdown": [
+          4
+        ]
+      },
+      "bst_map_todo": {
+        "verified": 10,
+        "total_files": 1,
+        "breakdown": [
+          10
+        ]
+      },
+      "invariants_todo": {
+        "verified": 14,
+        "total_files": 2,
+        "breakdown": [
+          7,
+          7
+        ]
+      },
+      "option_todo": {
+        "verified": 15,
+        "total_files": 2,
+        "breakdown": [
+          15,
+          0
+        ]
+      },
+      "rb_type_invariant_todo": {
+        "verified": 13,
+        "total_files": 2,
+        "breakdown": [
+          0,
+          13
+        ]
+      },
+      "rwlock_vstd_todo": {
+        "verified": 5,
+        "total_files": 2,
+        "breakdown": [
+          0,
+          5
+        ]
+      },
+      "set_from_vec_todo": {
+        "verified": 10,
+        "total_files": 1,
+        "breakdown": [
+          10
+        ]
+      },
+      "transfer_todo": {
+        "verified": 5,
+        "total_files": 2,
+        "breakdown": [
+          5,
+          0
+        ]
+      },
+      "vectors_todo": {
+        "verified": 7,
+        "total_files": 2,
+        "breakdown": [
+          0,
+          7
+        ]
+      }
+    },
+    "total_verified": 94,
+    "num_benchmarks": 10
+  },
+  "repair_experiment_20251010_193940": {
+    "benchmarks": {
+      "atomics_todo": {
+        "verified": 11,
+        "total_files": 2,
+        "breakdown": [
+          11,
+          0
+        ]
+      },
+      "bitmap_todo": {
+        "verified": 16,
+        "total_files": 2,
+        "breakdown": [
+          8,
+          8
+        ]
+      },
+      "bst_map_todo": {
+        "verified": 10,
+        "total_files": 1,
+        "breakdown": [
+          10
+        ]
+      },
+      "invariants_todo": {
+        "verified": 14,
+        "total_files": 2,
+        "breakdown": [
+          7,
+          7
+        ]
+      },
+      "option_todo": {
+        "verified": 0,
+        "total_files": 2,
+        "breakdown": [
+          0,
+          0
+        ]
+      },
+      "rb_type_invariant_todo": {
+        "verified": 13,
+        "total_files": 2,
+        "breakdown": [
+          13,
+          0
+        ]
+      },
+      "rwlock_vstd_todo": {
+        "verified": 5,
+        "total_files": 2,
+        "breakdown": [
+          0,
+          5
+        ]
+      },
+      "set_from_vec_todo": {
+        "verified": 12,
+        "total_files": 2,
+        "breakdown": [
+          6,
+          6
+        ]
+      },
+      "transfer_todo": {
+        "verified": 5,
+        "total_files": 2,
+        "breakdown": [
+          0,
+          5
+        ]
+      },
+      "vectors_todo": {
+        "verified": 6,
+        "total_files": 2,
+        "breakdown": [
+          0,
+          6
+        ]
+      }
+    },
+    "total_verified": 92,
+    "num_benchmarks": 10
+  },
+  "repair_experiment_20251011_182336": {
+    "benchmarks": {
+      "atomics_todo": {
+        "verified": 0,
+        "total_files": 2,
+        "breakdown": [
+          0,
+          0
+        ]
+      },
+      "bitmap_todo": {
+        "verified": 7,
+        "total_files": 2,
+        "breakdown": [
+          0,
+          7
+        ]
+      },
+      "bst_map_todo": {
+        "verified": 10,
+        "total_files": 1,
+        "breakdown": [
+          10
+        ]
+      },
+      "invariants_todo": {
+        "verified": 14,
+        "total_files": 2,
+        "breakdown": [
+          7,
+          7
+        ]
+      },
+      "option_todo": {
+        "verified": 15,
+        "total_files": 2,
+        "breakdown": [
+          15,
+          0
+        ]
+      },
+      "rb_type_invariant_todo": {
+        "verified": 9,
+        "total_files": 2,
+        "breakdown": [
+          0,
+          9
+        ]
+      },
+      "rwlock_vstd_todo": {
+        "verified": 5,
+        "total_files": 2,
+        "breakdown": [
+          0,
+          5
+        ]
+      },
+      "set_from_vec_todo": {
+        "verified": 22,
+        "total_files": 2,
+        "breakdown": [
+          11,
+          11
+        ]
+      },
+      "transfer_todo": {
+        "verified": 5,
+        "total_files": 2,
+        "breakdown": [
+          0,
+          5
+        ]
+      },
+      "vectors_todo": {
+        "verified": 0,
+        "total_files": 2,
+        "breakdown": [
+          0,
+          0
+        ]
+      }
+    },
+    "total_verified": 87,
+    "num_benchmarks": 10
+  }
+}

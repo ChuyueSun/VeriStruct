@@ -1,0 +1,30 @@
+{
+  "comment": "This is a template configuration file. Copy to config.json and fill in your actual values.",
+  "aoai_api_key": "your-api-key-here",
+  "aoai_generation_model": "gpt-4",
+  "aoai_api_base": "https://your-endpoint.openai.azure.com/",
+  "aoai_api_version": "2023-05-15",
+  "aoai_deployment_name": "your-deployment-name",
+
+  "anthropic_api_key": "your-anthropic-api-key-here",
+  "anthropic_model": "claude-3-sonnet-20240229",
+
+  "openai_api_key": "your-openai-api-key-here",
+  "openai_model": "gpt-4",
+
+  "deepseek_api_key": "your-deepseek-api-key-here",
+  "deepseek_api_base": "https://api.deepseek.com",
+
+  "max_retries": 3,
+  "timeout_seconds": 300,
+  "enable_cache": true,
+  "cache_dir": "llm_cache",
+
+  "verus_path": "/path/to/verus",
+  "benchmark_dir": "benchmarks-complete",
+  "output_dir": "output",
+
+  "max_iterations": 10,
+  "max_repair_attempts": 5,
+  "parallel_executions": 4
+}

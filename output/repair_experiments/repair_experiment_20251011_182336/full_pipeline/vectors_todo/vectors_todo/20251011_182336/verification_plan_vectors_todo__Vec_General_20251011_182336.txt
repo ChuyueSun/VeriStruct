@@ -1,0 +1,40 @@
+```markdown
+## 1. Analysis Summary
+
+Current State:
+- The code contains three functions (binary_search, reverse, binary_search_no_spinoff) and test functions.
+- Each function has a "TODO: add specification" placeholder.
+- Loops have "TODO: add invariants" placeholders, but there is no custom struct or class data structure to attach type invariants to.
+- There is no mention of "View" or "view" in the code.
+
+Identified Missing Components:
+- Requires/ensures clauses for each function (as indicated by "TODO: add specification").
+- Loop invariants (as indicated by "TODO: add invariants").
+
+Critical Verification Challenges:
+- Ensuring the loop invariants capture the key properties for correctness of binary search and reverse operations.
+- Providing the appropriate preconditions and postconditions for the given functions.
+
+Dependencies:
+- The loop invariants for binary search and reverse rely on the sorted property of the vector, array bounds, and correct item swapping.
+- No custom data structure dependencies exist (only standard library Vec is used).
+
+---
+
+## 2. Verification Plan
+
+**Selected Workflow:** Specification-Only Workflow
+
+**Justification:**
+The code does not define any custom struct or class, so there is no need for type invariants (inv_inference). It also does not mention or require any "View" functions, so a full sequence workflow is not triggered. The primary requests are "TODO: add specification" and loop invariants, which aligns with using the Specification-Only Workflow.
+
+Because the code contains "TODO: add invariants," we append a proof_generation step at the end to fulfill proof obligations associated with those invariants.
+
+**Execution Steps:**
+1. spec_inference
+2. proof_generation
+
+**Module Conditions:**
+- inv_inference: No (there is no class/struct data structure).
+- proof_generation: Yes (due to "TODO: add invariants" in the code).
+```

@@ -1,0 +1,33 @@
+MODEL COMPARISON REPORT
+Benchmark: node_todo
+Date: Thu Oct 30 10:07:54 PM CDT 2025
+All fixes applied: Yes (7 fixes)
+========================================
+
+=== o1-mini (Azure) ===
+Config: config-azure-o1mini
+Result: Verification error
+Total Execution Time: 190.35s
+Total LLM Calls: 25
+Cache Hit Rate: 20.00%
+Output: output/node_todo/azure_o1mini_20251030_215952/
+
+=== o3-mini (Azure) ===
+Config: config-azure-o3mini
+Result: verification results:: 10 verified, 1 errors
+Total Execution Time: 258.51s
+Total LLM Calls: 10
+Cache Hit Rate: 70.00%
+Output: output/node_todo/azure_o3mini_20251030_220303/
+
+=== Claude Sonnet 4.5 ===
+Config: config-anthropic-sonnet
+Result: Verification error
+Total Execution Time: 31.90s
+Total LLM Calls: 25
+Cache Hit Rate: 48.00%
+Output: output/node_todo/anthropic_sonnet_20251030_220722/
+
+========================================
+Detailed logs in: model_comparison_20251030_215952/
+Comparison report: model_comparison_20251030_215952/comparison_report.txt

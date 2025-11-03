@@ -1,0 +1,174 @@
+{
+  "run_timestamp": "20251011_140813",
+  "completed_at": "2025-10-11T14:25:56.116418",
+  "total_attempts": 10,
+  "total_candidates_evaluated": 5,
+  "final_score": {
+    "verified": -1,
+    "errors": 999,
+    "verus_errors": 1,
+    "compilation_error": true,
+    "is_correct": false
+  },
+  "success": false,
+  "per_attempt_stats": [
+    {
+      "attempt": 1,
+      "llm_time_seconds": 53.741593,
+      "total_time_seconds": 54.234135,
+      "eval_time_seconds": 0.49254200000000026,
+      "num_candidates": 0,
+      "candidates": [],
+      "best_verus_errors": null,
+      "best_candidate_num": null,
+      "timestamp": "2025-10-11T14:08:13.193355"
+    },
+    {
+      "attempt": 2,
+      "llm_time_seconds": 55.028794,
+      "total_time_seconds": 55.534443,
+      "eval_time_seconds": 0.5056490000000053,
+      "num_candidates": 0,
+      "candidates": [],
+      "best_verus_errors": null,
+      "best_candidate_num": null,
+      "timestamp": "2025-10-11T14:09:07.427514"
+    },
+    {
+      "attempt": 3,
+      "llm_time_seconds": 544.954487,
+      "total_time_seconds": 545.498895,
+      "eval_time_seconds": 0.5444079999999758,
+      "num_candidates": 0,
+      "candidates": [],
+      "best_verus_errors": null,
+      "best_candidate_num": null,
+      "timestamp": "2025-10-11T14:10:02.961989"
+    },
+    {
+      "attempt": 4,
+      "llm_time_seconds": 55.038752,
+      "total_time_seconds": 55.520977,
+      "eval_time_seconds": 0.4822249999999997,
+      "num_candidates": 0,
+      "candidates": [],
+      "best_verus_errors": null,
+      "best_candidate_num": null,
+      "timestamp": "2025-10-11T14:19:08.460905"
+    },
+    {
+      "attempt": 5,
+      "llm_time_seconds": 56.060883,
+      "total_time_seconds": 56.551044,
+      "eval_time_seconds": 0.4901610000000005,
+      "num_candidates": 0,
+      "candidates": [],
+      "best_verus_errors": null,
+      "best_candidate_num": null,
+      "timestamp": "2025-10-11T14:20:03.981906"
+    },
+    {
+      "attempt": 6,
+      "llm_time_seconds": 53.362261,
+      "total_time_seconds": 53.857202,
+      "eval_time_seconds": 0.4949410000000043,
+      "num_candidates": 0,
+      "candidates": [],
+      "best_verus_errors": null,
+      "best_candidate_num": null,
+      "timestamp": "2025-10-11T14:21:00.532975"
+    },
+    {
+      "attempt": 7,
+      "llm_time_seconds": 61.263713,
+      "total_time_seconds": 61.752418,
+      "eval_time_seconds": 0.48870499999999595,
+      "num_candidates": 0,
+      "candidates": [],
+      "best_verus_errors": null,
+      "best_candidate_num": null,
+      "timestamp": "2025-10-11T14:21:54.390199"
+    },
+    {
+      "attempt": 8,
+      "llm_time_seconds": 52.175966,
+      "total_time_seconds": 53.261211,
+      "eval_time_seconds": 1.0852450000000005,
+      "num_candidates": 3,
+      "candidates": [
+        {
+          "candidate_num": 2,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 3,
+          "compilation_error": true,
+          "is_correct": false
+        },
+        {
+          "candidate_num": 4,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 2,
+          "compilation_error": true,
+          "is_correct": false
+        },
+        {
+          "candidate_num": 5,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 3,
+          "compilation_error": true,
+          "is_correct": false
+        }
+      ],
+      "best_verus_errors": 2,
+      "best_candidate_num": 4,
+      "timestamp": "2025-10-11T14:22:56.142641"
+    },
+    {
+      "attempt": 9,
+      "llm_time_seconds": 63.392447,
+      "total_time_seconds": 63.93219,
+      "eval_time_seconds": 0.5397430000000014,
+      "num_candidates": 0,
+      "candidates": [],
+      "best_verus_errors": null,
+      "best_candidate_num": null,
+      "timestamp": "2025-10-11T14:23:49.403893"
+    },
+    {
+      "attempt": 10,
+      "llm_time_seconds": 62.028687,
+      "total_time_seconds": 62.780271,
+      "eval_time_seconds": 0.7515840000000011,
+      "num_candidates": 2,
+      "candidates": [
+        {
+          "candidate_num": 3,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 4,
+          "compilation_error": true,
+          "is_correct": false
+        },
+        {
+          "candidate_num": 4,
+          "verified": -1,
+          "errors": 999,
+          "verus_errors": 1,
+          "compilation_error": true,
+          "is_correct": false
+        }
+      ],
+      "best_verus_errors": 1,
+      "best_candidate_num": 4,
+      "timestamp": "2025-10-11T14:24:53.336106"
+    }
+  ],
+  "timing": {
+    "total_llm_time_seconds": 1057.047583,
+    "total_eval_time_seconds": 5.8752029999998285,
+    "total_time_seconds": 1062.9227859999999,
+    "average_llm_time_per_attempt": 105.70475830000001
+  }
+}

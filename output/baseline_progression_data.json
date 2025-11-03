@@ -1,0 +1,1164 @@
+{
+  "repair_experiment_20251011_135504": {
+    "atomics_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 11,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "bitmap_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 0,
+        "errors": 0,
+        "success": false,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "bst_map_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      }
+    ],
+    "invariants_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 7,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "option_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 15,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "rb_type_invariant_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      }
+    ],
+    "rwlock_vstd_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 5,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "set_from_vec_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 0,
+        "errors": 0,
+        "success": false,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "transfer_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 0,
+        "errors": 0,
+        "success": false,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "vectors_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      }
+    ]
+  },
+  "repair_experiment_20251011_160501": {
+    "atomics_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 11,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "bitmap_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      }
+    ],
+    "bst_map_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      }
+    ],
+    "invariants_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 7,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "option_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 15,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "rb_type_invariant_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      }
+    ],
+    "rwlock_vstd_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 5,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "set_from_vec_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 0,
+        "errors": 0,
+        "success": false,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "transfer_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 5,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "vectors_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 0,
+        "errors": 0,
+        "success": false,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ]
+  },
+  "repair_experiment_20251010_152504": {
+    "atomics_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 11,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "bitmap_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 0,
+        "errors": 0,
+        "success": false,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "bst_map_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      }
+    ],
+    "invariants_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 7,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "option_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 15,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "rb_type_invariant_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 0,
+        "errors": 0,
+        "success": false,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "rwlock_vstd_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 5,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "set_from_vec_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 0,
+        "errors": 0,
+        "success": false,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "transfer_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 0,
+        "errors": 0,
+        "success": false,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "vectors_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 0,
+        "errors": 0,
+        "success": false,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ]
+  },
+  "repair_experiment_20251010_215225": {
+    "atomics_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 11,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "bitmap_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 0,
+        "errors": 0,
+        "success": false,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "bst_map_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      }
+    ],
+    "invariants_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 7,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "option_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 15,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "rb_type_invariant_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 0,
+        "errors": 0,
+        "success": false,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "rwlock_vstd_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 5,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "set_from_vec_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 0,
+        "errors": 0,
+        "success": false,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "transfer_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 0,
+        "errors": 0,
+        "success": false,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "vectors_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 0,
+        "errors": 0,
+        "success": false,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ]
+  },
+  "repair_experiment_20251011_160518": {
+    "atomics_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 11,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "bitmap_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 0,
+        "errors": 0,
+        "success": false,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "bst_map_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      }
+    ],
+    "invariants_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 7,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "option_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 15,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "rb_type_invariant_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 0,
+        "errors": 0,
+        "success": false,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "rwlock_vstd_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 5,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "set_from_vec_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "transfer_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 5,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "vectors_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 0,
+        "errors": 0,
+        "success": false,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ]
+  },
+  "repair_experiment_20251010_193940": {
+    "atomics_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 11,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "bitmap_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 0,
+        "errors": 0,
+        "success": false,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "bst_map_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      }
+    ],
+    "invariants_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 7,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "option_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 15,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "rb_type_invariant_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      }
+    ],
+    "rwlock_vstd_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 5,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "set_from_vec_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 0,
+        "errors": 0,
+        "success": false,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "transfer_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 0,
+        "errors": 0,
+        "success": false,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "vectors_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 0,
+        "errors": 0,
+        "success": false,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ]
+  },
+  "repair_experiment_20251011_182336": {
+    "atomics_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 11,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "bitmap_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 0,
+        "errors": 0,
+        "success": false,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "bst_map_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      }
+    ],
+    "invariants_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 7,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "option_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 15,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "rb_type_invariant_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 0,
+        "errors": 0,
+        "success": false,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "rwlock_vstd_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 5,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "set_from_vec_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      }
+    ],
+    "transfer_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      },
+      {
+        "llm_calls": 1,
+        "verified": 5,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline",
+        "stage_num": 1
+      }
+    ],
+    "vectors_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial",
+        "stage_num": 0
+      }
+    ]
+  }
+}

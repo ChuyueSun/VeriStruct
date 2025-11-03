@@ -1,0 +1,39 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/bitmap_todo.rs
+Input File Name: bitmap_todo.rs
+File ID: bitmap_todo__Map_General_20251011_164803
+Output Directory: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160518/baseline/bitmap_todo/bitmap_todo/20251011_164803
+Progress Log: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160518/baseline/bitmap_todo/bitmap_todo/20251011_164803/progress_logs/progress_bitmap_todo_20251011_164803.json
+Summary File: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160518/baseline/bitmap_todo/bitmap_todo/20251011_164803/progress_logs/summary_bitmap_todo_20251011_164803.txt
+
+Start time: 2025-10-11T16:48:03.317229
+End time: 2025-10-11T17:05:41.002328
+Total execution time: 1057.69s
+
+## Final Result
+
+Verified: -1
+Errors: 999
+Verus Errors: 1
+Compilation Error: True
+Is Correct: False
+
+## Statistics
+
+Total steps: 1
+Total repair rounds: 0
+Total repairs attempted: 0
+Successful repairs: 0
+Average step time: 1056.88s
+Average repair time: 0.00s
+
+## Steps
+
+Step 1: baseline
+  Time: 1056.88s
+  Score: Verified=-1, Errors=999, Verus Errors=2
+
+## Repair Rounds

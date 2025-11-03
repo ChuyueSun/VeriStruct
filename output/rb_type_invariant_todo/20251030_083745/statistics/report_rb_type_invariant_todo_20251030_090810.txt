@@ -1,0 +1,94 @@
+================================================================================
+VerusAgent Statistics Report - rb_type_invariant_todo
+================================================================================
+
+EXECUTION SUMMARY
+--------------------------------------------------------------------------------
+Benchmark: rb_type_invariant_todo
+Start Time: 2025-10-30T08:37:45.869899
+End Time: 2025-10-30T09:08:10.069239
+Total Execution Time: 1824.20s
+Verification Success: No
+
+MODULE ACTIVATION
+--------------------------------------------------------------------------------
+Total Modules Activated: 5
+Modules: view_inference, view_refinement, inv_inference, spec_inference, proof_generation
+
+LLM CALLS
+--------------------------------------------------------------------------------
+Total LLM Calls: 21
+Average Response Time: 86.07s
+Cache Hit Rate: 14.29%
+
+Calls by Stage:
+  inv_inference: 1
+  planning: 1
+  proof_generation: 1
+  repair: 13
+  spec_inference: 1
+  view_inference: 1
+  view_refinement: 3
+
+ITERATIONS
+--------------------------------------------------------------------------------
+Iterations by Module:
+
+REPAIRS
+--------------------------------------------------------------------------------
+Total Repair Rounds: 5
+Total Repairs: 5
+Successful Repairs: 0
+Failed Repairs: 5
+Success Rate: 0.00%
+
+Repairs by Error Type:
+  Other: 5
+
+Repairs by Heuristic:
+  repair_syntax: 5
+
+ERROR TRACKING
+--------------------------------------------------------------------------------
+Initial Errors: 999
+Final Errors: 999
+Errors Fixed: 0
+
+Initial Errors by Type:
+  MissImpl: 1
+  Other: 1
+
+STAGE DETAILS
+--------------------------------------------------------------------------------
+
+view_inference (Step 1)
+  Execution Time: 119.40s
+  LLM Calls: 1
+  Iterations: 1
+  Result: Verified=-1, Errors=999
+
+view_refinement (Step 2)
+  Execution Time: 307.44s
+  LLM Calls: 3
+  Iterations: 1
+  Result: Verified=-1, Errors=999
+
+inv_inference (Step 3)
+  Execution Time: 131.99s
+  LLM Calls: 1
+  Iterations: 1
+  Result: Verified=-1, Errors=999
+
+spec_inference (Step 4)
+  Execution Time: 122.89s
+  LLM Calls: 1
+  Iterations: 1
+  Result: Verified=-1, Errors=999
+
+proof_generation (Step 5)
+  Execution Time: 93.85s
+  LLM Calls: 1
+  Iterations: 1
+  Result: Verified=-1, Errors=999
+
+================================================================================

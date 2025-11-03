@@ -1,0 +1,47 @@
+{
+  "execution_times": [
+    9.131431579589844e-05
+  ],
+  "modules_activated": [
+    0
+  ],
+  "total_llm_calls": [
+    1
+  ],
+  "cache_hits": [
+    0
+  ],
+  "cache_misses": [
+    1
+  ],
+  "input_tokens": [
+    36
+  ],
+  "output_tokens": [
+    87
+  ],
+  "avg_response_times": [
+    0.42
+  ],
+  "repair_rounds": [
+    0
+  ],
+  "total_repairs": [
+    0
+  ],
+  "successful_repairs": [
+    0
+  ],
+  "initial_errors": [
+    1
+  ],
+  "final_errors": [
+    1
+  ],
+  "verification_success": [
+    0
+  ],
+  "llm_by_stage": [],
+  "repair_heuristics": [],
+  "error_types": []
+}

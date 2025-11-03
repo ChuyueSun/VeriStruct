@@ -1,0 +1,7 @@
+Selected sample: 2
+Score: Compilation Error: False, Verified: 5, Errors: 3, Verus Errors: 3
+
+All scores:
+Sample 1: Compilation Error: False, Verified: 5, Errors: 3, Verus Errors: 5
+Sample 2: Compilation Error: False, Verified: 5, Errors: 3, Verus Errors: 3
+Sample 3: Compilation Error: False, Verified: 4, Errors: 4, Verus Errors: 4

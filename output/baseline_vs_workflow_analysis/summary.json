@@ -1,0 +1,165 @@
+{
+  "overall": {
+    "baseline": {
+      "files": 128,
+      "success": 72,
+      "success_rate": 56.25,
+      "functions_verified": 300
+    },
+    "full_workflow": {
+      "files": 184,
+      "success": 38,
+      "success_rate": 20.652173913043477,
+      "functions_verified": 249
+    },
+    "progressive_tests": {
+      "baseline_potential": 812,
+      "full_potential": 1139
+    }
+  },
+  "by_benchmark": {
+    "atomics_todo": {
+      "baseline": {
+        "files": 22,
+        "verified_sum": 90,
+        "success": 18
+      },
+      "full_pipeline": {
+        "files": 30,
+        "verified_sum": 10,
+        "success": 2
+      },
+      "test_variants": 7
+    },
+    "rb_type_invariant_todo": {
+      "baseline": {
+        "files": 8,
+        "verified_sum": 0,
+        "success": 0
+      },
+      "full_pipeline": {
+        "files": 16,
+        "verified_sum": 0,
+        "success": 0
+      },
+      "test_variants": 4
+    },
+    "rwlock_vstd_todo": {
+      "baseline": {
+        "files": 16,
+        "verified_sum": 32,
+        "success": 16
+      },
+      "full_pipeline": {
+        "files": 18,
+        "verified_sum": 0,
+        "success": 0
+      },
+      "test_variants": 4
+    },
+    "vectors_todo": {
+      "baseline": {
+        "files": 12,
+        "verified_sum": 0,
+        "success": 0
+      },
+      "full_pipeline": {
+        "files": 18,
+        "verified_sum": 0,
+        "success": 0
+      },
+      "test_variants": 6
+    },
+    "transfer_todo": {
+      "baseline": {
+        "files": 16,
+        "verified_sum": 18,
+        "success": 6
+      },
+      "full_pipeline": {
+        "files": 18,
+        "verified_sum": 0,
+        "success": 0
+      },
+      "test_variants": 3
+    },
+    "set_from_vec_todo": {
+      "baseline": {
+        "files": 10,
+        "verified_sum": 0,
+        "success": 0
+      },
+      "full_pipeline": {
+        "files": 17,
+        "verified_sum": 97,
+        "success": 12
+      },
+      "test_variants": 5
+    },
+    "bitmap_todo": {
+      "baseline": {
+        "files": 12,
+        "verified_sum": 0,
+        "success": 0
+      },
+      "full_pipeline": {
+        "files": 17,
+        "verified_sum": 106,
+        "success": 6
+      },
+      "test_variants": 14
+    },
+    "invariants_todo": {
+      "baseline": {
+        "files": 16,
+        "verified_sum": 32,
+        "success": 16
+      },
+      "full_pipeline": {
+        "files": 18,
+        "verified_sum": 36,
+        "success": 18
+      },
+      "test_variants": 6
+    },
+    "option_todo": {
+      "baseline": {
+        "files": 16,
+        "verified_sum": 128,
+        "success": 16
+      },
+      "full_pipeline": {
+        "files": 18,
+        "verified_sum": 0,
+        "success": 0
+      },
+      "test_variants": 8
+    },
+    "bst_map_todo": {
+      "baseline": {
+        "files": 0,
+        "verified_sum": 0,
+        "success": 0
+      },
+      "full_pipeline": {
+        "files": 11,
+        "verified_sum": 0,
+        "success": 0
+      },
+      "test_variants": 4
+    },
+    "node_todo": {
+      "baseline": {
+        "files": 0,
+        "verified_sum": 0,
+        "success": 0
+      },
+      "full_pipeline": {
+        "files": 3,
+        "verified_sum": 0,
+        "success": 0
+      },
+      "test_variants": 4
+    }
+  }
+}

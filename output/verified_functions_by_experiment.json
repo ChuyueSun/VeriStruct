@@ -1,0 +1,254 @@
+[
+  {
+    "name": "repair_experiment_20251011_135504",
+    "total_verified": 116,
+    "successful_files": 13,
+    "total_files": 19,
+    "benchmarks": 10
+  },
+  {
+    "name": "repair_experiment_20251011_160501",
+    "total_verified": 109,
+    "successful_files": 13,
+    "total_files": 19,
+    "benchmarks": 10
+  },
+  {
+    "name": "repair_experiment_20251010_152504",
+    "total_verified": 106,
+    "successful_files": 12,
+    "total_files": 18,
+    "benchmarks": 10
+  },
+  {
+    "name": "repair_experiment_20251010_215225",
+    "total_verified": 104,
+    "successful_files": 12,
+    "total_files": 18,
+    "benchmarks": 10
+  },
+  {
+    "name": "repair_experiment_20251011_160518",
+    "total_verified": 94,
+    "successful_files": 11,
+    "total_files": 17,
+    "benchmarks": 10
+  },
+  {
+    "name": "repair_experiment_20251010_193940",
+    "total_verified": 92,
+    "successful_files": 12,
+    "total_files": 19,
+    "benchmarks": 10
+  },
+  {
+    "name": "repair_experiment_20251011_182336",
+    "total_verified": 87,
+    "successful_files": 10,
+    "total_files": 19,
+    "benchmarks": 10
+  },
+  {
+    "name": "repair_experiment_20251010_191429",
+    "total_verified": 41,
+    "successful_files": 5,
+    "total_files": 6,
+    "benchmarks": 3
+  },
+  {
+    "name": "repair_experiment_20251011_225254",
+    "total_verified": 22,
+    "successful_files": 2,
+    "total_files": 2,
+    "benchmarks": 1
+  },
+  {
+    "name": "repair_experiment_20251011_170341",
+    "total_verified": 18,
+    "successful_files": 2,
+    "total_files": 2,
+    "benchmarks": 1
+  },
+  {
+    "name": "repair_experiment_20251011_225125",
+    "total_verified": 16,
+    "successful_files": 2,
+    "total_files": 2,
+    "benchmarks": 1
+  },
+  {
+    "name": "repair_experiment_20251011_225131",
+    "total_verified": 15,
+    "successful_files": 1,
+    "total_files": 2,
+    "benchmarks": 1
+  },
+  {
+    "name": "repair_experiment_20251011_225248",
+    "total_verified": 15,
+    "successful_files": 1,
+    "total_files": 2,
+    "benchmarks": 1
+  },
+  {
+    "name": "repair_experiment_20251011_225129",
+    "total_verified": 14,
+    "successful_files": 2,
+    "total_files": 2,
+    "benchmarks": 1
+  },
+  {
+    "name": "repair_experiment_20251011_225244",
+    "total_verified": 14,
+    "successful_files": 2,
+    "total_files": 2,
+    "benchmarks": 1
+  },
+  {
+    "name": "repair_experiment_20251010_193705",
+    "total_verified": 12,
+    "successful_files": 1,
+    "total_files": 2,
+    "benchmarks": 1
+  },
+  {
+    "name": "repair_experiment_20251011_225137",
+    "total_verified": 12,
+    "successful_files": 2,
+    "total_files": 2,
+    "benchmarks": 1
+  },
+  {
+    "name": "repair_experiment_20251009_212826",
+    "total_verified": 11,
+    "successful_files": 1,
+    "total_files": 2,
+    "benchmarks": 1
+  },
+  {
+    "name": "repair_experiment_20251010_150029",
+    "total_verified": 11,
+    "successful_files": 1,
+    "total_files": 2,
+    "benchmarks": 1
+  },
+  {
+    "name": "repair_experiment_20251010_152426",
+    "total_verified": 11,
+    "successful_files": 1,
+    "total_files": 2,
+    "benchmarks": 1
+  },
+  {
+    "name": "repair_experiment_20251011_224359",
+    "total_verified": 11,
+    "successful_files": 1,
+    "total_files": 2,
+    "benchmarks": 1
+  },
+  {
+    "name": "repair_experiment_20251011_225123",
+    "total_verified": 11,
+    "successful_files": 1,
+    "total_files": 2,
+    "benchmarks": 1
+  },
+  {
+    "name": "repair_experiment_20251011_225238",
+    "total_verified": 11,
+    "successful_files": 1,
+    "total_files": 2,
+    "benchmarks": 1
+  },
+  {
+    "name": "repair_experiment_20251011_225246",
+    "total_verified": 11,
+    "successful_files": 1,
+    "total_files": 1,
+    "benchmarks": 1
+  },
+  {
+    "name": "repair_experiment_20251011_225127",
+    "total_verified": 10,
+    "successful_files": 1,
+    "total_files": 1,
+    "benchmarks": 1
+  },
+  {
+    "name": "repair_experiment_20251011_225242",
+    "total_verified": 10,
+    "successful_files": 1,
+    "total_files": 1,
+    "benchmarks": 1
+  },
+  {
+    "name": "repair_experiment_20251011_225133",
+    "total_verified": 9,
+    "successful_files": 1,
+    "total_files": 2,
+    "benchmarks": 1
+  },
+  {
+    "name": "repair_experiment_20251011_225141",
+    "total_verified": 7,
+    "successful_files": 1,
+    "total_files": 2,
+    "benchmarks": 1
+  },
+  {
+    "name": "repair_experiment_20251011_225300",
+    "total_verified": 7,
+    "successful_files": 1,
+    "total_files": 2,
+    "benchmarks": 1
+  },
+  {
+    "name": "repair_experiment_20251011_225135",
+    "total_verified": 5,
+    "successful_files": 1,
+    "total_files": 2,
+    "benchmarks": 1
+  },
+  {
+    "name": "repair_experiment_20251011_225139",
+    "total_verified": 5,
+    "successful_files": 1,
+    "total_files": 2,
+    "benchmarks": 1
+  },
+  {
+    "name": "repair_experiment_20251011_225252",
+    "total_verified": 5,
+    "successful_files": 1,
+    "total_files": 2,
+    "benchmarks": 1
+  },
+  {
+    "name": "repair_experiment_20251011_225256",
+    "total_verified": 5,
+    "successful_files": 1,
+    "total_files": 2,
+    "benchmarks": 1
+  },
+  {
+    "name": "repair_experiment_20251011_225240",
+    "total_verified": 4,
+    "successful_files": 1,
+    "total_files": 1,
+    "benchmarks": 1
+  },
+  {
+    "name": "repair_experiment_20251011_225250",
+    "total_verified": 0,
+    "successful_files": 0,
+    "total_files": 1,
+    "benchmarks": 1
+  },
+  {
+    "name": "repair_experiment_20251011_225258",
+    "total_verified": 0,
+    "successful_files": 0,
+    "total_files": 2,
+    "benchmarks": 0
+  }
+]

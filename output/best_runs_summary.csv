@@ -1,0 +1,12 @@
+Benchmark,Success,Config,Experiment,FinalErrors,ExecutionTime,LLMCalls,Location
+atomics_todo,True,baseline,repair_experiment_20251011_160518,0,83.7,0,"/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160518/baseline/atomics_todo"
+bitmap_todo,True,full_pipeline,repair_experiment_20251010_215225,0,553.6,0,"/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_215225/full_pipeline/bitmap_todo"
+treemap_todo,True,full_pipeline,treemap_full_20250928_061304,0,16.2,0,"/home/chuyue/VerusAgent/output-bst-map-full"
+invariants_todo,True,baseline,repair_experiment_20251011_225244,0,42.1,0,"/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225244/baseline/invariants_todo"
+node_todo,False,full_pipeline,node_test_v3_20251011_160727,1,883.9906973838806,0,"/home/chuyue/VerusAgent/output/node_test_v3/node_todo/20251011_160727"
+option_todo,True,full_pipeline,repair_experiment_20251011_182336,0,62.4,0,"/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/full_pipeline/option_todo"
+rb_type_invariant_todo,True,full_pipeline,repair_experiment_20251011_160518,0,541.8,0,"/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160518/full_pipeline/rb_type_invariant_todo"
+rwlock_vstd_todo,True,baseline,repair_experiment_20251011_182336,0,33.2,0,"/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/baseline/rwlock_vstd_todo"
+set_from_vec_todo,True,no_repairs,repair_experiment_20251011_182336,0,179.8,0,"/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/no_repairs/set_from_vec_todo"
+transfer_todo,True,no_repairs,repair_experiment_20251011_160501,0,38.7,0,"/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160501/no_repairs/transfer_todo"
+vectors_todo,True,no_repairs,repair_experiment_20251011_160501,0,138.0,0,"/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160501/no_repairs/vectors_todo"

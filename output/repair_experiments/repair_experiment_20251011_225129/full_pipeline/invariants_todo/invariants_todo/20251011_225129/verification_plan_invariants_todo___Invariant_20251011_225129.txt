@@ -1,0 +1,26 @@
+```markdown
+Current State:
+- The code defines a struct (ModPredicate) implementing InvariantPredicate but leaves the predicate's specification (inv function) incomplete.
+- There is a "TODO: add specification" placeholder inside the inv function.
+- No View-related keywords or TODOs appear in the code.
+- The code relies on having a correct inv function for the ModPredicate in order to maintain the atomic invariants in test().
+
+Dependencies:
+- The AtomicInvariant<int, u32, ModPredicate> relies on ModPredicate::inv(k, v) to ensure that the stored values satisfy even/odd constraints based on k.
+- The test() function depends on a valid ModPredicate to assert that inner_i and inner_j remain within their invariants after mutation.
+
+---
+
+**Selected Workflow:** Invariant-First Workflow
+
+**Justification:**
+The code contains a struct (ModPredicate) that needs a type invariant, and there is a specification-related placeholder ("TODO: add specification"). There is no mention of a View requirement, so a Full Sequence Workflow is unnecessary. The Invariant-Only and Specification-Only workflows do not apply because both an invariant and a specification placeholder are present.
+
+**Execution Steps:**
+1. inv_inference
+2. spec_inference
+
+**Module Conditions:**
+- inv_inference: Yes - ModPredicate is a struct requiring a type invariant.
+- proof_generation: No - There is no "TODO: add proof" or "TODO: add invariants" indicator.
+```

@@ -1,0 +1,103 @@
+
+================================================================================
+✅ ANALYSIS CORRECTED - Summary of Updates
+================================================================================
+
+Your question revealed a critical error in my analysis!
+
+PROBLEM: I counted MODULE INVOCATIONS but called them 'LLM calls'
+REALITY: Each module invocation can make 1-3 ACTUAL LLM API calls
+
+================================================================================
+CORRECTED UNDERSTANDING
+================================================================================
+
+What I measured:
+  ✅ 184 module invocations (exact)
+
+What this means:
+  ❓ ~200-550 actual LLM API calls (estimated, unknown due to caching)
+
+Key difference:
+  1 module invocation = 1-3 API calls (due to retry loops)
+
+================================================================================
+UPDATED FILES (Read These)
+================================================================================
+
+1. CORRECTED_ANALYSIS.md (11KB)
+   → Full detailed explanation of the correction
+   → Shows retry mechanism code
+   → Provides estimated ranges
+
+2. CORRECTION_SUMMARY.txt (4KB)
+   → Quick reference correction
+   → One-page summary
+
+3. README_UPDATED.md (3KB)
+   → Updated overview
+   → Corrected key findings
+
+4. FULLY_VERIFIED_BENCHMARKS.md (Updated)
+   → Added clarification at top
+   → Changed 'calls' to 'invocations'
+   → Added API call estimates
+
+================================================================================
+CORRECTED KEY FINDINGS
+================================================================================
+
+Fully Verified Benchmarks (with corrected terminology):
+
+Benchmark              Invocations    Est. API Calls    Functions
+--------------------------------------------------------------------
+invariants_todo        1              1-3              7/7 ✅
+option_todo            1              1-3              15/15 ✅
+rwlock_vstd_todo       1              1-3              5/5 ✅
+transfer_todo          1              1-3              5/5 ✅
+vectors_todo           2              2-6              16/16 ✅
+atomics_todo           3              3-9              11/11 ✅
+bitmap_todo            5              5-15             14/14 ✅
+rb_type_invariant_todo 5              5-15             13/13 ✅
+set_from_vec_todo      5              5-15             10/10 ✅
+
+Average: 2.7 module invocations = ~4-8 actual API calls per benchmark
+
+Module Invocation Distribution:
+  - spec_inference: 57 invocations → 57-171 API calls
+  - inv_inference: 30 invocations → 30-90 API calls
+  - proof_generation: 29 invocations → 29-87 API calls
+  - view_inference: 15 invocations → 15-45 API calls
+  - view_refinement: 15 invocations → 15-45 API calls
+  - Repair modules: 39 invocations → 39-117 API calls
+
+================================================================================
+WHAT'S STILL VALID ✅
+================================================================================
+
+These insights remain correct:
+  ✅ Module invocation patterns
+  ✅ Which modules work best for which benchmarks
+  ✅ spec_inference used in 100% of successes
+  ✅ Simple cases need 1 invocation, complex need 5
+  ✅ Module sequence matters (view → inv → spec → proof)
+
+================================================================================
+BOTTOM LINE
+================================================================================
+
+Thank you for catching this!
+
+Corrected facts:
+  • Module invocations: 184 (certain)
+  • Actual API calls: ~200-550 (estimated)
+  • Ratio: ~1.5-3 API calls per invocation
+
+Files to read:
+  1. CORRECTED_ANALYSIS.md (most detailed)
+  2. CORRECTION_SUMMARY.txt (quick reference)
+  3. README_UPDATED.md (overview)
+
+⚠️ Note: Previous CSV/JSON files still say 'calls' but mean 'invocations'
+
+================================================================================

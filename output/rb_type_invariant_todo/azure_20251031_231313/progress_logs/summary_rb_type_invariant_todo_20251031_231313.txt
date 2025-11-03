@@ -1,0 +1,94 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/rb_type_invariant_todo.rs
+Input File Name: rb_type_invariant_todo.rs
+File ID: rb_type_invariant_todo__RB_TypeInv_20251031_231313
+Output Directory: /home/chuyue/VerusAgent/output/rb_type_invariant_todo/azure_20251031_231313
+Progress Log: /home/chuyue/VerusAgent/output/rb_type_invariant_todo/azure_20251031_231313/progress_logs/progress_rb_type_invariant_todo_20251031_231313.json
+Summary File: /home/chuyue/VerusAgent/output/rb_type_invariant_todo/azure_20251031_231313/progress_logs/summary_rb_type_invariant_todo_20251031_231313.txt
+
+Start time: 2025-10-31T23:13:13.896880
+End time: 2025-10-31T23:38:51.652568
+Total execution time: 1537.76s
+
+## Final Result
+
+Verified: 7
+Errors: 3
+Verus Errors: 7
+Compilation Error: False
+Is Correct: False
+
+## Statistics
+
+Total steps: 5
+Total repair rounds: 5
+Total repairs attempted: 7
+Successful repairs: 1
+Average step time: 58.32s
+Average repair time: 177.82s
+
+## Steps
+
+Step 1: view_inference
+  Time: 2.96s
+  Score: Verified=4, Errors=6, Verus Errors=25
+Step 2: view_refinement
+  Time: 3.49s
+  Score: Verified=4, Errors=6, Verus Errors=25
+Step 3: inv_inference
+  Time: 3.54s
+  Score: Verified=3, Errors=7, Verus Errors=26
+Step 4: spec_inference
+  Time: 116.92s
+  Score: Verified=3, Errors=7, Verus Errors=24
+Step 5: proof_generation
+  Time: 164.70s
+  Score: Verified=7, Errors=3, Verus Errors=9
+
+## Repair Rounds
+
+Round 1
+  Time: 257.60s
+  repair_assertion for AssertFail
+    Before: Verified=7, Errors=3, Verus Errors=9
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 50.49s
+  repair_postcond for PostCondFail
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 207.10s
+
+Round 2
+  Time: 84.80s
+  repair_syntax for Other
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 84.80s
+
+Round 3
+  Time: 682.25s
+  repair_syntax for Other
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=7, Errors=3, Verus Errors=9
+    Time: 681.69s
+
+Round 4
+  Time: 149.67s
+  repair_assertion for AssertFail
+    Before: Verified=7, Errors=3, Verus Errors=9
+    After: Verified=7, Errors=3, Verus Errors=9
+    Time: 42.18s
+  repair_postcond for PostCondFail
+    Before: Verified=7, Errors=3, Verus Errors=9
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 107.49s
+
+Round 5
+  Time: 71.02s
+  repair_syntax for Other
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 71.01s

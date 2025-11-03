@@ -1,0 +1,38 @@
+{
+  "full_pipeline": [
+    {
+      "benchmark": "atomics_todo",
+      "configuration": "full_pipeline",
+      "success": true,
+      "timeout": false,
+      "exit_code": 0,
+      "execution_time": 348.55342650413513,
+      "log_file": "output/repair_experiments/repair_experiment_20251009_212826/full_pipeline/atomics_todo/output.log",
+      "output_dir": "output/repair_experiments/repair_experiment_20251009_212826/full_pipeline/atomics_todo"
+    }
+  ],
+  "no_repairs": [
+    {
+      "benchmark": "atomics_todo",
+      "configuration": "no_repairs",
+      "success": true,
+      "timeout": false,
+      "exit_code": 0,
+      "execution_time": 160.19534420967102,
+      "log_file": "output/repair_experiments/repair_experiment_20251009_212826/no_repairs/atomics_todo/output.log",
+      "output_dir": "output/repair_experiments/repair_experiment_20251009_212826/no_repairs/atomics_todo"
+    }
+  ],
+  "baseline": [
+    {
+      "benchmark": "atomics_todo",
+      "configuration": "baseline",
+      "success": true,
+      "timeout": false,
+      "exit_code": 0,
+      "execution_time": 340.49033641815186,
+      "log_file": "output/repair_experiments/repair_experiment_20251009_212826/baseline/atomics_todo/output.log",
+      "output_dir": "output/repair_experiments/repair_experiment_20251009_212826/baseline/atomics_todo"
+    }
+  ]
+}

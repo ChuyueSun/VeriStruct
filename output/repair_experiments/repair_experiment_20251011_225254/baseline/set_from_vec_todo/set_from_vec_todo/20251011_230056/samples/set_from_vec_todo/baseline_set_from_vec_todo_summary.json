@@ -1,0 +1,132 @@
+{
+  "run_timestamp": "20251011_230057",
+  "completed_at": "2025-10-11T23:11:18.161000",
+  "total_attempts": 10,
+  "total_candidates_evaluated": 0,
+  "final_score": {
+    "verified": -1,
+    "errors": 999,
+    "verus_errors": 999,
+    "compilation_error": true,
+    "is_correct": false
+  },
+  "success": false,
+  "per_attempt_stats": [
+    {
+      "attempt": 1,
+      "llm_time_seconds": 59.564001,
+      "total_time_seconds": 60.053858,
+      "eval_time_seconds": 0.48985700000000065,
+      "num_candidates": 0,
+      "candidates": [],
+      "best_verus_errors": null,
+      "best_candidate_num": null,
+      "timestamp": "2025-10-11T23:00:57.141619"
+    },
+    {
+      "attempt": 2,
+      "llm_time_seconds": 51.530163,
+      "total_time_seconds": 52.019284,
+      "eval_time_seconds": 0.48912099999999725,
+      "num_candidates": 0,
+      "candidates": [],
+      "best_verus_errors": null,
+      "best_candidate_num": null,
+      "timestamp": "2025-10-11T23:01:57.195502"
+    },
+    {
+      "attempt": 3,
+      "llm_time_seconds": 53.003907,
+      "total_time_seconds": 53.491381,
+      "eval_time_seconds": 0.48747399999999885,
+      "num_candidates": 0,
+      "candidates": [],
+      "best_verus_errors": null,
+      "best_candidate_num": null,
+      "timestamp": "2025-10-11T23:02:49.214812"
+    },
+    {
+      "attempt": 4,
+      "llm_time_seconds": 60.737522,
+      "total_time_seconds": 61.225853,
+      "eval_time_seconds": 0.4883310000000023,
+      "num_candidates": 0,
+      "candidates": [],
+      "best_verus_errors": null,
+      "best_candidate_num": null,
+      "timestamp": "2025-10-11T23:03:42.706216"
+    },
+    {
+      "attempt": 5,
+      "llm_time_seconds": 65.837396,
+      "total_time_seconds": 66.319659,
+      "eval_time_seconds": 0.4822630000000032,
+      "num_candidates": 0,
+      "candidates": [],
+      "best_verus_errors": null,
+      "best_candidate_num": null,
+      "timestamp": "2025-10-11T23:04:43.932092"
+    },
+    {
+      "attempt": 6,
+      "llm_time_seconds": 77.442753,
+      "total_time_seconds": 77.93199,
+      "eval_time_seconds": 0.4892370000000028,
+      "num_candidates": 0,
+      "candidates": [],
+      "best_verus_errors": null,
+      "best_candidate_num": null,
+      "timestamp": "2025-10-11T23:05:50.251781"
+    },
+    {
+      "attempt": 7,
+      "llm_time_seconds": 52.139991,
+      "total_time_seconds": 52.634884,
+      "eval_time_seconds": 0.4948929999999976,
+      "num_candidates": 0,
+      "candidates": [],
+      "best_verus_errors": null,
+      "best_candidate_num": null,
+      "timestamp": "2025-10-11T23:07:08.183848"
+    },
+    {
+      "attempt": 8,
+      "llm_time_seconds": 73.603849,
+      "total_time_seconds": 74.092912,
+      "eval_time_seconds": 0.4890630000000016,
+      "num_candidates": 0,
+      "candidates": [],
+      "best_verus_errors": null,
+      "best_candidate_num": null,
+      "timestamp": "2025-10-11T23:08:00.818756"
+    },
+    {
+      "attempt": 9,
+      "llm_time_seconds": 56.483132,
+      "total_time_seconds": 56.986782,
+      "eval_time_seconds": 0.5036500000000004,
+      "num_candidates": 0,
+      "candidates": [],
+      "best_verus_errors": null,
+      "best_candidate_num": null,
+      "timestamp": "2025-10-11T23:09:14.911691"
+    },
+    {
+      "attempt": 10,
+      "llm_time_seconds": 65.763696,
+      "total_time_seconds": 66.262437,
+      "eval_time_seconds": 0.49874100000000965,
+      "num_candidates": 0,
+      "candidates": [],
+      "best_verus_errors": null,
+      "best_candidate_num": null,
+      "timestamp": "2025-10-11T23:10:11.898516"
+    }
+  ],
+  "timing": {
+    "total_llm_time_seconds": 616.10641,
+    "total_eval_time_seconds": 4.912630000000036,
+    "total_time_seconds": 621.01904,
+    "average_llm_time_per_attempt": 61.610641
+  }
+}

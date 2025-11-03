@@ -1,0 +1,772 @@
+Your mission is to fix the syntax error in the following Verus code.
+
+Look carefully at the error message and location to identify the syntax issue. Common syntax errors include:
+1. Missing or misplaced parentheses, braces, or brackets
+2. Missing or incorrect semicolons or commas
+3. Incorrect use of operators or methods
+4. Incorrect function or method call syntax
+5. Incorrect use of generics or type parameters
+6. Incorrect use of Verus-specific syntax (like @, spec, proof, etc.)
+
+Fix ONLY the part of the code with the syntax error, and leave the rest unchanged.
+Response with the Rust code only, do not include any explanation.
+
+# Verus Common Knowledge
+
+## Important Notes
+- ALWAYS use parentheses whenever possible for clarity!
+- Don't delete existing non-buggy `#[trigger]`!
+- Don't change "unwind" to `(unwind) as bool`!
+- Return the complete modified Rust code in your response without explanations.
+- Keep top level docstrings at the top of the file, before `verus! {`. Do not place them after the `verus! {` declaration.
+- Don't change any function signatures.
+
+## Spec Functions
+1. No Direct Method Calls:
+   In a spec function, you cannot directly call instance methods such as vector.is_full().
+2. Use the @ Operator:
+   To invoke methods on a variable within a spec, first convert it to its specification-level representation View with @.
+3. Always use vector.len() instead of vector@.len().
+4. Simplify Boolean Conjunctions:
+   When combining multiple conditions, avoid excessive &&&. Fewer (or well-structured) conjunctions make the spec code easier to read and debug.
+5. Parentheses Usage:
+   ALWAYS wrap conditions in parentheses, even for simple expressions. This makes precedence explicit and prevents errors.
+
+## Proof Blocks - CRITICAL SYNTAX RULES
+
+**🚫 NEVER use executable control flow (if/else/match) inside `proof { }` blocks!**
+
+Proof blocks are spec-level contexts. They can only contain:
+- `assert(...)` statements
+- `assume(...)` statements
+- Lemma/proof function calls
+- Variable bindings with spec expressions
+
+❌ **WRONG - Executable if/else in proof:**
+```rust
+proof {
+    if condition { assert(x); } else { assert(y); }  // SYNTAX ERROR!
+}
+```
+
+✅ **CORRECT - Use implication instead:**
+```rust
+proof {
+    assert(condition ==> x);
+    assert(!condition ==> y);
+}
+```
+
+❌ **WRONG - Executable match in proof:**
+```rust
+proof {
+    match opt { Some(v) => assert(v > 0), None => {} }  // SYNTAX ERROR!
+}
+```
+
+✅ **CORRECT - Use implication or spec-level reasoning:**
+```rust
+proof {
+    assert(opt.is_Some() ==> opt.unwrap() > 0);
+}
+```
+
+## Operators
+Verus extends Rust logical operators with low-precedence forms that are especially helpful in specification code:
+
+Standard Operators: &&, ||, ==>, <==>
+Low-Precedence Variants: &&& and |||
+
+The meaning of &&& is the same as && (logical AND), and ||| is the same as || (logical OR), but with lower precedence. This allows you to write conditions in a "bulleted list" style that remains grouped in a logical manner:
+
+```
+&&& a ==> b
+&&& c
+&&& d <==> e && f
+```
+
+is equivalent to:
+
+```
+(a ==> b) && c && (d <==> (e && f))
+```
+
+Note:
+- Implication (==>) and equivalence (<==>) bind more tightly than &&& and |||.
+- Using &&&/||| can make long specifications clearer by grouping logical clauses neatly.
+
+
+# Verus Map Knowledge
+
+## CRITICAL: Extensional Equality (=~=) for Maps ⚠️
+
+**ALWAYS use `=~=` for comparing Map types in specifications:**
+
+- ✅ **CORRECT**: `map1 =~= map2`
+- ❌ **WRONG**: `map1 == map2`
+
+**Why**: `=~=` is extensional equality that Verus reasons about effectively. Using `==` for maps will often fail verification even when the maps are logically equal.
+
+### Common Mistakes to Avoid
+
+```rust
+// ❌ WRONG - will fail verification:
+ensures self.as_map() == old(self).as_map().insert(key, value)
+ensures result_map == original_map.remove(key)
+ensures my_map_fn(*data) == my_map_fn(*old(data)).update(...)
+
+// ✅ CORRECT - will verify:
+ensures self.as_map() =~= old(self).as_map().insert(key, value)
+ensures result_map =~= original_map.remove(key)
+ensures my_map_fn(*data) =~= my_map_fn(*old(data)).update(...)
+```
+
+### Examples in Different Contexts
+
+```rust
+// In struct methods with View
+impl<K, V> MyMap<K, V> {
+    pub fn insert(&mut self, key: K, value: V)
+        ensures
+            self@ =~= old(self)@.insert(key, value)  // ✅ Use =~=
+}
+
+// In helper functions
+fn update_mapping<K, V>(map: &mut Map<K, V>, key: K, value: V)
+    ensures
+        *map =~= old(map).insert(key, value)  // ✅ Use =~=
+
+// In functions with custom map conversions
+fn modify_structure<T>(data: &mut SomeType<T>, key: u64, value: T)
+    ensures
+        data.to_map() =~= old(data).to_map().insert(key, value)  // ✅
+```
+
+---
+
+## Map<K, V> - Mathematical Map Type
+
+Map<K, V> is a mathematical map type used in specifications:
+
+### Construction
+- `Map::empty()` - Create empty map
+- `Map::new(...)` - Create map (if supported)
+
+### Operations (Return New Map)
+- `map.insert(key, value)` - Returns new map with key→value added/updated
+- `map.remove(key)` - Returns new map with key removed (if it existed)
+- `map.union_prefer_right(other)` - Union of two maps, preferring values from right on conflicts
+
+### Queries
+- `map[key]` - Get value for key (requires key exists in domain)
+- `map.dom()` - Returns `Set<K>` of all keys in the map
+- `map.dom().contains(key)` - Check if key exists in map
+
+### Common Patterns
+
+#### Checking Key Existence
+```rust
+// Check if key exists
+if map.dom().contains(key) {
+    let value = map[key];  // Safe - key is in domain
+}
+
+// In specifications
+requires map.dom().contains(key)
+ensures result == map[key]
+```
+
+#### Map Updates in Postconditions
+```rust
+// Insertion
+ensures self@ =~= old(self)@.insert(key, value)
+
+// Deletion
+ensures self@ =~= old(self)@.remove(key)
+
+// Conditional update
+ensures
+    if condition {
+        self@ =~= old(self)@.insert(key, new_value)
+    } else {
+        self@ =~= old(self)@
+    }
+```
+
+#### Map Equality Assertions
+```rust
+// In proof blocks
+assert(map1 =~= map2);  // ✅ Correct
+
+// In ensures
+ensures
+    map1 =~= map2,
+    map1.dom() == map2.dom(),  // Set equality uses ==
+```
+
+### Key-Value Relationships
+```rust
+// Accessing values
+ensures
+    result_map.dom().contains(key) ==> result_map[key] == value
+
+// Comparing with original
+ensures
+    forall |k| result_map.dom().contains(k) ==>
+        result_map[k] == original_map[k]
+```
+
+---
+
+## Important Notes
+
+### Equality Operators Summary
+
+| Type | Equality Operator | Example |
+|------|------------------|---------|
+| **Map<K, V>** | `=~=` | `map1 =~= map2` |
+| **Seq<T>** | `=~=` | `seq1 =~= seq2` |
+| **Set<T>** | `==` or `=~=` | Both work for sets |
+| **Primitive types** | `==` | `x == y` |
+| **Struct fields** | `==` | `self.field == value` |
+
+### When to Use Each
+
+- **`=~=`**: Use for Map, Seq, and other collection types in specifications
+- **`==`**: Use for primitive types, booleans, integers, and struct field comparisons
+
+### Common Verification Failures
+
+If you see "postcondition not satisfied" with map comparisons:
+1. Check if you used `==` instead of `=~=`
+2. Verify the map operations (insert/remove) are correct
+3. Ensure all required keys are in the domain
+
+---
+
+## Complete Example: Data Structure with Map Representation
+
+```rust
+// Generic example (not specific to any benchmark)
+pub struct MyDataStructure<K, V> {
+    // ... internal fields ...
+}
+
+impl<K, V> MyDataStructure<K, V> {
+    // Specification function that converts structure to map
+    pub spec fn to_map(self) -> Map<K, V> {
+        // ... conversion logic ...
+    }
+
+    pub fn insert(&mut self, key: K, value: V)
+        requires
+            old(self).well_formed(),
+        ensures
+            self.well_formed(),
+            self.to_map() =~= old(self).to_map().insert(key, value)  // ✅ Use =~=
+    {
+        // ... implementation ...
+    }
+
+    pub fn remove(&mut self, key: K)
+        requires
+            old(self).well_formed(),
+        ensures
+            self.well_formed(),
+            self.to_map() =~= old(self).to_map().remove(key)  // ✅ Use =~=
+    {
+        // ... implementation ...
+    }
+
+    pub fn get(&self, key: K) -> (result: Option<&V>)
+        requires
+            self.well_formed(),
+        ensures
+            result == (if self.to_map().dom().contains(key) {
+                Some(&self.to_map()[key])
+            } else {
+                None
+            })
+    {
+        // ... implementation ...
+    }
+}
+```
+
+**Key Point**: All insert/remove operations use `=~=` to compare map states before and after!
+
+
+
+additional knowledge:
+IMPORTANT:
+1. Don't change the anything in immutable function(s): test. Instead, consider adjusting the preconditions or postconditions of other functions or methods.
+2. Don't delete existing non-buggy `#[trigger]`, `use` statements, main function.
+
+
+---
+
+Syntax error:
+```
+in 'ensures' clause of public function, cannot refer to private function ()
+            s.well_formed()
+
+{"$message_type":"diagnostic","message":"use of deprecated method `vstd::prelude::OptionAdditionalFns::get_Some_0`: is_Variant is deprecated - use `->` or `matches` instead: https://verus-lang.github.io/verus/guide/datatypes_enum.html","code":{"code":"deprecated","explanation":null},"level":"warning","spans":[{"file_name":"<TMP_PATH>","byte_start":14152,"byte_end":14162,"line_start":337,"line_end":337,"column_start":36,"column_end":46,"is_primary":true,"text":[{"text":"            ret.is_some() ==> *ret.get_Some_0() == Node::<V>::optional_as_map(*node)[key]","highlight_start":36,"highlight_end":46}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[{"message":"`#[warn(deprecated)]` on by default","code":null,"level":"note","spans":[],"children":[],"rendered":null}],"rendered":"warning: use of deprecated method `vstd::prelude::OptionAdditionalFns::get_Some_0`: is_Variant is deprecated - use `->` or `matches` instead: https://verus-lang.github.io/verus/guide/datatypes_enum.html\n   --> <TMP_PATH>:337:36\n    |\n337 |             ret.is_some() ==> *ret.get_Some_0() == Node::<V>::optional_as_map(*node)[key]\n    |                                    ^^^^^^^^^^\n    |\n    = note: `#[warn(deprecated)]` on by default\n\n"}
+{"$message_type":"diagnostic","message":"use of deprecated method `vstd::prelude::OptionAdditionalFns::get_Some_0`: is_Variant is deprecated - use `->` or `matches` instead: https://verus-lang.github.io/verus/guide/datatypes_enum.html","code":{"code":"deprecated","explanation":null},"level":"warning","spans":[{"file_name":"<TMP_PATH>","byte_start":14803,"byte_end":14813,"line_start":357,"line_end":357,"column_start":36,"column_end":46,"is_primary":true,"text":[{"text":"            ret.is_some() ==> *ret.get_Some_0() == self.as_map()[key]","highlight_start":36,"highlight_end":46}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"warning: use of deprecated method `vstd::prelude::OptionAdditionalFns::get_Some_0`: is_Variant is deprecated - use `->` or `matches` instead: https://verus-lang.github.io/verus/guide/datatypes_enum.html\n   --> <TMP_PATH>:357:36\n    |\n357 |             ret.is_some() ==> *ret.get_Some_0() == self.as_map()[key]\n    |                                    ^^^^^^^^^^\n\n"}
+{"$message_type":"diagnostic","message":"use of deprecated method `vstd::prelude::OptionAdditionalFns::get_Some_0`: is_Variant is deprecated - use `->` or `matches` instead: https://verus-lang.github.io/verus/guide/datatypes_enum.html","code":{"code":"deprecated","explanation":null},"level":"warning","spans":[{"file_name":"<TMP_PATH>","byte_start":15859,"byte_end":15869,"line_start":385,"line_end":385,"column_start":36,"column_end":46,"is_primary":true,"text":[{"text":"            ret.is_some() ==> *ret.get_Some_0() == self@[key]","highlight_start":36,"highlight_end":46}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"warning: use of deprecated method `vstd::prelude::OptionAdditionalFns::get_Some_0`: is_Variant is deprecated - use `->` or `matches` instead: https://verus-lang.github.io/verus/guide/datatypes_enum.html\n   --> <TMP_PATH>:385:36\n    |\n385 |             ret.is_some() ==> *ret.get_Some_0() == self@[key]\n    |                                    ^^^^^^^^^^\n\n"}
+{"$message_type":"diagnostic","message":"in 'ensures' clause of public function, cannot refer to private function","code":null,"level":"error","spans":[{"file_name":"<TMP_PATH>","byte_start":4338,"byte_end":4353,"line_start":108,"line_end":108,"column_start":13,"column_end":28,"is_primary":true,"text":[{"text":"            s.well_formed()","highlight_start":13,"highlight_end":28}],"label":null,"suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[],"rendered":"error: in 'ensures' clause of public function, cannot refer to private function\n   --> <TMP_PATH>:108:13\n    |\n108 |             s.well_formed()\n    |             ^^^^^^^^^^^^^^^\n\n"}
+{"$message_type":"diagnostic","message":"aborting due to 1 previous error; 3 warnings emitted","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error; 3 warnings emitted\n\n"}```
+
+Code
+```
+#![cfg_attr(verus_keep_ghost, verifier::exec_allows_no_decreases_clause)]
+use vstd::prelude::*;
+
+verus!{
+
+/// A node in the binary search tree containing a key-value pair and optional left/right children.
+/// The node maintains BST property: all keys in left subtree < node.key < all keys in right subtree.
+struct Node<V> {
+    key: u64,                          // The key used for ordering in the BST
+    value: V,                          // The value associated with this key
+    left: Option<Box<Node<V>>>,        // Optional left child (contains keys smaller than this node's key)
+    right: Option<Box<Node<V>>>,       // Optional right child (contains keys larger than this node's key)
+}
+
+/// A binary search tree map data structure that maintains key-value pairs in sorted order.
+/// Provides efficient insertion, deletion, and lookup operations with O(log n) average complexity.
+pub struct TreeMap<V> {
+    root: Option<Box<Node<V>>>,        // The root node of the BST, or None if the tree is empty
+}
+
+impl<V> Node<V> {
+    /// Converts an optional node reference to a map representation.
+    /// Returns the mapping from keys to values contained in the node and its subtrees.
+    /// For None, returns an empty map; for Some(node), returns the node's map representation.
+    spec fn optional_as_map(node_opt: Option<Box<Node<V>>>) -> Map<u64, V>
+        decreases node_opt,
+    {
+        match node_opt {
+            None => Map::empty(),
+            Some(node) => node.as_map(),
+        }
+    }
+
+    /// Converts this node and its entire subtree to a map representation.
+    /// Returns a map containing all key-value pairs from this node and its left/right subtrees.
+    /// The map is formed by taking the union of left subtree, right subtree, and this node's key-value pair.
+    spec fn as_map(self) -> Map<u64, V>
+        decreases self,
+    {
+         Node::<V>::optional_as_map(self.left)
+          .union_prefer_right(Node::<V>::optional_as_map(self.right))
+          .insert(self.key, self.value)
+    }
+}
+
+impl<V> TreeMap<V> {
+    /// Returns the map representation of the entire tree.
+    /// Delegates to the optional_as_map function to convert the root node to a map.
+    pub closed spec fn as_map(self) -> Map<u64, V> {
+        /* TODO: part of view */
+        Node::<V>::optional_as_map(self.root)
+    }
+}
+
+/// Implementation of the View trait for TreeMap to provide a view of the tree as a map.
+/// This allows the TreeMap to be treated as a Map<u64, V> in specifications.
+impl<V> View for TreeMap<V> {
+    type V = Map<u64, V>;
+
+    /// Returns the view of this TreeMap as a Map, enabling the use of @ syntax.
+    open spec fn view(&self) -> Map<u64, V> {
+        /* TODO: part of view */
+        self.as_map()
+    }
+}
+
+impl<V> Node<V> {
+    /// Checks if this node and its subtrees satisfy the binary search tree property.
+    /// Returns true if all keys in left subtree are less than this node's key,
+    /// all keys in right subtree are greater than this node's key, and both subtrees are well-formed.
+    spec fn well_formed(self) -> bool
+        decreases self
+    {
+        &&& (forall |elem| Node::<V>::optional_as_map(self.left).dom().contains(elem) ==> elem < self.key)
+        &&& (forall |elem| Node::<V>::optional_as_map(self.right).dom().contains(elem) ==> elem > self.key)
+        &&& (match self.left {
+            Some(left_node) => left_node.well_formed(),
+            None => true,
+        })
+        &&& (match self.right {
+            Some(right_node) => right_node.well_formed(),
+            None => true,
+        })
+    }
+}
+
+impl<V> TreeMap<V> {
+    /// Type invariant for TreeMap that ensures the entire tree maintains BST properties.
+    /// Returns true if the root node (if exists) and all its descendants are well-formed according to BST rules.
+    #[verifier::type_invariant]
+    spec fn well_formed(self) -> bool {
+        match self.root {
+            Some(node) => node.well_formed(),
+            None => true,
+        }
+    }
+}
+
+impl<V> TreeMap<V> {
+    /// Creates a new empty TreeMap.
+    ///
+    /// Requires: Nothing (unconditional)
+    /// Ensures: The returned TreeMap represents an empty map with no key-value pairs,
+    ///          and is well-formed under the BST property.
+    pub fn new() -> (s: Self)
+        ensures
+            s@ =~= Map::empty(),
+            s.well_formed()
+    {
+        TreeMap::<V> { root: None }
+    }
+}
+
+impl<V> Node<V> {
+    /// Inserts a key-value pair into an optional node, creating a new node if None.
+    ///
+    /// Requires: If node is Some, then the node is well-formed before insertion
+    /// Ensures: If node is Some after insertion, then the node is well-formed,
+    ///          and the map representation includes key/value.
+    fn insert_into_optional(node: &mut Option<Box<Node<V>>>, key: u64, value: V)
+        requires
+            old(node).is_some() ==> old(node).unwrap().well_formed()
+        ensures
+            node.is_some() ==> node.unwrap().well_formed(),
+            Node::<V>::optional_as_map(*node) =~= Node::<V>::optional_as_map(*old(node)).insert(key, value)
+    {
+        if node.is_none() {
+            // Create a new leaf node if the current position is empty
+            *node = Some(Box::new(Node::<V> {
+                key: key,
+                value: value,
+                left: None,
+                right: None,
+            }));
+        } else {
+            // Extract the existing node, insert into it, then put it back
+            let mut tmp = None;
+            std::mem::swap(&mut tmp, node);
+            let mut boxed_node = tmp.unwrap();
+
+            (&mut *boxed_node).insert(key, value);
+
+            *node = Some(boxed_node);
+        }
+    }
+
+    /// Inserts a key-value pair into this node's subtree, maintaining BST properties.
+    ///
+    /// Requires: self is well-formed
+    /// Ensures: self remains well-formed after insertion,
+    ///          and the map representation includes key/value.
+    fn insert(&mut self, key: u64, value: V)
+        requires
+            old(self).well_formed()
+        ensures
+            self.well_formed(),
+            self.as_map() =~= old(self).as_map().insert(key, value)
+    {
+        if key == self.key {
+            // Update the value for an existing key
+            self.value = value;
+
+            // Proof assertions to help the verifier understand BST invariants
+            assert(!Node::<V>::optional_as_map(self.left).dom().contains(key));
+            assert(!Node::<V>::optional_as_map(self.right).dom().contains(key));
+        } else if key < self.key {
+            // Insert into left subtree for smaller keys
+            Self::insert_into_optional(&mut self.left, key, value);
+
+            // Proof assertion: key cannot be in right subtree due to BST property
+            assert(!Node::<V>::optional_as_map(self.right).dom().contains(key));
+        } else {
+            // Insert into right subtree for larger keys
+            Self::insert_into_optional(&mut self.right, key, value);
+
+            // Proof assertion: key cannot be in left subtree due to BST property
+            assert(!Node::<V>::optional_as_map(self.left).dom().contains(key));
+        }
+    }
+}
+
+impl<V> TreeMap<V> {
+    /// Inserts a key-value pair into the TreeMap.
+    ///
+    /// Requires: The TreeMap is well-formed before insertion
+    /// Ensures: The TreeMap remains well-formed after insertion,
+    ///          and the map representation includes key/value.
+    pub fn insert(&mut self, key: u64, value: V)
+        requires
+            old(self).well_formed()
+        ensures
+            self.well_formed(),
+            self@ =~= old(self)@.insert(key, value)
+    {
+        // Use the type invariant to establish that the tree is well-formed
+        proof {
+            use_type_invariant(&*self);
+            // Since old(self).well_formed(), we rely on that for BST correctness
+            // No further steps needed here
+        }
+
+        // Extract the root, perform insertion, then restore it
+        let mut root = None;
+        std::mem::swap(&mut root, &mut self.root);
+        Node::<V>::insert_into_optional(&mut root, key, value);
+        self.root = root;
+    }
+}
+
+impl<V> Node<V> {
+    /// Deletes a key from an optional node, handling the case where the node might not exist.
+    ///
+    /// Requires: If node is Some, then the node is well-formed
+    /// Ensures: If node is Some after deletion, then the node is well-formed,
+    ///          and the map representation excludes the key.
+    fn delete_from_optional(node: &mut Option<Box<Node<V>>>, key: u64)
+        requires
+            old(node).is_none() || old(node).unwrap().well_formed()
+        ensures
+            node.is_none() || node.unwrap().well_formed(),
+            Node::<V>::optional_as_map(*node) =~= Node::<V>::optional_as_map(*old(node)).remove(key)
+    {
+        if node.is_some() {
+            // Extract the node to work with it
+            let mut tmp = None;
+            std::mem::swap(&mut tmp, node);
+            let mut boxed_node = tmp.unwrap();
+
+            if key == boxed_node.key {
+                // Found the key to delete - need to handle node removal
+                assert(!Node::<V>::optional_as_map(boxed_node.left).dom().contains(key));
+                assert(!Node::<V>::optional_as_map(boxed_node.right).dom().contains(key));
+
+                if boxed_node.left.is_none() {
+                    // No left child, replace with right child
+                    *node = boxed_node.right;
+                } else {
+                    if boxed_node.right.is_none() {
+                        // No right child, replace with left child
+                        *node = boxed_node.left;
+                    } else {
+                        // Both children exist, replace with rightmost key from left subtree
+                        let (popped_key, popped_value) = Node::<V>::delete_rightmost(&mut boxed_node.left);
+                        boxed_node.key = popped_key;
+                        boxed_node.value = popped_value;
+                        *node = Some(boxed_node);
+                    }
+                }
+            } else if key < boxed_node.key {
+                // Key is in left subtree
+                assert(!Node::<V>::optional_as_map(boxed_node.right).dom().contains(key));
+                Node::<V>::delete_from_optional(&mut boxed_node.left, key);
+                *node = Some(boxed_node);
+            } else {
+                // Key is in right subtree
+                assert(!Node::<V>::optional_as_map(boxed_node.left).dom().contains(key));
+                Node::<V>::delete_from_optional(&mut boxed_node.right, key);
+                *node = Some(boxed_node);
+            }
+        }
+    }
+
+    /// Deletes and returns the rightmost (largest) key-value pair from a subtree.
+    /// Used as a helper for deletion when a node has both left and right children.
+    ///
+    /// Requires: The node must exist and be well-formed
+    /// Ensures: If the node remains Some, it is well-formed,
+    ///          The returned (u64, V) was in the original map and is removed from it,
+    ///          and that key was the largest in the old subtree.
+    fn delete_rightmost(node: &mut Option<Box<Node<V>>>) -> (popped: (u64, V))
+        requires
+            old(node).is_some(),
+            old(node).unwrap().well_formed()
+        ensures
+            node.is_none() || node.unwrap().well_formed(),
+            Node::<V>::optional_as_map(*node) =~= Node::<V>::optional_as_map(*old(node)).remove(popped.0),
+            Node::<V>::optional_as_map(*old(node)).dom().contains(popped.0),
+            Node::<V>::optional_as_map(*old(node))[popped.0] == popped.1,
+            forall|k: u64| Node::<V>::optional_as_map(*old(node)).dom().contains(k) ==> k <= popped.0
+    {
+        // Extract the node to work with it
+        let mut tmp = None;
+        std::mem::swap(&mut tmp, node);
+        let mut boxed_node = tmp.unwrap();
+
+        if boxed_node.right.is_none() {
+            // This is the rightmost node, return its key-value and replace with left subtree
+            *node = boxed_node.left;
+            assert(Node::<V>::optional_as_map(boxed_node.right) =~= Map::empty());
+            assert(!Node::<V>::optional_as_map(boxed_node.left).dom().contains(boxed_node.key));
+            return (boxed_node.key, boxed_node.value);
+        } else {
+            // Continue searching in the right subtree for the rightmost node
+            let (popped_key, popped_value) = Node::<V>::delete_rightmost(&mut boxed_node.right);
+            assert(!Node::<V>::optional_as_map(boxed_node.left).dom().contains(popped_key));
+            *node = Some(boxed_node);
+            return (popped_key, popped_value);
+        }
+    }
+}
+
+impl<V> TreeMap<V> {
+    /// Deletes a key from the TreeMap.
+    ///
+    /// Requires: The TreeMap is well-formed before deletion
+    /// Ensures: The TreeMap remains well-formed after deletion,
+    ///          and the map representation excludes the key.
+    pub fn delete(&mut self, key: u64)
+        requires
+            old(self).well_formed()
+        ensures
+            self.well_formed(),
+            self@ =~= old(self)@.remove(key)
+    {
+        // Use the type invariant to establish that the tree is well-formed
+        proof { use_type_invariant(&*self); }
+
+        // Extract the root, perform deletion, then restore it
+        let mut root = None;
+        std::mem::swap(&mut root, &mut self.root);
+        Node::<V>::delete_from_optional(&mut root, key);
+        self.root = root;
+    }
+}
+
+impl<V> Node<V> {
+    /// Looks up a key in an optional node, handling the case where the node might not exist.
+    ///
+    /// Requires: If node is Some, then it is well-formed
+    /// Ensures: Returns Some(&value) iff the key is present in the map representation,
+    ///          otherwise returns None.
+    fn get_from_optional(node: &Option<Box<Node<V>>>, key: u64) -> (ret: Option<&V>)
+        requires
+            node.is_none() || node.unwrap().well_formed()
+        ensures
+            ret.is_some() <==> Node::<V>::optional_as_map(*node).dom().contains(key),
+            ret.is_some() ==> *ret.get_Some_0() == Node::<V>::optional_as_map(*node)[key]
+    {
+        match node {
+            None => None,
+            Some(node) => {
+                node.get(key)
+            }
+        }
+    }
+
+    /// Looks up a key in this node's subtree using BST search.
+    ///
+    /// Requires: self is well-formed
+    /// Ensures: Returns Some(&value) iff the key is present in the map representation,
+    ///          otherwise returns None.
+    fn get(&self, key: u64) -> (ret: Option<&V>)
+        requires
+            self.well_formed()
+        ensures
+            ret.is_some() <==> self.as_map().dom().contains(key),
+            ret.is_some() ==> *ret.get_Some_0() == self.as_map()[key]
+    {
+        if key == self.key {
+            // Found the key at this node
+            Some(&self.value)
+        } else if key < self.key {
+            // Search in left subtree for smaller keys
+            proof { assert(!Node::<V>::optional_as_map(self.right).dom().contains(key)); }
+            Self::get_from_optional(&self.left, key)
+        } else {
+            // Search in right subtree for larger keys
+            proof { assert(!Node::<V>::optional_as_map(self.left).dom().contains(key)); }
+            Self::get_from_optional(&self.right, key)
+        }
+    }
+}
+
+impl<V> TreeMap<V> {
+    /// Looks up a key in the TreeMap.
+    ///
+    /// Requires: The TreeMap is well-formed
+    /// Ensures: Returns Some(&value) iff the key is present in the tree's map,
+    ///          otherwise returns None.
+    pub fn get(&self, key: u64) -> (ret: Option<&V>)
+        requires
+            self.well_formed()
+        ensures
+            ret.is_some() <==> self@.dom().contains(key),
+            ret.is_some() ==> *ret.get_Some_0() == self@[key]
+    {
+        // Use the type invariant to establish that the tree is well-formed
+        proof { use_type_invariant(&*self); }
+        Node::<V>::get_from_optional(&self.root, key)
+    }
+}
+
+/*
+TEST CODE BELOW
+*/
+
+/// Test function demonstrating basic TreeMap operations.
+///
+/// Requires: The input value v must be less than u64::MAX - 10 to avoid overflow
+/// Ensures: All operations complete successfully and assertions hold
+fn test(v: u64)
+requires
+    v < u64::MAX - 10
+{
+    // Create an empty tree map
+    let mut tree_map = TreeMap::<bool>::new();
+
+    // Insert key v with value false
+    tree_map.insert(v, false);
+
+    // Insert key v+1 with value false
+    tree_map.insert(v + 1, false);
+
+    // Update key v with value true (overwrites previous false)
+    tree_map.insert(v, true);
+
+    // Delete key v from the map
+    tree_map.delete(v);
+
+    // Look up deleted key v - should return None
+    let elem17 = tree_map.get(v);
+
+    // Look up existing key v+1 - should return Some(&false)
+    let elem18 = tree_map.get(v + 1);
+
+    // Verify the results
+    assert(elem17.is_none());
+    assert(elem18 == Some(&false));
+
+    // Continue testing with additional operations
+    test2(tree_map, v + 2, v + 3);
+}
+
+/// Additional test function that takes a TreeMap and inserts two more key-value pairs.
+/// Demonstrates that TreeMap can be passed by value and modified.
+///
+/// Requires: Nothing specific (no preconditions needed)
+/// Ensures: Two new key-value pairs are inserted into the tree map
+fn test2(tree_map: TreeMap<bool>, key1: u64, key2: u64) {
+    // Take ownership of the tree map and make it mutable
+    let mut tree_map = tree_map;
+
+    // Insert two new keys with true values
+    tree_map.insert(key1, true);
+    tree_map.insert(key2, true);
+}
+
+
+/// Main function - entry point for the program.
+/// Currently empty as this is a library implementation for testing purposes.
+fn main() { }
+}```

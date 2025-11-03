@@ -1,0 +1,25 @@
+```markdown
+Current State:
+- The code defines a struct (FixedParity) that implements RwLockPredicate, but its inv function is missing the body (marked with "TODO: add specification").
+- No other invariants or View functions are requested in the code.
+- No "TODO: add proof" or "TODO: add invariants" markers are present.
+
+Dependencies:
+- The inv function in FixedParity directly impacts the RwLock usage, as it must ensure the correct parity constraint.
+- No additional dependencies for View or invariants exist since there are no references to a View function or type invariants.
+
+```
+
+```markdown
+**Selected Workflow:** Specification-Only Workflow
+
+**Justification:**
+The code does not request a View function and does not have any "TODO: add invariants" markers. It only includes a "TODO: add specification" for the inv function, indicating that function specifications are needed without requiring new invariants. Therefore the Specification-Only Workflow is appropriate.
+
+**Execution Steps:**
+1. spec_inference
+
+**Module Conditions:**
+- inv_inference: No – the struct does not need additional type invariants beyond the predicate function.
+- proof_generation: No – there is no "TODO: add proof" marker present.
+```

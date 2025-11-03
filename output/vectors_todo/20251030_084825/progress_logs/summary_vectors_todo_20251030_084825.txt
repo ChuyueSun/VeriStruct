@@ -1,0 +1,81 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/vectors_todo.rs
+Input File Name: vectors_todo.rs
+File ID: vectors_todo__Vec_General_20251030_084825
+Output Directory: /home/chuyue/VerusAgent/output/vectors_todo/20251030_084825
+Progress Log: /home/chuyue/VerusAgent/output/vectors_todo/20251030_084825/progress_logs/progress_vectors_todo_20251030_084825.json
+Summary File: /home/chuyue/VerusAgent/output/vectors_todo/20251030_084825/progress_logs/summary_vectors_todo_20251030_084825.txt
+
+Start time: 2025-10-30T08:48:25.805680
+End time: 2025-10-30T09:01:49.523093
+Total execution time: 803.72s
+
+## Final Result
+
+Verified: 9
+Errors: 1
+Verus Errors: 1
+Compilation Error: False
+Is Correct: False
+
+## Statistics
+
+Total steps: 2
+Total repair rounds: 5
+Total repairs attempted: 6
+Successful repairs: 2
+Average step time: 67.91s
+Average repair time: 108.52s
+
+## Steps
+
+Step 1: spec_inference
+  Time: 77.52s
+  Score: Verified=-1, Errors=999, Verus Errors=1
+Step 2: proof_generation
+  Time: 58.29s
+  Score: Verified=-1, Errors=999, Verus Errors=1
+
+## Repair Rounds
+
+Round 1
+  Time: 54.71s
+  repair_syntax for Other
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=7, Errors=3, Verus Errors=4
+    Time: 54.71s
+
+Round 2
+  Time: 249.96s
+  repair_invariant for InvFailEnd
+    Before: Verified=7, Errors=3, Verus Errors=4
+    After: Verified=7, Errors=3, Verus Errors=4
+    Time: 134.74s
+  repair_postcond for PostCondFail
+    Before: Verified=7, Errors=3, Verus Errors=4
+    After: Verified=9, Errors=1, Verus Errors=1
+    Time: 115.21s
+
+Round 3
+  Time: 93.35s
+  repair_invariant for InvFailEnd
+    Before: Verified=9, Errors=1, Verus Errors=1
+    After: Verified=9, Errors=1, Verus Errors=1
+    Time: 93.35s
+
+Round 4
+  Time: 114.53s
+  repair_invariant for InvFailEnd
+    Before: Verified=9, Errors=1, Verus Errors=1
+    After: Verified=9, Errors=1, Verus Errors=1
+    Time: 114.53s
+
+Round 5
+  Time: 138.56s
+  repair_invariant for InvFailEnd
+    Before: Verified=9, Errors=1, Verus Errors=1
+    After: Verified=9, Errors=1, Verus Errors=1
+    Time: 138.56s

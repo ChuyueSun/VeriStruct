@@ -1,0 +1,33 @@
+```markdown
+Current State:
+- The code defines a BitMap struct with an internal Vec<u64> storage.
+- There is a "spec fn view" that needs an implementation (explicit "View" mention).
+- Multiple methods have "TODO: add requires and ensures" indicating missing specifications.
+- There are "TODO: add proof" placeholders in the set_bit and or methods.
+- A loop invariant is also missing in the or method’s while loop.
+- Thus, both type invariants and detailed function specifications are not yet provided.
+
+Dependencies:
+- The BitMap struct’s mathematical abstraction depends on the “view” function.
+- The various methods (from, get_bit, set_bit, or) need requires/ensures clauses.
+- Proofs depend on the completed specs and possibly any derived invariants.
+
+```
+
+```markdown
+**Selected Workflow:** Full Sequence Workflow
+
+**Justification:**
+The code explicitly mentions a "view" function and requests its implementation. It also has a struct (BitMap) plus multiple "TODO: add requires/ensures," thus requiring both view and specification work. Because it is a class/struct, we include the inv_inference step.
+
+**Execution Steps:**
+1. view_inference
+2. view_refinement
+3. inv_inference
+4. spec_inference
+5. proof_generation
+
+**Module Conditions:**
+- inv_inference: Yes (the code contains a struct data structure, and we may need invariants).
+- proof_generation: Yes ("TODO: add proof" exists in set_bit and or methods).
+```

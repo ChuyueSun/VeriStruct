@@ -1,0 +1,24 @@
+{
+  "run_timestamp": "20251010_195327",
+  "completed_at": "2025-10-10T20:02:41.874570",
+  "total_attempts": 1,
+  "total_candidates_evaluated": 1,
+  "final_score": {
+    "verified": 5,
+    "errors": 0,
+    "verus_errors": 0,
+    "compilation_error": false,
+    "is_correct": true
+  },
+  "success": true,
+  "successful_candidate": {
+    "candidate_idx": 1,
+    "attempt_num": 1,
+    "score": {
+      "verified": 5,
+      "errors": 0,
+      "verus_errors": 0,
+      "compilation_error": false
+    }
+  }
+}

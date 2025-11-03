@@ -1,0 +1,10 @@
+Benchmark,Ground_Truth,LLM_Calls_To_100%,Modules_Used,Experiment
+atomics_todo,11,3,"inv_inference; spec_inference; proof_generation",repair_experiment_20251011_135504
+bitmap_todo,14,5,"view_inference; view_refinement; inv_inference; spec_inference; proof_generation",repair_experiment_20251011_135504
+invariants_todo,7,1,"spec_inference",repair_experiment_20251010_152504
+option_todo,15,1,"spec_inference",repair_experiment_20251011_135504
+rb_type_invariant_todo,13,5,"view_inference; view_refinement; inv_inference; spec_inference; proof_generation",repair_experiment_20251011_135504
+rwlock_vstd_todo,5,1,"spec_inference",repair_experiment_20251010_215225
+set_from_vec_todo,10,5,"view_inference; view_refinement; inv_inference; spec_inference; proof_generation",repair_experiment_20251011_160518
+transfer_todo,5,1,"spec_inference",repair_experiment_20251011_135504
+vectors_todo,16,2,"spec_inference; proof_generation",repair_experiment_20251011_160501

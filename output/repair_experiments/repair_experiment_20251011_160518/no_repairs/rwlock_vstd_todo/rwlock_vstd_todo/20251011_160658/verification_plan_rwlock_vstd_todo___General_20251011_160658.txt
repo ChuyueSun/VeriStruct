@@ -1,0 +1,27 @@
+```markdown
+Current State:
+- The struct FixedParity implements RwLockPredicate<u64> but its inv(self, v: u64) function is missing a specification.
+- A "TODO: add specification" placeholder appears, indicating that we need to introduce or refine function pre/post conditions.
+- There is no mention of any custom View requirements or "TODO: add View."
+- FixedParity is a struct, so we may need invariants or specifications related to its usage in the RwLock context.
+
+Dependencies:
+- The correctness of FixedParity’s inv() function is required by the RwLock to validate stored values.
+- The test function test() uses locks with FixedParity, checking even/odd properties for the underlying data.
+
+```
+
+```markdown
+**Selected Workflow:** Invariant-First Workflow
+
+**Justification:**
+The code includes a struct (FixedParity) that may require type invariants and also has a "TODO: add specification" placeholder, indicating we need function specs. There is no mention of View functions or a "TODO: add View," so the Invariant-First Workflow (inv_inference → spec_inference) is most appropriate here.
+
+**Execution Steps:**
+1. inv_inference
+2. spec_inference
+
+**Module Conditions:**
+- inv_inference: Yes – FixedParity is a struct that can benefit from inferred invariants for parity.
+- proof_generation: No – Only a "TODO: add specification" is found (no "TODO: add proof" or "TODO: add invariants").
+```

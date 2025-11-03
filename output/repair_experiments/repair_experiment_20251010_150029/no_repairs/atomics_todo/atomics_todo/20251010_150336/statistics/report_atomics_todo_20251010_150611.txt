@@ -1,0 +1,72 @@
+================================================================================
+VerusAgent Statistics Report - atomics_todo
+================================================================================
+
+EXECUTION SUMMARY
+--------------------------------------------------------------------------------
+Benchmark: atomics_todo
+Start Time: 2025-10-10T15:03:36.237736
+End Time: 2025-10-10T15:06:11.327693
+Total Execution Time: 155.09s
+Verification Success: No
+
+MODULE ACTIVATION
+--------------------------------------------------------------------------------
+Total Modules Activated: 3
+Modules: inv_inference, spec_inference, proof_generation
+
+LLM CALLS
+--------------------------------------------------------------------------------
+Total LLM Calls: 0
+Average Response Time: 0.00s
+Cache Hit Rate: 0.00%
+
+Calls by Stage:
+
+ITERATIONS
+--------------------------------------------------------------------------------
+Iterations by Module:
+
+REPAIRS
+--------------------------------------------------------------------------------
+Total Repair Rounds: 0
+Total Repairs: 0
+Successful Repairs: 0
+Failed Repairs: 0
+Success Rate: 0.00%
+
+Repairs by Error Type:
+
+Repairs by Heuristic:
+
+ERROR TRACKING
+--------------------------------------------------------------------------------
+Initial Errors: 999
+Final Errors: 1
+Errors Fixed: 998
+
+Initial Errors by Type:
+  Other: 2
+
+STAGE DETAILS
+--------------------------------------------------------------------------------
+
+inv_inference (Step 1)
+  Execution Time: 56.03s
+  LLM Calls: 0
+  Iterations: 1
+  Result: Verified=4, Errors=1
+
+spec_inference (Step 2)
+  Execution Time: 75.95s
+  LLM Calls: 0
+  Iterations: 1
+  Result: Verified=4, Errors=1
+
+proof_generation (Step 3)
+  Execution Time: 0.01s
+  LLM Calls: 0
+  Iterations: 1
+  Result: Verified=4, Errors=1
+
+================================================================================

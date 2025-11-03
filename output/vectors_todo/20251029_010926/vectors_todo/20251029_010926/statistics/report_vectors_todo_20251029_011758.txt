@@ -1,0 +1,78 @@
+================================================================================
+VerusAgent Statistics Report - vectors_todo
+================================================================================
+
+EXECUTION SUMMARY
+--------------------------------------------------------------------------------
+Benchmark: vectors_todo
+Start Time: 2025-10-29T01:09:26.860449
+End Time: 2025-10-29T01:17:58.281358
+Total Execution Time: 511.42s
+Verification Success: No
+
+MODULE ACTIVATION
+--------------------------------------------------------------------------------
+Total Modules Activated: 2
+Modules: spec_inference, proof_generation
+
+LLM CALLS
+--------------------------------------------------------------------------------
+Total LLM Calls: 7
+Average Response Time: 63.44s
+Cache Hit Rate: 14.29%
+
+Calls by Stage:
+  planning: 1
+  proof_generation: 1
+  repair: 4
+  spec_inference: 1
+
+ITERATIONS
+--------------------------------------------------------------------------------
+Iterations by Module:
+
+REPAIRS
+--------------------------------------------------------------------------------
+Total Repair Rounds: 5
+Total Repairs: 6
+Successful Repairs: 2
+Failed Repairs: 4
+Success Rate: 33.33%
+
+Repairs by Error Type:
+  AssertFail: 2
+  InvFailEnd: 1
+  Other: 2
+  PostCondFail: 1
+
+Repairs by Heuristic:
+  repair_assertion: 2
+  repair_invariant: 1
+  repair_postcond: 1
+  repair_syntax: 2
+
+ERROR TRACKING
+--------------------------------------------------------------------------------
+Initial Errors: 999
+Final Errors: 2
+Errors Fixed: 997
+
+Initial Errors by Type:
+  Other: 1
+
+STAGE DETAILS
+--------------------------------------------------------------------------------
+
+spec_inference (Step 1)
+  Execution Time: 60.73s
+  LLM Calls: 1
+  Iterations: 1
+  Result: Verified=-1, Errors=999
+
+proof_generation (Step 2)
+  Execution Time: 63.73s
+  LLM Calls: 1
+  Iterations: 1
+  Result: Verified=-1, Errors=999
+
+================================================================================

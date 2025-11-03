@@ -1,0 +1,247 @@
+{
+  "benchmark_name": "bst_map_todo",
+  "start_time": "2025-10-31T12:08:45.190434",
+  "end_time": "2025-10-31T12:42:16.272130",
+  "total_execution_time": 2011.0816986560822,
+  "modules_activated": [
+    "view_inference",
+    "view_refinement",
+    "inv_inference",
+    "spec_inference",
+    "proof_generation"
+  ],
+  "modules_count": 5,
+  "stages": {
+    "view_inference": {
+      "step_number": 1,
+      "start_time": "2025-10-31T12:09:07.356570",
+      "end_time": "2025-10-31T12:14:19.502712",
+      "execution_time": 312.14614486694336,
+      "llm_calls": 1,
+      "iterations": 1,
+      "result": {
+        "compilation_error": false,
+        "verified": 9,
+        "errors": 7,
+        "verus_errors": 17,
+        "is_correct": false
+      }
+    },
+    "view_refinement": {
+      "step_number": 2,
+      "start_time": "2025-10-31T12:14:19.502850",
+      "end_time": "2025-10-31T12:16:42.635989",
+      "execution_time": 143.13314247131348,
+      "llm_calls": 1,
+      "iterations": 1,
+      "result": {
+        "compilation_error": false,
+        "verified": 9,
+        "errors": 7,
+        "verus_errors": 17,
+        "is_correct": false
+      }
+    },
+    "inv_inference": {
+      "step_number": 3,
+      "start_time": "2025-10-31T12:16:42.636128",
+      "end_time": "2025-10-31T12:20:12.613015",
+      "execution_time": 209.97688913345337,
+      "llm_calls": 1,
+      "iterations": 1,
+      "result": {
+        "compilation_error": false,
+        "verified": 9,
+        "errors": 7,
+        "verus_errors": 17,
+        "is_correct": false
+      }
+    },
+    "spec_inference": {
+      "step_number": 4,
+      "start_time": "2025-10-31T12:20:12.613155",
+      "end_time": "2025-10-31T12:39:39.564175",
+      "execution_time": 1166.9510226249695,
+      "llm_calls": 2,
+      "iterations": 1,
+      "result": {
+        "compilation_error": false,
+        "verified": 15,
+        "errors": 1,
+        "verus_errors": 1,
+        "is_correct": false
+      }
+    },
+    "proof_generation": {
+      "step_number": 5,
+      "start_time": "2025-10-31T12:39:39.564324",
+      "end_time": "2025-10-31T12:42:16.262737",
+      "execution_time": 156.69841527938843,
+      "llm_calls": 1,
+      "iterations": 1,
+      "result": {
+        "compilation_error": false,
+        "verified": 16,
+        "errors": 0,
+        "verus_errors": 0,
+        "is_correct": true
+      }
+    }
+  },
+  "llm_calls": {
+    "total": 7,
+    "by_stage": {
+      "planning": 1,
+      "view_inference": 1,
+      "view_refinement": 1,
+      "inv_inference": 1,
+      "spec_inference": 2,
+      "proof_generation": 1
+    },
+    "by_module": {
+      "planner": 1,
+      "view_inference": 1,
+      "view_refinement": 1,
+      "inv_inference": 1,
+      "spec_inference": 2,
+      "proof_generation": 1
+    },
+    "response_times": [
+      {
+        "stage": "planning",
+        "module": "planner",
+        "time": 21.291994333267212,
+        "cache_hit": false
+      },
+      {
+        "stage": "view_inference",
+        "module": "view_inference",
+        "time": 309.54788088798523,
+        "cache_hit": false
+      },
+      {
+        "stage": "view_refinement",
+        "module": "view_refinement",
+        "time": 139.87988448143005,
+        "cache_hit": false
+      },
+      {
+        "stage": "inv_inference",
+        "module": "inv_inference",
+        "time": 206.77446842193604,
+        "cache_hit": false
+      },
+      {
+        "stage": "spec_inference",
+        "module": "spec_inference",
+        "time": 600.1237733364105,
+        "cache_hit": false
+      },
+      {
+        "stage": "spec_inference",
+        "module": "spec_inference",
+        "time": 561.5759510993958,
+        "cache_hit": false
+      },
+      {
+        "stage": "proof_generation",
+        "module": "proof_generation",
+        "time": 153.72749972343445,
+        "cache_hit": false
+      }
+    ],
+    "cache_hits": 0,
+    "cache_misses": 7,
+    "input_tokens": 62864,
+    "output_tokens": 86325,
+    "by_call": [
+      {
+        "stage": "planning",
+        "module": "planner",
+        "input_tokens": 4967,
+        "output_tokens": 1215,
+        "cache_hit": false,
+        "time": 21.291994333267212
+      },
+      {
+        "stage": "view_inference",
+        "module": "view_inference",
+        "input_tokens": 8819,
+        "output_tokens": 17785,
+        "cache_hit": false,
+        "time": 309.54788088798523
+      },
+      {
+        "stage": "view_refinement",
+        "module": "view_refinement",
+        "input_tokens": 7724,
+        "output_tokens": 13511,
+        "cache_hit": false,
+        "time": 139.87988448143005
+      },
+      {
+        "stage": "inv_inference",
+        "module": "inv_inference",
+        "input_tokens": 8643,
+        "output_tokens": 14021,
+        "cache_hit": false,
+        "time": 206.77446842193604
+      },
+      {
+        "stage": "spec_inference",
+        "module": "spec_inference",
+        "input_tokens": 14999,
+        "output_tokens": 22171,
+        "cache_hit": false,
+        "time": 561.5759510993958
+      },
+      {
+        "stage": "proof_generation",
+        "module": "proof_generation",
+        "input_tokens": 17712,
+        "output_tokens": 17622,
+        "cache_hit": false,
+        "time": 153.72749972343445
+      }
+    ]
+  },
+  "iterations": {
+    "by_module": {},
+    "by_stage": {
+      "view_inference": 1,
+      "view_refinement": 1,
+      "inv_inference": 1,
+      "spec_inference": 1,
+      "proof_generation": 1
+    }
+  },
+  "repairs": {
+    "total_rounds": 0,
+    "total_repairs": 0,
+    "repairs_by_type": {},
+    "repairs_by_heuristic": {},
+    "successful_repairs": 0,
+    "failed_repairs": 0,
+    "repair_times": []
+  },
+  "errors": {
+    "initial_error_count": 999,
+    "final_error_count": 0,
+    "errors_by_type": {
+      "Other": 2
+    },
+    "errors_fixed_by_type": {}
+  },
+  "verification": {
+    "initial_verified": -1,
+    "final_verified": 16,
+    "initial_errors": 999,
+    "final_errors": 0,
+    "compilation_errors": 0
+  },
+  "code_metrics": {
+    "initial_code_length": 15805,
+    "final_code_length": 16432,
+    "code_changes": 627
+  }
+}

@@ -1,0 +1,39 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/rb_type_invariant_todo.rs
+Input File Name: rb_type_invariant_todo.rs
+File ID: rb_type_invariant_todo__RB_TypeInv_20251011_162344
+Output Directory: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160518/baseline/rb_type_invariant_todo/rb_type_invariant_todo/20251011_162344
+Progress Log: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160518/baseline/rb_type_invariant_todo/rb_type_invariant_todo/20251011_162344/progress_logs/progress_rb_type_invariant_todo_20251011_162344.json
+Summary File: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160518/baseline/rb_type_invariant_todo/rb_type_invariant_todo/20251011_162344/progress_logs/summary_rb_type_invariant_todo_20251011_162344.txt
+
+Start time: 2025-10-11T16:23:44.485160
+End time: 2025-10-11T16:51:46.339010
+Total execution time: 1681.85s
+
+## Final Result
+
+Verified: -1
+Errors: 999
+Verus Errors: 1
+Compilation Error: True
+Is Correct: False
+
+## Statistics
+
+Total steps: 1
+Total repair rounds: 0
+Total repairs attempted: 0
+Successful repairs: 0
+Average step time: 1681.05s
+Average repair time: 0.00s
+
+## Steps
+
+Step 1: baseline
+  Time: 1681.05s
+  Score: Verified=-1, Errors=999, Verus Errors=2
+
+## Repair Rounds

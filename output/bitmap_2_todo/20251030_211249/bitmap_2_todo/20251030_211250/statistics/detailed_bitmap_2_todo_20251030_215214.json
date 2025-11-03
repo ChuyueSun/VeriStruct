@@ -1,0 +1,367 @@
+{
+  "benchmark_name": "bitmap_2_todo",
+  "start_time": "2025-10-30T21:12:50.117531",
+  "end_time": "2025-10-30T21:52:14.714706",
+  "total_execution_time": 2364.597177505493,
+  "modules_activated": [
+    "view_inference",
+    "view_refinement",
+    "inv_inference",
+    "spec_inference",
+    "proof_generation"
+  ],
+  "modules_count": 5,
+  "stages": {
+    "view_inference": {
+      "step_number": 1,
+      "start_time": "2025-10-30T21:12:50.901024",
+      "end_time": "2025-10-30T21:14:58.306831",
+      "execution_time": 127.40581035614014,
+      "llm_calls": 1,
+      "iterations": 1,
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 7,
+        "is_correct": false
+      }
+    },
+    "view_refinement": {
+      "step_number": 2,
+      "start_time": "2025-10-30T21:14:58.306958",
+      "end_time": "2025-10-30T21:28:47.816515",
+      "execution_time": 829.5095603466034,
+      "llm_calls": 2,
+      "iterations": 1,
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 7,
+        "is_correct": false
+      }
+    },
+    "inv_inference": {
+      "step_number": 3,
+      "start_time": "2025-10-30T21:28:47.816652",
+      "end_time": "2025-10-30T21:30:30.695054",
+      "execution_time": 102.87840509414673,
+      "llm_calls": 1,
+      "iterations": 1,
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 7,
+        "is_correct": false
+      }
+    },
+    "spec_inference": {
+      "step_number": 4,
+      "start_time": "2025-10-30T21:30:30.695194",
+      "end_time": "2025-10-30T21:31:58.974214",
+      "execution_time": 88.27902221679688,
+      "llm_calls": 1,
+      "iterations": 1,
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 2,
+        "is_correct": false
+      }
+    },
+    "proof_generation": {
+      "step_number": 5,
+      "start_time": "2025-10-30T21:31:58.974360",
+      "end_time": "2025-10-30T21:31:58.974776",
+      "execution_time": 0.00041866302490234375,
+      "llm_calls": 0,
+      "iterations": 1,
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 2,
+        "is_correct": false
+      }
+    }
+  },
+  "llm_calls": {
+    "total": 11,
+    "by_stage": {
+      "planning": 1,
+      "view_inference": 1,
+      "view_refinement": 2,
+      "inv_inference": 1,
+      "spec_inference": 1,
+      "repair": 5
+    },
+    "by_module": {
+      "planner": 1,
+      "view_inference": 1,
+      "view_refinement": 2,
+      "inv_inference": 1,
+      "spec_inference": 1,
+      "repair_syntax": 4,
+      "repair_mode": 1
+    },
+    "response_times": [
+      {
+        "stage": "planning",
+        "module": "planner",
+        "time": 0.0005791187286376953,
+        "cache_hit": true
+      },
+      {
+        "stage": "view_inference",
+        "module": "view_inference",
+        "time": 127.1015727519989,
+        "cache_hit": false
+      },
+      {
+        "stage": "view_refinement",
+        "module": "view_refinement",
+        "time": 228.68147563934326,
+        "cache_hit": false
+      },
+      {
+        "stage": "view_refinement",
+        "module": "view_refinement",
+        "time": 600.3210186958313,
+        "cache_hit": false
+      },
+      {
+        "stage": "inv_inference",
+        "module": "inv_inference",
+        "time": 102.38170576095581,
+        "cache_hit": false
+      },
+      {
+        "stage": "spec_inference",
+        "module": "spec_inference",
+        "time": 87.69537019729614,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 99.25260066986084,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 95.27966594696045,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 186.40539073944092,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 231.36688017845154,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_mode",
+        "time": 600.1222560405731,
+        "cache_hit": false
+      }
+    ],
+    "cache_hits": 1,
+    "cache_misses": 10,
+    "input_tokens": 223848,
+    "output_tokens": 82696,
+    "by_call": [
+      {
+        "stage": "view_inference",
+        "module": "view_inference",
+        "input_tokens": 29999,
+        "output_tokens": 10889,
+        "cache_hit": false,
+        "time": 127.1015727519989
+      },
+      {
+        "stage": "view_refinement",
+        "module": "view_refinement",
+        "input_tokens": 29595,
+        "output_tokens": 7875,
+        "cache_hit": false,
+        "time": 228.68147563934326
+      },
+      {
+        "stage": "inv_inference",
+        "module": "inv_inference",
+        "input_tokens": 30504,
+        "output_tokens": 8156,
+        "cache_hit": false,
+        "time": 102.38170576095581
+      },
+      {
+        "stage": "spec_inference",
+        "module": "spec_inference",
+        "input_tokens": 14578,
+        "output_tokens": 9164,
+        "cache_hit": false,
+        "time": 87.69537019729614
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "input_tokens": 28688,
+        "output_tokens": 11415,
+        "cache_hit": false,
+        "time": 99.25260066986084
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "input_tokens": 30059,
+        "output_tokens": 10280,
+        "cache_hit": false,
+        "time": 95.27966594696045
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "input_tokens": 30239,
+        "output_tokens": 12424,
+        "cache_hit": false,
+        "time": 186.40539073944092
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "input_tokens": 30186,
+        "output_tokens": 12493,
+        "cache_hit": false,
+        "time": 231.36688017845154
+      }
+    ]
+  },
+  "iterations": {
+    "by_module": {},
+    "by_stage": {
+      "view_inference": 1,
+      "view_refinement": 1,
+      "inv_inference": 1,
+      "spec_inference": 1,
+      "proof_generation": 1
+    }
+  },
+  "repairs": {
+    "total_rounds": 5,
+    "total_repairs": 5,
+    "repairs_by_type": {
+      "Other": 4,
+      "CannotCallFunc": 1
+    },
+    "repairs_by_heuristic": {
+      "repair_syntax": 4,
+      "repair_mode": 1
+    },
+    "successful_repairs": 1,
+    "failed_repairs": 4,
+    "repair_times": [
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 99.56287693977356,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 96.07005786895752,
+        "success": true,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 187.19355463981628,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 232.22548532485962,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "CannotCallFunc",
+        "heuristic": "repair_mode",
+        "time": 600.6470723152161,
+        "success": false,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      }
+    ]
+  },
+  "errors": {
+    "initial_error_count": 999,
+    "final_error_count": 999,
+    "errors_by_type": {
+      "Other": 7
+    },
+    "errors_fixed_by_type": {
+      "Other": 1
+    }
+  },
+  "verification": {
+    "initial_verified": -1,
+    "final_verified": -1,
+    "initial_errors": 999,
+    "final_errors": 999,
+    "compilation_errors": 1
+  },
+  "code_metrics": {
+    "initial_code_length": 4451,
+    "final_code_length": 8004,
+    "code_changes": 3553
+  }
+}

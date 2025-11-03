@@ -1,0 +1,160 @@
+Failed assertion
+```
+            assert(forall|i: int| 0 <= i && i < n+1 ==> v[i] == v1[length - i - 1]);
+```
+
+Code
+```
+use vstd::prelude::*;
+
+verus! {
+
+/// This module provides basic vector algorithms with specifications suitable for formal verification.
+///
+/// - `binary_search`: Performs a binary search on a sorted vector to find the index of a given key. The vector must be sorted in ascending order and the key must be present in the vector.
+/// - `reverse`: Reverses the elements of a vector in place, with postconditions about the resulting order.
+/// - `binary_search_no_spinoff`: Variant of binary search with loop isolation disabled for verification purposes.
+
+fn binary_search(v: &Vec<u64>, k: u64) -> (r: usize)
+    requires
+        v@.len() > 0,
+        forall|i: int, j: int| 0 <= i && i <= j && j < v@.len() ==> v@[i] <= v@[j],
+        exists|i: int| 0 <= i && i < v@.len() && v@[i] == k
+    ensures
+        r < v@.len(),
+        v@[r as int] == k
+{
+    let mut i1: usize = 0;
+    let mut i2: usize = v.len() - 1;
+    while i1 != i2
+        invariant
+            0 <= i1 && i1 <= i2 && i2 < v.len(),
+            forall|x: int, y: int|
+                0 <= x && x <= y && y < v@.len() ==> v@[x] <= v@[y],
+            exists|m: int|
+                0 <= m && m < v@.len()
+                && i1 as int <= m <= i2 as int
+                && v@[m] == k,
+        decreases i2 - i1
+    {
+        let ix = i1 + (i2 - i1) / 2;
+        if v[ix] < k {
+            i1 = ix + 1;
+        } else {
+            i2 = ix;
+        }
+    }
+    i1
+}
+
+/// Reverses the elements of a vector in place.
+fn reverse(v: &mut Vec<u64>)
+    requires
+        old(v)@.len() <= usize::MAX
+    ensures
+        v@.len() == old(v)@.len(),
+        forall|i: int| 0 <= i && i < v@.len() ==> v@[i] == old(v)@[v@.len() - i - 1]
+{
+    let length = v.len();
+    let ghost v1 = v@;
+
+    for n in 0..(length / 2)
+        invariant
+            length == v.len(),
+            forall|i: int| 0 <= i && i < n ==> v[i] == v1[length - i - 1],
+    {
+        let x = v[n];
+        let y = v[length - 1 - n];
+        v.set(n, y);
+        v.set(length - 1 - n, x);
+        proof {
+            assert(forall|i: int| 0 <= i && i < n+1 ==> v[i] == v1[length - i - 1]);
+        }
+    }
+
+    proof {
+        assert(forall|i: int| 0 <= i && i < length / 2 ==> v[i] == v1[length - i - 1]);
+        assert(forall|i: int| 0 <= i && i < length / 2 ==> v[length - i - 1] == v1[i]);
+        assert forall|i: int| 0 <= i && i < length ==> v[i] == v1[length - i - 1] by {
+            if i < length / 2 {
+            } else {
+                let j = length - i - 1;
+                assert(0 <= j && j < length / 2);
+            }
+        };
+    }
+}
+
+#[verifier::loop_isolation(false)]
+fn binary_search_no_spinoff(v: &Vec<u64>, k: u64) -> (r: usize)
+    requires
+        v@.len() > 0,
+        forall|i: int, j: int| 0 <= i && i <= j && j < v@.len() ==> v@[i] <= v@[j],
+        exists|i: int| 0 <= i && i < v@.len() && v@[i] == k
+    ensures
+        r < v@.len(),
+        v@[r as int] == k
+{
+    let mut i1: usize = 0;
+    let mut i2: usize = v.len() - 1;
+    while i1 != i2
+        invariant
+            0 <= i1 && i1 <= i2 && i2 < v.len(),
+            forall|x: int, y: int|
+                0 <= x && x <= y && y < v@.len() ==> v@[x] <= v@[y],
+            exists|m: int|
+                0 <= m && m < v@.len()
+                && i1 as int <= m <= i2 as int
+                && v@[m] == k,
+        decreases i2 - i1
+    {
+        let ghost d = i2 - i1;
+        let ix = i1 + (i2 - i1) / 2;
+        if v[ix] < k {
+            i1 = ix + 1;
+        } else {
+            i2 = ix;
+        }
+        assert(i2 - i1 < d);
+    }
+    i1
+}
+
+fn binary_search_test(t: Vec<u64>)
+requires
+    t.len() > 0,
+    t.len() < u64::MAX - 1 as usize,
+    forall|i: int, j: int| 0 <= i && i <= j && j < t.len() ==> t[i] <= t[j]
+{
+    for i in 0 .. t.len()
+    invariant
+        forall|x: int, y: int| 0 <= x && x <= y && y < t.len() ==> t[x] <= t[y],
+    {
+        let k = t[i];
+        let r = binary_search(&t, k);
+        assert(r < t.len());
+        assert(t[r as int] == k);
+        let r = binary_search_no_spinoff(&t, k);
+        assert(r < t.len());
+        assert(t[r as int] == k);
+    }
+}
+
+fn reverse_test(t: &mut Vec<u64>)
+requires
+    old(t).len() > 0,
+    old(t).len() < u64::MAX - 1 as usize
+{
+    let ghost t1 = t@;
+    reverse(t);
+    assert(t.len() == t1.len());
+    assert(forall|i: int| 0 <= i && i < t1.len() ==> t[i] == t1[t1.len() - i - 1]);
+}
+
+pub fn test() {
+}
+
+pub fn main() {
+}
+
+} // verus!```

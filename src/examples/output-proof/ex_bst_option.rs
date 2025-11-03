@@ -1,0 +1,170 @@
+#![cfg_attr(verus_keep_ghost, verifier::exec_allows_no_decreases_clause)]
+use vstd::prelude::*;
+fn main() {}
+
+verus! {
+
+/// Example demonstrating correct patterns for Option types and tree-like data structures
+/// Key patterns illustrated:
+/// 1. Correct Option methods: is_none(), is_some(), unwrap() (NOT is_None, get_Some_0)
+/// 2. Correct old() placement: *old(ptr) (NOT old(*ptr))
+/// 3. Ensures clauses: inline expressions (NO let...in syntax)
+/// 4. When no View trait: use explicit .to_map() calls (NOT self@)
+
+pub struct TreeNode<T> {
+    pub id: u64,
+    pub data: T,
+    pub left: Option<Box<TreeNode<T>>>,
+    pub right: Option<Box<TreeNode<T>>>,
+}
+
+impl<T> TreeNode<T> {
+    /// Spec function to convert tree to map (NO View trait, so use explicit calls)
+    pub closed spec fn to_map(self) -> Map<u64, T>
+        decreases self,
+    {
+        TreeNode::<T>::opt_to_map(self.left)
+            .union_prefer_right(TreeNode::<T>::opt_to_map(self.right))
+            .insert(self.id, self.data)
+    }
+
+    pub closed spec fn opt_to_map(tree_opt: Option<Box<TreeNode<T>>>) -> Map<u64, T>
+        decreases tree_opt,
+    {
+        match tree_opt {
+            None => Map::empty(),
+            Some(tree) => tree.to_map(),
+        }
+    }
+
+    pub closed spec fn is_valid(self) -> bool
+        decreases self
+    {
+        &&& (forall |elem| TreeNode::<T>::opt_to_map(self.left).dom().contains(elem) ==> elem < self.id)
+        &&& (forall |elem| TreeNode::<T>::opt_to_map(self.right).dom().contains(elem) ==> elem > self.id)
+        &&& (match self.left {
+            Some(left_child) => left_child.is_valid(),
+            None => true,
+        })
+        &&& (match self.right {
+            Some(right_child) => right_child.is_valid(),
+            None => true,
+        })
+    }
+
+    /// CORRECT PATTERN: Option methods and ensures clauses
+    pub fn add_to_optional(ptr: &mut Option<Box<TreeNode<T>>>, id: u64, data: T)
+        requires
+            // ✅ CORRECT: Use is_some() and unwrap() (lowercase, standard Rust)
+            old(ptr).is_some() ==> old(ptr).unwrap().is_valid(),
+        ensures
+            // ✅ CORRECT: Use is_some() and unwrap()
+            ptr.is_some() ==> ptr.unwrap().is_valid(),
+            // ✅ CORRECT: *old(ptr) not old(*ptr)
+            // ✅ CORRECT: Inline expression, no let...in
+            TreeNode::<T>::opt_to_map(*ptr) =~=
+                TreeNode::<T>::opt_to_map(*old(ptr)).insert(id, data)
+    {
+        // ✅ CORRECT: is_none() method (lowercase)
+        if ptr.is_none() {
+            *ptr = Some(Box::new(TreeNode::<T> {
+                id: id,
+                data: data,
+                left: None,
+                right: None,
+            }));
+        } else {
+            let mut tmp = None;
+            std::mem::swap(&mut tmp, ptr);
+            let mut boxed = tmp.unwrap();
+            (&mut *boxed).add(id, data);
+            *ptr = Some(boxed);
+        }
+    }
+
+    /// CORRECT PATTERN: Ensures with explicit method calls (no View trait)
+    pub fn add(&mut self, id: u64, data: T)
+        requires
+            old(self).is_valid(),
+        ensures
+            self.is_valid(),
+            // ✅ CORRECT: Use .to_map() explicitly (no View trait, so no @)
+            self.to_map() =~= old(self).to_map().insert(id, data),
+    {
+        if id == self.id {
+            self.data = data;
+
+            // ========== INFERRED PROOF ==========
+            proof {
+                assert(!TreeNode::<T>::opt_to_map(self.left).dom().contains(id));
+                assert(!TreeNode::<T>::opt_to_map(self.right).dom().contains(id));
+            }
+            // ====================================
+        } else if id < self.id {
+            Self::add_to_optional(&mut self.left, id, data);
+
+            // ========== INFERRED PROOF ==========
+            proof {
+                assert(!TreeNode::<T>::opt_to_map(self.right).dom().contains(id));
+            }
+            // ====================================
+        } else {
+            Self::add_to_optional(&mut self.right, id, data);
+
+            // ========== INFERRED PROOF ==========
+            proof {
+                assert(!TreeNode::<T>::opt_to_map(self.left).dom().contains(id));
+            }
+            // ====================================
+        }
+    }
+
+    /// CORRECT PATTERN: Complex ensures without let...in
+    pub fn remove_max(ptr: &mut Option<Box<TreeNode<T>>>) -> (result: (u64, T))
+        requires
+            // ✅ CORRECT: is_some() and unwrap()
+            old(ptr).is_some(),
+            old(ptr).unwrap().is_valid(),
+        ensures
+            ptr.is_some() ==> ptr.unwrap().is_valid(),
+            // ✅ CORRECT: *old(ptr) not old(*ptr)
+            // ✅ CORRECT: Inline all expressions, NO let...in syntax
+            TreeNode::<T>::opt_to_map(*ptr) =~=
+                TreeNode::<T>::opt_to_map(*old(ptr)).remove(result.0),
+            TreeNode::<T>::opt_to_map(*old(ptr)).dom().contains(result.0),
+            TreeNode::<T>::opt_to_map(*old(ptr))[result.0] == result.1,
+            forall |elem| TreeNode::<T>::opt_to_map(*old(ptr)).dom().contains(elem) ==>
+                result.0 >= elem,
+    {
+        let mut tmp = None;
+        std::mem::swap(&mut tmp, ptr);
+        let mut boxed = tmp.unwrap();
+
+        // ✅ CORRECT: is_none() method
+        if boxed.right.is_none() {
+            *ptr = boxed.left;
+
+            // ========== INFERRED PROOF ==========
+            proof {
+                assert(TreeNode::<T>::opt_to_map(boxed.right) =~= Map::empty());
+                assert(!TreeNode::<T>::opt_to_map(boxed.left).dom().contains(boxed.id));
+            }
+            // ====================================
+
+            return (boxed.id, boxed.data);
+        } else {
+            let (max_id, max_data) = TreeNode::<T>::remove_max(&mut boxed.right);
+
+            // ========== INFERRED PROOF ==========
+            proof {
+                assert(!TreeNode::<T>::opt_to_map(boxed.left).dom().contains(max_id));
+            }
+            // ====================================
+
+            *ptr = Some(boxed);
+            return (max_id, max_data);
+        }
+    }
+}
+
+}

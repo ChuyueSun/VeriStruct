@@ -1,0 +1,82 @@
+================================================================================
+VerusAgent Statistics Report - node_todo
+================================================================================
+
+EXECUTION SUMMARY
+--------------------------------------------------------------------------------
+Benchmark: node_todo
+Start Time: 2025-10-29T00:49:47.148730
+End Time: 2025-10-29T01:09:26.405152
+Total Execution Time: 1179.26s
+Verification Success: No
+
+MODULE ACTIVATION
+--------------------------------------------------------------------------------
+Total Modules Activated: 3
+Modules: inv_inference, spec_inference, proof_generation
+
+LLM CALLS
+--------------------------------------------------------------------------------
+Total LLM Calls: 11
+Average Response Time: 106.45s
+Cache Hit Rate: 9.09%
+
+Calls by Stage:
+  inv_inference: 1
+  planning: 1
+  repair: 6
+  spec_inference: 3
+
+ITERATIONS
+--------------------------------------------------------------------------------
+Iterations by Module:
+
+REPAIRS
+--------------------------------------------------------------------------------
+Total Repair Rounds: 5
+Total Repairs: 8
+Successful Repairs: 3
+Failed Repairs: 5
+Success Rate: 37.50%
+
+Repairs by Error Type:
+  AssertFail: 3
+  Other: 2
+  PreCondFail: 3
+
+Repairs by Heuristic:
+  repair_assertion: 3
+  repair_precond: 3
+  repair_syntax: 2
+
+ERROR TRACKING
+--------------------------------------------------------------------------------
+Initial Errors: 999
+Final Errors: 4
+Errors Fixed: 995
+
+Initial Errors by Type:
+  Other: 1
+
+STAGE DETAILS
+--------------------------------------------------------------------------------
+
+inv_inference (Step 1)
+  Execution Time: 109.51s
+  LLM Calls: 1
+  Iterations: 1
+  Result: Verified=7, Errors=4
+
+spec_inference (Step 2)
+  Execution Time: 360.67s
+  LLM Calls: 3
+  Iterations: 1
+  Result: Verified=7, Errors=4
+
+proof_generation (Step 3)
+  Execution Time: 0.01s
+  LLM Calls: 0
+  Iterations: 1
+  Result: Verified=7, Errors=4
+
+================================================================================

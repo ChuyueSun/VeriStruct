@@ -1,0 +1,70 @@
+{
+  "benchmark_name": "option_todo",
+  "start_time": "2025-10-11T22:55:07.533874",
+  "end_time": "2025-10-11T22:56:34.616914",
+  "total_execution_time": 87.08304142951965,
+  "modules_activated": [
+    "baseline"
+  ],
+  "modules_count": 1,
+  "stages": {
+    "baseline": {
+      "step_number": 1,
+      "start_time": "2025-10-11T22:55:08.364024",
+      "end_time": "2025-10-11T22:56:34.607848",
+      "execution_time": 86.24382734298706,
+      "llm_calls": 0,
+      "iterations": 1,
+      "result": {
+        "compilation_error": false,
+        "verified": 8,
+        "errors": 0,
+        "verus_errors": 0,
+        "is_correct": true
+      }
+    }
+  },
+  "llm_calls": {
+    "total": 0,
+    "by_stage": {},
+    "by_module": {},
+    "response_times": [],
+    "cache_hits": 0,
+    "cache_misses": 0
+  },
+  "iterations": {
+    "by_module": {},
+    "by_stage": {
+      "baseline": 1
+    }
+  },
+  "repairs": {
+    "total_rounds": 0,
+    "total_repairs": 0,
+    "repairs_by_type": {},
+    "repairs_by_heuristic": {},
+    "successful_repairs": 0,
+    "failed_repairs": 0,
+    "repair_times": []
+  },
+  "errors": {
+    "initial_error_count": 999,
+    "final_error_count": 0,
+    "errors_by_type": {
+      "Other": 4
+    },
+    "errors_fixed_by_type": {}
+  },
+  "verification": {
+    "initial_verified": -1,
+    "final_verified": 8,
+    "initial_errors": 999,
+    "final_errors": 0,
+    "compilation_errors": 0
+  },
+  "code_metrics": {
+    "initial_code_length": 3117,
+    "final_code_length": 3530,
+    "code_changes": 413
+  }
+}

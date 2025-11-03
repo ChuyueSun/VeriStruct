@@ -1,0 +1,15 @@
+{
+  "benchmark": "transfer_todo",
+  "execution_time": 26.99826216697693,
+  "modules_activated": 1,
+  "total_llm_calls": 2,
+  "avg_response_time": 12.03909170627594,
+  "cache_hit_rate": 50.0,
+  "total_repair_rounds": 0,
+  "total_repairs": 0,
+  "repair_success_rate": 0,
+  "initial_errors": 2,
+  "final_errors": 0,
+  "errors_fixed": 2,
+  "verification_success": true
+}

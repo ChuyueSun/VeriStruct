@@ -1,0 +1,38 @@
+{
+  "full_pipeline": [
+    {
+      "benchmark": "invariants_todo",
+      "configuration": "full_pipeline",
+      "success": true,
+      "timeout": false,
+      "exit_code": 0,
+      "execution_time": 126.13898515701294,
+      "log_file": "output/repair_experiments/repair_experiment_20251011_225244/full_pipeline/invariants_todo/output.log",
+      "output_dir": "output/repair_experiments/repair_experiment_20251011_225244/full_pipeline/invariants_todo"
+    }
+  ],
+  "no_repairs": [
+    {
+      "benchmark": "invariants_todo",
+      "configuration": "no_repairs",
+      "success": true,
+      "timeout": false,
+      "exit_code": 0,
+      "execution_time": 92.48193788528442,
+      "log_file": "output/repair_experiments/repair_experiment_20251011_225244/no_repairs/invariants_todo/output.log",
+      "output_dir": "output/repair_experiments/repair_experiment_20251011_225244/no_repairs/invariants_todo"
+    }
+  ],
+  "baseline": [
+    {
+      "benchmark": "invariants_todo",
+      "configuration": "baseline",
+      "success": true,
+      "timeout": false,
+      "exit_code": 0,
+      "execution_time": 42.64268159866333,
+      "log_file": "output/repair_experiments/repair_experiment_20251011_225244/baseline/invariants_todo/output.log",
+      "output_dir": "output/repair_experiments/repair_experiment_20251011_225244/baseline/invariants_todo"
+    }
+  ]
+}

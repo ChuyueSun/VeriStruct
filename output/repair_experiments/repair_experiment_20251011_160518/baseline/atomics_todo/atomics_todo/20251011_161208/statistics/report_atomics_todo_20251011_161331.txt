@@ -1,0 +1,60 @@
+================================================================================
+VerusAgent Statistics Report - atomics_todo
+================================================================================
+
+EXECUTION SUMMARY
+--------------------------------------------------------------------------------
+Benchmark: atomics_todo
+Start Time: 2025-10-11T16:12:08.070266
+End Time: 2025-10-11T16:13:31.768308
+Total Execution Time: 83.70s
+Verification Success: Yes
+
+MODULE ACTIVATION
+--------------------------------------------------------------------------------
+Total Modules Activated: 1
+Modules: baseline
+
+LLM CALLS
+--------------------------------------------------------------------------------
+Total LLM Calls: 0
+Average Response Time: 0.00s
+Cache Hit Rate: 0.00%
+
+Calls by Stage:
+
+ITERATIONS
+--------------------------------------------------------------------------------
+Iterations by Module:
+
+REPAIRS
+--------------------------------------------------------------------------------
+Total Repair Rounds: 0
+Total Repairs: 0
+Successful Repairs: 0
+Failed Repairs: 0
+Success Rate: 0.00%
+
+Repairs by Error Type:
+
+Repairs by Heuristic:
+
+ERROR TRACKING
+--------------------------------------------------------------------------------
+Initial Errors: 999
+Final Errors: 0
+Errors Fixed: 999
+
+Initial Errors by Type:
+  Other: 2
+
+STAGE DETAILS
+--------------------------------------------------------------------------------
+
+baseline (Step 1)
+  Execution Time: 82.88s
+  LLM Calls: 0
+  Iterations: 1
+  Result: Verified=5, Errors=0
+
+================================================================================

@@ -1,0 +1,87 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/bitmap_todo.rs
+Input File Name: bitmap_todo.rs
+File ID: bitmap_todo__Map_General_20251030_083745
+Output Directory: /home/chuyue/VerusAgent/output/bitmap_todo/20251030_083745
+Progress Log: /home/chuyue/VerusAgent/output/bitmap_todo/20251030_083745/progress_logs/progress_bitmap_todo_20251030_083745.json
+Summary File: /home/chuyue/VerusAgent/output/bitmap_todo/20251030_083745/progress_logs/summary_bitmap_todo_20251030_083745.txt
+
+Start time: 2025-10-30T08:37:45.864331
+End time: 2025-10-30T09:06:40.286545
+Total execution time: 1734.42s
+
+## Final Result
+
+Verified: 8
+Errors: 0
+Verus Errors: 0
+Compilation Error: False
+Is Correct: True
+
+## Statistics
+
+Total steps: 5
+Total repair rounds: 4
+Total repairs attempted: 6
+Successful repairs: 4
+Average step time: 205.58s
+Average repair time: 117.50s
+
+## Steps
+
+Step 1: view_inference
+  Time: 171.52s
+  Score: Verified=4, Errors=4, Verus Errors=8
+Step 2: view_refinement
+  Time: 110.83s
+  Score: Verified=4, Errors=4, Verus Errors=8
+Step 3: inv_inference
+  Time: 106.21s
+  Score: Verified=4, Errors=4, Verus Errors=8
+Step 4: spec_inference
+  Time: 479.26s
+  Score: Verified=5, Errors=3, Verus Errors=5
+Step 5: proof_generation
+  Time: 160.07s
+  Score: Verified=-1, Errors=999, Verus Errors=1
+
+## Repair Rounds
+
+Round 1
+  Time: 112.28s
+  repair_syntax for Other
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=7, Errors=1, Verus Errors=4
+    Time: 111.66s
+
+Round 2
+  Time: 560.37s
+  repair_precond for PreCondFailVecLen
+    Before: Verified=7, Errors=1, Verus Errors=4
+    After: Verified=7, Errors=1, Verus Errors=1
+    Time: 96.61s
+  repair_invariant for InvFailEnd
+    Before: Verified=7, Errors=1, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 98.44s
+  repair_assertion for AssertFail
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 365.32s
+
+Round 3
+  Time: 1.24s
+  repair_syntax for Other
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=7, Errors=1, Verus Errors=1
+    Time: 1.24s
+
+Round 4
+  Time: 31.75s
+  repair_assertion for AssertFail
+    Before: Verified=7, Errors=1, Verus Errors=1
+    After: Verified=8, Errors=0, Verus Errors=0
+    Time: 31.75s

@@ -1,0 +1,227 @@
+{
+  "start_time": "2025-11-01T04:32:31.623836",
+  "steps": [
+    {
+      "name": "inv_inference",
+      "number": 1,
+      "start_time": "2025-11-01T04:32:32.651147",
+      "result": {
+        "compilation_error": false,
+        "verified": 7,
+        "errors": 4,
+        "verus_errors": 13,
+        "is_correct": false,
+        "code_length": 11277
+      },
+      "execution_time": 3.227012872695923,
+      "end_time": "2025-11-01T04:32:35.878170"
+    },
+    {
+      "name": "spec_inference",
+      "number": 2,
+      "start_time": "2025-11-01T04:32:35.878371",
+      "result": {
+        "compilation_error": false,
+        "verified": 8,
+        "errors": 3,
+        "verus_errors": 3,
+        "is_correct": false,
+        "code_length": 12695
+      },
+      "execution_time": 141.95755910873413,
+      "end_time": "2025-11-01T04:34:57.835937"
+    },
+    {
+      "name": "proof_generation",
+      "number": 3,
+      "start_time": "2025-11-01T04:34:57.836062",
+      "result": {
+        "compilation_error": false,
+        "verified": 8,
+        "errors": 3,
+        "verus_errors": 3,
+        "is_correct": false,
+        "code_length": 12695
+      },
+      "execution_time": 0.00884103775024414,
+      "end_time": "2025-11-01T04:34:57.844907"
+    }
+  ],
+  "repair_rounds": [
+    {
+      "round_number": 1,
+      "start_time": "2025-11-01T04:34:57.845072",
+      "repairs": [
+        {
+          "error_type": "PostCondFail",
+          "repair_module": "repair_postcond",
+          "before_score": {
+            "compilation_error": false,
+            "verified": 8,
+            "errors": 3,
+            "verus_errors": 3
+          },
+          "after_score": {
+            "compilation_error": false,
+            "verified": 8,
+            "errors": 3,
+            "verus_errors": 3
+          },
+          "success": false,
+          "execution_time": 110.79464483261108
+        }
+      ],
+      "end_time": "2025-11-01T04:36:48.640619",
+      "execution_time": 110.795547
+    },
+    {
+      "round_number": 2,
+      "start_time": "2025-11-01T04:36:48.649157",
+      "repairs": [
+        {
+          "error_type": "AssertFail",
+          "repair_module": "repair_assertion",
+          "before_score": {
+            "compilation_error": false,
+            "verified": 8,
+            "errors": 3,
+            "verus_errors": 3
+          },
+          "after_score": {
+            "compilation_error": false,
+            "verified": 8,
+            "errors": 3,
+            "verus_errors": 3
+          },
+          "success": false,
+          "execution_time": 48.49766516685486
+        },
+        {
+          "error_type": "PostCondFail",
+          "repair_module": "repair_postcond",
+          "before_score": {
+            "compilation_error": false,
+            "verified": 8,
+            "errors": 3,
+            "verus_errors": 3
+          },
+          "after_score": {
+            "compilation_error": false,
+            "verified": 8,
+            "errors": 3,
+            "verus_errors": 3
+          },
+          "success": false,
+          "execution_time": 103.83930826187134
+        }
+      ],
+      "end_time": "2025-11-01T04:39:20.987788",
+      "execution_time": 152.338631
+    },
+    {
+      "round_number": 3,
+      "start_time": "2025-11-01T04:39:20.996090",
+      "repairs": [
+        {
+          "error_type": "AssertFail",
+          "repair_module": "repair_assertion",
+          "before_score": {
+            "compilation_error": false,
+            "verified": 8,
+            "errors": 3,
+            "verus_errors": 3
+          },
+          "after_score": {
+            "compilation_error": false,
+            "verified": 8,
+            "errors": 3,
+            "verus_errors": 3
+          },
+          "success": false,
+          "execution_time": 46.0170202255249
+        },
+        {
+          "error_type": "PostCondFail",
+          "repair_module": "repair_postcond",
+          "before_score": {
+            "compilation_error": false,
+            "verified": 8,
+            "errors": 3,
+            "verus_errors": 3
+          },
+          "after_score": {
+            "compilation_error": false,
+            "verified": 8,
+            "errors": 3,
+            "verus_errors": 3
+          },
+          "success": false,
+          "execution_time": 108.96692967414856
+        }
+      ],
+      "end_time": "2025-11-01T04:41:55.981885",
+      "execution_time": 154.985795
+    },
+    {
+      "round_number": 4,
+      "start_time": "2025-11-01T04:41:55.990151",
+      "repairs": [
+        {
+          "error_type": "AssertFail",
+          "repair_module": "repair_assertion",
+          "before_score": {
+            "compilation_error": false,
+            "verified": 8,
+            "errors": 3,
+            "verus_errors": 3
+          },
+          "after_score": {
+            "compilation_error": false,
+            "verified": 8,
+            "errors": 3,
+            "verus_errors": 3
+          },
+          "success": false,
+          "execution_time": 53.23130774497986
+        }
+      ],
+      "end_time": "2025-11-01T04:42:49.222364",
+      "execution_time": 53.232213
+    },
+    {
+      "round_number": 5,
+      "start_time": "2025-11-01T04:42:49.231130",
+      "repairs": [
+        {
+          "error_type": "AssertFail",
+          "repair_module": "repair_assertion",
+          "before_score": {
+            "compilation_error": false,
+            "verified": 8,
+            "errors": 3,
+            "verus_errors": 3
+          },
+          "after_score": {
+            "compilation_error": false,
+            "verified": 8,
+            "errors": 3,
+            "verus_errors": 3
+          },
+          "success": false,
+          "execution_time": 0.3542182445526123
+        }
+      ],
+      "end_time": "2025-11-01T04:42:49.586047",
+      "execution_time": 0.354917
+    }
+  ],
+  "final_result": {
+    "compilation_error": false,
+    "verified": 8,
+    "errors": 3,
+    "verus_errors": 3,
+    "is_correct": false
+  },
+  "total_execution_time": 617.972453,
+  "end_time": "2025-11-01T04:42:49.596289"
+}

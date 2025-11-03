@@ -1,0 +1,86 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/rb_type_invariant_todo.rs
+Input File Name: rb_type_invariant_todo.rs
+File ID: rb_type_invariant_todo__RB_TypeInv_20251029_010518
+Output Directory: /home/chuyue/VerusAgent/output/rb_type_invariant_todo/20251029_010518/rb_type_invariant_todo/20251029_010518
+Progress Log: /home/chuyue/VerusAgent/output/rb_type_invariant_todo/20251029_010518/rb_type_invariant_todo/20251029_010518/progress_logs/progress_rb_type_invariant_todo_20251029_010518.json
+Summary File: /home/chuyue/VerusAgent/output/rb_type_invariant_todo/20251029_010518/rb_type_invariant_todo/20251029_010518/progress_logs/summary_rb_type_invariant_todo_20251029_010518.txt
+
+Start time: 2025-10-29T01:05:18.438550
+End time: 2025-10-29T01:29:28.386303
+Total execution time: 1449.95s
+
+## Final Result
+
+Verified: 3
+Errors: 7
+Verus Errors: 17
+Compilation Error: False
+Is Correct: False
+
+## Statistics
+
+Total steps: 5
+Total repair rounds: 5
+Total repairs attempted: 5
+Successful repairs: 2
+Average step time: 228.44s
+Average repair time: 61.28s
+
+## Steps
+
+Step 1: view_inference
+  Time: 1.60s
+  Score: Verified=-1, Errors=999, Verus Errors=1
+Step 2: view_refinement
+  Time: 316.27s
+  Score: Verified=-1, Errors=999, Verus Errors=1
+Step 3: inv_inference
+  Time: 350.93s
+  Score: Verified=3, Errors=7, Verus Errors=26
+Step 4: spec_inference
+  Time: 358.57s
+  Score: Verified=3, Errors=7, Verus Errors=24
+Step 5: proof_generation
+  Time: 114.83s
+  Score: Verified=-1, Errors=999, Verus Errors=2
+
+## Repair Rounds
+
+Round 1
+  Time: 105.82s
+  repair_syntax for Other
+    Before: Verified=-1, Errors=999, Verus Errors=2
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 105.82s
+
+Round 2
+  Time: 93.68s
+  repair_syntax for Other
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=2
+    Time: 93.68s
+
+Round 3
+  Time: 0.34s
+  repair_type for MismatchedType
+    Before: Verified=-1, Errors=999, Verus Errors=2
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 0.34s
+
+Round 4
+  Time: 0.33s
+  repair_type for MismatchedType
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 0.33s
+
+Round 5
+  Time: 106.75s
+  repair_syntax for Other
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 106.25s

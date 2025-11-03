@@ -1,0 +1,2133 @@
+{
+  "all_results": [
+    {
+      "experiment": "repair_experiment_20251009_212826",
+      "file": "checkpoint_best_atomics_todo___General_20251009_212826.rs",
+      "stage_num": 11,
+      "stage_name": "Checkpoint Best",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251009_212826/full_pipeline/atomics_todo/atomics_todo/20251009_212826/checkpoint_best_atomics_todo___General_20251009_212826.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251009_212826",
+      "file": "final_result_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251009_212826/full_pipeline/atomics_todo/atomics_todo/20251009_212826/final_result_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251009_212826",
+      "file": "final_result_atomics_todo___General_20251009_212826.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251009_212826/full_pipeline/atomics_todo/atomics_todo/20251009_212826/final_result_atomics_todo___General_20251009_212826.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251009_212826",
+      "file": "02_spec_inference_atomics_todo___General_20251009_212826.rs",
+      "stage_num": 2,
+      "stage_name": "Spec Inference",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251009_212826/full_pipeline/atomics_todo/atomics_todo/20251009_212826/02_spec_inference_atomics_todo___General_20251009_212826.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251009_212826",
+      "file": "01_inv_inference_atomics_todo___General_20251009_212826.rs",
+      "stage_num": 1,
+      "stage_name": "Inv Inference",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251009_212826/full_pipeline/atomics_todo/atomics_todo/20251009_212826/01_inv_inference_atomics_todo___General_20251009_212826.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251009_212826",
+      "file": "final_result.rs",
+      "stage_num": 13,
+      "stage_name": "Final Result",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251009_212826/full_pipeline/atomics_todo/atomics_todo/20251009_212826/final_result.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251009_212826",
+      "file": "preprocessed.rs",
+      "stage_num": 0,
+      "stage_name": "Preprocessed",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251009_212826/full_pipeline/atomics_todo/atomics_todo/20251009_212826/preprocessed.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251009_212826",
+      "file": "03_proof_generation_atomics_todo___General_20251009_212826.rs",
+      "stage_num": 3,
+      "stage_name": "Proof Generation",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251009_212826/full_pipeline/atomics_todo/atomics_todo/20251009_212826/03_proof_generation_atomics_todo___General_20251009_212826.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251009_212826",
+      "file": "best_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251009_212826/full_pipeline/atomics_todo/atomics_todo/20251009_212826/best/best_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251009_212826",
+      "file": "best.rs",
+      "stage_num": 12,
+      "stage_name": "Best",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251009_212826/full_pipeline/atomics_todo/atomics_todo/20251009_212826/best/best.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251009_212826",
+      "file": "best_atomics_todo___General_20251009_212826.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251009_212826/full_pipeline/atomics_todo/atomics_todo/20251009_212826/best/best_atomics_todo___General_20251009_212826.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_150029",
+      "file": "final_result_atomics_todo___General_20251010_150029.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_150029/full_pipeline/atomics_todo/atomics_todo/20251010_150029/final_result_atomics_todo___General_20251010_150029.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_150029",
+      "file": "final_result_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_150029/full_pipeline/atomics_todo/atomics_todo/20251010_150029/final_result_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_150029",
+      "file": "checkpoint_best_atomics_todo___General_20251010_150029.rs",
+      "stage_num": 11,
+      "stage_name": "Checkpoint Best",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_150029/full_pipeline/atomics_todo/atomics_todo/20251010_150029/checkpoint_best_atomics_todo___General_20251010_150029.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_150029",
+      "file": "02_spec_inference_atomics_todo___General_20251010_150029.rs",
+      "stage_num": 2,
+      "stage_name": "Spec Inference",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_150029/full_pipeline/atomics_todo/atomics_todo/20251010_150029/02_spec_inference_atomics_todo___General_20251010_150029.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_150029",
+      "file": "final_result.rs",
+      "stage_num": 13,
+      "stage_name": "Final Result",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_150029/full_pipeline/atomics_todo/atomics_todo/20251010_150029/final_result.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_150029",
+      "file": "03_proof_generation_atomics_todo___General_20251010_150029.rs",
+      "stage_num": 3,
+      "stage_name": "Proof Generation",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_150029/full_pipeline/atomics_todo/atomics_todo/20251010_150029/03_proof_generation_atomics_todo___General_20251010_150029.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_150029",
+      "file": "preprocessed.rs",
+      "stage_num": 0,
+      "stage_name": "Preprocessed",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_150029/full_pipeline/atomics_todo/atomics_todo/20251010_150029/preprocessed.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_150029",
+      "file": "01_inv_inference_atomics_todo___General_20251010_150029.rs",
+      "stage_num": 1,
+      "stage_name": "Inv Inference",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_150029/full_pipeline/atomics_todo/atomics_todo/20251010_150029/01_inv_inference_atomics_todo___General_20251010_150029.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_150029",
+      "file": "best_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_150029/full_pipeline/atomics_todo/atomics_todo/20251010_150029/best/best_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_150029",
+      "file": "best.rs",
+      "stage_num": 12,
+      "stage_name": "Best",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_150029/full_pipeline/atomics_todo/atomics_todo/20251010_150029/best/best.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_150029",
+      "file": "best_atomics_todo___General_20251010_150029.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_150029/full_pipeline/atomics_todo/atomics_todo/20251010_150029/best/best_atomics_todo___General_20251010_150029.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152426",
+      "file": "checkpoint_best_atomics_todo___General_20251010_152427.rs",
+      "stage_num": 11,
+      "stage_name": "Checkpoint Best",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152426/full_pipeline/atomics_todo/atomics_todo/20251010_152427/checkpoint_best_atomics_todo___General_20251010_152427.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152426",
+      "file": "02_spec_inference_atomics_todo___General_20251010_152427.rs",
+      "stage_num": 2,
+      "stage_name": "Spec Inference",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152426/full_pipeline/atomics_todo/atomics_todo/20251010_152427/02_spec_inference_atomics_todo___General_20251010_152427.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152426",
+      "file": "01_inv_inference_atomics_todo___General_20251010_152427.rs",
+      "stage_num": 1,
+      "stage_name": "Inv Inference",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152426/full_pipeline/atomics_todo/atomics_todo/20251010_152427/01_inv_inference_atomics_todo___General_20251010_152427.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152426",
+      "file": "final_result_atomics_todo___General_20251010_152427.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152426/full_pipeline/atomics_todo/atomics_todo/20251010_152427/final_result_atomics_todo___General_20251010_152427.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152426",
+      "file": "final_result_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152426/full_pipeline/atomics_todo/atomics_todo/20251010_152427/final_result_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152426",
+      "file": "repair_round_3_atomics_todo___General_20251010_152427.rs",
+      "stage_num": 8,
+      "stage_name": "Repair R3",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152426/full_pipeline/atomics_todo/atomics_todo/20251010_152427/repair_round_3_atomics_todo___General_20251010_152427.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152426",
+      "file": "03_repair_syntax_atomics_todo___General_20251010_152427.rs",
+      "stage_num": 4,
+      "stage_name": "Repair Syntax",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152426/full_pipeline/atomics_todo/atomics_todo/20251010_152427/03_repair_syntax_atomics_todo___General_20251010_152427.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152426",
+      "file": "03_proof_generation_atomics_todo___General_20251010_152427.rs",
+      "stage_num": 3,
+      "stage_name": "Proof Generation",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152426/full_pipeline/atomics_todo/atomics_todo/20251010_152427/03_proof_generation_atomics_todo___General_20251010_152427.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152426",
+      "file": "repair_round_2_atomics_todo___General_20251010_152427.rs",
+      "stage_num": 7,
+      "stage_name": "Repair R2",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152426/full_pipeline/atomics_todo/atomics_todo/20251010_152427/repair_round_2_atomics_todo___General_20251010_152427.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152426",
+      "file": "final_result.rs",
+      "stage_num": 13,
+      "stage_name": "Final Result",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152426/full_pipeline/atomics_todo/atomics_todo/20251010_152427/final_result.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152426",
+      "file": "preprocessed.rs",
+      "stage_num": 0,
+      "stage_name": "Preprocessed",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152426/full_pipeline/atomics_todo/atomics_todo/20251010_152427/preprocessed.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152426",
+      "file": "repair_round_1_atomics_todo___General_20251010_152427.rs",
+      "stage_num": 6,
+      "stage_name": "Repair R1",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152426/full_pipeline/atomics_todo/atomics_todo/20251010_152427/repair_round_1_atomics_todo___General_20251010_152427.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152426",
+      "file": "repair_round_4_atomics_todo___General_20251010_152427.rs",
+      "stage_num": 9,
+      "stage_name": "Repair R4",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152426/full_pipeline/atomics_todo/atomics_todo/20251010_152427/repair_round_4_atomics_todo___General_20251010_152427.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152426",
+      "file": "repair_round_5_atomics_todo___General_20251010_152427.rs",
+      "stage_num": 10,
+      "stage_name": "Repair R5",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152426/full_pipeline/atomics_todo/atomics_todo/20251010_152427/repair_round_5_atomics_todo___General_20251010_152427.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152426",
+      "file": "best_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152426/full_pipeline/atomics_todo/atomics_todo/20251010_152427/best/best_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152426",
+      "file": "best_atomics_todo___General_20251010_152427.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152426/full_pipeline/atomics_todo/atomics_todo/20251010_152427/best/best_atomics_todo___General_20251010_152427.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152426",
+      "file": "best.rs",
+      "stage_num": 12,
+      "stage_name": "Best",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152426/full_pipeline/atomics_todo/atomics_todo/20251010_152427/best/best.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152504",
+      "file": "repair_round_2_atomics_todo___General_20251010_152505.rs",
+      "stage_num": 7,
+      "stage_name": "Repair R2",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152504/full_pipeline/atomics_todo/atomics_todo/20251010_152505/repair_round_2_atomics_todo___General_20251010_152505.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152504",
+      "file": "repair_round_3_atomics_todo___General_20251010_152505.rs",
+      "stage_num": 8,
+      "stage_name": "Repair R3",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152504/full_pipeline/atomics_todo/atomics_todo/20251010_152505/repair_round_3_atomics_todo___General_20251010_152505.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152504",
+      "file": "01_inv_inference_atomics_todo___General_20251010_152505.rs",
+      "stage_num": 1,
+      "stage_name": "Inv Inference",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152504/full_pipeline/atomics_todo/atomics_todo/20251010_152505/01_inv_inference_atomics_todo___General_20251010_152505.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152504",
+      "file": "final_result_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152504/full_pipeline/atomics_todo/atomics_todo/20251010_152505/final_result_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152504",
+      "file": "checkpoint_best_atomics_todo___General_20251010_152505.rs",
+      "stage_num": 11,
+      "stage_name": "Checkpoint Best",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152504/full_pipeline/atomics_todo/atomics_todo/20251010_152505/checkpoint_best_atomics_todo___General_20251010_152505.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152504",
+      "file": "02_spec_inference_atomics_todo___General_20251010_152505.rs",
+      "stage_num": 2,
+      "stage_name": "Spec Inference",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152504/full_pipeline/atomics_todo/atomics_todo/20251010_152505/02_spec_inference_atomics_todo___General_20251010_152505.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152504",
+      "file": "repair_round_5_atomics_todo___General_20251010_152505.rs",
+      "stage_num": 10,
+      "stage_name": "Repair R5",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152504/full_pipeline/atomics_todo/atomics_todo/20251010_152505/repair_round_5_atomics_todo___General_20251010_152505.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152504",
+      "file": "repair_round_4_atomics_todo___General_20251010_152505.rs",
+      "stage_num": 9,
+      "stage_name": "Repair R4",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152504/full_pipeline/atomics_todo/atomics_todo/20251010_152505/repair_round_4_atomics_todo___General_20251010_152505.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152504",
+      "file": "final_result_atomics_todo___General_20251010_152505.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152504/full_pipeline/atomics_todo/atomics_todo/20251010_152505/final_result_atomics_todo___General_20251010_152505.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152504",
+      "file": "final_result.rs",
+      "stage_num": 13,
+      "stage_name": "Final Result",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152504/full_pipeline/atomics_todo/atomics_todo/20251010_152505/final_result.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152504",
+      "file": "03_repair_syntax_atomics_todo___General_20251010_152505.rs",
+      "stage_num": 4,
+      "stage_name": "Repair Syntax",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152504/full_pipeline/atomics_todo/atomics_todo/20251010_152505/03_repair_syntax_atomics_todo___General_20251010_152505.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152504",
+      "file": "preprocessed.rs",
+      "stage_num": 0,
+      "stage_name": "Preprocessed",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152504/full_pipeline/atomics_todo/atomics_todo/20251010_152505/preprocessed.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152504",
+      "file": "03_proof_generation_atomics_todo___General_20251010_152505.rs",
+      "stage_num": 3,
+      "stage_name": "Proof Generation",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152504/full_pipeline/atomics_todo/atomics_todo/20251010_152505/03_proof_generation_atomics_todo___General_20251010_152505.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152504",
+      "file": "09_repair_type_atomics_todo___General_20251010_152505.rs",
+      "stage_num": 5,
+      "stage_name": "Repair Type",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152504/full_pipeline/atomics_todo/atomics_todo/20251010_152505/09_repair_type_atomics_todo___General_20251010_152505.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152504",
+      "file": "repair_round_1_atomics_todo___General_20251010_152505.rs",
+      "stage_num": 6,
+      "stage_name": "Repair R1",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152504/full_pipeline/atomics_todo/atomics_todo/20251010_152505/repair_round_1_atomics_todo___General_20251010_152505.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152504",
+      "file": "best_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152504/full_pipeline/atomics_todo/atomics_todo/20251010_152505/best/best_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152504",
+      "file": "best_atomics_todo___General_20251010_152505.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152504/full_pipeline/atomics_todo/atomics_todo/20251010_152505/best/best_atomics_todo___General_20251010_152505.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_152504",
+      "file": "best.rs",
+      "stage_num": 12,
+      "stage_name": "Best",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_152504/full_pipeline/atomics_todo/atomics_todo/20251010_152505/best/best.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_191429",
+      "file": "02_spec_inference_atomics_todo___General_20251010_191430.rs",
+      "stage_num": 2,
+      "stage_name": "Spec Inference",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_191429/full_pipeline/atomics_todo/atomics_todo/20251010_191430/02_spec_inference_atomics_todo___General_20251010_191430.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_191429",
+      "file": "checkpoint_best_atomics_todo___General_20251010_191430.rs",
+      "stage_num": 11,
+      "stage_name": "Checkpoint Best",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_191429/full_pipeline/atomics_todo/atomics_todo/20251010_191430/checkpoint_best_atomics_todo___General_20251010_191430.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_191429",
+      "file": "final_result_atomics_todo___General_20251010_191430.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_191429/full_pipeline/atomics_todo/atomics_todo/20251010_191430/final_result_atomics_todo___General_20251010_191430.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_191429",
+      "file": "final_result_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_191429/full_pipeline/atomics_todo/atomics_todo/20251010_191430/final_result_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_191429",
+      "file": "03_proof_generation_atomics_todo___General_20251010_191430.rs",
+      "stage_num": 3,
+      "stage_name": "Proof Generation",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_191429/full_pipeline/atomics_todo/atomics_todo/20251010_191430/03_proof_generation_atomics_todo___General_20251010_191430.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_191429",
+      "file": "final_result.rs",
+      "stage_num": 13,
+      "stage_name": "Final Result",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_191429/full_pipeline/atomics_todo/atomics_todo/20251010_191430/final_result.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_191429",
+      "file": "preprocessed.rs",
+      "stage_num": 0,
+      "stage_name": "Preprocessed",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_191429/full_pipeline/atomics_todo/atomics_todo/20251010_191430/preprocessed.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_191429",
+      "file": "01_inv_inference_atomics_todo___General_20251010_191430.rs",
+      "stage_num": 1,
+      "stage_name": "Inv Inference",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_191429/full_pipeline/atomics_todo/atomics_todo/20251010_191430/01_inv_inference_atomics_todo___General_20251010_191430.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_191429",
+      "file": "best_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_191429/full_pipeline/atomics_todo/atomics_todo/20251010_191430/best/best_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_191429",
+      "file": "best.rs",
+      "stage_num": 12,
+      "stage_name": "Best",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_191429/full_pipeline/atomics_todo/atomics_todo/20251010_191430/best/best.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_191429",
+      "file": "best_atomics_todo___General_20251010_191430.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_191429/full_pipeline/atomics_todo/atomics_todo/20251010_191430/best/best_atomics_todo___General_20251010_191430.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193705",
+      "file": "06_repair_postcond_atomics_todo___General_20251010_193705.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 5,
+      "errors": 0,
+      "success": true,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193705/full_pipeline/atomics_todo/atomics_todo/20251010_193705/06_repair_postcond_atomics_todo___General_20251010_193705.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193705",
+      "file": "checkpoint_best_atomics_todo___General_20251010_193705.rs",
+      "stage_num": 11,
+      "stage_name": "Checkpoint Best",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193705/full_pipeline/atomics_todo/atomics_todo/20251010_193705/checkpoint_best_atomics_todo___General_20251010_193705.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193705",
+      "file": "02_spec_inference_atomics_todo___General_20251010_193705.rs",
+      "stage_num": 2,
+      "stage_name": "Spec Inference",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193705/full_pipeline/atomics_todo/atomics_todo/20251010_193705/02_spec_inference_atomics_todo___General_20251010_193705.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193705",
+      "file": "repair_round_1_atomics_todo___General_20251010_193705.rs",
+      "stage_num": 6,
+      "stage_name": "Repair R1",
+      "verified": 5,
+      "errors": 0,
+      "success": true,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193705/full_pipeline/atomics_todo/atomics_todo/20251010_193705/repair_round_1_atomics_todo___General_20251010_193705.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193705",
+      "file": "final_result_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 5,
+      "errors": 0,
+      "success": true,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193705/full_pipeline/atomics_todo/atomics_todo/20251010_193705/final_result_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193705",
+      "file": "final_result_atomics_todo___General_20251010_193705.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 5,
+      "errors": 0,
+      "success": true,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193705/full_pipeline/atomics_todo/atomics_todo/20251010_193705/final_result_atomics_todo___General_20251010_193705.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193705",
+      "file": "05_repair_precond_atomics_todo___General_20251010_193705.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 4,
+      "errors": 1,
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193705/full_pipeline/atomics_todo/atomics_todo/20251010_193705/05_repair_precond_atomics_todo___General_20251010_193705.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193705",
+      "file": "final_result.rs",
+      "stage_num": 13,
+      "stage_name": "Final Result",
+      "verified": 5,
+      "errors": 0,
+      "success": true,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193705/full_pipeline/atomics_todo/atomics_todo/20251010_193705/final_result.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193705",
+      "file": "03_proof_generation_atomics_todo___General_20251010_193705.rs",
+      "stage_num": 3,
+      "stage_name": "Proof Generation",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193705/full_pipeline/atomics_todo/atomics_todo/20251010_193705/03_proof_generation_atomics_todo___General_20251010_193705.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193705",
+      "file": "preprocessed.rs",
+      "stage_num": 0,
+      "stage_name": "Preprocessed",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193705/full_pipeline/atomics_todo/atomics_todo/20251010_193705/preprocessed.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193705",
+      "file": "01_inv_inference_atomics_todo___General_20251010_193705.rs",
+      "stage_num": 1,
+      "stage_name": "Inv Inference",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193705/full_pipeline/atomics_todo/atomics_todo/20251010_193705/01_inv_inference_atomics_todo___General_20251010_193705.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193705",
+      "file": "03_repair_syntax_atomics_todo___General_20251010_193705.rs",
+      "stage_num": 4,
+      "stage_name": "Repair Syntax",
+      "verified": 5,
+      "errors": 0,
+      "success": true,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193705/full_pipeline/atomics_todo/atomics_todo/20251010_193705/03_repair_syntax_atomics_todo___General_20251010_193705.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193705",
+      "file": "best_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193705/full_pipeline/atomics_todo/atomics_todo/20251010_193705/best/best_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193705",
+      "file": "best.rs",
+      "stage_num": 12,
+      "stage_name": "Best",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193705/full_pipeline/atomics_todo/atomics_todo/20251010_193705/best/best.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193705",
+      "file": "best_atomics_todo___General_20251010_193705.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193705/full_pipeline/atomics_todo/atomics_todo/20251010_193705/best/best_atomics_todo___General_20251010_193705.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193940",
+      "file": "02_spec_inference_atomics_todo___General_20251010_193941.rs",
+      "stage_num": 2,
+      "stage_name": "Spec Inference",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193940/full_pipeline/atomics_todo/atomics_todo/20251010_193941/02_spec_inference_atomics_todo___General_20251010_193941.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193940",
+      "file": "checkpoint_best_atomics_todo___General_20251010_193941.rs",
+      "stage_num": 11,
+      "stage_name": "Checkpoint Best",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193940/full_pipeline/atomics_todo/atomics_todo/20251010_193941/checkpoint_best_atomics_todo___General_20251010_193941.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193940",
+      "file": "final_result_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193940/full_pipeline/atomics_todo/atomics_todo/20251010_193941/final_result_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193940",
+      "file": "01_inv_inference_atomics_todo___General_20251010_193941.rs",
+      "stage_num": 1,
+      "stage_name": "Inv Inference",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193940/full_pipeline/atomics_todo/atomics_todo/20251010_193941/01_inv_inference_atomics_todo___General_20251010_193941.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193940",
+      "file": "final_result.rs",
+      "stage_num": 13,
+      "stage_name": "Final Result",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193940/full_pipeline/atomics_todo/atomics_todo/20251010_193941/final_result.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193940",
+      "file": "preprocessed.rs",
+      "stage_num": 0,
+      "stage_name": "Preprocessed",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193940/full_pipeline/atomics_todo/atomics_todo/20251010_193941/preprocessed.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193940",
+      "file": "03_proof_generation_atomics_todo___General_20251010_193941.rs",
+      "stage_num": 3,
+      "stage_name": "Proof Generation",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193940/full_pipeline/atomics_todo/atomics_todo/20251010_193941/03_proof_generation_atomics_todo___General_20251010_193941.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193940",
+      "file": "final_result_atomics_todo___General_20251010_193941.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193940/full_pipeline/atomics_todo/atomics_todo/20251010_193941/final_result_atomics_todo___General_20251010_193941.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193940",
+      "file": "best_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193940/full_pipeline/atomics_todo/atomics_todo/20251010_193941/best/best_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193940",
+      "file": "best_atomics_todo___General_20251010_193941.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193940/full_pipeline/atomics_todo/atomics_todo/20251010_193941/best/best_atomics_todo___General_20251010_193941.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193940",
+      "file": "best.rs",
+      "stage_num": 12,
+      "stage_name": "Best",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193940/full_pipeline/atomics_todo/atomics_todo/20251010_193941/best/best.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_215225",
+      "file": "final_result_atomics_todo___General_20251010_215226.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_215225/full_pipeline/atomics_todo/atomics_todo/20251010_215226/final_result_atomics_todo___General_20251010_215226.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_215225",
+      "file": "02_spec_inference_atomics_todo___General_20251010_215226.rs",
+      "stage_num": 2,
+      "stage_name": "Spec Inference",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_215225/full_pipeline/atomics_todo/atomics_todo/20251010_215226/02_spec_inference_atomics_todo___General_20251010_215226.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_215225",
+      "file": "repair_round_4_atomics_todo___General_20251010_215226.rs",
+      "stage_num": 9,
+      "stage_name": "Repair R4",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_215225/full_pipeline/atomics_todo/atomics_todo/20251010_215226/repair_round_4_atomics_todo___General_20251010_215226.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_215225",
+      "file": "repair_round_1_atomics_todo___General_20251010_215226.rs",
+      "stage_num": 6,
+      "stage_name": "Repair R1",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_215225/full_pipeline/atomics_todo/atomics_todo/20251010_215226/repair_round_1_atomics_todo___General_20251010_215226.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_215225",
+      "file": "final_result_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_215225/full_pipeline/atomics_todo/atomics_todo/20251010_215226/final_result_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_215225",
+      "file": "01_inv_inference_atomics_todo___General_20251010_215226.rs",
+      "stage_num": 1,
+      "stage_name": "Inv Inference",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_215225/full_pipeline/atomics_todo/atomics_todo/20251010_215226/01_inv_inference_atomics_todo___General_20251010_215226.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_215225",
+      "file": "repair_round_3_atomics_todo___General_20251010_215226.rs",
+      "stage_num": 8,
+      "stage_name": "Repair R3",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_215225/full_pipeline/atomics_todo/atomics_todo/20251010_215226/repair_round_3_atomics_todo___General_20251010_215226.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_215225",
+      "file": "09_repair_type_atomics_todo___General_20251010_215226.rs",
+      "stage_num": 5,
+      "stage_name": "Repair Type",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_215225/full_pipeline/atomics_todo/atomics_todo/20251010_215226/09_repair_type_atomics_todo___General_20251010_215226.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_215225",
+      "file": "repair_round_5_atomics_todo___General_20251010_215226.rs",
+      "stage_num": 10,
+      "stage_name": "Repair R5",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_215225/full_pipeline/atomics_todo/atomics_todo/20251010_215226/repair_round_5_atomics_todo___General_20251010_215226.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_215225",
+      "file": "03_repair_syntax_atomics_todo___General_20251010_215226.rs",
+      "stage_num": 4,
+      "stage_name": "Repair Syntax",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_215225/full_pipeline/atomics_todo/atomics_todo/20251010_215226/03_repair_syntax_atomics_todo___General_20251010_215226.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_215225",
+      "file": "final_result.rs",
+      "stage_num": 13,
+      "stage_name": "Final Result",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_215225/full_pipeline/atomics_todo/atomics_todo/20251010_215226/final_result.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_215225",
+      "file": "preprocessed.rs",
+      "stage_num": 0,
+      "stage_name": "Preprocessed",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_215225/full_pipeline/atomics_todo/atomics_todo/20251010_215226/preprocessed.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_215225",
+      "file": "12_repair_mode_atomics_todo___General_20251010_215226.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_215225/full_pipeline/atomics_todo/atomics_todo/20251010_215226/12_repair_mode_atomics_todo___General_20251010_215226.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_215225",
+      "file": "03_proof_generation_atomics_todo___General_20251010_215226.rs",
+      "stage_num": 3,
+      "stage_name": "Proof Generation",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_215225/full_pipeline/atomics_todo/atomics_todo/20251010_215226/03_proof_generation_atomics_todo___General_20251010_215226.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_215225",
+      "file": "repair_round_2_atomics_todo___General_20251010_215226.rs",
+      "stage_num": 7,
+      "stage_name": "Repair R2",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_215225/full_pipeline/atomics_todo/atomics_todo/20251010_215226/repair_round_2_atomics_todo___General_20251010_215226.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_215225",
+      "file": "checkpoint_best_atomics_todo___General_20251010_215226.rs",
+      "stage_num": 11,
+      "stage_name": "Checkpoint Best",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_215225/full_pipeline/atomics_todo/atomics_todo/20251010_215226/checkpoint_best_atomics_todo___General_20251010_215226.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_215225",
+      "file": "best_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_215225/full_pipeline/atomics_todo/atomics_todo/20251010_215226/best/best_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_215225",
+      "file": "best.rs",
+      "stage_num": 12,
+      "stage_name": "Best",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_215225/full_pipeline/atomics_todo/atomics_todo/20251010_215226/best/best.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_215225",
+      "file": "best_atomics_todo___General_20251010_215226.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_215225/full_pipeline/atomics_todo/atomics_todo/20251010_215226/best/best_atomics_todo___General_20251010_215226.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_135504",
+      "file": "01_inv_inference_atomics_todo___General_20251011_135504.rs",
+      "stage_num": 1,
+      "stage_name": "Inv Inference",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_135504/full_pipeline/atomics_todo/atomics_todo/20251011_135504/01_inv_inference_atomics_todo___General_20251011_135504.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_135504",
+      "file": "final_result_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_135504/full_pipeline/atomics_todo/atomics_todo/20251011_135504/final_result_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_135504",
+      "file": "02_spec_inference_atomics_todo___General_20251011_135504.rs",
+      "stage_num": 2,
+      "stage_name": "Spec Inference",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_135504/full_pipeline/atomics_todo/atomics_todo/20251011_135504/02_spec_inference_atomics_todo___General_20251011_135504.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_135504",
+      "file": "final_result.rs",
+      "stage_num": 13,
+      "stage_name": "Final Result",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_135504/full_pipeline/atomics_todo/atomics_todo/20251011_135504/final_result.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_135504",
+      "file": "preprocessed.rs",
+      "stage_num": 0,
+      "stage_name": "Preprocessed",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_135504/full_pipeline/atomics_todo/atomics_todo/20251011_135504/preprocessed.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_135504",
+      "file": "03_proof_generation_atomics_todo___General_20251011_135504.rs",
+      "stage_num": 3,
+      "stage_name": "Proof Generation",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_135504/full_pipeline/atomics_todo/atomics_todo/20251011_135504/03_proof_generation_atomics_todo___General_20251011_135504.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_135504",
+      "file": "final_result_atomics_todo___General_20251011_135504.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_135504/full_pipeline/atomics_todo/atomics_todo/20251011_135504/final_result_atomics_todo___General_20251011_135504.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_135504",
+      "file": "checkpoint_best_atomics_todo___General_20251011_135504.rs",
+      "stage_num": 11,
+      "stage_name": "Checkpoint Best",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_135504/full_pipeline/atomics_todo/atomics_todo/20251011_135504/checkpoint_best_atomics_todo___General_20251011_135504.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_135504",
+      "file": "best_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_135504/full_pipeline/atomics_todo/atomics_todo/20251011_135504/best/best_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_135504",
+      "file": "best_atomics_todo___General_20251011_135504.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_135504/full_pipeline/atomics_todo/atomics_todo/20251011_135504/best/best_atomics_todo___General_20251011_135504.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_135504",
+      "file": "best.rs",
+      "stage_num": 12,
+      "stage_name": "Best",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_135504/full_pipeline/atomics_todo/atomics_todo/20251011_135504/best/best.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_160501",
+      "file": "02_spec_inference_atomics_todo___General_20251011_160502.rs",
+      "stage_num": 2,
+      "stage_name": "Spec Inference",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160501/full_pipeline/atomics_todo/atomics_todo/20251011_160502/02_spec_inference_atomics_todo___General_20251011_160502.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_160501",
+      "file": "checkpoint_best_atomics_todo___General_20251011_160502.rs",
+      "stage_num": 11,
+      "stage_name": "Checkpoint Best",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160501/full_pipeline/atomics_todo/atomics_todo/20251011_160502/checkpoint_best_atomics_todo___General_20251011_160502.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_160501",
+      "file": "final_result_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160501/full_pipeline/atomics_todo/atomics_todo/20251011_160502/final_result_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_160501",
+      "file": "01_inv_inference_atomics_todo___General_20251011_160502.rs",
+      "stage_num": 1,
+      "stage_name": "Inv Inference",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160501/full_pipeline/atomics_todo/atomics_todo/20251011_160502/01_inv_inference_atomics_todo___General_20251011_160502.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_160501",
+      "file": "final_result.rs",
+      "stage_num": 13,
+      "stage_name": "Final Result",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160501/full_pipeline/atomics_todo/atomics_todo/20251011_160502/final_result.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_160501",
+      "file": "preprocessed.rs",
+      "stage_num": 0,
+      "stage_name": "Preprocessed",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160501/full_pipeline/atomics_todo/atomics_todo/20251011_160502/preprocessed.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_160501",
+      "file": "final_result_atomics_todo___General_20251011_160502.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160501/full_pipeline/atomics_todo/atomics_todo/20251011_160502/final_result_atomics_todo___General_20251011_160502.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_160501",
+      "file": "03_proof_generation_atomics_todo___General_20251011_160502.rs",
+      "stage_num": 3,
+      "stage_name": "Proof Generation",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160501/full_pipeline/atomics_todo/atomics_todo/20251011_160502/03_proof_generation_atomics_todo___General_20251011_160502.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_160501",
+      "file": "best_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160501/full_pipeline/atomics_todo/atomics_todo/20251011_160502/best/best_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_160501",
+      "file": "best.rs",
+      "stage_num": 12,
+      "stage_name": "Best",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160501/full_pipeline/atomics_todo/atomics_todo/20251011_160502/best/best.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_160501",
+      "file": "best_atomics_todo___General_20251011_160502.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160501/full_pipeline/atomics_todo/atomics_todo/20251011_160502/best/best_atomics_todo___General_20251011_160502.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_160518",
+      "file": "01_inv_inference_atomics_todo___General_20251011_160518.rs",
+      "stage_num": 1,
+      "stage_name": "Inv Inference",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160518/full_pipeline/atomics_todo/atomics_todo/20251011_160518/01_inv_inference_atomics_todo___General_20251011_160518.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_160518",
+      "file": "final_result_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160518/full_pipeline/atomics_todo/atomics_todo/20251011_160518/final_result_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_160518",
+      "file": "03_proof_generation_atomics_todo___General_20251011_160518.rs",
+      "stage_num": 3,
+      "stage_name": "Proof Generation",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160518/full_pipeline/atomics_todo/atomics_todo/20251011_160518/03_proof_generation_atomics_todo___General_20251011_160518.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_160518",
+      "file": "final_result.rs",
+      "stage_num": 13,
+      "stage_name": "Final Result",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160518/full_pipeline/atomics_todo/atomics_todo/20251011_160518/final_result.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_160518",
+      "file": "preprocessed.rs",
+      "stage_num": 0,
+      "stage_name": "Preprocessed",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160518/full_pipeline/atomics_todo/atomics_todo/20251011_160518/preprocessed.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_160518",
+      "file": "02_spec_inference_atomics_todo___General_20251011_160518.rs",
+      "stage_num": 2,
+      "stage_name": "Spec Inference",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160518/full_pipeline/atomics_todo/atomics_todo/20251011_160518/02_spec_inference_atomics_todo___General_20251011_160518.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_160518",
+      "file": "checkpoint_best_atomics_todo___General_20251011_160518.rs",
+      "stage_num": 11,
+      "stage_name": "Checkpoint Best",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160518/full_pipeline/atomics_todo/atomics_todo/20251011_160518/checkpoint_best_atomics_todo___General_20251011_160518.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_160518",
+      "file": "final_result_atomics_todo___General_20251011_160518.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160518/full_pipeline/atomics_todo/atomics_todo/20251011_160518/final_result_atomics_todo___General_20251011_160518.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_160518",
+      "file": "best_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160518/full_pipeline/atomics_todo/atomics_todo/20251011_160518/best/best_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_160518",
+      "file": "best_atomics_todo___General_20251011_160518.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160518/full_pipeline/atomics_todo/atomics_todo/20251011_160518/best/best_atomics_todo___General_20251011_160518.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_160518",
+      "file": "best.rs",
+      "stage_num": 12,
+      "stage_name": "Best",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160518/full_pipeline/atomics_todo/atomics_todo/20251011_160518/best/best.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_182336",
+      "file": "final_result_atomics_todo___General_20251011_182337.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 5,
+      "errors": 0,
+      "success": true,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/full_pipeline/atomics_todo/atomics_todo/20251011_182337/final_result_atomics_todo___General_20251011_182337.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_182336",
+      "file": "07_repair_invariant_atomics_todo___General_20251011_182337.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 5,
+      "errors": 0,
+      "success": true,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/full_pipeline/atomics_todo/atomics_todo/20251011_182337/07_repair_invariant_atomics_todo___General_20251011_182337.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_182336",
+      "file": "03_proof_generation_atomics_todo___General_20251011_182337.rs",
+      "stage_num": 3,
+      "stage_name": "Proof Generation",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/full_pipeline/atomics_todo/atomics_todo/20251011_182337/03_proof_generation_atomics_todo___General_20251011_182337.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_182336",
+      "file": "01_inv_inference_atomics_todo___General_20251011_182337.rs",
+      "stage_num": 1,
+      "stage_name": "Inv Inference",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/full_pipeline/atomics_todo/atomics_todo/20251011_182337/01_inv_inference_atomics_todo___General_20251011_182337.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_182336",
+      "file": "repair_round_1_atomics_todo___General_20251011_182337.rs",
+      "stage_num": 6,
+      "stage_name": "Repair R1",
+      "verified": 5,
+      "errors": 0,
+      "success": true,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/full_pipeline/atomics_todo/atomics_todo/20251011_182337/repair_round_1_atomics_todo___General_20251011_182337.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_182336",
+      "file": "final_result_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 5,
+      "errors": 0,
+      "success": true,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/full_pipeline/atomics_todo/atomics_todo/20251011_182337/final_result_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_182336",
+      "file": "checkpoint_best_atomics_todo___General_20251011_182337.rs",
+      "stage_num": 11,
+      "stage_name": "Checkpoint Best",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/full_pipeline/atomics_todo/atomics_todo/20251011_182337/checkpoint_best_atomics_todo___General_20251011_182337.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_182336",
+      "file": "02_spec_inference_atomics_todo___General_20251011_182337.rs",
+      "stage_num": 2,
+      "stage_name": "Spec Inference",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/full_pipeline/atomics_todo/atomics_todo/20251011_182337/02_spec_inference_atomics_todo___General_20251011_182337.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_182336",
+      "file": "final_result.rs",
+      "stage_num": 13,
+      "stage_name": "Final Result",
+      "verified": 5,
+      "errors": 0,
+      "success": true,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/full_pipeline/atomics_todo/atomics_todo/20251011_182337/final_result.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_182336",
+      "file": "preprocessed.rs",
+      "stage_num": 0,
+      "stage_name": "Preprocessed",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/full_pipeline/atomics_todo/atomics_todo/20251011_182337/preprocessed.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_182336",
+      "file": "best_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/full_pipeline/atomics_todo/atomics_todo/20251011_182337/best/best_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_182336",
+      "file": "best_atomics_todo___General_20251011_182337.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/full_pipeline/atomics_todo/atomics_todo/20251011_182337/best/best_atomics_todo___General_20251011_182337.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_182336",
+      "file": "best.rs",
+      "stage_num": 12,
+      "stage_name": "Best",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/full_pipeline/atomics_todo/atomics_todo/20251011_182337/best/best.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_224359",
+      "file": "01_inv_inference_atomics_todo___General_20251011_224359.rs",
+      "stage_num": 1,
+      "stage_name": "Inv Inference",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_224359/full_pipeline/atomics_todo/atomics_todo/20251011_224359/01_inv_inference_atomics_todo___General_20251011_224359.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_224359",
+      "file": "final_result_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_224359/full_pipeline/atomics_todo/atomics_todo/20251011_224359/final_result_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_224359",
+      "file": "checkpoint_best_atomics_todo___General_20251011_224359.rs",
+      "stage_num": 11,
+      "stage_name": "Checkpoint Best",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_224359/full_pipeline/atomics_todo/atomics_todo/20251011_224359/checkpoint_best_atomics_todo___General_20251011_224359.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_224359",
+      "file": "final_result.rs",
+      "stage_num": 13,
+      "stage_name": "Final Result",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_224359/full_pipeline/atomics_todo/atomics_todo/20251011_224359/final_result.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_224359",
+      "file": "preprocessed.rs",
+      "stage_num": 0,
+      "stage_name": "Preprocessed",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_224359/full_pipeline/atomics_todo/atomics_todo/20251011_224359/preprocessed.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_224359",
+      "file": "final_result_atomics_todo___General_20251011_224359.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_224359/full_pipeline/atomics_todo/atomics_todo/20251011_224359/final_result_atomics_todo___General_20251011_224359.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_224359",
+      "file": "02_spec_inference_atomics_todo___General_20251011_224359.rs",
+      "stage_num": 2,
+      "stage_name": "Spec Inference",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_224359/full_pipeline/atomics_todo/atomics_todo/20251011_224359/02_spec_inference_atomics_todo___General_20251011_224359.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_224359",
+      "file": "03_proof_generation_atomics_todo___General_20251011_224359.rs",
+      "stage_num": 3,
+      "stage_name": "Proof Generation",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_224359/full_pipeline/atomics_todo/atomics_todo/20251011_224359/03_proof_generation_atomics_todo___General_20251011_224359.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_224359",
+      "file": "best_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_224359/full_pipeline/atomics_todo/atomics_todo/20251011_224359/best/best_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_224359",
+      "file": "best_atomics_todo___General_20251011_224359.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_224359/full_pipeline/atomics_todo/atomics_todo/20251011_224359/best/best_atomics_todo___General_20251011_224359.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_224359",
+      "file": "best.rs",
+      "stage_num": 12,
+      "stage_name": "Best",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_224359/full_pipeline/atomics_todo/atomics_todo/20251011_224359/best/best.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_225123",
+      "file": "02_spec_inference_atomics_todo___General_20251011_225123.rs",
+      "stage_num": 2,
+      "stage_name": "Spec Inference",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225123/full_pipeline/atomics_todo/atomics_todo/20251011_225123/02_spec_inference_atomics_todo___General_20251011_225123.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_225123",
+      "file": "final_result_atomics_todo___General_20251011_225123.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225123/full_pipeline/atomics_todo/atomics_todo/20251011_225123/final_result_atomics_todo___General_20251011_225123.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_225123",
+      "file": "final_result_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225123/full_pipeline/atomics_todo/atomics_todo/20251011_225123/final_result_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_225123",
+      "file": "01_inv_inference_atomics_todo___General_20251011_225123.rs",
+      "stage_num": 1,
+      "stage_name": "Inv Inference",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225123/full_pipeline/atomics_todo/atomics_todo/20251011_225123/01_inv_inference_atomics_todo___General_20251011_225123.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_225123",
+      "file": "checkpoint_best_atomics_todo___General_20251011_225123.rs",
+      "stage_num": 11,
+      "stage_name": "Checkpoint Best",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225123/full_pipeline/atomics_todo/atomics_todo/20251011_225123/checkpoint_best_atomics_todo___General_20251011_225123.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_225123",
+      "file": "final_result.rs",
+      "stage_num": 13,
+      "stage_name": "Final Result",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225123/full_pipeline/atomics_todo/atomics_todo/20251011_225123/final_result.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_225123",
+      "file": "preprocessed.rs",
+      "stage_num": 0,
+      "stage_name": "Preprocessed",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225123/full_pipeline/atomics_todo/atomics_todo/20251011_225123/preprocessed.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_225123",
+      "file": "03_proof_generation_atomics_todo___General_20251011_225123.rs",
+      "stage_num": 3,
+      "stage_name": "Proof Generation",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225123/full_pipeline/atomics_todo/atomics_todo/20251011_225123/03_proof_generation_atomics_todo___General_20251011_225123.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_225123",
+      "file": "best_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225123/full_pipeline/atomics_todo/atomics_todo/20251011_225123/best/best_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_225123",
+      "file": "best.rs",
+      "stage_num": 12,
+      "stage_name": "Best",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225123/full_pipeline/atomics_todo/atomics_todo/20251011_225123/best/best.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_225123",
+      "file": "best_atomics_todo___General_20251011_225123.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225123/full_pipeline/atomics_todo/atomics_todo/20251011_225123/best/best_atomics_todo___General_20251011_225123.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_225238",
+      "file": "final_result_atomics_todo___General_20251011_225239.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225238/full_pipeline/atomics_todo/atomics_todo/20251011_225239/final_result_atomics_todo___General_20251011_225239.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_225238",
+      "file": "final_result_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225238/full_pipeline/atomics_todo/atomics_todo/20251011_225239/final_result_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_225238",
+      "file": "01_inv_inference_atomics_todo___General_20251011_225239.rs",
+      "stage_num": 1,
+      "stage_name": "Inv Inference",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225238/full_pipeline/atomics_todo/atomics_todo/20251011_225239/01_inv_inference_atomics_todo___General_20251011_225239.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_225238",
+      "file": "02_spec_inference_atomics_todo___General_20251011_225239.rs",
+      "stage_num": 2,
+      "stage_name": "Spec Inference",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225238/full_pipeline/atomics_todo/atomics_todo/20251011_225239/02_spec_inference_atomics_todo___General_20251011_225239.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_225238",
+      "file": "checkpoint_best_atomics_todo___General_20251011_225239.rs",
+      "stage_num": 11,
+      "stage_name": "Checkpoint Best",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225238/full_pipeline/atomics_todo/atomics_todo/20251011_225239/checkpoint_best_atomics_todo___General_20251011_225239.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_225238",
+      "file": "final_result.rs",
+      "stage_num": 13,
+      "stage_name": "Final Result",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225238/full_pipeline/atomics_todo/atomics_todo/20251011_225239/final_result.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_225238",
+      "file": "preprocessed.rs",
+      "stage_num": 0,
+      "stage_name": "Preprocessed",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225238/full_pipeline/atomics_todo/atomics_todo/20251011_225239/preprocessed.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_225238",
+      "file": "03_proof_generation_atomics_todo___General_20251011_225239.rs",
+      "stage_num": 3,
+      "stage_name": "Proof Generation",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225238/full_pipeline/atomics_todo/atomics_todo/20251011_225239/03_proof_generation_atomics_todo___General_20251011_225239.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_225238",
+      "file": "best_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225238/full_pipeline/atomics_todo/atomics_todo/20251011_225239/best/best_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_225238",
+      "file": "best.rs",
+      "stage_num": 12,
+      "stage_name": "Best",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225238/full_pipeline/atomics_todo/atomics_todo/20251011_225239/best/best.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_225238",
+      "file": "best_atomics_todo___General_20251011_225239.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 0,
+      "errors": "compile_error",
+      "success": false,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225238/full_pipeline/atomics_todo/atomics_todo/20251011_225239/best/best_atomics_todo___General_20251011_225239.rs"
+    }
+  ],
+  "stage_stats": [
+    {
+      "stage": "Best",
+      "files": 15,
+      "avg_verified": 0.0,
+      "success_rate": 0.0,
+      "max_verified": 0
+    },
+    {
+      "stage": "Checkpoint Best",
+      "files": 15,
+      "avg_verified": 0.0,
+      "success_rate": 0.0,
+      "max_verified": 0
+    },
+    {
+      "stage": "Final Result",
+      "files": 15,
+      "avg_verified": 0.6666666666666666,
+      "success_rate": 13.333333333333334,
+      "max_verified": 5
+    },
+    {
+      "stage": "Inv Inference",
+      "files": 15,
+      "avg_verified": 0.0,
+      "success_rate": 0.0,
+      "max_verified": 0
+    },
+    {
+      "stage": "Preprocessed",
+      "files": 15,
+      "avg_verified": 0.0,
+      "success_rate": 0.0,
+      "max_verified": 0
+    },
+    {
+      "stage": "Proof Generation",
+      "files": 15,
+      "avg_verified": 0.0,
+      "success_rate": 0.0,
+      "max_verified": 0
+    },
+    {
+      "stage": "Repair R1",
+      "files": 5,
+      "avg_verified": 2.0,
+      "success_rate": 40.0,
+      "max_verified": 5
+    },
+    {
+      "stage": "Repair R2",
+      "files": 3,
+      "avg_verified": 0.0,
+      "success_rate": 0.0,
+      "max_verified": 0
+    },
+    {
+      "stage": "Repair R3",
+      "files": 3,
+      "avg_verified": 0.0,
+      "success_rate": 0.0,
+      "max_verified": 0
+    },
+    {
+      "stage": "Repair R4",
+      "files": 3,
+      "avg_verified": 0.0,
+      "success_rate": 0.0,
+      "max_verified": 0
+    },
+    {
+      "stage": "Repair R5",
+      "files": 3,
+      "avg_verified": 0.0,
+      "success_rate": 0.0,
+      "max_verified": 0
+    },
+    {
+      "stage": "Repair Syntax",
+      "files": 4,
+      "avg_verified": 1.25,
+      "success_rate": 25.0,
+      "max_verified": 5
+    },
+    {
+      "stage": "Repair Type",
+      "files": 2,
+      "avg_verified": 0.0,
+      "success_rate": 0.0,
+      "max_verified": 0
+    },
+    {
+      "stage": "Spec Inference",
+      "files": 15,
+      "avg_verified": 0.0,
+      "success_rate": 0.0,
+      "max_verified": 0
+    },
+    {
+      "stage": "Unknown",
+      "files": 64,
+      "avg_verified": 0.53125,
+      "success_rate": 9.375,
+      "max_verified": 5
+    }
+  ],
+  "best_results": [
+    {
+      "experiment": "repair_experiment_20251010_193705",
+      "file": "06_repair_postcond_atomics_todo___General_20251010_193705.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 5,
+      "errors": 0,
+      "success": true,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193705/full_pipeline/atomics_todo/atomics_todo/20251010_193705/06_repair_postcond_atomics_todo___General_20251010_193705.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193705",
+      "file": "repair_round_1_atomics_todo___General_20251010_193705.rs",
+      "stage_num": 6,
+      "stage_name": "Repair R1",
+      "verified": 5,
+      "errors": 0,
+      "success": true,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193705/full_pipeline/atomics_todo/atomics_todo/20251010_193705/repair_round_1_atomics_todo___General_20251010_193705.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193705",
+      "file": "final_result_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 5,
+      "errors": 0,
+      "success": true,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193705/full_pipeline/atomics_todo/atomics_todo/20251010_193705/final_result_atomics_todo.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193705",
+      "file": "final_result_atomics_todo___General_20251010_193705.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 5,
+      "errors": 0,
+      "success": true,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193705/full_pipeline/atomics_todo/atomics_todo/20251010_193705/final_result_atomics_todo___General_20251010_193705.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193705",
+      "file": "final_result.rs",
+      "stage_num": 13,
+      "stage_name": "Final Result",
+      "verified": 5,
+      "errors": 0,
+      "success": true,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193705/full_pipeline/atomics_todo/atomics_todo/20251010_193705/final_result.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251010_193705",
+      "file": "03_repair_syntax_atomics_todo___General_20251010_193705.rs",
+      "stage_num": 4,
+      "stage_name": "Repair Syntax",
+      "verified": 5,
+      "errors": 0,
+      "success": true,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_193705/full_pipeline/atomics_todo/atomics_todo/20251010_193705/03_repair_syntax_atomics_todo___General_20251010_193705.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_182336",
+      "file": "final_result_atomics_todo___General_20251011_182337.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 5,
+      "errors": 0,
+      "success": true,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/full_pipeline/atomics_todo/atomics_todo/20251011_182337/final_result_atomics_todo___General_20251011_182337.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_182336",
+      "file": "07_repair_invariant_atomics_todo___General_20251011_182337.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 5,
+      "errors": 0,
+      "success": true,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/full_pipeline/atomics_todo/atomics_todo/20251011_182337/07_repair_invariant_atomics_todo___General_20251011_182337.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_182336",
+      "file": "repair_round_1_atomics_todo___General_20251011_182337.rs",
+      "stage_num": 6,
+      "stage_name": "Repair R1",
+      "verified": 5,
+      "errors": 0,
+      "success": true,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/full_pipeline/atomics_todo/atomics_todo/20251011_182337/repair_round_1_atomics_todo___General_20251011_182337.rs"
+    },
+    {
+      "experiment": "repair_experiment_20251011_182336",
+      "file": "final_result_atomics_todo.rs",
+      "stage_num": 99,
+      "stage_name": "Unknown",
+      "verified": 5,
+      "errors": 0,
+      "success": true,
+      "path": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/full_pipeline/atomics_todo/atomics_todo/20251011_182337/final_result_atomics_todo.rs"
+    }
+  ]
+}

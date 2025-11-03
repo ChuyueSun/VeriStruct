@@ -1,0 +1,33 @@
+```markdown
+Current State:
+- The BitMap struct requires a View function (“spec fn view”) but is not yet implemented.
+- Multiple methods (from, get_bit, set_bit, or) need requires/ensures specifications.
+- Several places have “TODO: add proof” indicating needed proof blocks.
+- There's also a “TODO: add loop invariant” in the while loop inside or().
+- Struct-based data structure + explicit “View” implementation requirement + specification placeholders + proof placeholders.
+
+Dependencies:
+- The BitMap struct’s “view” method (View function) underpins formal reasoning about correctness of get_bit/set_bit/or methods.
+- Invariance conditions must be tied to correctness of internal bits representation.
+- Spec (requires/ensures) must link to verifying correct usage of indices and preserving the overall bit properties.
+- Final proofs will rely on the newly inferred invariants and specifications.
+
+```
+
+```markdown
+**Selected Workflow:** Full Sequence Workflow
+
+**Justification:**
+The code explicitly contains a “spec fn view” for the BitMap struct and has “TODO: implement view.” This directly requires implementing a View function, triggering the Full Sequence Workflow. Moreover, it is a class/struct data structure with to-be-inferred invariants, along with requires/ensures placeholders and proof placeholders.
+
+**Execution Steps:**
+1. view_inference
+2. view_refinement
+3. inv_inference
+4. spec_inference
+5. proof_generation
+
+**Module Conditions:**
+- inv_inference: Yes – input is a struct (BitMap) needing type invariants.
+- proof_generation: Yes – there are “TODO: add proof” markers in the code.
+```

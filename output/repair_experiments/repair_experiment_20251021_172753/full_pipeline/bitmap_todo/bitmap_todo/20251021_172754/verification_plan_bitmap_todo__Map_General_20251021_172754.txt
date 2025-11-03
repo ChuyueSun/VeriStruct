@@ -1,0 +1,28 @@
+```markdown
+Current State:
+- The code defines a struct BitMap with a spec fn view(&self) -> Seq<bool> that is not yet implemented.
+- There are several “TODO” markers, including “TODO: add proof” and “TODO: implement view”, indicating the need for specification details and proofs.
+- No invariants are mentioned, but since we have a struct needing a View, a full workflow is triggered.
+
+Dependencies:
+- The BitMap struct’s view function will underpin the specifications of get_bit, set_bit, or, and from.
+- Proofs in set_bit and or depend on the correctness of view and on any inferred invariants.
+- The presence of a struct plus a view function requires the complete sequence of steps.
+
+```markdown
+**Selected Workflow:** Full Sequence Workflow
+
+**Justification:**
+We have a struct BitMap that explicitly contains a “view” function (marked with “TODO: implement view”). This triggers the Full Sequence Workflow, which is used whenever a data structure includes or requires “View” implementation. As a struct is present, we include the inv_inference step.
+
+**Execution Steps:**
+1. view_inference
+2. view_refinement
+3. inv_inference
+4. spec_inference
+5. proof_generation
+
+**Module Conditions:**
+- inv_inference: Yes – a struct BitMap exists, so type invariants may be inferred.
+- proof_generation: Yes – the code has “TODO: add proof” markers.
+```

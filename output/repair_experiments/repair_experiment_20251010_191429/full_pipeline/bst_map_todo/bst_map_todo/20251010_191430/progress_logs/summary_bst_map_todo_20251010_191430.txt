@@ -1,0 +1,106 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/bst_map_todo.rs
+Input File Name: bst_map_todo.rs
+File ID: bst_map_todo__Map_General_20251010_191430
+Output Directory: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_191429/full_pipeline/bst_map_todo/bst_map_todo/20251010_191430
+Progress Log: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_191429/full_pipeline/bst_map_todo/bst_map_todo/20251010_191430/progress_logs/progress_bst_map_todo_20251010_191430.json
+Summary File: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_191429/full_pipeline/bst_map_todo/bst_map_todo/20251010_191430/progress_logs/summary_bst_map_todo_20251010_191430.txt
+
+Start time: 2025-10-10T19:14:30.287251
+End time: 2025-10-10T20:00:31.810348
+Total execution time: 2761.52s
+
+## Final Result
+
+Verified: 9
+Errors: 7
+Verus Errors: 17
+Compilation Error: False
+Is Correct: False
+
+## Statistics
+
+Total steps: 5
+Total repair rounds: 5
+Total repairs attempted: 10
+Successful repairs: 2
+Average step time: 143.76s
+Average repair time: 202.52s
+
+## Steps
+
+Step 1: view_inference
+  Time: 119.91s
+  Score: Verified=9, Errors=7, Verus Errors=17
+Step 2: view_refinement
+  Time: 118.74s
+  Score: Verified=9, Errors=7, Verus Errors=17
+Step 3: inv_inference
+  Time: 132.50s
+  Score: Verified=9, Errors=7, Verus Errors=17
+Step 4: spec_inference
+  Time: 213.23s
+  Score: Verified=-1, Errors=999, Verus Errors=16
+Step 5: proof_generation
+  Time: 134.45s
+  Score: Verified=-1, Errors=999, Verus Errors=16
+
+## Repair Rounds
+
+Round 1
+  Time: 316.06s
+  repair_type for MismatchedType
+    Before: Verified=-1, Errors=999, Verus Errors=16
+    After: Verified=-1, Errors=999, Verus Errors=17
+    Time: 0.17s
+  repair_type for TypeAnnotation
+    Before: Verified=-1, Errors=999, Verus Errors=17
+    After: Verified=-1, Errors=999, Verus Errors=17
+    Time: 139.27s
+  repair_syntax for Other
+    Before: Verified=-1, Errors=999, Verus Errors=17
+    After: Verified=-1, Errors=999, Verus Errors=13
+    Time: 176.60s
+
+Round 2
+  Time: 143.59s
+  repair_type for MismatchedType
+    Before: Verified=-1, Errors=999, Verus Errors=13
+    After: Verified=-1, Errors=999, Verus Errors=14
+    Time: 0.17s
+  repair_type for TypeAnnotation
+    Before: Verified=-1, Errors=999, Verus Errors=14
+    After: Verified=-1, Errors=999, Verus Errors=14
+    Time: 143.42s
+
+Round 3
+  Time: 737.50s
+  repair_type for MismatchedType
+    Before: Verified=-1, Errors=999, Verus Errors=14
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 433.59s
+  repair_type for TypeAnnotation
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 117.04s
+  repair_syntax for Other
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 186.87s
+
+Round 4
+  Time: 297.23s
+  repair_syntax for Other
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 297.23s
+
+Round 5
+  Time: 530.84s
+  repair_syntax for Other
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 530.83s

@@ -1,0 +1,88 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/node_todo.rs
+Input File Name: node_todo.rs
+File ID: node_todo___General_20251101_043231
+Output Directory: /home/chuyue/VerusAgent/output/node_todo/20251101_043231/node_todo/azure_20251101_043231
+Progress Log: /home/chuyue/VerusAgent/output/node_todo/20251101_043231/node_todo/azure_20251101_043231/progress_logs/progress_node_todo_20251101_043231.json
+Summary File: /home/chuyue/VerusAgent/output/node_todo/20251101_043231/node_todo/azure_20251101_043231/progress_logs/summary_node_todo_20251101_043231.txt
+
+Start time: 2025-11-01T04:32:31.623836
+End time: 2025-11-01T04:42:49.596289
+Total execution time: 617.97s
+
+## Final Result
+
+Verified: 8
+Errors: 3
+Verus Errors: 3
+Compilation Error: False
+Is Correct: False
+
+## Statistics
+
+Total steps: 3
+Total repair rounds: 5
+Total repairs attempted: 7
+Successful repairs: 0
+Average step time: 48.40s
+Average repair time: 67.39s
+
+## Steps
+
+Step 1: inv_inference
+  Time: 3.23s
+  Score: Verified=7, Errors=4, Verus Errors=13
+Step 2: spec_inference
+  Time: 141.96s
+  Score: Verified=8, Errors=3, Verus Errors=3
+Step 3: proof_generation
+  Time: 0.01s
+  Score: Verified=8, Errors=3, Verus Errors=3
+
+## Repair Rounds
+
+Round 1
+  Time: 110.80s
+  repair_postcond for PostCondFail
+    Before: Verified=8, Errors=3, Verus Errors=3
+    After: Verified=8, Errors=3, Verus Errors=3
+    Time: 110.79s
+
+Round 2
+  Time: 152.34s
+  repair_assertion for AssertFail
+    Before: Verified=8, Errors=3, Verus Errors=3
+    After: Verified=8, Errors=3, Verus Errors=3
+    Time: 48.50s
+  repair_postcond for PostCondFail
+    Before: Verified=8, Errors=3, Verus Errors=3
+    After: Verified=8, Errors=3, Verus Errors=3
+    Time: 103.84s
+
+Round 3
+  Time: 154.99s
+  repair_assertion for AssertFail
+    Before: Verified=8, Errors=3, Verus Errors=3
+    After: Verified=8, Errors=3, Verus Errors=3
+    Time: 46.02s
+  repair_postcond for PostCondFail
+    Before: Verified=8, Errors=3, Verus Errors=3
+    After: Verified=8, Errors=3, Verus Errors=3
+    Time: 108.97s
+
+Round 4
+  Time: 53.23s
+  repair_assertion for AssertFail
+    Before: Verified=8, Errors=3, Verus Errors=3
+    After: Verified=8, Errors=3, Verus Errors=3
+    Time: 53.23s
+
+Round 5
+  Time: 0.35s
+  repair_assertion for AssertFail
+    Before: Verified=8, Errors=3, Verus Errors=3
+    After: Verified=8, Errors=3, Verus Errors=3
+    Time: 0.35s

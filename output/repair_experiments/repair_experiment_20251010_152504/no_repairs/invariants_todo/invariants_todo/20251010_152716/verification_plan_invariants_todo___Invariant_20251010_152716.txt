@@ -1,0 +1,26 @@
+```markdown
+Current State:
+- The struct ModPredicate implements InvariantPredicate but has a “TODO: add specification” placeholder for its inv function.
+- The code uses AtomicInvariant with different k values (0 or 1) to enforce even/odd constraints on the stored u32.
+- There is no mention or requirement for a View function.
+
+Dependencies:
+- The ModPredicate::inv function must relate k to v’s parity (k=0 => v even, k=1 => v odd).
+- The test function relies on the correctness of the ‘inv’ predicate for the invariants to hold.
+
+```
+
+```markdown
+**Selected Workflow:** Invariant-First Workflow
+
+**Justification:**
+This code includes a struct (ModPredicate) needing a type-level invariant function and contains a “TODO: add specification” placeholder for the inv function. There is no mention of a View requirement. Hence, we apply the Invariant-First Workflow to properly define type invariants followed by function specifications.
+
+**Execution Steps:**
+1. inv_inference
+2. spec_inference
+
+**Module Conditions:**
+- inv_inference: Yes – ModPredicate is a data-structure-like type (implements InvariantPredicate).
+- proof_generation: No – No “TODO: add proof” or “TODO: add invariants” markers were found.
+```

@@ -1,0 +1,15 @@
+{
+  "benchmark": "set_from_vec_todo",
+  "execution_time": 448.2744724750519,
+  "modules_activated": 5,
+  "total_llm_calls": 9,
+  "avg_response_time": 48.274514728122284,
+  "cache_hit_rate": 11.11111111111111,
+  "total_repair_rounds": 5,
+  "total_repairs": 5,
+  "repair_success_rate": 60.0,
+  "initial_errors": 999,
+  "final_errors": 1,
+  "errors_fixed": 998,
+  "verification_success": false
+}

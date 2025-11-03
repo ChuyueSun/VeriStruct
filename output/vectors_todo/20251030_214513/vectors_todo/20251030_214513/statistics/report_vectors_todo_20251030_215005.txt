@@ -1,0 +1,76 @@
+================================================================================
+VerusAgent Statistics Report - vectors_todo
+================================================================================
+
+EXECUTION SUMMARY
+--------------------------------------------------------------------------------
+Benchmark: vectors_todo
+Start Time: 2025-10-30T21:45:13.475173
+End Time: 2025-10-30T21:50:05.668691
+Total Execution Time: 292.19s
+Verification Success: No
+
+MODULE ACTIVATION
+--------------------------------------------------------------------------------
+Total Modules Activated: 2
+Modules: spec_inference, proof_generation
+
+LLM CALLS
+--------------------------------------------------------------------------------
+Total LLM Calls: 6
+Average Response Time: 41.50s
+Cache Hit Rate: 0.00%
+
+Calls by Stage:
+  planning: 1
+  proof_generation: 1
+  repair: 3
+  spec_inference: 1
+
+ITERATIONS
+--------------------------------------------------------------------------------
+Iterations by Module:
+
+REPAIRS
+--------------------------------------------------------------------------------
+Total Repair Rounds: 5
+Total Repairs: 5
+Successful Repairs: 1
+Failed Repairs: 4
+Success Rate: 20.00%
+
+Repairs by Error Type:
+  AssertFail: 1
+  InvFailEnd: 3
+  MismatchedType: 1
+
+Repairs by Heuristic:
+  repair_assertion: 1
+  repair_invariant: 3
+  repair_type: 1
+
+ERROR TRACKING
+--------------------------------------------------------------------------------
+Initial Errors: 999
+Final Errors: 1
+Errors Fixed: 998
+
+Initial Errors by Type:
+  Other: 1
+
+STAGE DETAILS
+--------------------------------------------------------------------------------
+
+spec_inference (Step 1)
+  Execution Time: 37.29s
+  LLM Calls: 1
+  Iterations: 1
+  Result: Verified=-1, Errors=999
+
+proof_generation (Step 2)
+  Execution Time: 55.74s
+  LLM Calls: 1
+  Iterations: 1
+  Result: Verified=9, Errors=1
+
+================================================================================

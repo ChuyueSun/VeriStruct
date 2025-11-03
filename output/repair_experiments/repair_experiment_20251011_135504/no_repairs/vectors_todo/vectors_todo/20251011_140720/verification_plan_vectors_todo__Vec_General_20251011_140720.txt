@@ -1,0 +1,28 @@
+```markdown
+Current State:
+- The code defines free functions (binary_search, reverse, binary_search_no_spinoff) with “TODO: add specification” comments, indicating missing function specifications.
+- There are “TODO: add invariants” placeholders for the while/for loops, indicating missing loop invariants.
+- No custom struct or class is defined, and there is no mention of “View” requirements.
+- No type invariants are requested, only function specs and loop invariants.
+
+Dependencies:
+- The three functions depend on properly defined requires/ensures clauses for correctness.
+- Loop invariants (proof obligations) depend on the function specifications to establish and maintain correctness across iterations.
+
+```
+
+```markdown
+**Selected Workflow:** Specification-Only Workflow
+
+**Justification:**
+There is no custom class or struct needing a type invariant, so inv_inference is not required.
+“TODO: add specification” placeholders indicate that only function specifications are needed, and no “View” requirement is mentioned.
+
+**Execution Steps:**
+1. spec_inference
+2. proof_generation
+
+**Module Conditions:**
+- inv_inference: No – the code does not define a custom class or struct requiring type invariants.
+- proof_generation: Yes – “TODO: add invariants” indicates loop invariants and accompanying proofs are needed.
+```

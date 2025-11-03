@@ -1,0 +1,24 @@
+Current State:
+- The code includes a data structure "FixedParity" and uses it with RwLock.
+- There is a "TODO: add specification" marker in the inv() function of the RwLockPredicate trait, indicating placeholders for requires/ensures or other specification details.
+- No "View" or "implement View" requirements are present, and there is no mention of needing a custom View function.
+
+Dependencies:
+- The "inv" function for FixedParity must be completed to satisfy the RwLockPredicate contract.
+- The RwLock requires that any supplied predicate fulfill its specification requirements to ensure correct operation.
+
+```
+
+```markdown
+**Selected Workflow:** Invariant-First Workflow
+
+**Justification:**
+The code has a struct ("FixedParity") which qualifies as a data structure, and there is a placeholder ("TODO: add specification") indicating the need for function specifications. There is no mention of a View function or any View-related TODO, so the Invariant-First Workflow (inv_inference → spec_inference) is appropriate.
+
+**Execution Steps:**
+1. inv_inference
+2. spec_inference
+
+**Module Conditions:**
+- inv_inference: Yes – the code includes the struct FixedParity and needs an invariant function consistent with the trait requirement.
+- proof_generation: No – no "TODO: add proof" or "TODO: add invariants" markers are present.

@@ -1,0 +1,13 @@
+{
+  "candidate_idx": 1,
+  "attempt_num": 5,
+  "timestamp": "2025-10-11T14:07:09.810716",
+  "score": {
+    "verified": 5,
+    "errors": 0,
+    "verus_errors": 0,
+    "compilation_error": false,
+    "is_correct": true
+  },
+  "is_best_so_far": true
+}

@@ -1,0 +1,45 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/node_todo.rs
+Input File Name: node_todo.rs
+File ID: node_todo___General_20251011_232247
+Output Directory: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225246/no_repairs/node_todo/node_todo/20251011_232247
+Progress Log: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225246/no_repairs/node_todo/node_todo/20251011_232247/progress_logs/progress_node_todo_20251011_232247.json
+Summary File: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225246/no_repairs/node_todo/node_todo/20251011_232247/progress_logs/summary_node_todo_20251011_232247.txt
+
+Start time: 2025-10-11T23:22:47.305901
+End time: 2025-10-11T23:32:45.303176
+Total execution time: 598.00s
+
+## Final Result
+
+Verified: 8
+Errors: 3
+Verus Errors: 3
+Compilation Error: False
+Is Correct: False
+
+## Statistics
+
+Total steps: 3
+Total repair rounds: 0
+Total repairs attempted: 0
+Successful repairs: 0
+Average step time: 192.71s
+Average repair time: 0.00s
+
+## Steps
+
+Step 1: inv_inference
+  Time: 396.52s
+  Score: Verified=7, Errors=4, Verus Errors=13
+Step 2: spec_inference
+  Time: 181.62s
+  Score: Verified=8, Errors=3, Verus Errors=3
+Step 3: proof_generation
+  Time: 0.01s
+  Score: Verified=8, Errors=3, Verus Errors=3
+
+## Repair Rounds

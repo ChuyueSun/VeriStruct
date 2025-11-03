@@ -1,0 +1,26 @@
+```markdown
+Current State:
+- The code defines a struct "FixedParity" implementing the trait RwLockPredicate<u64>, but its spec function "inv" is left unfinished with "TODO: add specification".
+- There is a data-structure-like struct ("FixedParity") needing an invariant/spec, but no explicit mention of "TODO: add View" or view-function refinement.
+- No "TODO: add proof" or "TODO: add invariants" is present.
+
+Dependencies:
+- "FixedParity" struct depends on defining its predicate logic in inv.
+- The RwLock uses the Pred::inv internally, so finishing FixedParity::inv is necessary for a consistent specification.
+
+```
+
+```markdown
+**Selected Workflow:** Invariant-First Workflow
+
+**Justification:**
+Because there is a struct (FixedParity) that needs an invariant/predicate function, and there is also a specification placeholder ("TODO: add specification"), the code matches the scenario for an Invariant-First Workflow. There is no requirement for new or refined "View" functions, so we do not use the Full Sequence Workflow.
+
+**Execution Steps:**
+1. inv_inference
+2. spec_inference
+
+**Module Conditions:**
+- inv_inference: Yes – "FixedParity" is a struct needing its predicate defined.
+- proof_generation: No – there is no "TODO: add proof" or "TODO: add invariants" present.
+```

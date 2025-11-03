@@ -1,0 +1,38 @@
+{
+  "full_pipeline": [
+    {
+      "benchmark": "bst_map_todo",
+      "configuration": "full_pipeline",
+      "success": false,
+      "timeout": true,
+      "exit_code": -1,
+      "execution_time": 1800.0060541629791,
+      "log_file": "output/repair_experiments/repair_experiment_20251010_152504/full_pipeline/bst_map_todo/output.log",
+      "output_dir": "output/repair_experiments/repair_experiment_20251010_152504/full_pipeline/bst_map_todo"
+    }
+  ],
+  "no_repairs": [
+    {
+      "benchmark": "bst_map_todo",
+      "configuration": "no_repairs",
+      "success": true,
+      "timeout": false,
+      "exit_code": 0,
+      "execution_time": 722.8678507804871,
+      "log_file": "output/repair_experiments/repair_experiment_20251010_152504/no_repairs/bst_map_todo/output.log",
+      "output_dir": "output/repair_experiments/repair_experiment_20251010_152504/no_repairs/bst_map_todo"
+    }
+  ],
+  "baseline": [
+    {
+      "benchmark": "bst_map_todo",
+      "configuration": "baseline",
+      "success": false,
+      "timeout": true,
+      "exit_code": -1,
+      "execution_time": 1800.007655620575,
+      "log_file": "output/repair_experiments/repair_experiment_20251010_152504/baseline/bst_map_todo/output.log",
+      "output_dir": "output/repair_experiments/repair_experiment_20251010_152504/baseline/bst_map_todo"
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "start_time": "2025-10-10T15:41:03.393452",
+  "steps": [
+    {
+      "name": "inv_inference",
+      "number": 1,
+      "start_time": "2025-10-10T15:43:33.108857",
+      "result": {
+        "compilation_error": false,
+        "verified": 4,
+        "errors": 1,
+        "verus_errors": 2,
+        "is_correct": false,
+        "code_length": 4005
+      },
+      "execution_time": 53.01548409461975,
+      "end_time": "2025-10-10T15:44:26.124348"
+    },
+    {
+      "name": "spec_inference",
+      "number": 2,
+      "start_time": "2025-10-10T15:44:26.124469",
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 1,
+        "is_correct": false,
+        "code_length": 4085
+      },
+      "execution_time": 72.9251000881195,
+      "end_time": "2025-10-10T15:45:39.049575"
+    },
+    {
+      "name": "proof_generation",
+      "number": 3,
+      "start_time": "2025-10-10T15:45:39.049701",
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 1,
+        "is_correct": false,
+        "code_length": 4103
+      },
+      "execution_time": 69.57076930999756,
+      "end_time": "2025-10-10T15:46:48.620474"
+    }
+  ],
+  "repair_rounds": [],
+  "final_result": {
+    "compilation_error": false,
+    "verified": 4,
+    "errors": 1,
+    "verus_errors": 2,
+    "is_correct": false
+  },
+  "total_execution_time": 345.23613,
+  "end_time": "2025-10-10T15:46:48.629582"
+}

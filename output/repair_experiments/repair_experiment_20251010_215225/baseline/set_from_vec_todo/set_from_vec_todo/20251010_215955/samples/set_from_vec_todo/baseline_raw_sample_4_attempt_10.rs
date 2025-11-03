@@ -1,0 +1,71 @@
+use vstd::prelude::*;
+use vstd::seq_lib::group_seq_properties;
+
+verus! {
+
+struct VecSet {
+    vt: Vec<u64>,
+}
+
+impl VecSet {
+    pub closed spec fn view(&self) -> Set<u64> {
+        // Replace TODO with the appropriate definition:
+        set i in 0..self.vt@.len() => self.vt@[i]
+    }
+
+    pub fn new() -> (s: Self)
+        // Replace TODO with the appropriate specification:
+        ensures s.view() =~= set![],
+    {
+        VecSet { vt: Vec::new() }
+    }
+
+    pub fn insert(&mut self, v: u64)
+        // Replace TODO with the appropriate specification:
+        ensures self.view() == old(self).view().union(set![v]),
+    {
+        // Replace TODO with the proof block:
+        self.vt.push(v);
+        proof {
+            assert(self.vt@ == old(self).vt@.add(v));
+            assert(self.view() == old(self).view().union(set![v]));
+        }
+    }
+
+    pub fn contains(&self, v: u64) -> (contained: bool)
+        // Replace TODO with the appropriate specification:
+        ensures contained <==> v in self.view(),
+    {
+        for i in iter: 0..self.vt.len()
+            // Replace TODO with the loop invariant:
+            invariant
+                self.vt@ == old(self).vt@,
+                forall j in 0..i { self.vt@[j] != v },
+            decreases self.vt.len() - i
+        {
+            if self.vt[i] == v {
+                return true;
+            }
+        }
+        false
+    }
+}
+
+/* TSET CODE BELOW */
+
+fn test(t: Vec<u64>)
+{
+    let mut vs: VecSet = VecSet::new();
+    assert(vs@ =~= set![]);
+    vs.insert(3);
+    vs.insert(5);
+    let contains2 = vs.contains(2);
+    assert(!contains2);
+    let contains3 = vs.contains(3);
+    assert(contains3);
+    assert(vs@ =~= set![3, 5]);
+}
+
+pub fn main() {}
+
+} // verus!

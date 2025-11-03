@@ -1,0 +1,317 @@
+\documentclass{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{amsmath}
+\usepackage{xcolor}
+
+\title{VerusAgent: Planner and Generation Pseudo-code}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Planner Algorithm}
+
+The planner determines the optimal verification workflow by analyzing the code structure and leveraging LLM-based decision making.
+
+\begin{algorithm}[H]
+\caption{Planner Execution}
+\begin{algorithmic}[1]
+\Require Context $ctx$ with trials, code, knowledge base, and available modules
+\Ensure Execution plan specifying module sequence
+
+\Procedure{ExecutePlanner}{$ctx$}
+    \State $modules\_desc \gets $ empty string
+    \For{$module$ \textbf{in} $ctx.modules.values()$}
+        \State $modules\_desc \gets modules\_desc + $ format($module.name$, $module.desc$)
+    \EndFor
+
+    \State $task\_overview \gets$ LoadTaskOverview()
+    \State $system\_prompt \gets$ FillTemplate(\texttt{"plan\_system"}, $task\_overview$, $modules\_desc$)
+
+    \State $user\_prompt \gets$ GetNormalizedTaskDesc($ctx$)
+
+    \State $plan \gets$ LLM.Infer(
+    \State \hspace{2em} $system\_info = system\_prompt$,
+    \State \hspace{2em} $query = user\_prompt$,
+    \State \hspace{2em} $max\_tokens = 8192$
+    \State )
+
+    \State \Return $plan$
+\EndProcedure
+
+\vspace{1em}
+
+\Procedure{GetNormalizedTaskDesc}{$ctx$}
+    \If{$ctx.params.trial\_fetch\_mode == $ \texttt{"naive"}}
+        \State $trial \gets ctx.trials[-1]$
+        \State $prevs \gets ctx.trials[-1 - ctx.params.max\_prev\_trial : -1]$
+    \Else
+        \State $trial \gets$ None
+        \State $prevs \gets []$
+    \EndIf
+
+    \State $verus\_code \gets trial.code$
+    \State $knowledge \gets ctx.gen\_knowledge()$
+    \State $failures \gets$ empty list
+    \For{$i, ptrail$ \textbf{in} enumerate($prevs$)}
+        \State $failures$.append(format(\texttt{"Failure"}, $i$, $ptrail.desc()$))
+    \EndFor
+
+    \State $task\_desc \gets$ FillTemplate(\texttt{"task\_desc"},
+    \State \hspace{2em} $verus\_code$, \texttt{""} \Comment{Empty rustc\_out for cache consistency}
+    \State \hspace{2em} $knowledge$, $failures$
+    \State )
+
+    \State \Return $task\_desc$
+\EndProcedure
+
+\end{algorithmic}
+\end{algorithm}
+
+\section{Workflow Selection}
+
+The planner selects from four main workflow types:
+
+\begin{itemize}
+    \item \textbf{Full Sequence:} $\text{view\_inference} \rightarrow \text{view\_refinement} \rightarrow [\text{inv\_inference}] \rightarrow \text{spec\_inference}$
+    \item \textbf{Invariant-First:} $\text{inv\_inference} \rightarrow \text{spec\_inference}$
+    \item \textbf{Specification-Only:} $\text{spec\_inference}$
+    \item \textbf{Invariant-Only:} $\text{inv\_inference}$
+\end{itemize}
+
+If \texttt{TODO: add proof} exists in code, append $\text{proof\_generation}$ to the workflow.
+
+\newpage
+
+\section{Generation Module Algorithm}
+
+Each generation module (View Inference, Invariant Inference, Specification Inference, Proof Generation) follows a similar pattern with module-specific instructions.
+
+\begin{algorithm}[H]
+\caption{Generation Module Execution}
+\begin{algorithmic}[1]
+\Require Context $ctx$ with code, knowledge base, and configuration
+\Require Module-specific instruction $module\_instruction$
+\Ensure Updated code with generated specifications
+
+\Procedure{ExecuteModule}{$ctx$, $module\_instruction$}
+    \State $code \gets ctx.trials[-1].code$
+    \State $original\_code \gets code$
+
+    \If{ShouldSkip($code$)}
+        \State \textcolor{gray}{// Early exit if no TODOs or markers}
+        \State \Return $code$
+    \EndIf
+
+    \State $max\_retries \gets 3$
+    \State $safe\_responses \gets []$
+
+    \For{$retry$ \textbf{in} range($max\_retries$)}
+        \State \textcolor{gray}{// Build instruction with knowledge and guidelines}
+        \State $instruction \gets$ BuildInstruction(
+        \State \hspace{2em} $base = module\_instruction$,
+        \State \hspace{2em} $add\_common = $ True,
+        \State \hspace{2em} $code = code$,
+        \State \hspace{2em} $knowledge = ctx.gen\_knowledge()$
+        \State )
+
+        \State $examples \gets$ GetExamples($module\_type$)
+        \State $use\_cache \gets (retry == 0)$
+
+        \State \textcolor{gray}{// Generate multiple candidate solutions}
+        \State $responses \gets$ LLM.Infer(
+        \State \hspace{2em} $instruction = instruction$,
+        \State \hspace{2em} $query = code$,
+        \State \hspace{2em} $exemplars = examples$,
+        \State \hspace{2em} $answer\_num = 5$,
+        \State \hspace{2em} $use\_cache = use\_cache$
+        \State )
+
+        \If{$responses == $ empty \textbf{and} $retry == max\_retries - 1$}
+            \State \Return $code$
+        \EndIf
+
+        \State \textcolor{gray}{// Process and validate responses}
+        \State $safe\_responses.extend($ProcessResponses($responses$, $original\_code$)$)$
+
+        \If{$safe\_responses$ is not empty}
+            \State \textbf{break}
+        \EndIf
+    \EndFor
+
+    \If{$safe\_responses$ is empty}
+        \State \Return $code$
+    \EndIf
+
+    \State \textcolor{gray}{// Evaluate and select best candidate}
+    \State $best\_code \gets$ EvaluateAndSelectBest($safe\_responses$, $ctx$)
+
+    \State \Return $best\_code$
+\EndProcedure
+
+\end{algorithmic}
+\end{algorithm}
+
+\newpage
+
+\begin{algorithm}[H]
+\caption{Process Responses}
+\begin{algorithmic}[1]
+\Require $responses$ - LLM generated code samples
+\Require $original\_code$ - Original code for safety checking
+\Ensure List of safe, validated code samples
+
+\Procedure{ProcessResponses}{$responses$, $original\_code$}
+    \State $safe\_samples \gets []$
+
+    \For{$response$ \textbf{in} $responses$}
+        \State $parsed\_code \gets$ ParseLLMResponse($response$)
+
+        \If{$parsed\_code$ is None}
+            \State \textbf{continue}
+        \EndIf
+
+        \State \textcolor{gray}{// Fix type errors if present}
+        \State $fixed\_code \gets$ DebugTypeError($parsed\_code$)
+
+        \If{$fixed\_code$ is not None}
+            \State $parsed\_code \gets fixed\_code$
+        \EndIf
+
+        \State \textcolor{gray}{// Validate code safety}
+        \If{\textbf{not} CodeChangeIsSafe($original\_code$, $parsed\_code$)}
+            \State Log(\texttt{"Unsafe code change detected"})
+            \State \textbf{continue}
+        \EndIf
+
+        \State $safe\_samples$.append($parsed\_code$)
+    \EndFor
+
+    \State \Return $safe\_samples$
+\EndProcedure
+
+\vspace{1em}
+
+\Procedure{EvaluateAndSelectBest}{$candidates$, $ctx$}
+    \State $best\_code \gets$ None
+    \State $best\_score \gets -\infty$
+
+    \For{$code$ \textbf{in} $candidates$}
+        \State $eval\_result \gets$ VerusEvaluate($code$)
+        \State $score \gets eval\_result.get\_score()$
+
+        \If{$score > best\_score$}
+            \State $best\_score \gets score$
+            \State $best\_code \gets code$
+        \EndIf
+
+        \State \textcolor{gray}{// Early exit if verification succeeds}
+        \If{$eval\_result.verification\_success$}
+            \State \Return $code$
+        \EndIf
+    \EndFor
+
+    \State \Return $best\_code$ \Comment{Return best candidate even if not perfect}
+\EndProcedure
+
+\end{algorithmic}
+\end{algorithm}
+
+\newpage
+
+\section{Module-Specific Instructions}
+
+\subsection{View Inference}
+Generates mathematical abstractions (View functions) for data structures.
+
+\textbf{Key Requirements:}
+\begin{itemize}
+    \item Add View spec function with mathematical types (int, nat, Seq$<$T$>$, Set$<$T$>$, Map$<$K,V$>$)
+    \item For Vec types in View, append "@" to variable names
+    \item Do not use \texttt{reveal} keyword in View implementation
+\end{itemize}
+
+\subsection{View Refinement}
+Improves and optimizes existing View functions.
+
+\textbf{Key Requirements:}
+\begin{itemize}
+    \item Simplify View definitions while maintaining semantic equivalence
+    \item Optimize mathematical representations
+    \item Ensure consistency with data structure operations
+\end{itemize}
+
+\subsection{Invariant Inference}
+Generates invariant functions for data structures.
+
+\textbf{Key Requirements:}
+\begin{itemize}
+    \item Define well-formedness conditions
+    \item Capture structural constraints
+    \item Ensure type safety properties
+\end{itemize}
+
+\subsection{Specification Inference}
+Adds function specifications (requires/ensures clauses).
+
+\textbf{Key Requirements:}
+\begin{itemize}
+    \item Add \texttt{requires} and \texttt{ensures} to spec functions
+    \item Change function signatures to include return types
+    \item For field access: use \texttt{self.view().field} if type implements View
+    \item Implement spec fn function bodies using match/let constructs
+\end{itemize}
+
+\subsection{Proof Generation}
+Fills in proof blocks and loop invariants.
+
+\textbf{Key Requirements:}
+\begin{itemize}
+    \item Replace \texttt{// TODO: add proof} with appropriate proof blocks
+    \item For regular functions: use \texttt{proof \{ ... \}} blocks
+    \item For proof functions: write assertions directly in function body
+    \item Add loop invariants for all variables that are read or written
+    \item Use lemmas and strategic assertions with \texttt{by(...)} syntax
+\end{itemize}
+
+\section{Safety Checking}
+
+\begin{algorithm}[H]
+\caption{Code Safety Validation}
+\begin{algorithmic}[1]
+\Require $original\_code$ - The original code before modification
+\Require $generated\_code$ - The LLM-generated code
+\Ensure Boolean indicating if the code change is safe
+
+\Procedure{CodeChangeIsSafe}{$original\_code$, $generated\_code$}
+    \State \textcolor{gray}{// Extract essential components}
+    \State $orig\_structs \gets$ ExtractStructs($original\_code$)
+    \State $gen\_structs \gets$ ExtractStructs($generated\_code$)
+
+    \State $orig\_fn\_sigs \gets$ ExtractFunctionSignatures($original\_code$)
+    \State $gen\_fn\_sigs \gets$ ExtractFunctionSignatures($generated\_code$)
+
+    \State \textcolor{gray}{// Validate no unauthorized modifications}
+    \If{$orig\_structs \neq gen\_structs$}
+        \State \Return False \Comment{Struct definitions modified}
+    \EndIf
+
+    \If{\textbf{not} SignaturesCompatible($orig\_fn\_sigs$, $gen\_fn\_sigs$)}
+        \State \Return False \Comment{Function signatures changed}
+    \EndIf
+
+    \If{ContainsProhibitedPatterns($generated\_code$)}
+        \State \Return False \Comment{Unsafe patterns detected}
+    \EndIf
+
+    \State \Return True
+\EndProcedure
+
+\end{algorithmic}
+\end{algorithm}
+
+\end{document}

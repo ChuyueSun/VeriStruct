@@ -1,0 +1,120 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/node_todo.rs
+Input File Name: node_todo.rs
+File ID: node_todo___General_20251029_123107
+Output Directory: /home/chuyue/VerusAgent/output/node_todo/20251029_123107
+Progress Log: /home/chuyue/VerusAgent/output/node_todo/20251029_123107/progress_logs/progress_node_todo_20251029_123107.json
+Summary File: /home/chuyue/VerusAgent/output/node_todo/20251029_123107/progress_logs/summary_node_todo_20251029_123107.txt
+
+Start time: 2025-10-29T12:31:07.455648
+End time: 2025-10-29T13:00:40.522103
+Total execution time: 1773.07s
+
+## Final Result
+
+Verified: 7
+Errors: 4
+Verus Errors: 13
+Compilation Error: False
+Is Correct: False
+
+## Statistics
+
+Total steps: 3
+Total repair rounds: 5
+Total repairs attempted: 15
+Successful repairs: 0
+Average step time: 162.25s
+Average repair time: 85.70s
+
+## Steps
+
+Step 1: inv_inference
+  Time: 2.92s
+  Score: Verified=7, Errors=4, Verus Errors=13
+Step 2: spec_inference
+  Time: 483.81s
+  Score: Verified=6, Errors=5, Verus Errors=13
+Step 3: proof_generation
+  Time: 0.01s
+  Score: Verified=6, Errors=5, Verus Errors=13
+
+## Repair Rounds
+
+Round 1
+  Time: 1126.99s
+  repair_assertion for AssertFail
+    Before: Verified=6, Errors=5, Verus Errors=13
+    After: Verified=6, Errors=5, Verus Errors=13
+    Time: 0.54s
+  repair_precond for PreCondFail
+    Before: Verified=6, Errors=5, Verus Errors=13
+    After: Verified=6, Errors=5, Verus Errors=13
+    Time: 601.63s
+  repair_postcond for PostCondFail
+    Before: Verified=6, Errors=5, Verus Errors=13
+    After: Verified=6, Errors=5, Verus Errors=13
+    Time: 524.81s
+
+Round 2
+  Time: 147.54s
+  repair_assertion for AssertFail
+    Before: Verified=6, Errors=5, Verus Errors=13
+    After: Verified=6, Errors=5, Verus Errors=13
+    Time: 0.55s
+  repair_precond for PreCondFail
+    Before: Verified=6, Errors=5, Verus Errors=13
+    After: Verified=6, Errors=5, Verus Errors=13
+    Time: 145.77s
+  repair_postcond for PostCondFail
+    Before: Verified=6, Errors=5, Verus Errors=13
+    After: Verified=6, Errors=5, Verus Errors=13
+    Time: 1.23s
+
+Round 3
+  Time: 3.66s
+  repair_assertion for AssertFail
+    Before: Verified=6, Errors=5, Verus Errors=13
+    After: Verified=6, Errors=5, Verus Errors=13
+    Time: 0.55s
+  repair_precond for PreCondFail
+    Before: Verified=6, Errors=5, Verus Errors=13
+    After: Verified=6, Errors=5, Verus Errors=13
+    Time: 1.90s
+  repair_postcond for PostCondFail
+    Before: Verified=6, Errors=5, Verus Errors=13
+    After: Verified=6, Errors=5, Verus Errors=13
+    Time: 1.21s
+
+Round 4
+  Time: 3.65s
+  repair_assertion for AssertFail
+    Before: Verified=6, Errors=5, Verus Errors=13
+    After: Verified=6, Errors=5, Verus Errors=13
+    Time: 0.54s
+  repair_precond for PreCondFail
+    Before: Verified=6, Errors=5, Verus Errors=13
+    After: Verified=6, Errors=5, Verus Errors=13
+    Time: 1.88s
+  repair_postcond for PostCondFail
+    Before: Verified=6, Errors=5, Verus Errors=13
+    After: Verified=6, Errors=5, Verus Errors=13
+    Time: 1.23s
+
+Round 5
+  Time: 3.65s
+  repair_assertion for AssertFail
+    Before: Verified=6, Errors=5, Verus Errors=13
+    After: Verified=6, Errors=5, Verus Errors=13
+    Time: 0.55s
+  repair_precond for PreCondFail
+    Before: Verified=6, Errors=5, Verus Errors=13
+    After: Verified=6, Errors=5, Verus Errors=13
+    Time: 1.91s
+  repair_postcond for PostCondFail
+    Before: Verified=6, Errors=5, Verus Errors=13
+    After: Verified=6, Errors=5, Verus Errors=13
+    Time: 1.19s

@@ -1,0 +1,51 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/bst_map_todo.rs
+Input File Name: bst_map_todo.rs
+File ID: bst_map_todo__Map_General_20251101_213312
+Output Directory: /home/chuyue/VerusAgent/output/bst_map_todo/20251101_213311/bst_map_todo/azure_20251101_213312
+Progress Log: /home/chuyue/VerusAgent/output/bst_map_todo/20251101_213311/bst_map_todo/azure_20251101_213312/progress_logs/progress_bst_map_todo_20251101_213312.json
+Summary File: /home/chuyue/VerusAgent/output/bst_map_todo/20251101_213311/bst_map_todo/azure_20251101_213312/progress_logs/summary_bst_map_todo_20251101_213312.txt
+
+Start time: 2025-11-01T21:33:12.172538
+End time: 2025-11-01T21:33:32.346969
+Total execution time: 20.17s
+
+## Final Result
+
+Verified: 16
+Errors: 0
+Verus Errors: 0
+Compilation Error: False
+Is Correct: True
+
+## Statistics
+
+Total steps: 5
+Total repair rounds: 0
+Total repairs attempted: 0
+Successful repairs: 0
+Average step time: 3.85s
+Average repair time: 0.00s
+
+## Steps
+
+Step 1: view_inference
+  Time: 3.11s
+  Score: Verified=9, Errors=7, Verus Errors=17
+Step 2: view_refinement
+  Time: 4.15s
+  Score: Verified=9, Errors=7, Verus Errors=17
+Step 3: inv_inference
+  Time: 4.12s
+  Score: Verified=9, Errors=7, Verus Errors=17
+Step 4: spec_inference
+  Time: 5.16s
+  Score: Verified=15, Errors=1, Verus Errors=1
+Step 5: proof_generation
+  Time: 2.73s
+  Score: Verified=16, Errors=0, Verus Errors=0
+
+## Repair Rounds

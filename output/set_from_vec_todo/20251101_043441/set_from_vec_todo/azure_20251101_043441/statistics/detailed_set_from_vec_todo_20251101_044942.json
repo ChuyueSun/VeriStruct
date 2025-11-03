@@ -1,0 +1,342 @@
+{
+  "benchmark_name": "set_from_vec_todo",
+  "start_time": "2025-11-01T04:34:41.888231",
+  "end_time": "2025-11-01T04:49:42.397205",
+  "total_execution_time": 900.5089757442474,
+  "modules_activated": [
+    "view_inference",
+    "view_refinement",
+    "inv_inference",
+    "spec_inference",
+    "proof_generation"
+  ],
+  "modules_count": 5,
+  "stages": {
+    "view_inference": {
+      "step_number": 1,
+      "start_time": "2025-11-01T04:34:42.662793",
+      "end_time": "2025-11-01T04:34:43.657739",
+      "execution_time": 0.9949488639831543,
+      "llm_calls": 1,
+      "iterations": 1,
+      "result": {
+        "compilation_error": false,
+        "verified": 4,
+        "errors": 2,
+        "verus_errors": 2,
+        "is_correct": false
+      }
+    },
+    "view_refinement": {
+      "step_number": 2,
+      "start_time": "2025-11-01T04:34:43.657869",
+      "end_time": "2025-11-01T04:34:45.851097",
+      "execution_time": 2.1932311058044434,
+      "llm_calls": 1,
+      "iterations": 1,
+      "result": {
+        "compilation_error": false,
+        "verified": 4,
+        "errors": 2,
+        "verus_errors": 2,
+        "is_correct": false
+      }
+    },
+    "inv_inference": {
+      "step_number": 3,
+      "start_time": "2025-11-01T04:34:45.851227",
+      "end_time": "2025-11-01T04:34:48.062275",
+      "execution_time": 2.211049795150757,
+      "llm_calls": 1,
+      "iterations": 1,
+      "result": {
+        "compilation_error": false,
+        "verified": 4,
+        "errors": 2,
+        "verus_errors": 2,
+        "is_correct": false
+      }
+    },
+    "spec_inference": {
+      "step_number": 4,
+      "start_time": "2025-11-01T04:34:48.062406",
+      "end_time": "2025-11-01T04:45:43.648567",
+      "execution_time": 655.5861644744873,
+      "llm_calls": 2,
+      "iterations": 1,
+      "result": {
+        "compilation_error": false,
+        "verified": 4,
+        "errors": 2,
+        "verus_errors": 2,
+        "is_correct": false
+      }
+    },
+    "proof_generation": {
+      "step_number": 5,
+      "start_time": "2025-11-01T04:45:43.648707",
+      "end_time": "2025-11-01T04:47:07.855148",
+      "execution_time": 84.20644330978394,
+      "llm_calls": 1,
+      "iterations": 1,
+      "result": {
+        "compilation_error": false,
+        "verified": 5,
+        "errors": 1,
+        "verus_errors": 1,
+        "is_correct": false
+      }
+    }
+  },
+  "llm_calls": {
+    "total": 10,
+    "by_stage": {
+      "planning": 1,
+      "view_inference": 1,
+      "view_refinement": 1,
+      "inv_inference": 1,
+      "spec_inference": 2,
+      "proof_generation": 1,
+      "repair": 3
+    },
+    "by_module": {
+      "planner": 1,
+      "view_inference": 1,
+      "view_refinement": 1,
+      "inv_inference": 1,
+      "spec_inference": 2,
+      "proof_generation": 1,
+      "repair_postcond": 1,
+      "repair_syntax": 2
+    },
+    "response_times": [
+      {
+        "stage": "planning",
+        "module": "planner",
+        "time": 0.0001518726348876953,
+        "cache_hit": true
+      },
+      {
+        "stage": "view_inference",
+        "module": "view_inference",
+        "time": 0.00019431114196777344,
+        "cache_hit": true
+      },
+      {
+        "stage": "view_refinement",
+        "module": "view_refinement",
+        "time": 0.0001780986785888672,
+        "cache_hit": true
+      },
+      {
+        "stage": "inv_inference",
+        "module": "inv_inference",
+        "time": 0.00020956993103027344,
+        "cache_hit": true
+      },
+      {
+        "stage": "spec_inference",
+        "module": "spec_inference",
+        "time": 600.2213582992554,
+        "cache_hit": false
+      },
+      {
+        "stage": "spec_inference",
+        "module": "spec_inference",
+        "time": 52.09119176864624,
+        "cache_hit": false
+      },
+      {
+        "stage": "proof_generation",
+        "module": "proof_generation",
+        "time": 83.17391395568848,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_postcond",
+        "time": 38.70360088348389,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 63.73201012611389,
+        "cache_hit": false
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "time": 48.779958724975586,
+        "cache_hit": false
+      }
+    ],
+    "cache_hits": 4,
+    "cache_misses": 6,
+    "input_tokens": 31219,
+    "output_tokens": 49392,
+    "by_call": [
+      {
+        "stage": "spec_inference",
+        "module": "spec_inference",
+        "input_tokens": 6994,
+        "output_tokens": 10650,
+        "cache_hit": false,
+        "time": 52.09119176864624
+      },
+      {
+        "stage": "proof_generation",
+        "module": "proof_generation",
+        "input_tokens": 11116,
+        "output_tokens": 14921,
+        "cache_hit": false,
+        "time": 83.17391395568848
+      },
+      {
+        "stage": "repair",
+        "module": "repair_postcond",
+        "input_tokens": 3199,
+        "output_tokens": 5939,
+        "cache_hit": false,
+        "time": 38.70360088348389
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "input_tokens": 4947,
+        "output_tokens": 10686,
+        "cache_hit": false,
+        "time": 63.73201012611389
+      },
+      {
+        "stage": "repair",
+        "module": "repair_syntax",
+        "input_tokens": 4963,
+        "output_tokens": 7196,
+        "cache_hit": false,
+        "time": 48.779958724975586
+      }
+    ]
+  },
+  "iterations": {
+    "by_module": {},
+    "by_stage": {
+      "view_inference": 1,
+      "view_refinement": 1,
+      "inv_inference": 1,
+      "spec_inference": 1,
+      "proof_generation": 1
+    }
+  },
+  "repairs": {
+    "total_rounds": 5,
+    "total_repairs": 5,
+    "repairs_by_type": {
+      "PostCondFail": 1,
+      "AssertFail": 2,
+      "Other": 2
+    },
+    "repairs_by_heuristic": {
+      "repair_postcond": 1,
+      "repair_assertion": 2,
+      "repair_syntax": 2
+    },
+    "successful_repairs": 3,
+    "failed_repairs": 2,
+    "repair_times": [
+      {
+        "error_type": "PostCondFail",
+        "heuristic": "repair_postcond",
+        "time": 39.64929413795471,
+        "success": false,
+        "before": {
+          "verified": 5,
+          "errors": 1
+        },
+        "after": {
+          "verified": 5,
+          "errors": 1
+        }
+      },
+      {
+        "error_type": "AssertFail",
+        "heuristic": "repair_assertion",
+        "time": 0.5694315433502197,
+        "success": true,
+        "before": {
+          "verified": 5,
+          "errors": 1
+        },
+        "after": {
+          "verified": 7,
+          "errors": 1
+        }
+      },
+      {
+        "error_type": "AssertFail",
+        "heuristic": "repair_assertion",
+        "time": 0.09404182434082031,
+        "success": false,
+        "before": {
+          "verified": 7,
+          "errors": 1
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 63.965466022491455,
+        "success": true,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      },
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 50.223522424697876,
+        "success": true,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": 9,
+          "errors": 1
+        }
+      }
+    ]
+  },
+  "errors": {
+    "initial_error_count": 999,
+    "final_error_count": 1,
+    "errors_by_type": {
+      "Other": 1
+    },
+    "errors_fixed_by_type": {
+      "AssertFail": 1,
+      "Other": 2
+    }
+  },
+  "verification": {
+    "initial_verified": -1,
+    "final_verified": 9,
+    "initial_errors": 999,
+    "final_errors": 1,
+    "compilation_errors": 0
+  },
+  "code_metrics": {
+    "initial_code_length": 1115,
+    "final_code_length": 3726,
+    "code_changes": 2611
+  }
+}

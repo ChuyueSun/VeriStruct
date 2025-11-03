@@ -1,0 +1,147 @@
+{
+  "repair_experiment_20251011_135504": {
+    "atomics_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial"
+      },
+      {
+        "llm_calls": 1,
+        "verified": 5,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline_call_1",
+        "num_samples": 42
+      }
+    ],
+    "bitmap_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial"
+      },
+      {
+        "llm_calls": 1,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "baseline_call_1",
+        "num_samples": 50
+      },
+      {
+        "llm_calls": 2,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "baseline_call_2",
+        "num_samples": 50
+      }
+    ],
+    "option_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial"
+      },
+      {
+        "llm_calls": 1,
+        "verified": 8,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline_call_1",
+        "num_samples": 2
+      }
+    ],
+    "invariants_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial"
+      },
+      {
+        "llm_calls": 1,
+        "verified": 2,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline_call_1",
+        "num_samples": 4
+      }
+    ],
+    "rwlock_vstd_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial"
+      },
+      {
+        "llm_calls": 1,
+        "verified": 2,
+        "errors": 0,
+        "success": true,
+        "stage": "baseline_call_1",
+        "num_samples": 2
+      }
+    ],
+    "transfer_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial"
+      },
+      {
+        "llm_calls": 1,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "baseline_call_1",
+        "num_samples": 50
+      },
+      {
+        "llm_calls": 2,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "baseline_call_2",
+        "num_samples": 50
+      }
+    ],
+    "set_from_vec_todo": [
+      {
+        "llm_calls": 0,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "initial"
+      },
+      {
+        "llm_calls": 1,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "baseline_call_1",
+        "num_samples": 50
+      },
+      {
+        "llm_calls": 2,
+        "verified": 0,
+        "errors": 999,
+        "success": false,
+        "stage": "baseline_call_2",
+        "num_samples": 50
+      }
+    ]
+  }
+}

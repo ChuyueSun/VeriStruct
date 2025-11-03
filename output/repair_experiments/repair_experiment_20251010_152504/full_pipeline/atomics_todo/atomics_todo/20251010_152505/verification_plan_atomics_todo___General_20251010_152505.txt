@@ -1,0 +1,27 @@
+```markdown
+Current State:
+- The code defines a struct Lock<T> with invariants and includes placeholders for function specifications ("TODO: add requires and ensures") and loop invariants ("TODO: add invariants").
+- No explicit "View" or view-related requirements are present.
+- A data structure Lock<T> requiring type invariants is identified, and multiple specification markers are present.
+
+Dependencies:
+- The Lock<T> struct’s invariants must be properly defined and maintained in well_formed.
+- The function take<T> includes specification needs (requires/ensures) and loop invariants, implying both specs and invariants must be addressed.
+
+```
+
+```markdown
+**Selected Workflow:** Invariant-First Workflow
+
+**Justification:**
+The code contains a struct (Lock<T>) indicating a need for invariants, and there are clear "TODO: add requires and ensures" markers. No "View" or view-related TODOs are present, so the Full Sequence Workflow is not needed. Thus, the Invariant-First Workflow is appropriate.
+
+**Execution Steps:**
+1. inv_inference
+2. spec_inference
+3. proof_generation
+
+**Module Conditions:**
+- inv_inference: Yes — Lock<T> is a data structure requiring invariants.
+- proof_generation: Yes — the code has "TODO: add invariants," triggering proof_generation in the final step.
+```

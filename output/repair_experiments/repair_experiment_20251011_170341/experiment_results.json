@@ -1,0 +1,38 @@
+{
+  "full_pipeline": [
+    {
+      "benchmark": "node_todo",
+      "configuration": "full_pipeline",
+      "success": true,
+      "timeout": false,
+      "exit_code": 0,
+      "execution_time": 758.8798229694366,
+      "log_file": "output/repair_experiments/repair_experiment_20251011_170341/full_pipeline/node_todo/output.log",
+      "output_dir": "output/repair_experiments/repair_experiment_20251011_170341/full_pipeline/node_todo"
+    }
+  ],
+  "no_repairs": [
+    {
+      "benchmark": "node_todo",
+      "configuration": "no_repairs",
+      "success": true,
+      "timeout": false,
+      "exit_code": 0,
+      "execution_time": 1578.3324239253998,
+      "log_file": "output/repair_experiments/repair_experiment_20251011_170341/no_repairs/node_todo/output.log",
+      "output_dir": "output/repair_experiments/repair_experiment_20251011_170341/no_repairs/node_todo"
+    }
+  ],
+  "baseline": [
+    {
+      "benchmark": "node_todo",
+      "configuration": "baseline",
+      "success": false,
+      "timeout": true,
+      "exit_code": -1,
+      "execution_time": 1800.0074408054352,
+      "log_file": "output/repair_experiments/repair_experiment_20251011_170341/baseline/node_todo/output.log",
+      "output_dir": "output/repair_experiments/repair_experiment_20251011_170341/baseline/node_todo"
+    }
+  ]
+}

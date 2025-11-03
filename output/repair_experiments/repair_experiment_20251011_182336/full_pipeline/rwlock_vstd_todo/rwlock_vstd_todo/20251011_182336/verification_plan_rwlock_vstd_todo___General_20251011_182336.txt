@@ -1,0 +1,28 @@
+```markdown
+## 1. Analysis Summary
+
+Current State:
+- The only missing piece is the body of the “inv” function in the “FixedParity” struct, marked with “TODO: add specification”.
+- There is no request to add any type invariants for “FixedParity” or “RwLock” beyond what is already specified.
+- No “View” or “TODO: add View” requirements are present in the code.
+
+Dependencies:
+- The “FixedParity” struct implements “RwLockPredicate<u64>”, so its “inv” method must constrain the integer argument in some way.
+- The “test” function relies on “FixedParity::inv” being correct to ensure the locks store integers of the correct parity.
+
+## 2. Verification Plan
+
+**Selected Workflow:** Specification-Only Workflow
+
+**Justification:**
+- There is a placeholder “TODO: add specification” but no mention of needing type invariants for the struct data.
+- There is no reference to “TODO: add view” or “implement View,” so a full sequence workflow is not required.
+- “FixedParity” is a simple struct with no explicit “TODO: add invariants,” so we do not need the Invariant-First workflow.
+
+**Execution Steps:**
+1. spec_inference
+
+**Module Conditions:**
+- inv_inference: No – the code does not request struct-level invariants beyond the existing type_invariant on “RwLock.”
+- proof_generation: No – there is no “TODO: add proof” or “TODO: add invariants” in the code.
+```

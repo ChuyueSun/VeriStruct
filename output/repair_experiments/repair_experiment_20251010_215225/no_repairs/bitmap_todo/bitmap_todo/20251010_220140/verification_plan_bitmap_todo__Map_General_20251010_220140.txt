@@ -1,0 +1,31 @@
+```markdown
+Current State:
+- The BitMap struct has a placeholder “spec fn view” requiring a View function implementation.
+- Several methods (from, get_bit, set_bit, or) have “TODO: add requires and ensures”.
+- The set_bit method and the or method each have “TODO: add proof” or “TODO: add loop invariant”.
+- Verification cannot be completed until a proper View is defined, invariants are added (especially for loop correctness), specifications are inferred, and proofs are written.
+
+Dependencies:
+- The BitMap struct depends on a correct implementation of “view” for accurate abstraction.
+- The methods (from, get_bit, set_bit, or) depend on both invariants (internal consistency) and specific function specifications (requires/ensures).
+- The final proofs (particularly around set_bit and the or loop) depend on viable function specs and any necessary invariants.
+
+```
+
+```markdown
+**Selected Workflow:** Full Sequence Workflow
+
+**Justification:**
+The code explicitly contains a “spec fn view” with a “TODO: implement view”, indicating it needs a View function. It also contains a struct data structure and specification placeholders (“TODO: add requires and ensures”), plus “TODO: add proof” statements. Per the rules, we use “view_inference → view_refinement → inv_inference → spec_inference” for a full verification solution, then add a proof_generation step because of the “TODO: add proof” markers.
+
+**Execution Steps:**
+1. view_inference
+2. view_refinement
+3. inv_inference
+4. spec_inference
+5. proof_generation
+
+**Module Conditions:**
+- inv_inference: Yes (BitMap is a struct needing invariants).
+- proof_generation: Yes (“TODO: add proof” and “TODO: add loop invariant” are present).
+```

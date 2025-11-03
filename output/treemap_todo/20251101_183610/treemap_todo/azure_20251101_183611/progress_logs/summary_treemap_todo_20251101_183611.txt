@@ -1,0 +1,51 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/treemap_todo.rs
+Input File Name: treemap_todo.rs
+File ID: treemap_todo__Map_General_20251101_183611
+Output Directory: /home/chuyue/VerusAgent/output/treemap_todo/20251101_183610/treemap_todo/azure_20251101_183611
+Progress Log: /home/chuyue/VerusAgent/output/treemap_todo/20251101_183610/treemap_todo/azure_20251101_183611/progress_logs/progress_treemap_todo_20251101_183611.json
+Summary File: /home/chuyue/VerusAgent/output/treemap_todo/20251101_183610/treemap_todo/azure_20251101_183611/progress_logs/summary_treemap_todo_20251101_183611.txt
+
+Start time: 2025-11-01T18:36:11.081950
+End time: 2025-11-01T18:48:59.045158
+Total execution time: 767.96s
+
+## Final Result
+
+Verified: 16
+Errors: 0
+Verus Errors: 0
+Compilation Error: False
+Is Correct: True
+
+## Statistics
+
+Total steps: 5
+Total repair rounds: 0
+Total repairs attempted: 0
+Successful repairs: 0
+Average step time: 153.35s
+Average repair time: 0.00s
+
+## Steps
+
+Step 1: view_inference
+  Time: 162.80s
+  Score: Verified=14, Errors=2, Verus Errors=3
+Step 2: view_refinement
+  Time: 122.76s
+  Score: Verified=14, Errors=2, Verus Errors=3
+Step 3: inv_inference
+  Time: 140.72s
+  Score: Verified=14, Errors=2, Verus Errors=3
+Step 4: spec_inference
+  Time: 164.36s
+  Score: Verified=15, Errors=1, Verus Errors=1
+Step 5: proof_generation
+  Time: 176.09s
+  Score: Verified=16, Errors=0, Verus Errors=0
+
+## Repair Rounds

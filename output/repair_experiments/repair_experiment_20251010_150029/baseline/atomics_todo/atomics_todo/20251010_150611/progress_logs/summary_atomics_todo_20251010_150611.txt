@@ -1,0 +1,39 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/atomics_todo.rs
+Input File Name: atomics_todo.rs
+File ID: atomics_todo___General_20251010_150611
+Output Directory: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_150029/baseline/atomics_todo/atomics_todo/20251010_150611
+Progress Log: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_150029/baseline/atomics_todo/atomics_todo/20251010_150611/progress_logs/progress_atomics_todo_20251010_150611.json
+Summary File: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_150029/baseline/atomics_todo/atomics_todo/20251010_150611/progress_logs/summary_atomics_todo_20251010_150611.txt
+
+Start time: 2025-10-10T15:06:11.831493
+End time: 2025-10-10T15:22:56.423999
+Total execution time: 1004.59s
+
+## Final Result
+
+Verified: -1
+Errors: 999
+Verus Errors: 1
+Compilation Error: True
+Is Correct: False
+
+## Statistics
+
+Total steps: 1
+Total repair rounds: 0
+Total repairs attempted: 0
+Successful repairs: 0
+Average step time: 1003.77s
+Average repair time: 0.00s
+
+## Steps
+
+Step 1: baseline
+  Time: 1003.77s
+  Score: Verified=-1, Errors=999, Verus Errors=2
+
+## Repair Rounds

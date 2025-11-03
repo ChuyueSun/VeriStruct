@@ -1,0 +1,39 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/transfer_todo.rs
+Input File Name: transfer_todo.rs
+File ID: transfer_todo___General_20251011_182337
+Output Directory: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/full_pipeline/transfer_todo/transfer_todo/20251011_182337
+Progress Log: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/full_pipeline/transfer_todo/transfer_todo/20251011_182337/progress_logs/progress_transfer_todo_20251011_182337.json
+Summary File: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/full_pipeline/transfer_todo/transfer_todo/20251011_182337/progress_logs/summary_transfer_todo_20251011_182337.txt
+
+Start time: 2025-10-11T18:23:37.033048
+End time: 2025-10-11T18:24:49.247876
+Total execution time: 72.21s
+
+## Final Result
+
+Verified: 3
+Errors: 0
+Verus Errors: 0
+Compilation Error: False
+Is Correct: True
+
+## Statistics
+
+Total steps: 1
+Total repair rounds: 0
+Total repairs attempted: 0
+Successful repairs: 0
+Average step time: 49.48s
+Average repair time: 0.00s
+
+## Steps
+
+Step 1: spec_inference
+  Time: 49.48s
+  Score: Verified=3, Errors=0, Verus Errors=0
+
+## Repair Rounds

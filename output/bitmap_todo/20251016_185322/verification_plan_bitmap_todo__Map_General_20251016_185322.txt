@@ -1,0 +1,31 @@
+```markdown
+Current State:
+- The code includes a struct BitMap with an unfinished "spec fn view" indicating a required View implementation.
+- There are multiple "TODO: add requires and ensures" placeholders in the methods (from, get_bit, set_bit, or), indicating the need for function specifications.
+- There is a "TODO: add proof" comment in set_bit, indicating proof obligations still need to be filled.
+- Therefore, a complete verification sequence is required (including the View steps), along with invariant generation (since BitMap is a struct) and final proofs.
+
+Dependencies:
+- The BitMap’s view function depends on correctly deriving the boolean sequence from the internal bits vector.
+- Invariants may be needed to ensure consistency between the number of bits requested and the length of the internal vector.
+- The proof of set_bit relies on the correctness of get_bit64!/set_bit64! macros and the invariants/specs of BitMap.
+
+```
+
+```markdown
+**Selected Workflow:** Full Sequence Workflow
+
+**Justification:**
+This code explicitly contains a “spec fn view” that needs implementation, which triggers the requirement for a View-based workflow. It also includes a struct (BitMap) that likely needs type invariants, and there are several specification todos indicating function specs are needed. Finally, a "TODO: add proof" is present, so proof_generation will be appended.
+
+**Execution Steps:**
+1. view_inference
+2. view_refinement
+3. inv_inference
+4. spec_inference
+5. proof_generation
+
+**Module Conditions:**
+- inv_inference: Yes – BitMap is a struct data structure requiring invariants.
+- proof_generation: Yes – “TODO: add proof” is present in set_bit.
+```

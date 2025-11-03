@@ -1,0 +1,21 @@
+Current State:
+- The verus code defines a struct (Account) and contains a function (transfer) that currently lacks explicit requires/ensures specifications.
+- The TODO marker "TODO: add requires and ensures" indicates that the function transfer needs specification clauses.
+- There is no explicit requirement for a View function, and there are no view-related TODO markers.
+
+Dependencies:
+- The Account struct is used in transfer and test functions, so its potential invariants (if needed) might play a role in verifying transfer.
+- The correctness of transfer depends on the proper specification (requires/ensures) that relates the Account balances before and after the operation.
+
+**Selected Workflow:** Invariant-First Workflow
+
+**Justification:**
+The input contains a struct (Account), which qualifies as a class/struct data structure that might have associated invariants. Additionally, the presence of the "TODO: add requires and ensures" placeholder on the transfer function indicates a need for specification inference. Since there is no explicit requirement for a View implementation, the Invariant-First Workflow (inv_inference → spec_inference) is appropriate.
+
+**Execution Steps:**
+1. inv_inference
+2. spec_inference
+
+**Module Conditions:**
+- inv_inference: Yes – The input is a class/struct data structure (Account) and may benefit from automatically inferred invariants.
+- proof_generation: No – There are no "TODO: add proof" or similar markers that would require appending proof_generation.

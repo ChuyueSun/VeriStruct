@@ -1,0 +1,70 @@
+{
+  "benchmark_name": "set_from_vec_todo",
+  "start_time": "2025-10-11T16:12:51.384875",
+  "end_time": "2025-10-11T16:22:56.647406",
+  "total_execution_time": 605.2625319957733,
+  "modules_activated": [
+    "baseline"
+  ],
+  "modules_count": 1,
+  "stages": {
+    "baseline": {
+      "step_number": 1,
+      "start_time": "2025-10-11T16:12:52.198671",
+      "end_time": "2025-10-11T16:22:56.647287",
+      "execution_time": 604.4486191272736,
+      "llm_calls": 0,
+      "iterations": 1,
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 1,
+        "is_correct": false
+      }
+    }
+  },
+  "llm_calls": {
+    "total": 0,
+    "by_stage": {},
+    "by_module": {},
+    "response_times": [],
+    "cache_hits": 0,
+    "cache_misses": 0
+  },
+  "iterations": {
+    "by_module": {},
+    "by_stage": {
+      "baseline": 1
+    }
+  },
+  "repairs": {
+    "total_rounds": 0,
+    "total_repairs": 0,
+    "repairs_by_type": {},
+    "repairs_by_heuristic": {},
+    "successful_repairs": 0,
+    "failed_repairs": 0,
+    "repair_times": []
+  },
+  "errors": {
+    "initial_error_count": 999,
+    "final_error_count": 999,
+    "errors_by_type": {
+      "Other": 1
+    },
+    "errors_fixed_by_type": {}
+  },
+  "verification": {
+    "initial_verified": -1,
+    "final_verified": -1,
+    "initial_errors": 999,
+    "final_errors": 999,
+    "compilation_errors": 1
+  },
+  "code_metrics": {
+    "initial_code_length": 1115,
+    "final_code_length": 1115,
+    "code_changes": 0
+  }
+}

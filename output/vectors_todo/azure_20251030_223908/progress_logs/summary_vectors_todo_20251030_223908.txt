@@ -1,0 +1,42 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/vectors_todo.rs
+Input File Name: vectors_todo.rs
+File ID: vectors_todo__Vec_General_20251030_223908
+Output Directory: /home/chuyue/VerusAgent/output/vectors_todo/azure_20251030_223908
+Progress Log: /home/chuyue/VerusAgent/output/vectors_todo/azure_20251030_223908/progress_logs/progress_vectors_todo_20251030_223908.json
+Summary File: /home/chuyue/VerusAgent/output/vectors_todo/azure_20251030_223908/progress_logs/summary_vectors_todo_20251030_223908.txt
+
+Start time: 2025-10-30T22:39:08.913049
+End time: 2025-10-30T22:40:33.402423
+Total execution time: 84.49s
+
+## Final Result
+
+Verified: 10
+Errors: 0
+Verus Errors: 0
+Compilation Error: False
+Is Correct: True
+
+## Statistics
+
+Total steps: 2
+Total repair rounds: 0
+Total repairs attempted: 0
+Successful repairs: 0
+Average step time: 41.82s
+Average repair time: 0.00s
+
+## Steps
+
+Step 1: spec_inference
+  Time: 3.06s
+  Score: Verified=-1, Errors=999, Verus Errors=1
+Step 2: proof_generation
+  Time: 80.58s
+  Score: Verified=10, Errors=0, Verus Errors=0
+
+## Repair Rounds

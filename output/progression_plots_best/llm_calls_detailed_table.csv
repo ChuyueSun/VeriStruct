@@ -1,0 +1,17 @@
+Module,LLM_Calls,Percentage,Category
+spec_inference,57,31.0%,Core Pipeline
+inv_inference,30,16.3%,Core Pipeline
+proof_generation,29,15.8%,Core Pipeline
+view_inference,15,8.2%,Core Pipeline
+view_refinement,15,8.2%,Core Pipeline
+repair_syntax,10,5.4%,Repair
+repair_type,5,2.7%,Repair
+repair_invariant,5,2.7%,Repair
+repair_postcond,4,2.2%,Repair
+repair_assertion,4,2.2%,Repair
+repair_precond,3,1.6%,Repair
+repair_arithmetic,2,1.1%,Repair
+repair_mode,2,1.1%,Repair
+repair_remove,2,1.1%,Repair
+repair_decrease,1,0.5%,Repair
+TOTAL,184,100.0%,All

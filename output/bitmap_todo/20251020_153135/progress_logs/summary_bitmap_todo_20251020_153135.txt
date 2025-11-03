@@ -1,0 +1,106 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/bitmap_todo.rs
+Input File Name: bitmap_todo.rs
+File ID: bitmap_todo__Map_General_20251020_153135
+Output Directory: /home/chuyue/VerusAgent/output/bitmap_todo/20251020_153135
+Progress Log: /home/chuyue/VerusAgent/output/bitmap_todo/20251020_153135/progress_logs/progress_bitmap_todo_20251020_153135.json
+Summary File: /home/chuyue/VerusAgent/output/bitmap_todo/20251020_153135/progress_logs/summary_bitmap_todo_20251020_153135.txt
+
+Start time: 2025-10-20T15:31:35.729538
+End time: 2025-10-20T15:54:25.482046
+Total execution time: 1369.75s
+
+## Final Result
+
+Verified: 5
+Errors: 3
+Verus Errors: 4
+Compilation Error: False
+Is Correct: False
+
+## Statistics
+
+Total steps: 5
+Total repair rounds: 5
+Total repairs attempted: 10
+Successful repairs: 3
+Average step time: 25.10s
+Average repair time: 124.34s
+
+## Steps
+
+Step 1: view_inference
+  Time: 2.86s
+  Score: Verified=4, Errors=4, Verus Errors=8
+Step 2: view_refinement
+  Time: 2.92s
+  Score: Verified=4, Errors=4, Verus Errors=8
+Step 3: inv_inference
+  Time: 2.92s
+  Score: Verified=4, Errors=4, Verus Errors=8
+Step 4: spec_inference
+  Time: 3.11s
+  Score: Verified=4, Errors=4, Verus Errors=6
+Step 5: proof_generation
+  Time: 113.69s
+  Score: Verified=5, Errors=3, Verus Errors=5
+
+## Repair Rounds
+
+Round 1
+  Time: 342.48s
+  repair_precond for PreCondFailVecLen
+    Before: Verified=5, Errors=3, Verus Errors=5
+    After: Verified=5, Errors=3, Verus Errors=4
+    Time: 79.74s
+  repair_invariant for InvFailEnd
+    Before: Verified=5, Errors=3, Verus Errors=4
+    After: Verified=5, Errors=3, Verus Errors=4
+    Time: 130.28s
+  repair_assertion for AssertFail
+    Before: Verified=5, Errors=3, Verus Errors=4
+    After: Verified=5, Errors=3, Verus Errors=4
+    Time: 26.94s
+  repair_postcond for PostCondFail
+    Before: Verified=5, Errors=3, Verus Errors=4
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 105.51s
+
+Round 2
+  Time: 0.41s
+  repair_type for MismatchedType
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=5, Errors=3, Verus Errors=4
+    Time: 0.41s
+
+Round 3
+  Time: 135.88s
+  repair_invariant for InvFailEnd
+    Before: Verified=5, Errors=3, Verus Errors=4
+    After: Verified=5, Errors=3, Verus Errors=5
+    Time: 106.56s
+  repair_assertion for AssertFail
+    Before: Verified=5, Errors=3, Verus Errors=5
+    After: Verified=5, Errors=3, Verus Errors=5
+    Time: 29.32s
+
+Round 4
+  Time: 764.65s
+  repair_precond for PreCondFailVecLen
+    Before: Verified=5, Errors=3, Verus Errors=5
+    After: Verified=5, Errors=3, Verus Errors=4
+    Time: 701.34s
+  repair_assertion for AssertFail
+    Before: Verified=5, Errors=3, Verus Errors=4
+    After: Verified=5, Errors=3, Verus Errors=4
+    Time: 63.31s
+
+Round 5
+  Time: 0.00s
+  repair_assertion for AssertFail
+    Before: Verified=5, Errors=3, Verus Errors=4
+    After: Verified=5, Errors=3, Verus Errors=4
+    Time: 0.00s

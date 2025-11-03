@@ -1,0 +1,42 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/rwlock_vstd_todo.rs
+Input File Name: rwlock_vstd_todo.rs
+File ID: rwlock_vstd_todo___General_20251101_183605
+Output Directory: /home/chuyue/VerusAgent/output/rwlock_vstd_todo/20251101_183604/rwlock_vstd_todo/azure_20251101_183605
+Progress Log: /home/chuyue/VerusAgent/output/rwlock_vstd_todo/20251101_183604/rwlock_vstd_todo/azure_20251101_183605/progress_logs/progress_rwlock_vstd_todo_20251101_183605.json
+Summary File: /home/chuyue/VerusAgent/output/rwlock_vstd_todo/20251101_183604/rwlock_vstd_todo/azure_20251101_183605/progress_logs/summary_rwlock_vstd_todo_20251101_183605.txt
+
+Start time: 2025-11-01T18:36:05.355034
+End time: 2025-11-01T18:36:10.163372
+Total execution time: 4.81s
+
+## Final Result
+
+Verified: 2
+Errors: 0
+Verus Errors: 0
+Compilation Error: False
+Is Correct: True
+
+## Statistics
+
+Total steps: 2
+Total repair rounds: 0
+Total repairs attempted: 0
+Successful repairs: 0
+Average step time: 1.96s
+Average repair time: 0.00s
+
+## Steps
+
+Step 1: inv_inference
+  Time: 1.48s
+  Score: Verified=2, Errors=0, Verus Errors=0
+Step 2: spec_inference
+  Time: 2.44s
+  Score: Verified=2, Errors=0, Verus Errors=0
+
+## Repair Rounds

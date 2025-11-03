@@ -1,0 +1,87 @@
+{
+  "benchmark_name": "vectors_todo",
+  "start_time": "2025-10-10T15:25:05.126727",
+  "end_time": "2025-10-10T15:32:27.739900",
+  "total_execution_time": 442.6131749153137,
+  "modules_activated": [
+    "spec_inference",
+    "proof_generation"
+  ],
+  "modules_count": 2,
+  "stages": {
+    "spec_inference": {
+      "step_number": 1,
+      "start_time": "2025-10-10T15:25:26.695602",
+      "end_time": "2025-10-10T15:26:27.317409",
+      "execution_time": 60.62181210517883,
+      "llm_calls": 0,
+      "iterations": 1,
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 1,
+        "is_correct": false
+      }
+    },
+    "proof_generation": {
+      "step_number": 2,
+      "start_time": "2025-10-10T15:26:27.317598",
+      "end_time": "2025-10-10T15:32:27.730852",
+      "execution_time": 360.4132571220398,
+      "llm_calls": 0,
+      "iterations": 1,
+      "result": {
+        "compilation_error": false,
+        "verified": 10,
+        "errors": 0,
+        "verus_errors": 0,
+        "is_correct": true
+      }
+    }
+  },
+  "llm_calls": {
+    "total": 0,
+    "by_stage": {},
+    "by_module": {},
+    "response_times": [],
+    "cache_hits": 0,
+    "cache_misses": 0
+  },
+  "iterations": {
+    "by_module": {},
+    "by_stage": {
+      "spec_inference": 1,
+      "proof_generation": 1
+    }
+  },
+  "repairs": {
+    "total_rounds": 0,
+    "total_repairs": 0,
+    "repairs_by_type": {},
+    "repairs_by_heuristic": {},
+    "successful_repairs": 0,
+    "failed_repairs": 0,
+    "repair_times": []
+  },
+  "errors": {
+    "initial_error_count": 999,
+    "final_error_count": 0,
+    "errors_by_type": {
+      "Other": 1
+    },
+    "errors_fixed_by_type": {}
+  },
+  "verification": {
+    "initial_verified": -1,
+    "final_verified": 10,
+    "initial_errors": 999,
+    "final_errors": 0,
+    "compilation_errors": 0
+  },
+  "code_metrics": {
+    "initial_code_length": 3017,
+    "final_code_length": 4412,
+    "code_changes": 1395
+  }
+}

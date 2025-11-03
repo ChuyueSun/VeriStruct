@@ -1,0 +1,62 @@
+================================================================================
+VerusAgent Statistics Report - option_todo
+================================================================================
+
+EXECUTION SUMMARY
+--------------------------------------------------------------------------------
+Benchmark: option_todo
+Start Time: 2025-10-31T12:08:45.270048
+End Time: 2025-10-31T12:12:49.438181
+Total Execution Time: 244.17s
+Verification Success: Yes
+
+MODULE ACTIVATION
+--------------------------------------------------------------------------------
+Total Modules Activated: 1
+Modules: spec_inference
+
+LLM CALLS
+--------------------------------------------------------------------------------
+Total LLM Calls: 4
+Average Response Time: 59.30s
+Cache Hit Rate: 0.00%
+
+Calls by Stage:
+  planning: 1
+  spec_inference: 3
+
+ITERATIONS
+--------------------------------------------------------------------------------
+Iterations by Module:
+
+REPAIRS
+--------------------------------------------------------------------------------
+Total Repair Rounds: 0
+Total Repairs: 0
+Successful Repairs: 0
+Failed Repairs: 0
+Success Rate: 0.00%
+
+Repairs by Error Type:
+
+Repairs by Heuristic:
+
+ERROR TRACKING
+--------------------------------------------------------------------------------
+Initial Errors: 999
+Final Errors: 0
+Errors Fixed: 999
+
+Initial Errors by Type:
+  Other: 4
+
+STAGE DETAILS
+--------------------------------------------------------------------------------
+
+spec_inference (Step 1)
+  Execution Time: 219.45s
+  LLM Calls: 3
+  Iterations: 1
+  Result: Verified=8, Errors=0
+
+================================================================================

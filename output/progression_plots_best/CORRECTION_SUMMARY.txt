@@ -1,0 +1,144 @@
+================================================================================
+CRITICAL CORRECTION TO LLM CALL ANALYSIS
+================================================================================
+
+DATE: October 16, 2025
+ISSUE: Incorrectly reported "LLM calls" when actually counting "module invocations"
+
+================================================================================
+THE PROBLEM
+================================================================================
+
+Previous analysis claimed:
+  ❌ "184 total LLM API calls"
+  ❌ "spec_inference made 57 calls"
+  ❌ "Each module = 1 LLM call"
+
+This was WRONG because:
+  Each module invocation can make MULTIPLE LLM API calls via retry loops!
+
+================================================================================
+HOW MODULES ACTUALLY WORK
+================================================================================
+
+Code structure:
+  max_retries = 3  # Most modules (10 for baseline)
+
+  for retry_attempt in range(max_retries):
+      responses = llm.infer_llm(...)  # ACTUAL API CALL
+      if responses_are_valid():
+          break
+
+Result: 1 module invocation = 1-3 actual API calls (1-10 for baseline)
+
+Each API call generates multiple samples (answer_num=3 to 5)
+
+================================================================================
+CORRECTED NUMBERS
+================================================================================
+
+What was counted:
+  ✅ MODULE INVOCATIONS: 184
+
+What this means for API calls:
+  - Best case (all succeed first try): 184 API calls
+  - Likely case (some retries): ~276 API calls (1.5× average)
+  - Worst case (max retries): ~552 API calls (3× for all)
+
+Module Invocations → Estimated API Calls:
+  - spec_inference: 57 invocations → 57-171 API calls
+  - inv_inference: 30 invocations → 30-90 API calls
+  - proof_generation: 29 invocations → 29-87 API calls
+  - view_inference: 15 invocations → 15-45 API calls
+  - view_refinement: 15 invocations → 15-45 API calls
+  - All repair modules: 39 invocations → 39-117 API calls
+
+================================================================================
+WHY ACTUAL COUNTS ARE UNKNOWN
+================================================================================
+
+All analyzed experiments used CACHED responses:
+  - Statistics files show: "total": 0 LLM calls
+  - All calls were cache hits
+  - No new API calls were made
+
+To get actual counts, need:
+  1. Original uncached experimental logs
+  2. Run with ENABLE_LLM_CACHE=0
+  3. Check logs for retry attempts
+
+================================================================================
+WHAT IS STILL VALID
+================================================================================
+
+These findings remain correct:
+  ✅ Module invocation patterns
+  ✅ Which modules were used in what order
+  ✅ Verification progression per module
+  ✅ Success patterns (spec_inference in 100% of successes)
+  ✅ Simple benchmarks need fewer module invocations
+  ✅ Complex benchmarks need full pipeline
+
+================================================================================
+FULLY VERIFIED BENCHMARKS (CORRECTED)
+================================================================================
+
+Benchmark              Module Invocations    Est. API Calls    Result
+--------------------------------------------------------------------------------
+invariants_todo        1                     1-3              7/7 ✅
+option_todo            1                     1-3              15/15 ✅
+rwlock_vstd_todo       1                     1-3              5/5 ✅
+transfer_todo          1                     1-3              5/5 ✅
+vectors_todo           2                     2-6              16/16 ✅
+atomics_todo           3                     3-9              11/11 ✅
+bitmap_todo            5                     5-15             14/14 ✅
+rb_type_invariant_todo 5                     5-15             13/13 ✅
+set_from_vec_todo      5                     5-15             10/10 ✅
+
+Average: 2.7 module invocations → estimated 4-8 API calls per benchmark
+
+================================================================================
+CORRECTED TERMINOLOGY
+================================================================================
+
+Use going forward:
+  ✅ "Module invocation" or "module call"
+  ✅ "57 spec_inference invocations"
+  ✅ "1 invocation achieved 100%"
+  ✅ "Estimated 1-3 API calls per invocation"
+
+Do NOT use:
+  ❌ "LLM calls" (ambiguous)
+  ❌ "57 LLM calls" (unclear if module or API)
+
+For actual API calls, be specific:
+  ✅ "Actual LLM API calls"
+  ✅ "API calls to the LLM service"
+
+================================================================================
+UPDATED FILES
+================================================================================
+
+✅ CORRECTED_ANALYSIS.md - Full detailed correction
+✅ FULLY_VERIFIED_BENCHMARKS.md - Updated with clarifications
+✅ CORRECTION_SUMMARY.txt - This file
+⚠️ Other files still use old terminology (read with caution)
+
+Key point: All visualizations and CSVs show MODULE INVOCATIONS, not API calls
+
+================================================================================
+BOTTOM LINE
+================================================================================
+
+Your question was absolutely correct!
+
+Modules do NOT make just 1 LLM call per invocation.
+
+What we know:
+  - Module invocations: 184 (exact, certain)
+  - Module patterns: Documented and valid
+  - Actual API calls: Unknown (~200-550 estimated)
+
+Thank you for catching this critical error!
+
+================================================================================

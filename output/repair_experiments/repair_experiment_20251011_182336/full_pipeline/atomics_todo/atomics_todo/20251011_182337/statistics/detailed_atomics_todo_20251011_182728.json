@@ -1,0 +1,125 @@
+{
+  "benchmark_name": "atomics_todo",
+  "start_time": "2025-10-11T18:23:37.020938",
+  "end_time": "2025-10-11T18:27:28.264424",
+  "total_execution_time": 231.24348759651184,
+  "modules_activated": [
+    "inv_inference",
+    "spec_inference",
+    "proof_generation"
+  ],
+  "modules_count": 3,
+  "stages": {
+    "inv_inference": {
+      "step_number": 1,
+      "start_time": "2025-10-11T18:23:57.991884",
+      "end_time": "2025-10-11T18:24:51.311663",
+      "execution_time": 53.3197820186615,
+      "llm_calls": 0,
+      "iterations": 1,
+      "result": {
+        "compilation_error": false,
+        "verified": 4,
+        "errors": 1,
+        "verus_errors": 2,
+        "is_correct": false
+      }
+    },
+    "spec_inference": {
+      "step_number": 2,
+      "start_time": "2025-10-11T18:24:51.311792",
+      "end_time": "2025-10-11T18:25:49.370003",
+      "execution_time": 58.05821442604065,
+      "llm_calls": 0,
+      "iterations": 1,
+      "result": {
+        "compilation_error": false,
+        "verified": 4,
+        "errors": 1,
+        "verus_errors": 2,
+        "is_correct": false
+      }
+    },
+    "proof_generation": {
+      "step_number": 3,
+      "start_time": "2025-10-11T18:25:49.370130",
+      "end_time": "2025-10-11T18:26:41.669103",
+      "execution_time": 52.29897618293762,
+      "llm_calls": 0,
+      "iterations": 1,
+      "result": {
+        "compilation_error": false,
+        "verified": 4,
+        "errors": 1,
+        "verus_errors": 1,
+        "is_correct": false
+      }
+    }
+  },
+  "llm_calls": {
+    "total": 0,
+    "by_stage": {},
+    "by_module": {},
+    "response_times": [],
+    "cache_hits": 0,
+    "cache_misses": 0
+  },
+  "iterations": {
+    "by_module": {},
+    "by_stage": {
+      "inv_inference": 1,
+      "spec_inference": 1,
+      "proof_generation": 1
+    }
+  },
+  "repairs": {
+    "total_rounds": 1,
+    "total_repairs": 1,
+    "repairs_by_type": {
+      "InvFailFront": 1
+    },
+    "repairs_by_heuristic": {
+      "repair_invariant": 1
+    },
+    "successful_repairs": 1,
+    "failed_repairs": 0,
+    "repair_times": [
+      {
+        "error_type": "InvFailFront",
+        "heuristic": "repair_invariant",
+        "time": 46.57592296600342,
+        "success": true,
+        "before": {
+          "verified": 4,
+          "errors": 1
+        },
+        "after": {
+          "verified": 5,
+          "errors": 0
+        }
+      }
+    ]
+  },
+  "errors": {
+    "initial_error_count": 999,
+    "final_error_count": 0,
+    "errors_by_type": {
+      "Other": 2
+    },
+    "errors_fixed_by_type": {
+      "InvFailFront": 1
+    }
+  },
+  "verification": {
+    "initial_verified": -1,
+    "final_verified": 5,
+    "initial_errors": 999,
+    "final_errors": 0,
+    "compilation_errors": 0
+  },
+  "code_metrics": {
+    "initial_code_length": 4034,
+    "final_code_length": 3503,
+    "code_changes": 531
+  }
+}

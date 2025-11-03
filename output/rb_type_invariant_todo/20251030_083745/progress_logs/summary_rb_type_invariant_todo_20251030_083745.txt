@@ -1,0 +1,86 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/rb_type_invariant_todo.rs
+Input File Name: rb_type_invariant_todo.rs
+File ID: rb_type_invariant_todo__RB_TypeInv_20251030_083745
+Output Directory: /home/chuyue/VerusAgent/output/rb_type_invariant_todo/20251030_083745
+Progress Log: /home/chuyue/VerusAgent/output/rb_type_invariant_todo/20251030_083745/progress_logs/progress_rb_type_invariant_todo_20251030_083745.json
+Summary File: /home/chuyue/VerusAgent/output/rb_type_invariant_todo/20251030_083745/progress_logs/summary_rb_type_invariant_todo_20251030_083745.txt
+
+Start time: 2025-10-30T08:37:45.869839
+End time: 2025-10-30T09:08:10.069218
+Total execution time: 1824.20s
+
+## Final Result
+
+Verified: -1
+Errors: 999
+Verus Errors: 1
+Compilation Error: True
+Is Correct: False
+
+## Statistics
+
+Total steps: 5
+Total repair rounds: 5
+Total repairs attempted: 5
+Successful repairs: 0
+Average step time: 155.11s
+Average repair time: 207.16s
+
+## Steps
+
+Step 1: view_inference
+  Time: 119.40s
+  Score: Verified=-1, Errors=999, Verus Errors=3
+Step 2: view_refinement
+  Time: 307.44s
+  Score: Verified=-1, Errors=999, Verus Errors=3
+Step 3: inv_inference
+  Time: 131.99s
+  Score: Verified=-1, Errors=999, Verus Errors=2
+Step 4: spec_inference
+  Time: 122.89s
+  Score: Verified=-1, Errors=999, Verus Errors=2
+Step 5: proof_generation
+  Time: 93.85s
+  Score: Verified=-1, Errors=999, Verus Errors=1
+
+## Repair Rounds
+
+Round 1
+  Time: 76.71s
+  repair_syntax for Other
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=2
+    Time: 76.71s
+
+Round 2
+  Time: 373.86s
+  repair_syntax for Other
+    Before: Verified=-1, Errors=999, Verus Errors=2
+    After: Verified=-1, Errors=999, Verus Errors=2
+    Time: 373.86s
+
+Round 3
+  Time: 176.81s
+  repair_syntax for Other
+    Before: Verified=-1, Errors=999, Verus Errors=2
+    After: Verified=-1, Errors=999, Verus Errors=2
+    Time: 176.81s
+
+Round 4
+  Time: 241.87s
+  repair_syntax for Other
+    Before: Verified=-1, Errors=999, Verus Errors=2
+    After: Verified=-1, Errors=999, Verus Errors=2
+    Time: 241.87s
+
+Round 5
+  Time: 166.56s
+  repair_syntax for Other
+    Before: Verified=-1, Errors=999, Verus Errors=2
+    After: Verified=-1, Errors=999, Verus Errors=2
+    Time: 166.56s

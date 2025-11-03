@@ -1,0 +1,102 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/bitmap_todo.rs
+Input File Name: bitmap_todo.rs
+File ID: bitmap_todo__Map_General_20251030_213953
+Output Directory: /home/chuyue/VerusAgent/output/bitmap_todo/20251030_213953/bitmap_todo/20251030_213953
+Progress Log: /home/chuyue/VerusAgent/output/bitmap_todo/20251030_213953/bitmap_todo/20251030_213953/progress_logs/progress_bitmap_todo_20251030_213953.json
+Summary File: /home/chuyue/VerusAgent/output/bitmap_todo/20251030_213953/bitmap_todo/20251030_213953/progress_logs/summary_bitmap_todo_20251030_213953.txt
+
+Start time: 2025-10-30T21:39:53.919878
+End time: 2025-10-30T21:58:47.122321
+Total execution time: 1133.20s
+
+## Final Result
+
+Verified: 4
+Errors: 4
+Verus Errors: 8
+Compilation Error: False
+Is Correct: False
+
+## Statistics
+
+Total steps: 5
+Total repair rounds: 5
+Total repairs attempted: 9
+Successful repairs: 0
+Average step time: 93.64s
+Average repair time: 71.80s
+
+## Steps
+
+Step 1: view_inference
+  Time: 57.72s
+  Score: Verified=4, Errors=4, Verus Errors=8
+Step 2: view_refinement
+  Time: 51.77s
+  Score: Verified=4, Errors=4, Verus Errors=8
+Step 3: inv_inference
+  Time: 55.87s
+  Score: Verified=4, Errors=4, Verus Errors=8
+Step 4: spec_inference
+  Time: 209.79s
+  Score: Verified=-1, Errors=999, Verus Errors=4
+Step 5: proof_generation
+  Time: 93.06s
+  Score: Verified=-1, Errors=999, Verus Errors=2
+
+## Repair Rounds
+
+Round 1
+  Time: 61.93s
+  repair_syntax for Other
+    Before: Verified=-1, Errors=999, Verus Errors=2
+    After: Verified=-1, Errors=999, Verus Errors=4
+    Time: 61.93s
+
+Round 2
+  Time: 158.42s
+  repair_type for MismatchedType
+    Before: Verified=-1, Errors=999, Verus Errors=4
+    After: Verified=-1, Errors=999, Verus Errors=4
+    Time: 68.33s
+  repair_type for TypeAnnotation
+    Before: Verified=-1, Errors=999, Verus Errors=4
+    After: Verified=-1, Errors=999, Verus Errors=4
+    Time: 90.10s
+
+Round 3
+  Time: 110.27s
+  repair_type for MismatchedType
+    Before: Verified=-1, Errors=999, Verus Errors=4
+    After: Verified=-1, Errors=999, Verus Errors=4
+    Time: 53.67s
+  repair_type for TypeAnnotation
+    Before: Verified=-1, Errors=999, Verus Errors=4
+    After: Verified=-1, Errors=999, Verus Errors=4
+    Time: 56.60s
+
+Round 4
+  Time: 115.87s
+  repair_type for MismatchedType
+    Before: Verified=-1, Errors=999, Verus Errors=4
+    After: Verified=-1, Errors=999, Verus Errors=4
+    Time: 60.34s
+  repair_type for TypeAnnotation
+    Before: Verified=-1, Errors=999, Verus Errors=4
+    After: Verified=-1, Errors=999, Verus Errors=4
+    Time: 55.53s
+
+Round 5
+  Time: 199.71s
+  repair_type for MismatchedType
+    Before: Verified=-1, Errors=999, Verus Errors=4
+    After: Verified=-1, Errors=999, Verus Errors=4
+    Time: 132.68s
+  repair_type for TypeAnnotation
+    Before: Verified=-1, Errors=999, Verus Errors=4
+    After: Verified=-1, Errors=999, Verus Errors=4
+    Time: 67.02s

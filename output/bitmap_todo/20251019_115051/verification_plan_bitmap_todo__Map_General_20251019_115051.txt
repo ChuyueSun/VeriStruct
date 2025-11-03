@@ -1,0 +1,28 @@
+```markdown
+Current State:
+- The code defines a BitMap struct (i.e., a data structure) and already includes a spec fn view.
+- No explicit TODO markers for adding invariants or specifications are present.
+- The code explicitly mentions “view” in its type, indicating a verified abstraction of BitMap.
+
+Dependencies:
+- The BitMap’s behavior is captured by its view() function, which abstracts the bits field into a Seq<bool>.
+- Functions like get_bit, set_bit, and or rely on the view to connect their ensures clauses to the underlying bit-array representations.
+
+```
+
+```markdown
+**Selected Workflow:** Full Sequence Workflow
+
+**Justification:**
+The BitMap struct explicitly defines a “view()” function, meeting the criterion for “Full Sequence Workflow” when a View is present in the type definitions. Because BitMap is a struct, we include the inv_inference step to cover possible struct invariants.
+
+**Execution Steps:**
+1. view_inference
+2. view_refinement
+3. inv_inference
+4. spec_inference
+
+**Module Conditions:**
+- inv_inference: Yes – the input is a struct data structure (BitMap).
+- proof_generation: No – there are no “TODO: add proof” or “TODO: add invariants” markers.
+```

@@ -1,0 +1,39 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/rwlock_vstd_todo.rs
+Input File Name: rwlock_vstd_todo.rs
+File ID: rwlock_vstd_todo___General_20251011_140042
+Output Directory: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_135504/baseline/rwlock_vstd_todo/rwlock_vstd_todo/20251011_140042
+Progress Log: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_135504/baseline/rwlock_vstd_todo/rwlock_vstd_todo/20251011_140042/progress_logs/progress_rwlock_vstd_todo_20251011_140042.json
+Summary File: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_135504/baseline/rwlock_vstd_todo/rwlock_vstd_todo/20251011_140042/progress_logs/summary_rwlock_vstd_todo_20251011_140042.txt
+
+Start time: 2025-10-11T14:00:42.954475
+End time: 2025-10-11T14:01:21.091029
+Total execution time: 38.14s
+
+## Final Result
+
+Verified: 2
+Errors: 0
+Verus Errors: 0
+Compilation Error: False
+Is Correct: True
+
+## Statistics
+
+Total steps: 1
+Total repair rounds: 0
+Total repairs attempted: 0
+Successful repairs: 0
+Average step time: 37.33s
+Average repair time: 0.00s
+
+## Steps
+
+Step 1: baseline
+  Time: 37.33s
+  Score: Verified=2, Errors=0, Verus Errors=0
+
+## Repair Rounds

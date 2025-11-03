@@ -1,0 +1,27 @@
+```markdown
+Current State:
+- The code defines a trait implementation (ModPredicate) for InvariantPredicate but leaves the body of inv(k, v) unimplemented with a "TODO: add specification" comment.
+- There is no request for a View function and no new data structure that requires a type invariant (ModPredicate is just an empty struct implementing a trait).
+- There are no "TODO: add proof" or "TODO: add invariants" markers.
+
+Dependencies:
+- The verification of AtomicInvariant objects depends on the correctness of the inv(k, v) predicate for ModPredicate.
+- No other special proof dependencies are indicated.
+
+```
+
+```markdown
+**Selected Workflow:** Specification-Only Workflow
+
+**Justification:**
+1. There is no indication that a View implementation is needed.
+2. Although "struct ModPredicate" exists, it does not store data requiring a type invariant.
+3. The only placeholder is "TODO: add specification," which fits a specification-only task.
+
+**Execution Steps:**
+1. spec_inference
+
+**Module Conditions:**
+- inv_inference: No – there is no class/struct storing fields requiring a type invariant.
+- proof_generation: No – there is no "TODO: add proof" or "TODO: add invariants" marker.
+```

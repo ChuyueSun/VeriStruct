@@ -1,0 +1,15 @@
+{
+  "benchmark": "bst_map_todo",
+  "execution_time": 2743.8654379844666,
+  "modules_activated": 5,
+  "total_llm_calls": 19,
+  "avg_response_time": 142.93529930867646,
+  "cache_hit_rate": 15.789473684210526,
+  "total_repair_rounds": 5,
+  "total_repairs": 9,
+  "repair_success_rate": 11.11111111111111,
+  "initial_errors": 999,
+  "final_errors": 1,
+  "errors_fixed": 998,
+  "verification_success": false
+}

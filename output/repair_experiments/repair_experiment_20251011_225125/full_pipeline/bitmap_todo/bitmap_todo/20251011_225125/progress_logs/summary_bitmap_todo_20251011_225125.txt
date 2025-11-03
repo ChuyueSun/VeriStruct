@@ -1,0 +1,51 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/bitmap_todo.rs
+Input File Name: bitmap_todo.rs
+File ID: bitmap_todo__Map_General_20251011_225125
+Output Directory: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225125/full_pipeline/bitmap_todo/bitmap_todo/20251011_225125
+Progress Log: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225125/full_pipeline/bitmap_todo/bitmap_todo/20251011_225125/progress_logs/progress_bitmap_todo_20251011_225125.json
+Summary File: /home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225125/full_pipeline/bitmap_todo/bitmap_todo/20251011_225125/progress_logs/summary_bitmap_todo_20251011_225125.txt
+
+Start time: 2025-10-11T22:51:25.497438
+End time: 2025-10-11T23:19:17.296992
+Total execution time: 1671.80s
+
+## Final Result
+
+Verified: 8
+Errors: 0
+Verus Errors: 0
+Compilation Error: False
+Is Correct: True
+
+## Statistics
+
+Total steps: 5
+Total repair rounds: 0
+Total repairs attempted: 0
+Successful repairs: 0
+Average step time: 224.88s
+Average repair time: 0.00s
+
+## Steps
+
+Step 1: view_inference
+  Time: 89.49s
+  Score: Verified=4, Errors=4, Verus Errors=8
+Step 2: view_refinement
+  Time: 702.32s
+  Score: Verified=4, Errors=4, Verus Errors=8
+Step 3: inv_inference
+  Time: 100.77s
+  Score: Verified=4, Errors=4, Verus Errors=8
+Step 4: spec_inference
+  Time: 114.13s
+  Score: Verified=5, Errors=3, Verus Errors=6
+Step 5: proof_generation
+  Time: 117.70s
+  Score: Verified=8, Errors=0, Verus Errors=0
+
+## Repair Rounds

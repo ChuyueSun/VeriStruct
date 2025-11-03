@@ -1,0 +1,100 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/transfer_todo.rs
+Input File Name: transfer_todo.rs
+File ID: transfer_todo___General_20251030_213348
+Output Directory: /home/chuyue/VerusAgent/output/transfer_todo/20251030_213348/transfer_todo/20251030_213348
+Progress Log: /home/chuyue/VerusAgent/output/transfer_todo/20251030_213348/transfer_todo/20251030_213348/progress_logs/progress_transfer_todo_20251030_213348.json
+Summary File: /home/chuyue/VerusAgent/output/transfer_todo/20251030_213348/transfer_todo/20251030_213348/progress_logs/summary_transfer_todo_20251030_213348.txt
+
+Start time: 2025-10-30T21:33:48.940881
+End time: 2025-10-30T21:33:56.368729
+Total execution time: 7.43s
+
+## Final Result
+
+Verified: 1
+Errors: 2
+Verus Errors: 4
+Compilation Error: False
+Is Correct: False
+
+## Statistics
+
+Total steps: 3
+Total repair rounds: 5
+Total repairs attempted: 10
+Successful repairs: 0
+Average step time: 0.25s
+Average repair time: 0.60s
+
+## Steps
+
+Step 1: view_inference
+  Time: 0.38s
+  Score: Verified=1, Errors=2, Verus Errors=4
+Step 2: spec_inference
+  Time: 0.39s
+  Score: Verified=1, Errors=2, Verus Errors=4
+Step 3: proof_generation
+  Time: 0.00s
+  Score: Verified=1, Errors=2, Verus Errors=4
+
+## Repair Rounds
+
+Round 1
+  Time: 1.26s
+  repair_arithmetic for ArithmeticFlow
+    Before: Verified=1, Errors=2, Verus Errors=4
+    After: Verified=1, Errors=2, Verus Errors=4
+    Time: 0.91s
+  repair_assertion for AssertFail
+    Before: Verified=1, Errors=2, Verus Errors=4
+    After: Verified=1, Errors=2, Verus Errors=4
+    Time: 0.35s
+
+Round 2
+  Time: 1.17s
+  repair_arithmetic for ArithmeticFlow
+    Before: Verified=1, Errors=2, Verus Errors=4
+    After: Verified=1, Errors=2, Verus Errors=4
+    Time: 0.85s
+  repair_assertion for AssertFail
+    Before: Verified=1, Errors=2, Verus Errors=4
+    After: Verified=1, Errors=2, Verus Errors=4
+    Time: 0.32s
+
+Round 3
+  Time: 1.18s
+  repair_arithmetic for ArithmeticFlow
+    Before: Verified=1, Errors=2, Verus Errors=4
+    After: Verified=1, Errors=2, Verus Errors=4
+    Time: 0.84s
+  repair_assertion for AssertFail
+    Before: Verified=1, Errors=2, Verus Errors=4
+    After: Verified=1, Errors=2, Verus Errors=4
+    Time: 0.34s
+
+Round 4
+  Time: 1.20s
+  repair_arithmetic for ArithmeticFlow
+    Before: Verified=1, Errors=2, Verus Errors=4
+    After: Verified=1, Errors=2, Verus Errors=4
+    Time: 0.86s
+  repair_assertion for AssertFail
+    Before: Verified=1, Errors=2, Verus Errors=4
+    After: Verified=1, Errors=2, Verus Errors=4
+    Time: 0.34s
+
+Round 5
+  Time: 1.15s
+  repair_arithmetic for ArithmeticFlow
+    Before: Verified=1, Errors=2, Verus Errors=4
+    After: Verified=1, Errors=2, Verus Errors=4
+    Time: 0.82s
+  repair_assertion for AssertFail
+    Before: Verified=1, Errors=2, Verus Errors=4
+    After: Verified=1, Errors=2, Verus Errors=4
+    Time: 0.33s

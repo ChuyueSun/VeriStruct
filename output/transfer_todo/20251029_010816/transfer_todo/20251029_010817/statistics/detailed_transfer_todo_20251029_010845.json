@@ -1,0 +1,102 @@
+{
+  "benchmark_name": "transfer_todo",
+  "start_time": "2025-10-29T01:08:17.223316",
+  "end_time": "2025-10-29T01:08:45.115373",
+  "total_execution_time": 27.892059326171875,
+  "modules_activated": [
+    "spec_inference"
+  ],
+  "modules_count": 1,
+  "stages": {
+    "spec_inference": {
+      "step_number": 1,
+      "start_time": "2025-10-29T01:08:18.067332",
+      "end_time": "2025-10-29T01:08:45.106370",
+      "execution_time": 27.03904151916504,
+      "llm_calls": 1,
+      "iterations": 1,
+      "result": {
+        "compilation_error": false,
+        "verified": 3,
+        "errors": 0,
+        "verus_errors": 0,
+        "is_correct": true
+      }
+    }
+  },
+  "llm_calls": {
+    "total": 2,
+    "by_stage": {
+      "planning": 1,
+      "spec_inference": 1
+    },
+    "by_module": {
+      "planner": 1,
+      "spec_inference": 1
+    },
+    "response_times": [
+      {
+        "stage": "planning",
+        "module": "planner",
+        "time": 0.0001518726348876953,
+        "cache_hit": true
+      },
+      {
+        "stage": "spec_inference",
+        "module": "spec_inference",
+        "time": 24.795966863632202,
+        "cache_hit": false
+      }
+    ],
+    "cache_hits": 1,
+    "cache_misses": 1,
+    "input_tokens": 8990,
+    "output_tokens": 3173,
+    "by_call": [
+      {
+        "stage": "spec_inference",
+        "module": "spec_inference",
+        "input_tokens": 8990,
+        "output_tokens": 3173,
+        "cache_hit": false,
+        "time": 24.795966863632202
+      }
+    ]
+  },
+  "iterations": {
+    "by_module": {},
+    "by_stage": {
+      "spec_inference": 1
+    }
+  },
+  "repairs": {
+    "total_rounds": 0,
+    "total_repairs": 0,
+    "repairs_by_type": {},
+    "repairs_by_heuristic": {},
+    "successful_repairs": 0,
+    "failed_repairs": 0,
+    "repair_times": []
+  },
+  "errors": {
+    "initial_error_count": 2,
+    "final_error_count": 0,
+    "errors_by_type": {
+      "ArithmeticFlow": 2,
+      "AssertFail": 2
+    },
+    "errors_fixed_by_type": {}
+  },
+  "verification": {
+    "initial_verified": 1,
+    "final_verified": 3,
+    "initial_errors": 2,
+    "final_errors": 0,
+    "compilation_errors": 0
+  },
+  "code_metrics": {
+    "initial_code_length": 757,
+    "final_code_length": 933,
+    "code_changes": 176
+  }
+}

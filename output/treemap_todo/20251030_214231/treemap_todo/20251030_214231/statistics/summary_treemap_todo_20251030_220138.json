@@ -1,0 +1,15 @@
+{
+  "benchmark": "treemap_todo",
+  "execution_time": 1146.472732782364,
+  "modules_activated": 5,
+  "total_llm_calls": 11,
+  "avg_response_time": 92.7368848323822,
+  "cache_hit_rate": 0.0,
+  "total_repair_rounds": 5,
+  "total_repairs": 8,
+  "repair_success_rate": 25.0,
+  "initial_errors": 2,
+  "final_errors": 2,
+  "errors_fixed": 0,
+  "verification_success": false
+}

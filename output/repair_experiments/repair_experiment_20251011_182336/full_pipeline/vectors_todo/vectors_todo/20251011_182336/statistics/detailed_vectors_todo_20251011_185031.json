@@ -1,0 +1,303 @@
+{
+  "benchmark_name": "vectors_todo",
+  "start_time": "2025-10-11T18:23:36.970700",
+  "end_time": "2025-10-11T18:50:31.450438",
+  "total_execution_time": 1614.4797399044037,
+  "modules_activated": [
+    "spec_inference",
+    "proof_generation"
+  ],
+  "modules_count": 2,
+  "stages": {
+    "spec_inference": {
+      "step_number": 1,
+      "start_time": "2025-10-11T18:23:50.378598",
+      "end_time": "2025-10-11T18:35:05.791911",
+      "execution_time": 675.4133174419403,
+      "llm_calls": 0,
+      "iterations": 1,
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 1,
+        "is_correct": false
+      }
+    },
+    "proof_generation": {
+      "step_number": 2,
+      "start_time": "2025-10-11T18:35:05.792032",
+      "end_time": "2025-10-11T18:35:05.800792",
+      "execution_time": 0.008762836456298828,
+      "llm_calls": 0,
+      "iterations": 1,
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 1,
+        "is_correct": false
+      }
+    }
+  },
+  "llm_calls": {
+    "total": 0,
+    "by_stage": {},
+    "by_module": {},
+    "response_times": [],
+    "cache_hits": 0,
+    "cache_misses": 0
+  },
+  "iterations": {
+    "by_module": {},
+    "by_stage": {
+      "spec_inference": 1,
+      "proof_generation": 1
+    }
+  },
+  "repairs": {
+    "total_rounds": 5,
+    "total_repairs": 14,
+    "repairs_by_type": {
+      "Other": 1,
+      "PreCondFailVecLen": 2,
+      "ArithmeticFlow": 1,
+      "DecFailEnd": 1,
+      "AssertFail": 3,
+      "PreCondFail": 2,
+      "PostCondFail": 4
+    },
+    "repairs_by_heuristic": {
+      "repair_syntax": 1,
+      "repair_precond": 4,
+      "repair_arithmetic": 1,
+      "repair_decrease": 1,
+      "repair_assertion": 3,
+      "repair_postcond": 4
+    },
+    "successful_repairs": 4,
+    "failed_repairs": 10,
+    "repair_times": [
+      {
+        "error_type": "Other",
+        "heuristic": "repair_syntax",
+        "time": 61.02325463294983,
+        "success": true,
+        "before": {
+          "verified": -1,
+          "errors": 999
+        },
+        "after": {
+          "verified": 5,
+          "errors": 5
+        }
+      },
+      {
+        "error_type": "PreCondFailVecLen",
+        "heuristic": "repair_precond",
+        "time": 62.93539762496948,
+        "success": true,
+        "before": {
+          "verified": 5,
+          "errors": 5
+        },
+        "after": {
+          "verified": 5,
+          "errors": 5
+        }
+      },
+      {
+        "error_type": "ArithmeticFlow",
+        "heuristic": "repair_arithmetic",
+        "time": 85.13209939002991,
+        "success": true,
+        "before": {
+          "verified": 5,
+          "errors": 5
+        },
+        "after": {
+          "verified": 6,
+          "errors": 4
+        }
+      },
+      {
+        "error_type": "DecFailEnd",
+        "heuristic": "repair_decrease",
+        "time": 79.89593887329102,
+        "success": false,
+        "before": {
+          "verified": 6,
+          "errors": 4
+        },
+        "after": {
+          "verified": 6,
+          "errors": 4
+        }
+      },
+      {
+        "error_type": "AssertFail",
+        "heuristic": "repair_assertion",
+        "time": 29.17068648338318,
+        "success": false,
+        "before": {
+          "verified": 6,
+          "errors": 4
+        },
+        "after": {
+          "verified": 6,
+          "errors": 4
+        }
+      },
+      {
+        "error_type": "PreCondFail",
+        "heuristic": "repair_precond",
+        "time": 77.58767676353455,
+        "success": false,
+        "before": {
+          "verified": 6,
+          "errors": 4
+        },
+        "after": {
+          "verified": 6,
+          "errors": 4
+        }
+      },
+      {
+        "error_type": "PostCondFail",
+        "heuristic": "repair_postcond",
+        "time": 76.75531888008118,
+        "success": false,
+        "before": {
+          "verified": 6,
+          "errors": 4
+        },
+        "after": {
+          "verified": 6,
+          "errors": 4
+        }
+      },
+      {
+        "error_type": "PreCondFailVecLen",
+        "heuristic": "repair_precond",
+        "time": 60.599459409713745,
+        "success": true,
+        "before": {
+          "verified": 6,
+          "errors": 4
+        },
+        "after": {
+          "verified": 6,
+          "errors": 4
+        }
+      },
+      {
+        "error_type": "PreCondFail",
+        "heuristic": "repair_precond",
+        "time": 80.39115571975708,
+        "success": false,
+        "before": {
+          "verified": 6,
+          "errors": 4
+        },
+        "after": {
+          "verified": 6,
+          "errors": 4
+        }
+      },
+      {
+        "error_type": "PostCondFail",
+        "heuristic": "repair_postcond",
+        "time": 93.44819116592407,
+        "success": false,
+        "before": {
+          "verified": 6,
+          "errors": 4
+        },
+        "after": {
+          "verified": 6,
+          "errors": 4
+        }
+      },
+      {
+        "error_type": "AssertFail",
+        "heuristic": "repair_assertion",
+        "time": 28.27765965461731,
+        "success": false,
+        "before": {
+          "verified": 6,
+          "errors": 4
+        },
+        "after": {
+          "verified": 6,
+          "errors": 4
+        }
+      },
+      {
+        "error_type": "PostCondFail",
+        "heuristic": "repair_postcond",
+        "time": 81.95198011398315,
+        "success": false,
+        "before": {
+          "verified": 6,
+          "errors": 4
+        },
+        "after": {
+          "verified": 6,
+          "errors": 4
+        }
+      },
+      {
+        "error_type": "AssertFail",
+        "heuristic": "repair_assertion",
+        "time": 33.500946044921875,
+        "success": false,
+        "before": {
+          "verified": 6,
+          "errors": 4
+        },
+        "after": {
+          "verified": 6,
+          "errors": 4
+        }
+      },
+      {
+        "error_type": "PostCondFail",
+        "heuristic": "repair_postcond",
+        "time": 74.29613900184631,
+        "success": false,
+        "before": {
+          "verified": 6,
+          "errors": 4
+        },
+        "after": {
+          "verified": -1,
+          "errors": 999
+        }
+      }
+    ]
+  },
+  "errors": {
+    "initial_error_count": 999,
+    "final_error_count": 999,
+    "errors_by_type": {
+      "Other": 1
+    },
+    "errors_fixed_by_type": {
+      "Other": 1,
+      "PreCondFailVecLen": 2,
+      "ArithmeticFlow": 1
+    }
+  },
+  "verification": {
+    "initial_verified": -1,
+    "final_verified": -1,
+    "initial_errors": 999,
+    "final_errors": 999,
+    "compilation_errors": 1
+  },
+  "code_metrics": {
+    "initial_code_length": 3017,
+    "final_code_length": 5662,
+    "code_changes": 2645
+  }
+}

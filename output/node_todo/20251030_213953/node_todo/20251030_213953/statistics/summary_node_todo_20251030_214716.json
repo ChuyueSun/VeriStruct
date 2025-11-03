@@ -1,0 +1,15 @@
+{
+  "benchmark": "node_todo",
+  "execution_time": 442.44540143013,
+  "modules_activated": 3,
+  "total_llm_calls": 5,
+  "avg_response_time": 66.83889393806457,
+  "cache_hit_rate": 0.0,
+  "total_repair_rounds": 5,
+  "total_repairs": 5,
+  "repair_success_rate": 0.0,
+  "initial_errors": 999,
+  "final_errors": 1,
+  "errors_fixed": 998,
+  "verification_success": false
+}

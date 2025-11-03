@@ -1,0 +1,38 @@
+{
+  "full_pipeline": [
+    {
+      "benchmark": "vectors_todo",
+      "configuration": "full_pipeline",
+      "success": false,
+      "timeout": true,
+      "exit_code": -1,
+      "execution_time": 1800.0058331489563,
+      "log_file": "output/repair_experiments/repair_experiment_20251021_172813/full_pipeline/vectors_todo/output.log",
+      "output_dir": "output/repair_experiments/repair_experiment_20251021_172813/full_pipeline/vectors_todo"
+    }
+  ],
+  "no_repairs": [
+    {
+      "benchmark": "vectors_todo",
+      "configuration": "no_repairs",
+      "success": true,
+      "timeout": false,
+      "exit_code": 0,
+      "execution_time": 168.83654952049255,
+      "log_file": "output/repair_experiments/repair_experiment_20251021_172813/no_repairs/vectors_todo/output.log",
+      "output_dir": "output/repair_experiments/repair_experiment_20251021_172813/no_repairs/vectors_todo"
+    }
+  ],
+  "baseline": [
+    {
+      "benchmark": "vectors_todo",
+      "configuration": "baseline",
+      "success": false,
+      "timeout": true,
+      "exit_code": -1,
+      "execution_time": 1800.006373167038,
+      "log_file": "output/repair_experiments/repair_experiment_20251021_172813/baseline/vectors_todo/output.log",
+      "output_dir": "output/repair_experiments/repair_experiment_20251021_172813/baseline/vectors_todo"
+    }
+  ]
+}

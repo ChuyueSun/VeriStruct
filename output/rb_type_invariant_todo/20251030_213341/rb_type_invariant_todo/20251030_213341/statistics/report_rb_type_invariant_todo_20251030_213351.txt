@@ -1,0 +1,82 @@
+================================================================================
+VerusAgent Statistics Report - rb_type_invariant_todo
+================================================================================
+
+EXECUTION SUMMARY
+--------------------------------------------------------------------------------
+Benchmark: rb_type_invariant_todo
+Start Time: 2025-10-30T21:33:41.629957
+End Time: 2025-10-30T21:33:51.766077
+Total Execution Time: 10.14s
+Verification Success: No
+
+MODULE ACTIVATION
+--------------------------------------------------------------------------------
+Total Modules Activated: 3
+Modules: view_inference, spec_inference, proof_generation
+
+LLM CALLS
+--------------------------------------------------------------------------------
+Total LLM Calls: 30
+Average Response Time: 0.14s
+Cache Hit Rate: 3.33%
+
+Calls by Stage:
+  planning: 1
+  proof_generation: 3
+  repair: 20
+  spec_inference: 3
+  view_inference: 3
+
+ITERATIONS
+--------------------------------------------------------------------------------
+Iterations by Module:
+
+REPAIRS
+--------------------------------------------------------------------------------
+Total Repair Rounds: 5
+Total Repairs: 10
+Successful Repairs: 0
+Failed Repairs: 10
+Success Rate: 0.00%
+
+Repairs by Error Type:
+  MissImpl: 5
+  Other: 5
+
+Repairs by Heuristic:
+  repair_missing: 5
+  repair_syntax: 5
+
+ERROR TRACKING
+--------------------------------------------------------------------------------
+Initial Errors: 999
+Final Errors: 999
+Errors Fixed: 0
+
+Initial Errors by Type:
+  MissImpl: 1
+  Other: 1
+
+STAGE DETAILS
+--------------------------------------------------------------------------------
+
+view_inference (Step 1)
+  Execution Time: 0.38s
+  LLM Calls: 3
+  Iterations: 1
+  Result: Verified=-1, Errors=999
+
+spec_inference (Step 2)
+  Execution Time: 0.49s
+  LLM Calls: 3
+  Iterations: 1
+  Result: Verified=-1, Errors=999
+
+proof_generation (Step 3)
+  Execution Time: 0.39s
+  LLM Calls: 3
+  Iterations: 1
+  Result: Verified=-1, Errors=999
+
+================================================================================

@@ -1,0 +1,38 @@
+{
+  "full_pipeline": [
+    {
+      "benchmark": "bitmap_todo",
+      "configuration": "full_pipeline",
+      "success": false,
+      "timeout": true,
+      "exit_code": -1,
+      "execution_time": 1800.0058279037476,
+      "log_file": "output/repair_experiments/repair_experiment_20251021_172753/full_pipeline/bitmap_todo/output.log",
+      "output_dir": "output/repair_experiments/repair_experiment_20251021_172753/full_pipeline/bitmap_todo"
+    }
+  ],
+  "no_repairs": [
+    {
+      "benchmark": "bitmap_todo",
+      "configuration": "no_repairs",
+      "success": true,
+      "timeout": false,
+      "exit_code": 0,
+      "execution_time": 1717.0806488990784,
+      "log_file": "output/repair_experiments/repair_experiment_20251021_172753/no_repairs/bitmap_todo/output.log",
+      "output_dir": "output/repair_experiments/repair_experiment_20251021_172753/no_repairs/bitmap_todo"
+    }
+  ],
+  "baseline": [
+    {
+      "benchmark": "bitmap_todo",
+      "configuration": "baseline",
+      "success": false,
+      "timeout": true,
+      "exit_code": -1,
+      "execution_time": 1800.0068144798279,
+      "log_file": "output/repair_experiments/repair_experiment_20251021_172753/baseline/bitmap_todo/output.log",
+      "output_dir": "output/repair_experiments/repair_experiment_20251021_172753/baseline/bitmap_todo"
+    }
+  ]
+}

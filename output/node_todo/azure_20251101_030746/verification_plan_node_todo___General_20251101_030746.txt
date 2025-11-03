@@ -1,0 +1,29 @@
+## 1. Analysis Summary
+
+Current State:
+- The code defines a BST-like data structure (struct Node<V>) with operations (insert, delete, get).
+- The "well_formed" method is missing its invariant implementation ("TODO: add invariant").
+- Several methods (insert_into_optional, insert, delete_from_optional, delete_rightmost, get_from_optional, get) have "TODO: add requires and ensures" placeholders.
+- No explicit "View" requirement or keyword is present.
+
+Dependencies:
+- The well_formed invariant is critical for all operations (insert, delete, get).
+- Each operation’s pre- and postconditions (requires/ensures) depend on guaranteeing or preserving the BST property.
+
+## 2. Verification Plan
+
+**Selected Workflow:** Invariant-First Workflow
+
+**Justification:**
+- The code contains a struct (Node<V>) that requires type invariants ("TODO: add invariant").
+- It also has specification-related placeholders ("TODO: add requires/ensures").
+- There is no explicit mention of "View" or request to implement a View, so we do not use the Full Sequence Workflow.
+
+**Execution Steps:**
+1. inv_inference
+2. spec_inference
+3. proof_generation  (added because the code has “TODO: add invariant”)
+
+**Module Conditions:**
+- inv_inference: Yes – the Node struct requires BST invariants.
+- proof_generation: Yes – “TODO: add invariant” is present in the code.

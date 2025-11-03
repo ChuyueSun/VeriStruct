@@ -1,0 +1,30 @@
+```markdown
+Current State:
+- The code defines a BitMap struct with a placeholder "spec fn view(&self) -> Seq<bool>" that is not implemented yet.
+- There are multiple "TODO" markers requesting proofs, loop invariants, and requires/ensures in methods of BitMap.
+- Key missing components are the view function implementation, function specifications, type invariants, and proof obligations.
+
+Dependencies:
+- The BitMap struct depends on a correct view function for formal specification.
+- The set_bit and or methods depend on proofs ensuring correct bit manipulations and loop invariants.
+- The requires/ensures clauses for methods also depend on correct type invariants and the view abstraction to maintain consistency.
+
+```
+
+```markdown
+**Selected Workflow:** Full Sequence Workflow
+
+**Justification:**
+This BitMap struct explicitly includes a "spec fn view" placeholder, triggering the need for a full View-based verification workflow. It is also a data structure, so type invariants are applicable. Furthermore, there are "TODO: add proof" markers, indicating the final proof_generation step.
+
+**Execution Steps:**
+1. view_inference
+2. view_refinement
+3. inv_inference
+4. spec_inference
+5. proof_generation
+
+**Module Conditions:**
+- inv_inference: Yes, because BitMap is a struct needing an invariant.
+- proof_generation: Yes, because "TODO: add proof" markers exist in the code.
+```

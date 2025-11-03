@@ -1,0 +1,170 @@
+[
+  {
+    "benchmark": "atomics_todo",
+    "success": true,
+    "best_run": {
+      "experiment": "repair_experiment_20251011_160518",
+      "config": "baseline",
+      "final_errors": 0,
+      "execution_time": 83.69804525375366,
+      "llm_calls": 0,
+      "location": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160518/baseline/atomics_todo"
+    },
+    "total_runs_found": 36,
+    "successful_runs": 27
+  },
+  {
+    "benchmark": "bitmap_todo",
+    "success": true,
+    "best_run": {
+      "experiment": "repair_experiment_20251010_215225",
+      "config": "full_pipeline",
+      "final_errors": 0,
+      "execution_time": 553.5890021324158,
+      "llm_calls": 0,
+      "location": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251010_215225/full_pipeline/bitmap_todo"
+    },
+    "total_runs_found": 20,
+    "successful_runs": 4
+  },
+  {
+    "benchmark": "bst_map_todo",
+    "success": false,
+    "best_run": {
+      "experiment": "repair_experiment_20251011_182336",
+      "config": "no_repairs",
+      "final_errors": 7,
+      "execution_time": 702.3410999774933,
+      "llm_calls": 0,
+      "location": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/no_repairs/bst_map_todo"
+    },
+    "total_runs_found": 8,
+    "successful_runs": 0
+  },
+  {
+    "benchmark": "invariants_todo",
+    "success": true,
+    "best_run": {
+      "experiment": "repair_experiment_20251011_225244",
+      "config": "baseline",
+      "final_errors": 0,
+      "execution_time": 42.12890625,
+      "llm_calls": 0,
+      "location": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225244/baseline/invariants_todo"
+    },
+    "total_runs_found": 25,
+    "successful_runs": 25
+  },
+  {
+    "benchmark": "node_todo",
+    "success": false,
+    "best_run": {
+      "experiment": "repair_experiment_20251011_225246",
+      "config": "no_repairs",
+      "final_errors": 3,
+      "execution_time": 597.9972364902496,
+      "llm_calls": 0,
+      "location": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225246/no_repairs/node_todo"
+    },
+    "total_runs_found": 3,
+    "successful_runs": 0
+  },
+  {
+    "benchmark": "option_todo",
+    "success": true,
+    "best_run": {
+      "experiment": "repair_experiment_20251011_182336",
+      "config": "full_pipeline",
+      "final_errors": 0,
+      "execution_time": 62.37956404685974,
+      "llm_calls": 0,
+      "location": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/full_pipeline/option_todo"
+    },
+    "total_runs_found": 25,
+    "successful_runs": 24
+  },
+  {
+    "benchmark": "rb_type_invariant_todo",
+    "success": true,
+    "best_run": {
+      "experiment": "repair_experiment_20251011_160518",
+      "config": "full_pipeline",
+      "final_errors": 0,
+      "execution_time": 541.8357257843018,
+      "llm_calls": 0,
+      "location": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160518/full_pipeline/rb_type_invariant_todo"
+    },
+    "total_runs_found": 19,
+    "successful_runs": 7
+  },
+  {
+    "benchmark": "rwlock_vstd_todo",
+    "success": true,
+    "best_run": {
+      "experiment": "repair_experiment_20251011_182336",
+      "config": "baseline",
+      "final_errors": 0,
+      "execution_time": 33.195226192474365,
+      "llm_calls": 0,
+      "location": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/baseline/rwlock_vstd_todo"
+    },
+    "total_runs_found": 25,
+    "successful_runs": 25
+  },
+  {
+    "benchmark": "set_from_vec_todo",
+    "success": true,
+    "best_run": {
+      "experiment": "repair_experiment_20251011_182336",
+      "config": "no_repairs",
+      "final_errors": 0,
+      "execution_time": 179.76955199241638,
+      "llm_calls": 0,
+      "location": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_182336/no_repairs/set_from_vec_todo"
+    },
+    "total_runs_found": 23,
+    "successful_runs": 12
+  },
+  {
+    "benchmark": "transfer_todo",
+    "success": true,
+    "best_run": {
+      "experiment": "repair_experiment_20251011_160501",
+      "config": "no_repairs",
+      "final_errors": 0,
+      "execution_time": 38.68365979194641,
+      "llm_calls": 0,
+      "location": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160501/no_repairs/transfer_todo"
+    },
+    "total_runs_found": 25,
+    "successful_runs": 17
+  },
+  {
+    "benchmark": "treemap_todo",
+    "success": false,
+    "best_run": {
+      "experiment": "repair_experiment_20251011_225258",
+      "config": "no_repairs",
+      "final_errors": 999,
+      "execution_time": 1175.6533796787262,
+      "llm_calls": 0,
+      "location": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_225258/no_repairs/treemap_todo"
+    },
+    "total_runs_found": 3,
+    "successful_runs": 0
+  },
+  {
+    "benchmark": "vectors_todo",
+    "success": true,
+    "best_run": {
+      "experiment": "repair_experiment_20251011_160501",
+      "config": "no_repairs",
+      "final_errors": 0,
+      "execution_time": 137.9920904636383,
+      "llm_calls": 0,
+      "location": "/home/chuyue/VerusAgent/output/repair_experiments/repair_experiment_20251011_160501/no_repairs/vectors_todo"
+    },
+    "total_runs_found": 23,
+    "successful_runs": 7
+  }
+]

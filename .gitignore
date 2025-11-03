@@ -1,0 +1,91 @@
+# Ignore macOS system files
+.DS_Store
+
+# Ignore node_modules (for Node.js projects)
+node_modules/
+
+# Ignore logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ignore cache
+llm_cache/
+results/
+
+results/
+
+# Ignore tmp
+tmp/
+
+# Ignore output directory
+
+
+# Ignore Cursor files
+.cursor/
+
+# Ignore environment variable files
+.env
+.env.local
+.env.*.local
+
+# Ignore temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# Ignore Rust compiler temporary files for long type names
+tmp*.long-type-*.txt
+
+# Ignore build artifacts
+/dist/
+/out/
+/build/
+
+# Ignore OS-specific files
+Thumbs.db
+Desktop.ini
+
+# Ignore IDE and editor files
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+*.iml
+
+# Ignore Python files
+*.pyc
+*.pyo
+__pycache__/
+
+# Ignore compiled files
+*.class
+*.o
+*.so
+*.dll
+*.exe
+
+# Ignore Java project files
+target/
+*.jar
+*.war
+*.ear
+
+# Ignore Rust/Cargo files
+/target/
+
+# Ignore Go binary
+*.exe
+*.out
+
+# Ignore temporary files from editing
+~*
+
+log
+
+# API Configuration files (contain sensitive keys)
+src/configs/config*.json
+!src/configs/config.json.template

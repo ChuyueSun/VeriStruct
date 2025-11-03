@@ -1,0 +1,83 @@
+# VerusAgent Execution Summary
+
+## Input and Output Files
+
+Input File: /home/chuyue/VerusAgent/benchmarks-complete/bitmap_todo.rs
+Input File Name: bitmap_todo.rs
+File ID: bitmap_todo__Map_General_20251019_115051
+Output Directory: /home/chuyue/VerusAgent/output/bitmap_todo/20251019_115051
+Progress Log: /home/chuyue/VerusAgent/output/bitmap_todo/20251019_115051/progress_logs/progress_bitmap_todo_20251019_115051.json
+Summary File: /home/chuyue/VerusAgent/output/bitmap_todo/20251019_115051/progress_logs/summary_bitmap_todo_20251019_115051.txt
+
+Start time: 2025-10-19T11:50:51.362988
+End time: 2025-10-19T12:00:49.046794
+Total execution time: 597.68s
+
+## Final Result
+
+Verified: -1
+Errors: 999
+Verus Errors: 1
+Compilation Error: True
+Is Correct: False
+
+## Statistics
+
+Total steps: 4
+Total repair rounds: 5
+Total repairs attempted: 5
+Successful repairs: 0
+Average step time: 142.30s
+Average repair time: 0.00s
+
+## Steps
+
+Step 1: view_inference
+  Time: 121.56s
+  Score: Verified=-1, Errors=999, Verus Errors=1
+Step 2: view_refinement
+  Time: 268.39s
+  Score: Verified=-1, Errors=999, Verus Errors=1
+Step 3: inv_inference
+  Time: 99.56s
+  Score: Verified=-1, Errors=999, Verus Errors=1
+Step 4: spec_inference
+  Time: 79.70s
+  Score: Verified=-1, Errors=999, Verus Errors=1
+
+## Repair Rounds
+
+Round 1
+  Time: 0.01s
+  repair_old_self for RequiresOldSelf
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 0.00s
+
+Round 2
+  Time: 0.00s
+  repair_old_self for RequiresOldSelf
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 0.00s
+
+Round 3
+  Time: 0.00s
+  repair_old_self for RequiresOldSelf
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 0.00s
+
+Round 4
+  Time: 0.00s
+  repair_old_self for RequiresOldSelf
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 0.00s
+
+Round 5
+  Time: 0.00s
+  repair_old_self for RequiresOldSelf
+    Before: Verified=-1, Errors=999, Verus Errors=1
+    After: Verified=-1, Errors=999, Verus Errors=1
+    Time: 0.00s

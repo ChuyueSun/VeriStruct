@@ -1,0 +1,72 @@
+================================================================================
+VerusAgent Statistics Report - node_todo
+================================================================================
+
+EXECUTION SUMMARY
+--------------------------------------------------------------------------------
+Benchmark: node_todo
+Start Time: 2025-10-21T17:58:00.152413
+End Time: 2025-10-21T18:03:03.390115
+Total Execution Time: 303.24s
+Verification Success: No
+
+MODULE ACTIVATION
+--------------------------------------------------------------------------------
+Total Modules Activated: 3
+Modules: inv_inference, spec_inference, proof_generation
+
+LLM CALLS
+--------------------------------------------------------------------------------
+Total LLM Calls: 0
+Average Response Time: 0.00s
+Cache Hit Rate: 0.00%
+
+Calls by Stage:
+
+ITERATIONS
+--------------------------------------------------------------------------------
+Iterations by Module:
+
+REPAIRS
+--------------------------------------------------------------------------------
+Total Repair Rounds: 0
+Total Repairs: 0
+Successful Repairs: 0
+Failed Repairs: 0
+Success Rate: 0.00%
+
+Repairs by Error Type:
+
+Repairs by Heuristic:
+
+ERROR TRACKING
+--------------------------------------------------------------------------------
+Initial Errors: 999
+Final Errors: 4
+Errors Fixed: 995
+
+Initial Errors by Type:
+  Other: 1
+
+STAGE DETAILS
+--------------------------------------------------------------------------------
+
+inv_inference (Step 1)
+  Execution Time: 123.79s
+  LLM Calls: 0
+  Iterations: 1
+  Result: Verified=7, Errors=4
+
+spec_inference (Step 2)
+  Execution Time: 153.75s
+  LLM Calls: 0
+  Iterations: 1
+  Result: Verified=-1, Errors=999
+
+proof_generation (Step 3)
+  Execution Time: 0.00s
+  LLM Calls: 0
+  Iterations: 1
+  Result: Verified=-1, Errors=999
+
+================================================================================

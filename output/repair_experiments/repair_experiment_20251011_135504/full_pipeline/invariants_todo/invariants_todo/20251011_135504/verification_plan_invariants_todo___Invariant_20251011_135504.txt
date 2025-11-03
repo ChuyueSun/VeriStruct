@@ -1,0 +1,26 @@
+```markdown
+Current State:
+- There is a struct named `ModPredicate` which implements `InvariantPredicate<int, u32>` but its core invariant function (`inv`) is left as a TODO (“TODO: add specification”).
+- Verification requires providing an appropriate invariant for the struct, along with ensuring that any function-level specifications (requires/ensures) are included as needed.
+- No "View" functionality is mentioned or required in this code.
+
+Dependencies:
+- The `ModPredicate` must define a correct invariant relationship for (k, v) so that the existing usage (requiring odd/even conditions) holds.
+- The rest of the test code depends on this invariant to ensure that the operations inside open/close blocks are valid.
+
+```
+
+```markdown
+**Selected Workflow:** Invariant-First Workflow
+
+**Justification:**
+Since the code defines a struct (`ModPredicate`) that needs a type-level invariant and contains a “TODO: add specification” placeholder, but does not mention or require any View functionality, we use the Invariant-First Workflow. This flow ensures we define the struct’s invariant before finalizing function specifications.
+
+**Execution Steps:**
+1. inv_inference
+2. spec_inference
+
+**Module Conditions:**
+- inv_inference: Yes – The code includes a struct `ModPredicate` requiring an invariant function.
+- proof_generation: No – There is no explicit “TODO: add proof” or “TODO: add invariants” in the code.
+```

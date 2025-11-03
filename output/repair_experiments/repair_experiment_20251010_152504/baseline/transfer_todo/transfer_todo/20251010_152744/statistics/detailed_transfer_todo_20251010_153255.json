@@ -1,0 +1,71 @@
+{
+  "benchmark_name": "transfer_todo",
+  "start_time": "2025-10-10T15:27:44.667191",
+  "end_time": "2025-10-10T15:32:55.364781",
+  "total_execution_time": 310.6975917816162,
+  "modules_activated": [
+    "baseline"
+  ],
+  "modules_count": 1,
+  "stages": {
+    "baseline": {
+      "step_number": 1,
+      "start_time": "2025-10-10T15:27:45.517123",
+      "end_time": "2025-10-10T15:32:55.355762",
+      "execution_time": 309.8386421203613,
+      "llm_calls": 0,
+      "iterations": 1,
+      "result": {
+        "compilation_error": true,
+        "verified": -1,
+        "errors": 999,
+        "verus_errors": 2,
+        "is_correct": false
+      }
+    }
+  },
+  "llm_calls": {
+    "total": 0,
+    "by_stage": {},
+    "by_module": {},
+    "response_times": [],
+    "cache_hits": 0,
+    "cache_misses": 0
+  },
+  "iterations": {
+    "by_module": {},
+    "by_stage": {
+      "baseline": 1
+    }
+  },
+  "repairs": {
+    "total_rounds": 0,
+    "total_repairs": 0,
+    "repairs_by_type": {},
+    "repairs_by_heuristic": {},
+    "successful_repairs": 0,
+    "failed_repairs": 0,
+    "repair_times": []
+  },
+  "errors": {
+    "initial_error_count": 2,
+    "final_error_count": 999,
+    "errors_by_type": {
+      "ArithmeticFlow": 2,
+      "AssertFail": 2
+    },
+    "errors_fixed_by_type": {}
+  },
+  "verification": {
+    "initial_verified": 1,
+    "final_verified": -1,
+    "initial_errors": 2,
+    "final_errors": 999,
+    "compilation_errors": 1
+  },
+  "code_metrics": {
+    "initial_code_length": 757,
+    "final_code_length": 926,
+    "code_changes": 169
+  }
+}

@@ -1,0 +1,89 @@
+[
+  {
+    "benchmark": "atomics_todo",
+    "best_exp": "1_135504",
+    "max_verified": 11,
+    "gt_count": 11,
+    "fully_verified": true,
+    "num_stages": 4
+  },
+  {
+    "benchmark": "bitmap_todo",
+    "best_exp": "1_135504",
+    "max_verified": 14,
+    "gt_count": 14,
+    "fully_verified": true,
+    "num_stages": 6
+  },
+  {
+    "benchmark": "bst_map_todo",
+    "best_exp": "1_135504",
+    "max_verified": 10,
+    "gt_count": 21,
+    "fully_verified": false,
+    "num_stages": 8
+  },
+  {
+    "benchmark": "invariants_todo",
+    "best_exp": "1_135504",
+    "max_verified": 7,
+    "gt_count": 7,
+    "fully_verified": true,
+    "num_stages": 3
+  },
+  {
+    "benchmark": "node_todo",
+    "best_exp": "None",
+    "max_verified": 0,
+    "gt_count": 12,
+    "fully_verified": false
+  },
+  {
+    "benchmark": "option_todo",
+    "best_exp": "1_135504",
+    "max_verified": 15,
+    "gt_count": 15,
+    "fully_verified": true,
+    "num_stages": 2
+  },
+  {
+    "benchmark": "rb_type_invariant_todo",
+    "best_exp": "1_135504",
+    "max_verified": 13,
+    "gt_count": 13,
+    "fully_verified": true,
+    "num_stages": 6
+  },
+  {
+    "benchmark": "rwlock_vstd_todo",
+    "best_exp": "1_135504",
+    "max_verified": 5,
+    "gt_count": 5,
+    "fully_verified": true,
+    "num_stages": 3
+  },
+  {
+    "benchmark": "set_from_vec_todo",
+    "best_exp": "1_160518",
+    "max_verified": 10,
+    "gt_count": 10,
+    "fully_verified": true,
+    "num_stages": 6
+  },
+  {
+    "benchmark": "transfer_todo",
+    "best_exp": "1_135504",
+    "max_verified": 5,
+    "gt_count": 5,
+    "fully_verified": true,
+    "num_stages": 2
+  },
+  {
+    "benchmark": "vectors_todo",
+    "best_exp": "1_160501",
+    "max_verified": 16,
+    "gt_count": 16,
+    "fully_verified": true,
+    "num_stages": 3
+  }
+]
