@@ -1,2 +1,0 @@
-Benchmark,Exec Time (s),Modules,LLM Calls,Avg Response (s),Cache Hit %,Input Tokens,Output Tokens,Repair Rounds,Repairs,Success Rate %,Initial Errors,Final Errors,Verified
-demo_bench,0.00,0,1,0.42,0.0,36,87,0,0,0.0,1,1,No

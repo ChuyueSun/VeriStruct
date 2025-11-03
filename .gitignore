@@ -89,3 +89,12 @@ log
 # API Configuration files (contain sensitive keys)
 src/configs/config*.json
 !src/configs/config.json.template
+
+# Benchmark and output directories
+benchmark_nocache_*/
+benchmark_results_*/
+model_comparison_*/
+output/
+prompt/
+log
+log2
