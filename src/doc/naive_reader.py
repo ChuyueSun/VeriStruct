@@ -5,10 +5,29 @@ if __name__ == "__main__":
     sys.path[0] = "/Users/syc/Desktop/-verusyth/src"
 from src.configs.sconfig import config
 
-external_dir = os.path.join(config["project_dir"], "external")
-vstd_dir = os.path.join(external_dir, "vstd")
-
+# Lazy initialization to avoid accessing config at import time
+_external_dir = None
+_vstd_dir = None
 vstd_base: dict[str, str] = {}
+
+
+def _get_external_dir():
+    """Get external directory lazily to avoid config access at import time."""
+    global _external_dir
+    if _external_dir is None:
+        project_dir = config.get(
+            "project_dir", os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+        )
+        _external_dir = os.path.join(project_dir, "external")
+    return _external_dir
+
+
+def _get_vstd_dir():
+    """Get vstd directory lazily."""
+    global _vstd_dir
+    if _vstd_dir is None:
+        _vstd_dir = os.path.join(_get_external_dir(), "vstd")
+    return _vstd_dir
 
 
 def search(path: str, path_id: str):
@@ -31,7 +50,7 @@ def get_content(use_path: str):
         use_path = use_path[:-1]
     if use_path == "vstd" or use_path == "vstd/":
         return ""
-    use_path = os.path.join(external_dir, use_path + ".rs")
+    use_path = os.path.join(_get_external_dir(), use_path + ".rs")
     # print(use_path)
     if os.path.exists(use_path):
         return open(use_path, "r").read()
