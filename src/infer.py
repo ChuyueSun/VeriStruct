@@ -16,33 +16,6 @@ import requests
 from src.llm_cache import LLMCache
 from src.utils.path_utils import get_output_dir
 
-# sglang
-try:
-    import sglang as sgl
-except ImportError:
-    # If you don't have sglang installed, create a dummy implementation
-    class DummySGL:
-        def function(self, func):
-            return func
-
-        def set_default_backend(self, backend):
-            pass
-
-        def system(self, text):
-            return text
-
-        def user(self, text):
-            return text
-
-        def assistant(self, text):
-            return text
-
-        def gen(self, name, **kwargs):
-            return name
-
-    sgl = DummySGL()
-    print("Warning: sglang not installed, using dummy implementation")
-
 try:
     from azure.identity import DefaultAzureCredential, get_bearer_token_provider
 except ImportError:
@@ -56,8 +29,8 @@ ENABLE_LLM_INFERENCE = os.environ.get("ENABLE_LLM_INFERENCE", "1") == "1"
 class LLM:
     def __init__(self, config, logger, use_cache=True):
         """
-        Initialize the LLM with SGL backends. If multiple keys/backends exist,
-        you could store them in self.backends and set one as the default.
+        Initialize the LLM client with API configuration.
+        Supports OpenAI, Azure OpenAI, and Anthropic platforms.
         """
         self.config = config
         self.logger = logger
@@ -119,9 +92,6 @@ class LLM:
                 "Config: using non-OpenAI platform; base URL list not applicable"
             )
 
-        # Prepare a list of potential SGL backends
-        self.backends = []
-
         # Log which platform we are going to initialize
         self.logger.info(
             f"LLM initializing for platform: {self.config.get('platform', 'openai')}"
@@ -129,54 +99,6 @@ class LLM:
 
         if self.dummy_mode:
             self.logger.warning("LLM in dummy mode. Will return placeholder responses.")
-            return
-
-        try:
-            platform_type = self.config.get("platform", "openai")
-
-            # Treat both standard OpenAI and XAI endpoints similarly (OpenAI-compatible API)
-            if platform_type in ["openai", "xai"]:
-                for i in range(len(self.config["aoai_api_key"])):
-                    self.backends.append(
-                        sgl.OpenAI(
-                            model_name=self.config.get(
-                                "aoai_generation_model", "gpt-4o"
-                            ),
-                            api_key=self.config["aoai_api_key"][i],
-                            base_url=self.config["aoai_api_base"][i],
-                        )
-                    )
-            elif platform_type == "azure":
-                for i in range(len(self.config["aoai_api_key"])):
-                    self.backends.append(
-                        sgl.OpenAI(
-                            model_name=self.config["aoai_generation_model"],
-                            api_version=self.config["aoai_api_version"],
-                            azure_endpoint=self.config["aoai_api_base"][i],
-                            api_key=self.config["aoai_api_key"][i],
-                            is_azure=True,
-                        )
-                    )
-            elif platform_type == "anthropic":
-                for i in range(len(self.config["anthropic_api_key"])):
-                    self.backends.append(
-                        sgl.Anthropic(
-                            model_name=self.config["anthropic_generation_model"],
-                            api_key=self.config["anthropic_api_key"][i],
-                        )
-                    )
-            else:
-                raise ValueError(f"Unknown platform: {platform_type}")
-
-            self.logger.info(
-                f"LLM backend initialization complete. Backends count: {len(self.backends)} for platform {platform_type}"
-            )
-        except Exception as e:
-            self.logger.error(f"Error initializing LLM backends: {e}")
-            self.dummy_mode = True
-            self.logger.warning(
-                "Falling back to dummy mode due to initialization error."
-            )
 
         # Pick a random backend index
         self.client_id = 0
@@ -213,41 +135,6 @@ class LLM:
             if isinstance(maybe_txt, str):
                 final_answers.append(maybe_txt)
 
-    @sgl.function
-    def _build_prompt(
-        s, system_info, instruction, exemplars, query, answer_num, max_tokens=8192
-    ):
-        """
-        Internal sgl.function to build the conversation flow for a single infer_llm call.
-        """
-        # system message
-        s += sgl.system(system_info or "You are a helpful AI assistant.")
-
-        # instruction, if provided
-        if instruction is not None:
-            s += sgl.user(instruction)
-        # s += sgl.assistant("OK, I'm ready to help.")
-
-        # exemplars
-        if exemplars:
-            for ex in exemplars:
-                # ex["query"], ex["answer"]
-                s += sgl.user(ex["query"])
-                s += sgl.assistant(ex["answer"])
-        if query:
-            # final query from user
-            s += sgl.user(query)
-
-        # We'll store the final response in a variable named "final_answer".
-        # SGLang will automatically translate max_tokens to max_completion_tokens for o1/o3 models
-        s += sgl.assistant(
-            sgl.gen(
-                f"final_answer",
-                max_tokens=max_tokens,  # SGLang handles model-specific params
-                n=answer_num,
-            )
-        )
-
     def infer_llm(
         self,
         engine: str,
@@ -270,7 +157,7 @@ class LLM:
         Tuple[List[str], List[dict], dict],
     ]:
         """
-        Calls SGL to build and run an LLM prompt. Returns a list of strings
+        Calls LLM API to generate responses. Returns a list of strings
         (the final answers). If return_msg=True, returns a tuple of
         (list of strings, conversation messages).
 

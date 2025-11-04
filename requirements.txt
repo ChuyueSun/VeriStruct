@@ -1,0 +1,10 @@
+# Core dependencies
+loguru>=0.7.0
+requests>=2.31.0
+
+# Optional: Azure authentication (if using Azure OpenAI with managed identity)
+# azure-identity>=1.15.0
+
+# Note: Python 3.8+ required
+# The project uses the requests library for LLM API calls (OpenAI, Azure, Anthropic, DeepSeek)
+# No additional LLM-specific libraries are strictly required

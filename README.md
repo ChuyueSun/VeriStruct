@@ -1,8 +1,10 @@
-# VerusAgent
+# VerusAgent (VeriStruct)
 
 **An AI-Powered Assistant for Verus Formal Verification**
 
 VerusAgent is an automated system that helps develop, debug, and refine Rust code with Verus formal specifications. It uses Large Language Models (LLMs) to generate specifications, infer invariants, and repair verification errors.
+
+📄 **Paper**: [VeriStruct: AI-assisted Automated Verification of Data-Structure Modules in Verus](https://arxiv.org/abs/2510.25015) (arXiv:2510.25015)
 
 ---
 
@@ -32,9 +34,10 @@ VerusAgent automates the challenging process of formal verification by:
 
 ### Prerequisites
 
-- Python 3.8+
-- Verus (install from [verus-lang.github.io](https://verus-lang.github.io))
-- LLM API access (OpenAI, Azure, Anthropic, or DeepSeek)
+- **Python 3.8+**
+- **Verus** (install from [verus-lang.github.io](https://verus-lang.github.io))
+- **LLM API access** (OpenAI, Azure OpenAI, Anthropic, or DeepSeek)
+  - API key and endpoint configured in `src/configs/config-azure.json` or your custom config
 
 ### Installation
 
@@ -47,22 +50,34 @@ cd VerusAgent
 pip install -r requirements.txt
 
 # Configure your LLM API
-cp src/configs/config.json.template src/configs/config.json
-# Edit config.json with your API keys and settings
+# Option 1: Use existing Azure OpenAI configuration
+# Edit src/configs/config-azure.json with your credentials
+
+# Option 2: Create new configuration from template
+cp src/configs/config.json.template src/configs/config-custom.json
+# Edit config-custom.json with your API keys and settings
+
+# 🔒 SECURITY: All config*.json files are automatically ignored by git
+# Your API keys will NEVER be committed to the repository
+
 # See src/configs/README.md for detailed configuration instructions
 ```
 
 ### Running VerusAgent
 
 ```bash
-# Run on a single file
-python run_agent.py --test-file benchmarks-complete/vectors_todo.rs
+# Run on a single file with default config
+python run_agent.py --test-file benchmarks-complete/vectors_todo.rs --config config-azure
 
 # Run on all benchmarks
 python run_all_benchmarks.py --configs config-azure
 
-# Run with custom configuration
-python run_bench.py --config src/configs/config-azure.json --test-file my_file.rs
+# Run specific file with options
+python run_bench.py --config config-azure --test-file benchmarks-complete/my_file.rs
+
+# Run with immutable functions (e.g., test functions that shouldn't be modified)
+python run_agent.py --test-file benchmarks-complete/rb_type_invariant.rs \
+  --immutable-functions test --config config-azure
 ```
 
 ---
@@ -188,6 +203,11 @@ VerusAgent/
 ├── run_agent.py                      # Run on single file
 ├── run_all_benchmarks.py             # Run on all benchmarks
 ├── run_bench.py                      # Run with specific config
+├── run_bench_no_cache.py             # Run without LLM cache
+├── run_baseline_bench.py             # Run baseline experiments
+├── run_repair_effectiveness_experiment.py  # Test repair modules
+├── run_all_benchmarks_no_cache.sh    # Shell script for no-cache runs
+├── run_model_comparison.sh           # Compare different models
 │
 └── README.md                         # This file
 ```
@@ -211,10 +231,10 @@ Configuration files are in `src/configs/`. Key settings:
 
 ### Available Configurations
 
-- `config-azure.json` - Azure OpenAI
-- `config-oai.json` - OpenAI
-- `config-anthropic.json` - Anthropic Claude
-- `config-deepseek.json` - DeepSeek
+- `config-azure.json` - Azure OpenAI (currently configured)
+- `config.json.template` - Template for creating custom configurations
+
+**Note:** You can create additional configurations for OpenAI, Anthropic Claude, or DeepSeek by copying the template and filling in your credentials. See `src/configs/README.md` for details.
 
 ### Environment Variables
 
@@ -250,14 +270,23 @@ VerusAgent includes multiple benchmark suites:
 ### Running Benchmarks
 
 ```bash
-# Run all benchmarks in parallel
-fish run_all_benchmarks_parallel.fish
+# Run all benchmarks
+python run_all_benchmarks.py --configs config-azure
 
 # Run specific benchmark
 python run_agent.py --test-file benchmarks-complete/vectors_todo.rs
 
 # Run with specific configuration
 python run_bench.py --config config-azure --benchmark vectors_todo
+
+# Run without cache (for testing)
+python run_bench_no_cache.py --config config-azure --test-file benchmarks-complete/vectors_todo.rs
+
+# Run all benchmarks without cache using shell script
+bash run_all_benchmarks_no_cache.sh
+
+# Run model comparison experiments
+bash run_model_comparison.sh
 ```
 
 ---
@@ -272,7 +301,7 @@ VerusAgent collects comprehensive statistics for research:
 - **Execution times** and performance metrics
 - **Verification outcomes** (success/failure)
 
-See [`STATISTICS_README.md`](STATISTICS_README.md) for details.
+Statistics are automatically saved in the `output/` directory for each run.
 
 ### Generating Reports
 
@@ -340,19 +369,36 @@ Register in `src/modules/repair_registry.py`.
 
 ### Getting Started
 - **README.md** (this file) - Overview and quick start
+- [`YOUR_CONFIG_SETUP.md`](YOUR_CONFIG_SETUP.md) - Azure OpenAI configuration guide
 
 ### Technical Documentation
 - [`README_modules.md`](README_modules.md) - Module overview
-- [`STATISTICS_README.md`](STATISTICS_README.md) - Statistics system
+- [`src/configs/README.md`](src/configs/README.md) - Configuration options
+- [`documentation/`](documentation/) - Comprehensive technical documentation
 
 ### Research & Results
+- **Paper**: [VeriStruct: AI-assisted Automated Verification of Data-Structure Modules in Verus](https://arxiv.org/abs/2510.25015)
 - [`README_BASELINE.md`](README_BASELINE.md) - Baseline experiments
 - [`output/`](output/) - Experimental results and analysis
 
 ---
 
----
+## 📄 Citation
 
+If you use VerusAgent in your research, please cite our paper:
+
+```bibtex
+@article{sun2025veristruct,
+  title={VeriStruct: AI-assisted Automated Verification of Data-Structure Modules in Verus},
+  author={Sun, Chuyue and Sun, Yican and Amrollahi, Daneshvar and Zhang, Ethan and Lahiri, Shuvendu and Lu, Shan and Dill, David and Barrett, Clark},
+  journal={arXiv preprint arXiv:2510.25015},
+  year={2025}
+}
+```
+
+**Paper**: [https://arxiv.org/abs/2510.25015](https://arxiv.org/abs/2510.25015)
+
+---
 
 ## 📧 Contact
 

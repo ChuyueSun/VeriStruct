@@ -61,49 +61,81 @@ This directory contains configuration files for VerusAgent. The actual configura
 ### System Settings
 
 - `max_retries`: Number of retry attempts for failed API calls (default: 3)
-- `timeout_seconds`: Timeout for verification attempts (default: 300)
+- `repair_timeout`: Maximum time per repair attempt in seconds (default: 120)
+- `repair_llm_timeout`: LLM call warning threshold in seconds (default: 60)
+- `slow_repair_threshold`: Slow repair warning threshold in seconds (default: 30)
+- `max_repair_retries`: Number of retry attempts on timeout (default: 1)
 - `enable_cache`: Enable LLM response caching (default: true)
 - `cache_dir`: Directory for cache files (default: "llm_cache")
 
 ### Path Settings
 
-- `verus_path`: Path to Verus executable
-- `benchmark_dir`: Directory containing benchmark files
-- `output_dir`: Directory for output files
+- `verus_path`: Path to Verus executable (optional, will use system PATH if not specified)
+- `benchmark_dir`: Directory containing benchmark files (default: "benchmarks-complete")
+- `output_dir`: Directory for output files (default: "output")
 
 ### Execution Settings
 
 - `max_iterations`: Maximum workflow iterations (default: 10)
 - `max_repair_attempts`: Maximum repair attempts per error (default: 5)
-- `parallel_executions`: Number of parallel benchmark executions (default: 4)
+- `num_repair_rounds`: Number of repair rounds to attempt (configurable via CLI)
 
-## Example Configurations
+## Current Configurations
 
-### For Azure OpenAI (Recommended)
+### Available
+- **config-azure.json** - Azure OpenAI configuration (currently set up)
+- **config.json.template** - Template for creating new configurations
+
+### Creating Additional Configurations
+
+#### For Azure OpenAI
 ```bash
-cp config.json.template config-azure.json
-# Edit config-azure.json with your Azure credentials
+# Already configured in config-azure.json
+# Edit config-azure.json to update your Azure credentials
 ```
 
-### For OpenAI
+#### For OpenAI
 ```bash
 cp config.json.template config-oai.json
 # Edit config-oai.json with your OpenAI API key
 ```
 
-### For Anthropic Claude
+#### For Anthropic Claude
 ```bash
 cp config.json.template config-anthropic.json
 # Edit config-anthropic.json with your Anthropic API key
 ```
 
-## Security Notes
+#### For DeepSeek
+```bash
+cp config.json.template config-deepseek.json
+# Edit config-deepseek.json with your DeepSeek API key
+```
 
-⚠️ **IMPORTANT**:
+## 🔒 Security Notes
+
+⚠️ **IMPORTANT - API Key Protection**:
+
+✅ **Already Protected:**
+- All `config*.json` files (except `.template`) are automatically ignored by git
+- Your API keys in `config-azure.json` will **NEVER** be committed to the repository
+- The `.gitignore` file ensures these files stay local only
+
+⚠️ **Best Practices:**
+- Never manually add config files to git (don't use `git add -f`)
 - Never commit files containing actual API keys
-- All `config*.json` files (except `.template`) are in `.gitignore`
 - Keep your API keys secure and rotate them regularly
-- Use environment variables for additional security if needed
+- Consider using environment variables for additional security:
+
+```bash
+# Set environment variable
+export AZURE_OPENAI_API_KEY="your-key-here"
+
+# Reference in config.json
+{
+  "aoai_api_key": "${AZURE_OPENAI_API_KEY}"
+}
+```
 
 ## Troubleshooting
 
