@@ -126,3 +126,8 @@ VEVAL_ERROR_*.md
 results_summary.md
 examples/repair_*.md
 docs/repair_*.md
+
+# Additional generated files
+TIMEOUT_IMPLEMENTATION_SUMMARY.txt
+benchmark_summary_*.txt
+check_benchmark_status.sh
