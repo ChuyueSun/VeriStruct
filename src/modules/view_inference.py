@@ -184,6 +184,74 @@ impl View for StructName {
 DO NOT return the entire file. ONLY return the view implementation as shown above."""
 
     @staticmethod
+    def _find_matching_brace(code: str, start_pos: int) -> int:
+        """
+        Find the position of the closing brace that matches the opening brace at start_pos.
+
+        Args:
+            code: The code string
+            start_pos: Position of the opening brace
+
+        Returns:
+            Position of the matching closing brace, or -1 if not found
+        """
+        if start_pos >= len(code) or code[start_pos] != "{":
+            return -1
+
+        brace_count = 1
+        i = start_pos + 1
+
+        while i < len(code) and brace_count > 0:
+            # Skip string literals and character literals to avoid counting braces inside them
+            if code[i] == '"':
+                i += 1
+                while i < len(code):
+                    if code[i] == "\\":
+                        i += 2  # Skip escaped character
+                    elif code[i] == '"':
+                        i += 1
+                        break
+                    else:
+                        i += 1
+                continue
+            elif code[i] == "'":
+                i += 1
+                while i < len(code):
+                    if code[i] == "\\":
+                        i += 2  # Skip escaped character
+                    elif code[i] == "'":
+                        i += 1
+                        break
+                    else:
+                        i += 1
+                continue
+            # Skip single-line comments
+            elif i + 1 < len(code) and code[i : i + 2] == "//":
+                while i < len(code) and code[i] != "\n":
+                    i += 1
+                continue
+            # Skip multi-line comments
+            elif i + 1 < len(code) and code[i : i + 2] == "/*":
+                i += 2
+                while i + 1 < len(code):
+                    if code[i : i + 2] == "*/":
+                        i += 2
+                        break
+                    i += 1
+                continue
+            # Count braces
+            elif code[i] == "{":
+                brace_count += 1
+            elif code[i] == "}":
+                brace_count -= 1
+                if brace_count == 0:
+                    return i
+
+            i += 1
+
+        return -1
+
+    @staticmethod
     def has_spec_fn_view(code: str) -> tuple[bool, str, int, int]:
         """
         Check if code already has a spec fn view declaration.
@@ -201,15 +269,25 @@ DO NOT return the entire file. ONLY return the view implementation as shown abov
         """
         # Look for: [pub] [open|closed] spec fn view(&self) -> SomeType { ... }
         # Pattern matches visibility (pub), modifiers (open/closed), and spec fn view
-        pattern = r"(struct\s+(\w+).*?impl\s+\2\s*(?:<[^>]*>)?\s*\{.*?)((?:pub\s+)?(?:open\s+|closed\s+)?spec\s+fn\s+view\s*\(\s*&\s*self\s*\)\s*->\s*[^{]+\{)(.*?)(\})"
+        # Note: We now only match up to the opening brace, then use _find_matching_brace
+        pattern = r"struct\s+(\w+).*?impl\s+\1\s*(?:<[^>]*>)?\s*\{.*?((?:pub\s+)?(?:open\s+|closed\s+)?spec\s+fn\s+view\s*\(\s*&\s*self\s*\)\s*->\s*[^{]+)\{"
 
         match = re.search(pattern, code, re.DOTALL)
         if match:
-            struct_name = match.group(2)
-            # Find the position of the function body (group 4)
-            body = match.group(4)
-            start_pos = match.start(4)
-            end_pos = match.end(4)
+            struct_name = match.group(1)
+            # Find the opening brace position (right after the match)
+            opening_brace_pos = match.end() - 1
+
+            # Find the matching closing brace
+            closing_brace_pos = ViewInferenceModule._find_matching_brace(code, opening_brace_pos)
+
+            if closing_brace_pos == -1:
+                return False, "", -1, -1
+
+            # The body is between the opening and closing braces
+            start_pos = opening_brace_pos + 1
+            end_pos = closing_brace_pos
+
             return True, struct_name, start_pos, end_pos
 
         return False, "", -1, -1
@@ -227,13 +305,27 @@ DO NOT return the entire file. ONLY return the view implementation as shown abov
             (has_view_trait, struct_name, start_pos, end_pos)
             where start_pos and end_pos define the view function body to replace
         """
-        # Look for impl View for with a view function containing TODO
-        pattern = r"impl\s*(?:<[^>]*>)?\s*View\s+for\s+(\w+)\s*(?:<[^>]*>)?\s*\{.*?type\s+V\s*=[^;]+;.*?((?:open\s+|closed\s+)?spec\s+fn\s+view\s*\([^)]*\)[^{]*\{)(.*?)(\}\s*\})"
+        # Look for impl View for with a view function
+        # Note: We now only match up to the opening brace, then use _find_matching_brace
+        pattern = r"impl\s*(?:<[^>]*>)?\s*View\s+for\s+(\w+)\s*(?:<[^>]*>)?\s*\{.*?type\s+V\s*=[^;]+;.*?((?:open\s+|closed\s+)?spec\s+fn\s+view\s*\([^)]*\)[^{]*)\{"
 
         match = re.search(pattern, code, re.DOTALL)
         if match:
             struct_name = match.group(1)
-            body = match.group(3)
+            # Find the opening brace position (right after the match)
+            opening_brace_pos = match.end() - 1
+
+            # Find the matching closing brace
+            closing_brace_pos = ViewInferenceModule._find_matching_brace(code, opening_brace_pos)
+
+            if closing_brace_pos == -1:
+                return False, "", -1, -1
+
+            # The body is between the opening and closing braces
+            start_pos = opening_brace_pos + 1
+            end_pos = closing_brace_pos
+            body = code[start_pos:end_pos]
+
             # Only consider it a TODO case if:
             # 1. Body explicitly contains TODO comment
             # 2. Body is empty or only whitespace/comments
@@ -244,8 +336,6 @@ DO NOT return the entire file. ONLY return the view implementation as shown abov
                 or (len(body_stripped) < 20 and "//" in body_stripped)  # Just a comment
             )
             if is_todo:
-                start_pos = match.start(3)
-                end_pos = match.end(3)
                 return True, struct_name, start_pos, end_pos
 
         return False, "", -1, -1
@@ -271,19 +361,41 @@ DO NOT return the entire file. ONLY return the view implementation as shown abov
             # Remove any impl View for or spec fn view wrappers
 
             # If LLM returned full function, extract body
-            fn_pattern = r"spec\s+fn\s+view\s*\([^)]*\)[^{]*\{(.*)\}"
+            # Pattern matches up to the opening brace (non-greedy)
+            fn_pattern = r"spec\s+fn\s+view\s*\([^)]*\)[^{]*\{"
             match = re.search(fn_pattern, code, re.DOTALL)
             if match:
-                return match.group(1).strip()
+                # Find the opening brace position
+                opening_brace_pos = match.end() - 1
+
+                # Use _find_matching_brace to find the proper closing brace
+                closing_brace_pos = ViewInferenceModule._find_matching_brace(
+                    code, opening_brace_pos
+                )
+
+                if closing_brace_pos != -1:
+                    # Extract only the content between the braces (the function body)
+                    return code[opening_brace_pos + 1 : closing_brace_pos].strip()
 
             # Otherwise, assume it's already just the body
             return code.strip()
         else:
             # For View trait, we want the complete impl block
-            impl_pattern = r"(impl\s*(?:<[^>]*>)?\s*View\s+for\s+\w+.*?\{.*?\}(?:\s*\})?)"
+            # Pattern matches up to the opening brace, then use _find_matching_brace
+            impl_pattern = r"(impl\s*(?:<[^>]*>)?\s*View\s+for\s+\w+.*?)\{"
             match = re.search(impl_pattern, code, re.DOTALL)
             if match:
-                return match.group(1).strip()
+                # Find the opening brace position
+                opening_brace_pos = match.end() - 1
+
+                # Use _find_matching_brace to find the proper closing brace
+                closing_brace_pos = ViewInferenceModule._find_matching_brace(
+                    code, opening_brace_pos
+                )
+
+                if closing_brace_pos != -1:
+                    # Extract the entire impl block including braces
+                    return code[match.start() : closing_brace_pos + 1].strip()
 
             return code.strip()
 
@@ -430,18 +542,40 @@ DO NOT return the entire file. ONLY return the view implementation as shown abov
             return parsed_code
 
         # If we don't have a View implementation yet, try to extract it specifically
-        view_impl_pattern = r"impl\s*<.*?>\s*View\s+for\s+\w+.*?{.*?type\s+V\s*=.*?closed\s+spec\s+fn\s+view.*?}.*?}"
-        view_impls = re.findall(view_impl_pattern, parsed_code, re.DOTALL)
+        # Pattern matches up to the opening brace, then use _find_matching_brace
+        view_impl_pattern = r"impl\s*<.*?>\s*View\s+for\s+\w+.*?\{"
+        matches = list(re.finditer(view_impl_pattern, parsed_code, re.DOTALL))
 
-        if view_impls:
-            self.logger.info("Extracted specific View implementation from parsed code")
-            return view_impls[0]
+        if matches:
+            for match in matches:
+                # Check if this impl block contains the required elements
+                opening_brace_pos = match.end() - 1
+                closing_brace_pos = ViewInferenceModule._find_matching_brace(
+                    parsed_code, opening_brace_pos
+                )
+
+                if closing_brace_pos != -1:
+                    impl_block = parsed_code[match.start() : closing_brace_pos + 1]
+                    # Verify it contains the view function
+                    if "type V =" in impl_block and "spec fn view" in impl_block:
+                        self.logger.info("Extracted specific View implementation from parsed code")
+                        return impl_block
 
         # If we still don't have a View implementation, try the original response
-        view_impls = re.findall(view_impl_pattern, response, re.DOTALL)
-        if view_impls:
-            self.logger.info("Extracted View implementation from original response")
-            return view_impls[0]
+        matches = list(re.finditer(view_impl_pattern, response, re.DOTALL))
+        if matches:
+            for match in matches:
+                opening_brace_pos = match.end() - 1
+                closing_brace_pos = ViewInferenceModule._find_matching_brace(
+                    response, opening_brace_pos
+                )
+
+                if closing_brace_pos != -1:
+                    impl_block = response[match.start() : closing_brace_pos + 1]
+                    # Verify it contains the view function
+                    if "type V =" in impl_block and "spec fn view" in impl_block:
+                        self.logger.info("Extracted View implementation from original response")
+                        return impl_block
 
         # If nothing worked, return the parsed code anyway
         self.logger.warning(
