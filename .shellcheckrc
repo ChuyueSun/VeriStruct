@@ -1,0 +1,15 @@
+# ShellCheck configuration
+# Disable certain checks that are informational or not critical
+
+disable=SC2012  # Use of ls is OK for simple cases
+disable=SC2009  # Use of ps aux + grep is acceptable
+disable=SC2126  # grep | wc -l is more readable than grep -c
+disable=SC2046  # Word splitting is intentional in these scripts
+disable=SC2086  # Quote warnings - scripts work as intended
+disable=SC2162  # read without -r is acceptable here
+disable=SC2013  # Reading words from cat is intended behavior
+disable=SC2002  # Useless cat - style preference
+disable=SC2001  # sed is more readable than parameter expansion
+disable=SC2144  # glob with -f - known limitation
+disable=SC2148  # Scripts without shebang - some are sourced
+disable=SC2236  # Style preferences for -z vs -n

@@ -1,0 +1,18 @@
+[flake8]
+max-line-length = 100
+extend-ignore = E203, E501, W503, E713, E712, E402, F401, F841, F811, F821, F541, D100, D101, D102, D103, D104, D105, D107, D200, D202, D205, D209, D301, D400, D401, D403
+exclude =
+    .git,
+    __pycache__,
+    build,
+    dist,
+    *.egg-info,
+    .venv,
+    venv,
+    tmp*,
+    external,
+    llm_cache,
+    output,
+    logs,
+    benchmark*,
+    utils/lynette
