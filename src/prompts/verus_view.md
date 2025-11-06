@@ -5,13 +5,15 @@
 **If the struct has N fields and the View type is an N-tuple, the view is TRIVIAL and MUST be refined!**
 
 Examples:
-  - ❌ TRIVIAL: `struct {ring, head, tail}` → `type V = (Seq<T>, nat, nat)` (3 fields, 3-tuple = NO abstraction)
-  - ✅ GOOD: `struct {ring, head, tail}` → `type V = (Seq<T>, nat)` (3 fields, 2-tuple = ABSTRACTION!)
-  - ✅ GOOD: `struct {data, len}` → `type V = Seq<T>` (2 fields, single type = ABSTRACTION!)
+
+- ❌ TRIVIAL: `struct {ring, head, tail}` → `type V = (Seq<T>, nat, nat)` (3 fields, 3-tuple = NO abstraction)
+- ✅ GOOD: `struct {ring, head, tail}` → `type V = (Seq<T>, nat)` (3 fields, 2-tuple = ABSTRACTION!)
+- ✅ GOOD: `struct {data, len}` → `type V = Seq<T>` (2 fields, single type = ABSTRACTION!)
 
 **Rule:** Tuple size MUST be STRICTLY LESS than field count to show true abstraction!
 
 ## View Refinement Guidelines
+
 1. A good View abstraction should:
    - Represent the essential state of the data structure, not just copy its fields
    - Hide implementation details while preserving behavior

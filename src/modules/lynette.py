@@ -41,9 +41,7 @@ class Lynette:
 
     def func_add(self, file1, file2, replace=False, funcs=[]):
         return self.run(
-            ["func", "add", file1, file2, "--replace" if replace else ""]
-            + ["--funcs"]
-            + funcs
+            ["func", "add", file1, file2, "--replace" if replace else ""] + ["--funcs"] + funcs
             if funcs
             else []
         )

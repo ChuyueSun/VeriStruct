@@ -156,9 +156,7 @@ class StatisticsCollector:
             iterations: Number of iterations performed in this stage
         """
         if stage_name not in self.stats["stages"]:
-            self.logger.warning(
-                f"Attempting to end stage {stage_name} that was not started"
-            )
+            self.logger.warning(f"Attempting to end stage {stage_name} that was not started")
             return
 
         stage = self.stats["stages"][stage_name]
@@ -315,9 +313,7 @@ class StatisticsCollector:
             }
         )
 
-    def record_initial_state(
-        self, code: str, eval_score: EvalScore, failures: List = None
-    ):
+    def record_initial_state(self, code: str, eval_score: EvalScore, failures: List = None):
         """
         Record the initial state of the benchmark.
 
@@ -334,15 +330,11 @@ class StatisticsCollector:
         if failures:
             for failure in failures:
                 error_type = (
-                    failure.error.name
-                    if hasattr(failure.error, "name")
-                    else str(failure.error)
+                    failure.error.name if hasattr(failure.error, "name") else str(failure.error)
                 )
                 self.stats["errors"]["errors_by_type"][error_type] += 1
 
-    def record_final_state(
-        self, code: str, eval_score: EvalScore, failures: List = None
-    ):
+    def record_final_state(self, code: str, eval_score: EvalScore, failures: List = None):
         """
         Record the final state of the benchmark.
 
@@ -376,26 +368,18 @@ class StatisticsCollector:
             Dictionary containing summary statistics
         """
         # Calculate average response times
-        response_times = [
-            rt["time"] for rt in self.stats["llm_calls"]["response_times"]
-        ]
-        avg_response_time = (
-            sum(response_times) / len(response_times) if response_times else 0
-        )
+        response_times = [rt["time"] for rt in self.stats["llm_calls"]["response_times"]]
+        avg_response_time = sum(response_times) / len(response_times) if response_times else 0
 
         # Calculate repair success rate
         total_repairs = self.stats["repairs"]["total_repairs"]
         successful_repairs = self.stats["repairs"]["successful_repairs"]
-        repair_success_rate = (
-            (successful_repairs / total_repairs * 100) if total_repairs > 0 else 0
-        )
+        repair_success_rate = (successful_repairs / total_repairs * 100) if total_repairs > 0 else 0
 
         # Calculate cache hit rate
         total_llm_calls = self.stats["llm_calls"]["total"]
         cache_hits = self.stats["llm_calls"]["cache_hits"]
-        cache_hit_rate = (
-            (cache_hits / total_llm_calls * 100) if total_llm_calls > 0 else 0
-        )
+        cache_hit_rate = (cache_hits / total_llm_calls * 100) if total_llm_calls > 0 else 0
 
         return {
             "benchmark": self.benchmark_name,
@@ -420,9 +404,7 @@ class StatisticsCollector:
         """
         # Save detailed statistics as JSON
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        detailed_file = (
-            self.stats_dir / f"detailed_{self.benchmark_name}_{timestamp}.json"
-        )
+        detailed_file = self.stats_dir / f"detailed_{self.benchmark_name}_{timestamp}.json"
 
         # Convert defaultdicts to regular dicts for JSON serialization
         stats_to_save = json.loads(
@@ -439,9 +421,7 @@ class StatisticsCollector:
 
         # Save summary statistics
         summary = self.get_summary()
-        summary_file = (
-            self.stats_dir / f"summary_{self.benchmark_name}_{timestamp}.json"
-        )
+        summary_file = self.stats_dir / f"summary_{self.benchmark_name}_{timestamp}.json"
         with open(summary_file, "w") as f:
             json.dump(summary, f, indent=2)
 
@@ -473,9 +453,7 @@ class StatisticsCollector:
             f.write(f"Start Time: {self.stats['start_time']}\n")
             f.write(f"End Time: {self.stats.get('end_time', 'N/A')}\n")
             f.write(f"Total Execution Time: {summary['execution_time']:.2f}s\n")
-            f.write(
-                f"Verification Success: {'Yes' if summary['verification_success'] else 'No'}\n"
-            )
+            f.write(f"Verification Success: {'Yes' if summary['verification_success'] else 'No'}\n")
             f.write("\n")
 
             # Module Activation
@@ -509,20 +487,14 @@ class StatisticsCollector:
             f.write("-" * 80 + "\n")
             f.write(f"Total Repair Rounds: {summary['total_repair_rounds']}\n")
             f.write(f"Total Repairs: {summary['total_repairs']}\n")
-            f.write(
-                f"Successful Repairs: {self.stats['repairs']['successful_repairs']}\n"
-            )
+            f.write(f"Successful Repairs: {self.stats['repairs']['successful_repairs']}\n")
             f.write(f"Failed Repairs: {self.stats['repairs']['failed_repairs']}\n")
             f.write(f"Success Rate: {summary['repair_success_rate']:.2f}%\n")
             f.write("\nRepairs by Error Type:\n")
-            for error_type, count in sorted(
-                self.stats["repairs"]["repairs_by_type"].items()
-            ):
+            for error_type, count in sorted(self.stats["repairs"]["repairs_by_type"].items()):
                 f.write(f"  {error_type}: {count}\n")
             f.write("\nRepairs by Heuristic:\n")
-            for heuristic, count in sorted(
-                self.stats["repairs"]["repairs_by_heuristic"].items()
-            ):
+            for heuristic, count in sorted(self.stats["repairs"]["repairs_by_heuristic"].items()):
                 f.write(f"  {heuristic}: {count}\n")
             f.write("\n")
 
@@ -533,9 +505,7 @@ class StatisticsCollector:
             f.write(f"Final Errors: {summary['final_errors']}\n")
             f.write(f"Errors Fixed: {summary['errors_fixed']}\n")
             f.write("\nInitial Errors by Type:\n")
-            for error_type, count in sorted(
-                self.stats["errors"]["errors_by_type"].items()
-            ):
+            for error_type, count in sorted(self.stats["errors"]["errors_by_type"].items()):
                 f.write(f"  {error_type}: {count}\n")
             f.write("\n")
 
@@ -546,16 +516,12 @@ class StatisticsCollector:
                 self.stats["stages"].items(), key=lambda x: x[1]["step_number"]
             ):
                 f.write(f"\n{stage_name} (Step {stage_data['step_number']})\n")
-                f.write(
-                    f"  Execution Time: {stage_data.get('execution_time', 0):.2f}s\n"
-                )
+                f.write(f"  Execution Time: {stage_data.get('execution_time', 0):.2f}s\n")
                 f.write(f"  LLM Calls: {stage_data['llm_calls']}\n")
                 f.write(f"  Iterations: {stage_data['iterations']}\n")
                 if stage_data.get("result"):
                     result = stage_data["result"]
-                    f.write(
-                        f"  Result: Verified={result['verified']}, Errors={result['errors']}\n"
-                    )
+                    f.write(f"  Result: Verified={result['verified']}, Errors={result['errors']}\n")
 
             f.write("\n" + "=" * 80 + "\n")
 

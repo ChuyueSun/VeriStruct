@@ -49,9 +49,7 @@ class LLMCache:
             # Still honor the deprecated variable if it's set to disable caching
             if deprecated_cache_env == "0":
                 if logger:
-                    logger.warning(
-                        "Disabling cache due to deprecated LLM_CACHE_ENABLED=0 setting"
-                    )
+                    logger.warning("Disabling cache due to deprecated LLM_CACHE_ENABLED=0 setting")
                 enable_cache_env = "0"
 
         # Cache is enabled if passed parameter is True and environment variable is "1"
@@ -68,9 +66,7 @@ class LLMCache:
                     f"LLM cache disabled for reading but enabled for writing (from env: ENABLE_LLM_CACHE={enable_cache_env})"
                 )
             else:
-                logger.info(
-                    f"LLM cache disabled (from env: ENABLE_LLM_CACHE={enable_cache_env})"
-                )
+                logger.info(f"LLM cache disabled (from env: ENABLE_LLM_CACHE={enable_cache_env})")
 
         self.max_age_seconds = max_age_days * 24 * 60 * 60
         self.logger = logger
@@ -129,9 +125,7 @@ class LLMCache:
         # Double-check environment variables in case they changed after initialization
         if os.environ.get("ENABLE_LLM_CACHE", "1") == "0":
             if self.logger:
-                self.logger.warning(
-                    "Cache miss: Cache disabled by environment variable"
-                )
+                self.logger.warning("Cache miss: Cache disabled by environment variable")
             self.misses += 1
             return None
 
@@ -163,9 +157,7 @@ class LLMCache:
 
             if current_time - timestamp > self.max_age_seconds:
                 if self.logger:
-                    self.logger.warning(
-                        f"Cache miss: Entry expired for key {cache_key}"
-                    )
+                    self.logger.warning(f"Cache miss: Entry expired for key {cache_key}")
                     self.logger.debug(
                         f"Cache entry age: {age_hours:.2f} hours (max age: {self.max_age_seconds/3600:.2f} hours)"
                     )
@@ -202,9 +194,7 @@ class LLMCache:
         # Double-check environment variables in case they changed after initialization
         if os.environ.get("ENABLE_LLM_CACHE", "1") == "0" and not self.always_write:
             if self.logger:
-                self.logger.debug(
-                    "Cache save skipped - disabled by environment variable"
-                )
+                self.logger.debug("Cache save skipped - disabled by environment variable")
             return
 
         # Only skip saving if both enabled and always_write are False
@@ -261,11 +251,7 @@ class LLMCache:
         if not self.enabled or not self.cache_dir.exists():
             return 0
 
-        max_age = (
-            max_age_days * 24 * 60 * 60
-            if max_age_days is not None
-            else self.max_age_seconds
-        )
+        max_age = max_age_days * 24 * 60 * 60 if max_age_days is not None else self.max_age_seconds
         current_time = time.time()
         cleared_count = 0
 
@@ -295,8 +281,6 @@ class LLMCache:
             "misses": self.misses,
             "total": self.hits + self.misses,
             "hit_rate": (
-                self.hits / (self.hits + self.misses)
-                if (self.hits + self.misses) > 0
-                else 0
+                self.hits / (self.hits + self.misses) if (self.hits + self.misses) > 0 else 0
             ),
         }

@@ -86,9 +86,7 @@ def verify_repair_registry():
     if check_count >= 4:
         print(f"✓ repair_registry.py: {check_count} timeout checks (≥4 expected)")
     else:
-        print(
-            f"⚠ repair_registry.py: Only {check_count} timeout checks (4+ recommended)"
-        )
+        print(f"⚠ repair_registry.py: Only {check_count} timeout checks (4+ recommended)")
 
     return all_passed
 

@@ -1,6 +1,7 @@
 # Verus Common Knowledge
 
 ## Important Notes
+
 - ALWAYS use parentheses whenever possible for clarity!
 - Don't delete existing non-buggy `#[trigger]`!
 - Don't change "unwind" to `(unwind) as bool`!
@@ -9,11 +10,12 @@
 - Don't change any function signatures.
 
 ## Spec Functions
+
 1. No Direct Method Calls:
    In a spec function, you cannot directly call instance methods such as vector.is_full().
 2. Use the @ Operator:
    To invoke methods on a variable within a spec, first convert it to its specification-level representation View with @.
-3. Always use vector.len() instead of vector@.len().
+3. Always use vector.len() instead of <<vector@.len>>().
 4. Simplify Boolean Conjunctions:
    When combining multiple conditions, avoid excessive &&&. Fewer (or well-structured) conjunctions make the spec code easier to read and debug.
 5. Parentheses Usage:
@@ -24,12 +26,14 @@
 **🚫 NEVER use executable control flow (if/else/match) inside `proof { }` blocks!**
 
 Proof blocks are spec-level contexts. They can only contain:
+
 - `assert(...)` statements
 - `assume(...)` statements
 - Lemma/proof function calls
 - Variable bindings with spec expressions
 
 ❌ **WRONG - Executable if/else in proof:**
+
 ```rust
 proof {
     if condition { assert(x); } else { assert(y); }  // SYNTAX ERROR!
@@ -37,6 +41,7 @@ proof {
 ```
 
 ✅ **CORRECT - Use implication instead:**
+
 ```rust
 proof {
     assert(condition ==> x);
@@ -45,6 +50,7 @@ proof {
 ```
 
 ❌ **WRONG - Executable match in proof:**
+
 ```rust
 proof {
     match opt { Some(v) => assert(v > 0), None => {} }  // SYNTAX ERROR!
@@ -52,6 +58,7 @@ proof {
 ```
 
 ✅ **CORRECT - Use implication or spec-level reasoning:**
+
 ```rust
 proof {
     assert(opt.is_Some() ==> opt.unwrap() > 0);
@@ -59,6 +66,7 @@ proof {
 ```
 
 ## Operators
+
 Verus extends Rust logical operators with low-precedence forms that are especially helpful in specification code:
 
 Standard Operators: &&, ||, ==>, <==>
@@ -79,5 +87,6 @@ is equivalent to:
 ```
 
 Note:
+
 - Implication (==>) and equivalence (<==>) bind more tightly than &&& and |||.
 - Using &&&/||| can make long specifications clearer by grouping logical clauses neatly.

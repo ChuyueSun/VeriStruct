@@ -15,9 +15,7 @@ from src.prompts.template import fill_template
 
 
 class Trial:
-    def __init__(
-        self, trial_id: int, eval: VEval, code_loc: Optional[str] = None, logger=None
-    ):
+    def __init__(self, trial_id: int, eval: VEval, code_loc: Optional[str] = None, logger=None):
         self.id = trial_id
         self.eval = eval
         self.code_loc = code_loc
@@ -36,9 +34,7 @@ class Trial:
                     if stderr:
                         lines = stderr.splitlines()
                         excerpt = "\n".join(lines[:30])  # first 30 lines
-                        self.logger.error(
-                            "rustc stderr excerpt (first 30 lines):\n" + excerpt
-                        )
+                        self.logger.error("rustc stderr excerpt (first 30 lines):\n" + excerpt)
                 except Exception as _:
                     # Best‑effort logging; ignore secondary failures
                     pass
@@ -88,9 +84,7 @@ class Context:
     Context class to store the trials and modules.
     """
 
-    def __init__(
-        self, raw_code: str, params: HyperParams, logger, progress_logger=None
-    ):
+    def __init__(self, raw_code: str, params: HyperParams, logger, progress_logger=None):
         self.trials: List[Trial] = []
         self.modules: Dict[str, BaseModule] = {}
         self.knowledge: Dict[str, str] = {}
@@ -147,9 +141,7 @@ class Context:
             self.logger.info("=" * 60)
             total_knowledge = self.gen_knowledge()
             self.logger.info(f"Total knowledge entries: {len(self.knowledge)}")
-            self.logger.info(
-                f"Total knowledge length: {len(total_knowledge)} characters"
-            )
+            self.logger.info(f"Total knowledge length: {len(total_knowledge)} characters")
             self.logger.debug("\nFormatted knowledge preview:")
             self.logger.debug("-" * 40)
             # Print first 500 characters of the formatted knowledge
@@ -252,9 +244,7 @@ class Context:
         verus_code = trial.code
         rustc_out = trial.rustc_out
         knowledge = self.gen_knowledge()
-        prev_descs = [
-            f"### Failure {i}\n\n" + ptrail.desc(rloc) for i, ptrail in enumerate(prevs)
-        ]
+        prev_descs = [f"### Failure {i}\n\n" + ptrail.desc(rloc) for i, ptrail in enumerate(prevs)]
 
         return fill_template(
             "task_desc",
@@ -329,14 +319,10 @@ class Context:
                     if isinstance(result, tuple) and len(result) == 3:
                         _, _, usage = result
                         input_tokens = (
-                            usage.get("input_tokens")
-                            if isinstance(usage, dict)
-                            else None
+                            usage.get("input_tokens") if isinstance(usage, dict) else None
                         )
                         output_tokens = (
-                            usage.get("output_tokens")
-                            if isinstance(usage, dict)
-                            else None
+                            usage.get("output_tokens") if isinstance(usage, dict) else None
                         )
                 else:
                     # Could be (answers, usage)

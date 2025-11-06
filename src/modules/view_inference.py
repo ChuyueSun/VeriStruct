@@ -280,9 +280,7 @@ DO NOT return the entire file. ONLY return the view implementation as shown abov
             return code.strip()
         else:
             # For View trait, we want the complete impl block
-            impl_pattern = (
-                r"(impl\s*(?:<[^>]*>)?\s*View\s+for\s+\w+.*?\{.*?\}(?:\s*\})?)"
-            )
+            impl_pattern = r"(impl\s*(?:<[^>]*>)?\s*View\s+for\s+\w+.*?\{.*?\}(?:\s*\})?)"
             match = re.search(impl_pattern, code, re.DOTALL)
             if match:
                 return match.group(1).strip()
@@ -290,9 +288,7 @@ DO NOT return the entire file. ONLY return the view implementation as shown abov
             return code.strip()
 
     @staticmethod
-    def insert_view_body(
-        original_code: str, view_body: str, start_pos: int, end_pos: int
-    ) -> str:
+    def insert_view_body(original_code: str, view_body: str, start_pos: int, end_pos: int) -> str:
         """
         Insert view function body into the original code.
 
@@ -316,13 +312,7 @@ DO NOT return the entire file. ONLY return the view implementation as shown abov
         indented_body = "\n".join(indented_lines)
 
         # Insert the body
-        return (
-            original_code[:start_pos]
-            + "\n"
-            + indented_body
-            + "\n    "
-            + original_code[end_pos:]
-        )
+        return original_code[:start_pos] + "\n" + indented_body + "\n    " + original_code[end_pos:]
 
     @staticmethod
     def insert_view_trait(original_code: str, view_impl: str, struct_name: str) -> str:
@@ -338,9 +328,7 @@ DO NOT return the entire file. ONLY return the view implementation as shown abov
             Modified code with View trait inserted
         """
         # Find the struct definition
-        struct_pattern = (
-            rf"(pub\s+)?struct\s+{struct_name}\s*(?:<[^>]*>)?\s*\{{[^}}]*\}}"
-        )
+        struct_pattern = rf"(pub\s+)?struct\s+{struct_name}\s*(?:<[^>]*>)?\s*\{{[^}}]*\}}"
         match = re.search(struct_pattern, original_code, re.DOTALL)
 
         if not match:
@@ -349,33 +337,18 @@ DO NOT return the entire file. ONLY return the view implementation as shown abov
             match = re.search(impl_pattern, original_code)
             if match:
                 insert_pos = match.start()
-                return (
-                    original_code[:insert_pos]
-                    + view_impl
-                    + "\n\n"
-                    + original_code[insert_pos:]
-                )
+                return original_code[:insert_pos] + view_impl + "\n\n" + original_code[insert_pos:]
         else:
             # Insert after struct definition
             insert_pos = match.end()
             return (
-                original_code[:insert_pos]
-                + "\n\n"
-                + view_impl
-                + "\n"
-                + original_code[insert_pos:]
+                original_code[:insert_pos] + "\n\n" + view_impl + "\n" + original_code[insert_pos:]
             )
 
         # Last resort: add at the end before closing verus! block
         verus_end = original_code.rfind("}")
         if verus_end > 0:
-            return (
-                original_code[:verus_end]
-                + "\n"
-                + view_impl
-                + "\n"
-                + original_code[verus_end:]
-            )
+            return original_code[:verus_end] + "\n" + view_impl + "\n" + original_code[verus_end:]
 
         return original_code + "\n\n" + view_impl
 
@@ -448,17 +421,11 @@ DO NOT return the entire file. ONLY return the view implementation as shown abov
 
         # If parsing failed or returned empty string, log warning and return original
         if not parsed_code:
-            self.logger.warning(
-                "General parser couldn't extract code, using original response"
-            )
+            self.logger.warning("General parser couldn't extract code, using original response")
             return response
 
         # Check if the parser gave us a complete View implementation
-        if (
-            "impl" in parsed_code
-            and "View for" in parsed_code
-            and "type V =" in parsed_code
-        ):
+        if "impl" in parsed_code and "View for" in parsed_code and "type V =" in parsed_code:
             self.logger.info("Successfully extracted View implementation")
             return parsed_code
 
@@ -502,9 +469,7 @@ DO NOT return the entire file. ONLY return the view implementation as shown abov
             # Log the complete query content for debugging
             self.logger.debug("=== LLM Query Content ===")
             self.logger.debug(f"Retry Attempt: {retry_attempt}")
-            self.logger.debug(
-                f"Temperature: {1.0 + (retry_attempt * temperature_boost)}"
-            )
+            self.logger.debug(f"Temperature: {1.0 + (retry_attempt * temperature_boost)}")
             self.logger.debug(f"Cache Enabled: {use_cache}")
             self.logger.debug("\n=== Instruction ===\n" + instruction)
             self.logger.debug("\n=== Code ===\n" + code)
@@ -561,9 +526,7 @@ DO NOT return the entire file. ONLY return the view implementation as shown abov
 
         # Detect which pattern we have
         # Pattern 1-2: spec fn view (with optional pub/open/closed modifiers)
-        has_spec_fn, struct_name, start_pos, end_pos = self.has_spec_fn_view(
-            original_code
-        )
+        has_spec_fn, struct_name, start_pos, end_pos = self.has_spec_fn_view(original_code)
 
         # Pattern 4: impl View for with TODO in view function
         (
@@ -574,9 +537,7 @@ DO NOT return the entire file. ONLY return the view implementation as shown abov
         ) = self.has_view_trait_with_todo(original_code)
 
         if has_spec_fn:
-            self.logger.info(
-                f"Pattern: spec fn view for {struct_name}, will fill in body only"
-            )
+            self.logger.info(f"Pattern: spec fn view for {struct_name}, will fill in body only")
             is_spec_fn = True
         elif has_view_trait_todo:
             self.logger.info(
@@ -595,9 +556,7 @@ DO NOT return the entire file. ONLY return the view implementation as shown abov
         for response in responses:
             try:
                 # Extract just the view implementation from response
-                view_impl = self.extract_view_implementation(
-                    response, is_spec_fn=is_spec_fn
-                )
+                view_impl = self.extract_view_implementation(response, is_spec_fn=is_spec_fn)
 
                 if not view_impl:
                     self.logger.warning(
@@ -620,31 +579,26 @@ DO NOT return the entire file. ONLY return the view implementation as shown abov
                 # Apply regex-based syntax fixes
                 from src.modules.repair_regex import fix_common_syntax_errors
 
-                view_impl, was_changed = fix_common_syntax_errors(
-                    view_impl, self.logger
-                )
+                view_impl, was_changed = fix_common_syntax_errors(view_impl, self.logger)
                 if was_changed:
-                    self.logger.info(
-                        "Applied regex syntax fixes to view implementation"
-                    )
+                    self.logger.info("Applied regex syntax fixes to view implementation")
 
                 # Now insert the view implementation into the original code
                 if is_spec_fn:
                     # Insert function body into existing spec fn view or View trait view function
-                    final_code = self.insert_view_body(
-                        original_code, view_impl, start_pos, end_pos
-                    )
+                    final_code = self.insert_view_body(original_code, view_impl, start_pos, end_pos)
                 else:
                     # Insert complete View trait implementation
                     # Try to detect struct name from original code
-                    struct_match = re.search(
-                        r"(?:pub\s+)?struct\s+(\w+)", original_code
-                    )
+                    struct_match = re.search(r"(?:pub\s+)?struct\s+(\w+)", original_code)
                     if struct_match:
                         struct_name = struct_match.group(1)
-                    final_code = self.insert_view_trait(
-                        original_code, view_impl, struct_name
-                    )
+                    else:
+                        self.logger.warning(
+                            f"Could not detect struct name from code for View trait insertion{context_msg}"
+                        )
+                        continue
+                    final_code = self.insert_view_trait(original_code, view_impl, struct_name)
 
                 # Validate the final assembled code
                 is_balanced, error_msg = self.check_balanced_delimiters(final_code)
@@ -718,9 +672,7 @@ DO NOT return the entire file. ONLY return the view implementation as shown abov
         safe_responses = []
 
         for retry_attempt in range(max_retries):
-            self.logger.info(
-                f"View inference attempt {retry_attempt + 1}/{max_retries}"
-            )
+            self.logger.info(f"View inference attempt {retry_attempt + 1}/{max_retries}")
 
             # Save prompt for debugging
             prompt_path = prompt_dir()
@@ -750,19 +702,21 @@ DO NOT return the entire file. ONLY return the view implementation as shown abov
                 break
 
             if retry_attempt < max_retries - 1:
-                instruction += f"\n\nIMPORTANT: Previous attempt failed validation checks. Common issues:\n"
-                instruction += f"1. Unbalanced delimiters - ensure ALL {{ }} ( ) [ ] are properly matched\n"
                 instruction += (
-                    f"2. Unclosed impl blocks - every 'impl' must have a closing }}\n"
+                    f"\n\nIMPORTANT: Previous attempt failed validation checks. Common issues:\n"
                 )
+                instruction += (
+                    f"1. Unbalanced delimiters - ensure ALL {{ }} ( ) [ ] are properly matched\n"
+                )
+                instruction += f"2. Unclosed impl blocks - every 'impl' must have a closing }}\n"
                 instruction += f"3. Code safety - do not modify immutable functions\n"
-                instruction += f"Please fix these issues. Attempt {retry_attempt + 2}/{max_retries}."
+                instruction += (
+                    f"Please fix these issues. Attempt {retry_attempt + 2}/{max_retries}."
+                )
 
         # If no safe responses found after all retries, fall back to original
         if not safe_responses:
-            self.logger.warning(
-                "No safe responses found after all retries, using original code"
-            )
+            self.logger.warning("No safe responses found after all retries, using original code")
             safe_responses = [original_code]
 
         # Save all generated samples
@@ -789,8 +743,9 @@ DO NOT return the entire file. ONLY return the view implementation as shown abov
             context.get_best_code() if hasattr(context, "get_best_code") else None
         )
 
-        # If this is the first checkpoint_best_code, initialize it
+        # Compare and update checkpoint best if current is better
         if checkpoint_best_code is None:
+            # First time: initialize with current best
             self.logger.debug(
                 f"ViewInference - Initial checkpoint_best_code is None: {checkpoint_best_code is None}"
             )
@@ -798,11 +753,22 @@ DO NOT return the entire file. ONLY return the view implementation as shown abov
                 f"ViewInference - Initial checkpoint_best_score: {checkpoint_best_score}"
             )
             self.logger.debug(f"ViewInference - Current best_score: {best_score}")
-            self.logger.info(
-                "ViewInference - Initializing checkpoint best with current best"
-            )
+            self.logger.info("ViewInference - Initializing checkpoint best with current best")
             checkpoint_best_code = best_code
             checkpoint_best_score = best_score
+        elif best_score > checkpoint_best_score:
+            # Current result is better: update checkpoint best
+            self.logger.info(
+                f"ViewInference - Found better result: {best_score} > {checkpoint_best_score}"
+            )
+            self.logger.info("ViewInference - Updating checkpoint best with current best")
+            checkpoint_best_code = best_code
+            checkpoint_best_score = best_score
+        else:
+            # Previous checkpoint was better: keep it
+            self.logger.info(
+                f"ViewInference - Keeping previous checkpoint best: {checkpoint_best_score} >= {best_score}"
+            )
 
         # Save the module-specific best from this step
         module_best_path = output_dir / "01_view_inference_global_best.rs"

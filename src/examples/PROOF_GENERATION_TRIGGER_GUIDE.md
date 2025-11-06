@@ -16,6 +16,7 @@ forall|i: int| 0 <= i < n ==>
 ```
 
 **Why this fails:**
+
 - `v@[i]` is non-arithmetic (array indexing)
 - `length - 1 - i` is arithmetic (subtraction involving loop variable)
 - Variable `i` appears in both contexts within the same trigger
@@ -30,6 +31,7 @@ forall|i: int| 0 <= i < n ==>
 ```
 
 **Why this works:**
+
 - We removed the `#[trigger]` annotations
 - Verus will automatically choose appropriate triggers
 - The invariant still expresses the same property
@@ -39,7 +41,9 @@ forall|i: int| 0 <= i < n ==>
 ## Pattern 1: Vector Reverse
 
 ### Problem Context
+
 When reversing a vector, we swap elements symmetrically:
+
 - `v[i]` ←→ `v[length - 1 - i]`
 
 ### ❌ WRONG Invariant
@@ -70,6 +74,7 @@ for n in 0..(length / 2)
 ```
 
 **Key points:**
+
 1. No `#[trigger]` on expressions with `length - i`
 2. Cast to `int` explicitly: `length as int - 1 - i`
 3. Separate invariants for swapped vs unchanged elements
@@ -79,6 +84,7 @@ for n in 0..(length / 2)
 ## Pattern 2: Swap Adjacent Pairs
 
 ### Problem Context
+
 Swapping pairs: `(v[0], v[1])`, `(v[2], v[3])`, etc.
 
 ### ❌ WRONG Invariant
@@ -127,6 +133,7 @@ forall|i: int| 0 <= i < n ==>
 ```
 
 **This works because:**
+
 - The function call `mirror_index(...)` is non-arithmetic from trigger's perspective
 - Arithmetic is hidden inside the spec function
 - Verus can trigger on the function call
@@ -135,13 +142,15 @@ forall|i: int| 0 <= i < n ==>
 
 ## Quick Rules
 
-### ✅ DO:
+### ✅ DO
+
 1. **Remove triggers** from expressions with arithmetic involving loop variables
 2. **Use separate foralls** for different parts of the invariant
 3. **Cast explicitly**: `length as int - 1 - i`
 4. **Use spec functions** to hide arithmetic from triggers
 
-### ❌ DON'T:
+### ❌ DON'T
+
 1. **Never** put `#[trigger]` on `v@[n - i]` or similar arithmetic expressions
 2. **Never** mix arithmetic and non-arithmetic uses of the same variable in a trigger
 3. **Don't** assume triggers are always needed - often Verus picks them automatically

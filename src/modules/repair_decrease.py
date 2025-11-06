@@ -46,12 +46,8 @@ class RepairDecreaseModule(BaseRepairModule):
         # If a specific failure isn't provided, try to get one from the last trial
         if failure_to_fix is None:
             last_trial = context.trials[-1]
-            end_failures = last_trial.eval.get_failures(
-                error_type=VerusErrorType.DecFailEnd
-            )
-            cont_failures = last_trial.eval.get_failures(
-                error_type=VerusErrorType.DecFailCont
-            )
+            end_failures = last_trial.eval.get_failures(error_type=VerusErrorType.DecFailEnd)
+            cont_failures = last_trial.eval.get_failures(error_type=VerusErrorType.DecFailCont)
             failures = end_failures + cont_failures
 
             if not failures:
@@ -105,9 +101,7 @@ Common fixes include:
 Response with the Rust code only, do not include any explanation."""
         instruction += "\n\n" + self.proof_block_info
         instruction = self.add_seq_knowledge(code, instruction)
-        instruction += (
-            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
-        )
+        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
 
         # Load examples
         examples = get_examples(self.config, "decreases-end", self.logger)
@@ -123,7 +117,6 @@ Response with the Rust code only, do not include any explanation."""
         # Use tracking wrapper for LLM calls
 
         if context is not None and hasattr(context, "infer_llm_with_tracking"):
-
             result = context.infer_llm_with_tracking(
                 engine=self.config.get("aoai_generation_model", "gpt-4"),
                 instruction=instruction,
@@ -140,7 +133,6 @@ Response with the Rust code only, do not include any explanation."""
             responses = result[0] if isinstance(result, tuple) else result
 
         else:
-
             responses = self.llm.infer_llm(
                 engine=self.config.get("aoai_generation_model", "gpt-4"),
                 instruction=instruction,
@@ -191,9 +183,7 @@ Common fixes include:
 Response with the Rust code only, do not include any explanation."""
         instruction += "\n\n" + self.proof_block_info
         instruction = self.add_seq_knowledge(code, instruction)
-        instruction += (
-            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
-        )
+        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
 
         # Load examples
         examples = get_examples(self.config, "decreases-cont", self.logger)
@@ -209,7 +199,6 @@ Response with the Rust code only, do not include any explanation."""
         # Use tracking wrapper for LLM calls
 
         if context is not None and hasattr(context, "infer_llm_with_tracking"):
-
             result = context.infer_llm_with_tracking(
                 engine=self.config.get("aoai_generation_model", "gpt-4"),
                 instruction=instruction,
@@ -226,7 +215,6 @@ Response with the Rust code only, do not include any explanation."""
             responses = result[0] if isinstance(result, tuple) else result
 
         else:
-
             responses = self.llm.infer_llm(
                 engine=self.config.get("aoai_generation_model", "gpt-4"),
                 instruction=instruction,

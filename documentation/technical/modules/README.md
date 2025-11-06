@@ -11,36 +11,42 @@ See the [RingBuffer Example](examples/rb_type_invariant.md) for a walkthrough sh
 ## Core Verification Modules
 
 ### 1. [View Inference](view_inference.md)
+
 - Generates mathematical abstractions for data structures
 - Creates View functions for formal specifications
 - Handles vector and collection abstractions
 - Maintains type safety and semantic correctness
 
 ### 2. [View Refinement](view_refinement.md)
+
 - Improves existing View functions
 - Optimizes mathematical abstractions
 - Simplifies representations
 - Maintains semantic equivalence
 
 ### 3. [Invariant Inference](inv_inference.md)
+
 - Generates invariant functions
 - Captures data structure constraints
 - Implements well-formed conditions
 - Ensures type safety
 
 ### 4. [Specification Inference](spec_inference.md)
+
 - Adds requires/ensures clauses
 - Implements spec functions
 - Handles trait specifications
 - Maintains code safety
 
 ### 5. [Proof Generation](proof_generation.md)
+
 - Generates verification proofs
 - Implements loop invariants
 - Handles proof assertions
 - Manages proof blocks
 
 ### 6. [Lemma Preprocessor](lemma_preprocessor.md)
+
 - Loads lemma files based on keywords found in the code
 - Inserts lemmas after the `verus!{` marker before planning
 - Uses explicit keyword-to-file mapping for precise lemma selection

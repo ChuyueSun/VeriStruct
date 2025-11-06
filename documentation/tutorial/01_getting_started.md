@@ -164,18 +164,21 @@ pub fn increment(&mut self) -> bool {
 ## Common Patterns
 
 ### 1. State Updates
+
 ```rust
 ensures
     self@.value == old(self)@.value + 1  // Clear state change
 ```
 
 ### 2. Bound Checking
+
 ```rust
 requires
     old(self)@.value < 100  // Explicit bounds
 ```
 
 ### 3. Type Conversion
+
 ```rust
 ensures
     ret as nat == self@.value  // Safe conversion
@@ -207,6 +210,7 @@ ensures
 ## Common Pitfalls
 
 1. Missing Invariants:
+
    ```rust
    // Wrong: Missing bound check
    pub fn increment(&mut self) -> bool {
@@ -216,6 +220,7 @@ ensures
    ```
 
 2. Incomplete Specifications:
+
    ```rust
    // Wrong: Missing requires clause
    pub fn increment(&mut self) -> bool
@@ -224,6 +229,7 @@ ensures
    ```
 
 3. Type Confusion:
+
    ```rust
    // Wrong: Mixing types without conversion
    ensures
@@ -255,6 +261,7 @@ ensures
 ## Conclusion
 
 This introduction covered:
+
 - Basic verification concepts
 - Simple data structure verification
 - Common patterns and practices

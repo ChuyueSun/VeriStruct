@@ -7,15 +7,19 @@ The Lemma Preprocessor injects helper lemmas into Verus source code before the p
 ## Key Functions
 
 ### `load_lemmas`
+
 Loads lemma files from a configured directory. Keywords are mapped to specific files and only lemmas whose keywords appear in the target code are read into memory.
 
 ### `process_code`
+
 Inserts the loaded lemmas after the first `verus!{` marker in the code. If no lemmas are loaded or the marker is missing, the original code is returned unchanged.
 
 ### `preprocess`
+
 High-level entry point that calls `load_lemmas` with the target code and then `process_code` to perform the insertion.
 
 ## Keyword-to-File Mapping
+
 A built-in dictionary maps keywords to lemma filenames. For example:
 
 ```python
@@ -24,6 +28,7 @@ keyword_lemmas = {
     "bit": "bit.rs",              # Explicitly specify the lemma file to use
 }
 ```
+
 Only the files whose keywords appear in the code are loaded and inserted.
 
 ## Usage Example
@@ -44,4 +49,5 @@ code = """verus!{
 
 processed = pre.preprocess(code)
 ```
+
 This configuration loads `lemmas/mod.rs` because the keyword `saturating_sub` appears in the input code. The lemma contents are inserted immediately after `verus!{` before further planning.

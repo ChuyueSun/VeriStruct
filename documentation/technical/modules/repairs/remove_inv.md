@@ -101,6 +101,7 @@ graph TD
 ### 2. Repair Process
 
 1. Error Detection:
+
 ```python
 failures = last_trial.eval.get_failures(
     error_type=VerusErrorType.require_private
@@ -112,6 +113,7 @@ if not failures:
 ```
 
 2. Fix Selection:
+
 ```python
 # Remove redundant inv() calls when type_invariant is present
 instruction = """DO NOT add `self.inv()` to pre/post-conditions
@@ -119,6 +121,7 @@ if `#[verifier::type_invariant]` is used"""
 ```
 
 3. Fix Application:
+
 ```python
 # Remove redundant inv() calls
 # Before:
@@ -130,24 +133,28 @@ requires x > 0  // type_invariant handles inv
 ## Features
 
 ### 1. Privacy Error Handling
+
 - Requires private
 - Ensures private
 - Type invariant check
 - Condition preservation
 
 ### 2. Inv Call Management
+
 - Redundancy detection
 - Safe removal
 - Context preservation
 - Invariant checking
 
 ### 3. Type Invariant Integration
+
 - Presence detection
 - Compatibility check
 - Proper usage
 - Error prevention
 
 ### 4. Result Management
+
 - Best result tracking
 - Sample preservation
 - Context updates
@@ -156,6 +163,7 @@ requires x > 0  // type_invariant handles inv
 ## Common Repairs
 
 ### 1. Requires Clause
+
 ```rust
 // Before
 pub fn push(&mut self, value: T)
@@ -176,6 +184,7 @@ pub fn push(&mut self, value: T)
 ```
 
 ### 2. Ensures Clause
+
 ```rust
 // Before
 pub fn pop(&mut self) -> Option<T>
@@ -196,6 +205,7 @@ pub fn pop(&mut self) -> Option<T>
 ```
 
 ### 3. Multiple Conditions
+
 ```rust
 // Before
 pub fn insert(&mut self, index: usize, value: T)
@@ -251,6 +261,7 @@ pub fn insert(&mut self, index: usize, value: T)
 ## Extension Points
 
 1. Error Analysis:
+
 ```python
 def add_error_analyzer(self, analyzer: Callable):
     """Add new error analyzer."""
@@ -258,6 +269,7 @@ def add_error_analyzer(self, analyzer: Callable):
 ```
 
 2. Inv Detection:
+
 ```python
 def add_inv_detector(self, detector: Callable):
     """Add new inv detector."""
@@ -265,6 +277,7 @@ def add_inv_detector(self, detector: Callable):
 ```
 
 3. Fix Generation:
+
 ```python
 def add_fix_generator(self, generator: Callable):
     """Add new fix generator."""
@@ -274,6 +287,7 @@ def add_fix_generator(self, generator: Callable):
 ## Common Issues
 
 ### 1. Mixed Conditions
+
 ```rust
 // Problem: Mixed inv with other conditions
 requires
@@ -285,6 +299,7 @@ requires
 ```
 
 ### 2. Nested Structures
+
 ```rust
 // Problem: Nested inv calls
 requires
@@ -297,6 +312,7 @@ requires
 ```
 
 ### 3. Complex Conditions
+
 ```rust
 // Problem: Complex condition structure
 requires
@@ -317,12 +333,14 @@ requires
 ## Conclusion
 
 The Remove Inv Repair Module provides:
+
 1. Comprehensive inv handling
 2. Type invariant integration
 3. Privacy error fixes
 4. Clean condition management
 
 Key strengths:
+
 1. Privacy handling
 2. Inv management
 3. Type integration

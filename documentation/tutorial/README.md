@@ -20,6 +20,7 @@ This tutorial walks you through the process of verifying Rust code using VerusAg
 ## Tutorial Structure
 
 Each section includes:
+
 - Concepts and theory
 - Practical examples
 - Step-by-step instructions

@@ -23,6 +23,7 @@ impl BitMap {
 ```
 
 Key decisions:
+
 1. Uses `Seq<bool>` for the mathematical sequence type
 2. Flattens the bit vector into a sequence of booleans
 3. Handles bit-level operations through mathematical mapping
@@ -56,6 +57,7 @@ closed spec fn inv(&self) -> bool {
 ```
 
 Key aspects:
+
 1. Relies on Vec invariants
 2. Bit operations verified through separate proofs
 3. No additional structural invariants needed
@@ -88,6 +90,7 @@ fn or(&self, bm: &BitMap) -> (ret: BitMap)
 ```
 
 Key specifications:
+
 1. Bounds checking
 2. State updates
 3. Bitwise operation semantics
@@ -127,6 +130,7 @@ fn or(&self, bm: &BitMap) -> (ret: BitMap) {
 ```
 
 Key proof elements:
+
 1. Bit operation correctness
 2. Sequence equality assertions
 3. Bitwise operation proofs

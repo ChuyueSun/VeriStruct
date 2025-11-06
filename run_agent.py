@@ -27,15 +27,9 @@ def display_banner(file_path=None):
 
 def main():
     # Parse command line arguments
-    parser = argparse.ArgumentParser(
-        description="Run VerusAgent for formal verification"
-    )
-    parser.add_argument(
-        "--test-file", help="Path to the Rust file to verify", default=None
-    )
-    parser.add_argument(
-        "--verus-path", help="Path to the Verus executable", default=None
-    )
+    parser = argparse.ArgumentParser(description="Run VerusAgent for formal verification")
+    parser.add_argument("--test-file", help="Path to the Rust file to verify", default=None)
+    parser.add_argument("--verus-path", help="Path to the Verus executable", default=None)
     parser.add_argument(
         "--config",
         help="Config file to use (default: config-azure)",
@@ -52,9 +46,7 @@ def main():
         help="Comma-separated list of function names that should not be modified during generation or repair",
         default=None,
     )
-    parser.add_argument(
-        "--num-repair-rounds", help="Number of repair rounds to run", default=5
-    )
+    parser.add_argument("--num-repair-rounds", help="Number of repair rounds to run", default=5)
     args = parser.parse_args()
 
     # Set environment variables if arguments are provided

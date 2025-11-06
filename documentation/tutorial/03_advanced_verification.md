@@ -90,6 +90,7 @@ graph TD
 ## Complex Patterns
 
 ### 1. Bit Manipulation
+
 ```rust
 // Setting bits
 fn set_bit(&mut self, index: u32, bit: bool)
@@ -104,6 +105,7 @@ fn set_bit(&mut self, index: u32, bit: bool)
 ```
 
 ### 2. Bitwise Operations
+
 ```rust
 // Bitwise OR
 fn or(&self, bm: &BitMap) -> (ret: BitMap)
@@ -115,6 +117,7 @@ fn or(&self, bm: &BitMap) -> (ret: BitMap)
 ```
 
 ### 3. Index Mapping
+
 ```rust
 // Bit index calculation
 let seq_index: usize = (index / 64) as usize;
@@ -124,6 +127,7 @@ let bit_index: u32 = index % 64;
 ## Advanced Proofs
 
 ### 1. Bit Operation Proofs
+
 ```rust
 proof fn bit_or_64_proof(bv1: u64, bv2: u64, bv_new: u64)
     requires
@@ -135,6 +139,7 @@ proof fn bit_or_64_proof(bv1: u64, bv2: u64, bv_new: u64)
 ```
 
 ### 2. Modulo Arithmetic
+
 ```rust
 proof fn mod_auto(n: int) -> bool
     recommends
@@ -147,6 +152,7 @@ proof fn mod_auto(n: int) -> bool
 ```
 
 ### 3. Sequence Properties
+
 ```rust
 proof {
     assert_seqs_equal!(
@@ -176,6 +182,7 @@ proof {
 ## Advanced Challenges
 
 ### 1. Bit Pattern Verification
+
 ```rust
 // Challenge: Proving bit pattern properties
 ensures
@@ -185,6 +192,7 @@ ensures
 ```
 
 ### 2. Operation Composition
+
 ```rust
 // Challenge: Proving composed operations
 ensures
@@ -194,6 +202,7 @@ ensures
 ```
 
 ### 3. Performance Properties
+
 ```rust
 // Challenge: Proving optimization correctness
 ensures
@@ -249,6 +258,7 @@ ensures
 ## Conclusion
 
 This guide covered:
+
 - Advanced bit operations
 - Complex proofs
 - Performance considerations

@@ -96,6 +96,7 @@ graph TD
 ### 2. Repair Process
 
 1. Error Detection:
+
 ```python
 front_failures = last_trial.eval.get_failures(
     error_type=VerusErrorType.InvFailFront
@@ -106,6 +107,7 @@ end_failures = last_trial.eval.get_failures(
 ```
 
 2. Error Analysis:
+
 ```python
 error_trace = failure_to_fix.trace[0]
 error_highlight = error_trace.get_highlights()[0]
@@ -113,6 +115,7 @@ line_info = f"Line {error_trace.lines[0]}-{error_trace.lines[1]}"
 ```
 
 3. Repair Generation:
+
 ```python
 # For pre-loop failures
 proof {
@@ -132,24 +135,28 @@ proof {
 ## Features
 
 ### 1. Error Handling
+
 - Pre-loop invariants
 - End-of-loop invariants
 - Multiple loops
 - Invariant modification
 
 ### 2. Repair Strategies
+
 - Proof generation
 - Loop analysis
 - State verification
 - Invariant correction
 
 ### 3. Context Integration
+
 - Loop state
 - Prior loops
 - Initial state
 - State changes
 
 ### 4. Result Management
+
 - Best result tracking
 - Sample preservation
 - Context updates
@@ -158,6 +165,7 @@ proof {
 ## Common Repairs
 
 ### 1. Pre-loop Invariants
+
 ```rust
 // Before
 while i < n
@@ -184,6 +192,7 @@ while i < n
 ```
 
 ### 2. End-of-loop Invariants
+
 ```rust
 // Before
 while i < n
@@ -214,6 +223,7 @@ while i < n
 ```
 
 ### 3. Multiple Loops
+
 ```rust
 // Before
 while i < n {
@@ -270,6 +280,7 @@ while j < m
 ## Extension Points
 
 1. Error Handling:
+
 ```python
 def add_error_handler(self, error_type: str, handler: Callable):
     """Add new error handler."""
@@ -277,6 +288,7 @@ def add_error_handler(self, error_type: str, handler: Callable):
 ```
 
 2. Repair Strategies:
+
 ```python
 def add_repair_strategy(self, strategy_type: str, strategy: Callable):
     """Add new repair strategy."""
@@ -284,6 +296,7 @@ def add_repair_strategy(self, strategy_type: str, strategy: Callable):
 ```
 
 3. Context Integration:
+
 ```python
 def add_context_source(self, source: str):
     """Add new context source."""
@@ -293,6 +306,7 @@ def add_context_source(self, source: str):
 ## Common Issues
 
 ### 1. Missing Initial State
+
 ```rust
 // Problem: Unproven initial state
 invariant
@@ -306,6 +320,7 @@ proof {
 ```
 
 ### 2. Loop Maintenance
+
 ```rust
 // Problem: Unproven maintenance
 while i < n
@@ -322,6 +337,7 @@ proof {
 ```
 
 ### 3. Multiple Loops
+
 ```rust
 // Problem: Missing shared invariant
 while i < n { /* First loop */ }
@@ -337,12 +353,14 @@ invariant property(j)  // Second loop
 ## Conclusion
 
 The Invariant Repair Module provides:
+
 1. Comprehensive error handling
 2. Multiple repair strategies
 3. Loop state management
 4. Context-aware repairs
 
 Key strengths:
+
 1. Multiple error types
 2. Proof generation
 3. Loop handling

@@ -111,6 +111,7 @@ graph TD
 ### 2. Repair Process
 
 1. Error Detection:
+
 ```python
 type_failures = last_trial.eval.get_failures(
     error_type=VerusErrorType.MismatchedType
@@ -124,6 +125,7 @@ constructor_failures = last_trial.eval.get_failures(
 ```
 
 2. Repair Selection:
+
 ```python
 # Choose repair strategy based on error type
 if error_type == MismatchedType:
@@ -135,6 +137,7 @@ elif error_type == ConstructorFailTypeInvariant:
 ```
 
 3. Safety Checking:
+
 ```python
 # Evaluate repair candidates
 best_code = self.evaluate_repair_candidates(
@@ -148,24 +151,28 @@ best_code = self.evaluate_repair_candidates(
 ## Features
 
 ### 1. Automatic Repair
+
 - Type error detection
 - Automatic fixes
 - LLM fallback
 - Safety checks
 
 ### 2. Type Annotation
+
 - None type fixes
 - Generic parameters
 - Type inference
 - Context analysis
 
 ### 3. Constructor Invariants
+
 - Invariant checking
 - Requires clauses
 - Safety validation
 - Context preservation
 
 ### 4. Result Management
+
 - Best result tracking
 - Sample preservation
 - Context updates
@@ -174,6 +181,7 @@ best_code = self.evaluate_repair_candidates(
 ## Common Repairs
 
 ### 1. Mismatched Types
+
 ```rust
 // Before
 let x: u64 = vec.len();
@@ -183,6 +191,7 @@ let x: usize = vec.len();
 ```
 
 ### 2. Type Annotations
+
 ```rust
 // Before
 fn get_value() -> Option<T> {
@@ -196,6 +205,7 @@ fn get_value() -> Option<T> {
 ```
 
 ### 3. Constructor Invariants
+
 ```rust
 // Before
 pub fn new(capacity: usize) -> Self {
@@ -240,6 +250,7 @@ pub fn new(capacity: usize) -> Self
 ## Extension Points
 
 1. Type Analysis:
+
 ```python
 def add_type_analyzer(self, analyzer: Callable):
     """Add new type analyzer."""
@@ -247,6 +258,7 @@ def add_type_analyzer(self, analyzer: Callable):
 ```
 
 2. Repair Strategy:
+
 ```python
 def add_repair_strategy(self, strategy: Callable):
     """Add new repair strategy."""
@@ -254,6 +266,7 @@ def add_repair_strategy(self, strategy: Callable):
 ```
 
 3. Safety Check:
+
 ```python
 def add_safety_check(self, check: Callable):
     """Add new safety check."""
@@ -263,6 +276,7 @@ def add_safety_check(self, check: Callable):
 ## Common Issues
 
 ### 1. Missing Type Parameters
+
 ```rust
 // Problem: Generic type parameter missing
 let x = None;
@@ -272,6 +286,7 @@ let x = None::<MyType>;
 ```
 
 ### 2. Constructor Invariants
+
 ```rust
 // Problem: Invariant not satisfied
 pub fn new(size: usize) -> Self {
@@ -289,6 +304,7 @@ pub fn new(size: usize) -> Self
 ```
 
 ### 3. Type Mismatches
+
 ```rust
 // Problem: Type mismatch in arithmetic
 let x: u32 = arr.len() * 2;
@@ -300,12 +316,14 @@ let x: usize = arr.len() * 2;
 ## Conclusion
 
 The Type Repair Module provides:
+
 1. Comprehensive type error handling
 2. Multiple repair strategies
 3. Safety validation
 4. Context-aware fixes
 
 Key strengths:
+
 1. Automatic repairs
 2. Type inference
 3. Safety checks

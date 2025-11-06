@@ -28,16 +28,19 @@ fn func(arg) -> rettype
 **For methods with `&self` parameter (immutable):**
 
 **In `requires` clauses:**
+
 - ✅ Use `self` directly - NO old() needed!
 - ❌ NEVER use `old(self)` - this causes compilation errors!
 - Example: `requires self.invariant()`
 
 **In `ensures` clauses:**
+
 - ✅ Use `self` directly - NO old() needed!
 - ❌ NEVER use `old(self)` - not valid for immutable references
 - Example: `ensures ret == self.some_property()`
 
 **Common mistake to avoid:**
+
 ```rust
 // ❌ WRONG - causes compilation error!
 fn read_data(&self) -> T
@@ -48,6 +51,7 @@ fn read_data(&self) -> T
 ```
 
 **Correct version:**
+
 ```rust
 // ✅ CORRECT - use self directly
 fn read_data(&self) -> T
@@ -62,16 +66,19 @@ fn read_data(&self) -> T
 **For methods with `&mut self` parameter:**
 
 **In `requires` clauses:**
+
 - ✅ ONLY use `old(self)` - refers to the pre-state before the function executes
 - ❌ NEVER use `self` - the post-state doesn't exist yet in preconditions
 - Example: `requires parameter < old(self).spec_property()`
 
 **In `ensures` clauses:**
+
 - ✅ Use `self` - refers to the post-state after the function executes
 - ✅ Use `old(self)` - refers to the pre-state for comparison
 - Example: `ensures self.spec_property() == old(self).spec_property()`
 
 **Common mistake to avoid:**
+
 ```rust
 fn mutate_data(&mut self, param: ParamType)
     requires
@@ -80,6 +87,7 @@ fn mutate_data(&mut self, param: ParamType)
 ```
 
 **Correct version:**
+
 ```rust
 fn mutate_data(&mut self, param: ParamType)
     requires

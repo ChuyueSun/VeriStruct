@@ -115,6 +115,7 @@ graph TD
 ### 2. Repair Process
 
 1. Error Detection:
+
 ```python
 if "error[E0433]: failed to resolve" in rustc_out:
     # Name resolution error
@@ -123,6 +124,7 @@ elif "unexpected token" in rustc_out:
 ```
 
 2. Repair Selection:
+
 ```python
 if is_seq_syntax_error(failure, rustc_out):
     return repair_seq_syntax_error(context, failure)
@@ -131,6 +133,7 @@ else:
 ```
 
 3. Result Validation:
+
 ```python
 def evaluate_repair_candidates(self, original_code, candidates):
     for candidate in candidates:
@@ -141,24 +144,28 @@ def evaluate_repair_candidates(self, original_code, candidates):
 ## Features
 
 ### 1. Sequence Handling
+
 - View function syntax
 - Sequence operations
 - Type safety
 - Operation correctness
 
 ### 2. Error Detection
+
 - Compilation errors
 - Token errors
 - Resolution errors
 - Syntax patterns
 
 ### 3. Repair Strategies
+
 - Multiple attempts
 - Temperature adjustment
 - Example-based repair
 - Safety checking
 
 ### 4. Result Management
+
 - Best result tracking
 - Sample preservation
 - Context updates
@@ -167,6 +174,7 @@ def evaluate_repair_candidates(self, original_code, candidates):
 ## Common Repairs
 
 ### 1. Sequence Operations
+
 ```rust
 // Before
 vec.subrange(0, len)
@@ -176,6 +184,7 @@ vec.view().subrange(0, len as int)
 ```
 
 ### 2. View Functions
+
 ```rust
 // Before
 self.data.len()
@@ -185,6 +194,7 @@ self.data.view().len()
 ```
 
 ### 3. Type Conversions
+
 ```rust
 // Before
 index < vec.len()
@@ -222,6 +232,7 @@ index as int < vec.view().len()
 ## Extension Points
 
 1. Error Detection:
+
 ```python
 def add_error_pattern(self, pattern: str, handler: Callable):
     """Add new error detection pattern."""
@@ -229,6 +240,7 @@ def add_error_pattern(self, pattern: str, handler: Callable):
 ```
 
 2. Repair Strategies:
+
 ```python
 def add_repair_strategy(self, error_type: str, strategy: Callable):
     """Add new repair strategy."""
@@ -236,6 +248,7 @@ def add_repair_strategy(self, error_type: str, strategy: Callable):
 ```
 
 3. Example Management:
+
 ```python
 def add_example_source(self, source: str):
     """Add new example source."""
@@ -245,6 +258,7 @@ def add_example_source(self, source: str):
 ## Common Issues
 
 ### 1. Sequence Operations
+
 ```rust
 // Problem: Missing view
 vec.subrange(0, len)
@@ -254,6 +268,7 @@ vec.view().subrange(0, len as int)
 ```
 
 ### 2. Type Conversions
+
 ```rust
 // Problem: Type mismatch
 index < sequence.len()
@@ -263,6 +278,7 @@ index < sequence.len()
 ```
 
 ### 3. Method Calls
+
 ```rust
 // Problem: Invalid method
 vec.push(element)
@@ -274,12 +290,14 @@ vec.set(index, element)
 ## Conclusion
 
 The Syntax Repair Module provides:
+
 1. Specialized sequence handling
 2. General syntax repair
 3. Safe code modifications
 4. Robust error recovery
 
 Key strengths:
+
 1. Sequence expertise
 2. Multiple strategies
 3. Safe repairs

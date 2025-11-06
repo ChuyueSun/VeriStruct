@@ -72,17 +72,13 @@ VERUS_SYNTAX_PATTERNS = {
     "assert_forall_missing_by": {
         "error_keywords": ["expected `by`"],
         "pattern": r"(assert forall\|[^|]+\|[^;]+);",
-        "fix": lambda code: re.sub(
-            r"(assert forall\|[^|]+\|[^;]+);", r"\1 by {\n    \n}", code
-        ),
+        "fix": lambda code: re.sub(r"(assert forall\|[^|]+\|[^;]+);", r"\1 by {\n    \n}", code),
         "description": "Add missing 'by {}' clause to assert forall",
     },
     "assert_forall_implies": {
         "error_keywords": ["expected `by`", "unexpected token"],
         "pattern": r"(assert forall\|[^|]+\|[^=]+)==>",
-        "fix": lambda code: re.sub(
-            r"(assert forall\|[^|]+\|[^=]+)==>", r"\1implies", code
-        ),
+        "fix": lambda code: re.sub(r"(assert forall\|[^|]+\|[^=]+)==>", r"\1implies", code),
         "description": "Replace '==>' with 'implies' in assert forall",
     },
     "map_equality": {
@@ -179,9 +175,7 @@ class RepairSyntaxModule(BaseRepairModule):
                     "unexpected token" in last_trial.eval.rustc_out
                     or "expected" in last_trial.eval.rustc_out
                 ):
-                    self.logger.info(
-                        "Detected potential syntax error, will try syntax repair"
-                    )
+                    self.logger.info("Detected potential syntax error, will try syntax repair")
                     # Try to find a relevant error
                     failures = last_trial.eval.verus_errors
                     if failures:
@@ -192,15 +186,11 @@ class RepairSyntaxModule(BaseRepairModule):
                     )
                     return code
             else:
-                self.logger.warning(
-                    "No compilation errors detected, skipping syntax repair."
-                )
+                self.logger.warning("No compilation errors detected, skipping syntax repair.")
                 return code
 
         # Check if we're dealing with Seq-related syntax
-        is_seq_error = self.is_seq_syntax_error(
-            failure_to_fix, last_trial.eval.rustc_out
-        )
+        is_seq_error = self.is_seq_syntax_error(failure_to_fix, last_trial.eval.rustc_out)
         self.logger.info(
             f"Error classification: {'Seq-related' if is_seq_error else 'General'} syntax error"
         )
@@ -212,9 +202,7 @@ class RepairSyntaxModule(BaseRepairModule):
                 context, failure_to_fix, last_trial.eval.rustc_out
             )
 
-    def is_seq_syntax_error(
-        self, failure: Optional[VerusError], rustc_out: str
-    ) -> bool:
+    def is_seq_syntax_error(self, failure: Optional[VerusError], rustc_out: str) -> bool:
         """
         Determine if the error is related to Seq syntax.
 
@@ -263,9 +251,7 @@ class RepairSyntaxModule(BaseRepairModule):
 
         return False
 
-    def repair_seq_syntax_error(
-        self, context, failure_to_fix: Optional[VerusError]
-    ) -> str:
+    def repair_seq_syntax_error(self, context, failure_to_fix: Optional[VerusError]) -> str:
         """
         Repair Seq-related syntax errors.
         This is based on the repair_SeqSyntax_error function from refinement.py.
@@ -302,10 +288,8 @@ Please make sure to change that wrong expression and do not change any other par
 
         # Add Seq knowledge to help with repair
         seq_examples = self.get_seq_examples()
-        seq_knowledge = (
-            "Here is the usage for Seq in Verus you can refer:\n```\n{}\n```\n".format(
-                "\n".join(seq_examples)
-            )
+        seq_knowledge = "Here is the usage for Seq in Verus you can refer:\n```\n{}\n```\n".format(
+            "\n".join(seq_examples)
         )
         base_instruction += "\n\n" + seq_knowledge
 
@@ -318,9 +302,7 @@ Please make sure to change that wrong expression and do not change any other par
 
         for retry_attempt in range(max_retries):
             self.logger.info("-" * 50)
-            self.logger.info(
-                f"Seq syntax repair attempt {retry_attempt + 1}/{max_retries}"
-            )
+            self.logger.info(f"Seq syntax repair attempt {retry_attempt + 1}/{max_retries}")
             self.logger.info("-" * 50)
 
             # Build complete instruction using the prompt system
@@ -377,9 +359,7 @@ Please make sure to change that wrong expression and do not change any other par
 
         # If no safe responses found after all retries, fall back to original
         if not safe_responses:
-            self.logger.warning(
-                "No safe responses found after all retries, using original code"
-            )
+            self.logger.warning("No safe responses found after all retries, using original code")
             return code
 
         # Use the last safe response (since we break after finding one)
@@ -442,9 +422,7 @@ Response with the Rust code only, do not include any explanation."""
             error_info += "\n" + "\n".join(error_lines[:20])  # Limit to first 20 lines
 
         # Normalize variable tmp paths to a stable placeholder so prompts are identical across runs
-        normalized_error_info = re.sub(
-            r"/tmp/tmp[0-9A-Za-z_\-]+", "<TMP_PATH>", error_info
-        )
+        normalized_error_info = re.sub(r"/tmp/tmp[0-9A-Za-z_\-]+", "<TMP_PATH>", error_info)
 
         query_template = "Syntax error:\n```\n{}```\n"
         query_template += "\nCode\n```\n{}```\n"
@@ -470,9 +448,7 @@ Response with the Rust code only, do not include any explanation."""
             examples = get_examples(self.config, "syntax", self.logger)
 
             # Save prompt for debugging
-            prompt_file = (
-                prompt_dir() / f"repair_general_syntax_{len(context.trials)}.txt"
-            )
+            prompt_file = prompt_dir() / f"repair_general_syntax_{len(context.trials)}.txt"
             prompt_file.write_text(instruction + "\n\n---\n\n" + query)
             self.logger.info(f"Saved syntax repair prompt to {prompt_file}")
 
@@ -514,9 +490,7 @@ Response with the Rust code only, do not include any explanation."""
 
         # If no safe responses found after all retries, fall back to original
         if not safe_responses:
-            self.logger.warning(
-                "No safe responses found after all retries, using original code"
-            )
+            self.logger.warning("No safe responses found after all retries, using original code")
             return code
 
         # Use the last safe response (since we break after finding one)
@@ -534,9 +508,7 @@ Response with the Rust code only, do not include any explanation."""
         Returns:
             List of example Seq usages
         """
-        examples_dir = os.path.join(
-            os.path.dirname(os.path.dirname(__file__)), "examples", "seq"
-        )
+        examples_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "examples", "seq")
         examples = []
         try:
             for file in os.listdir(examples_dir):
@@ -568,9 +540,7 @@ Response with the Rust code only, do not include any explanation."""
             error_info += "\n" + "\n".join(error_lines[:20])  # Limit to first 20 lines
 
         # Normalize variable tmp paths to a stable placeholder so prompts are identical across runs
-        normalized_error_info = re.sub(
-            r"/tmp/tmp[0-9A-Za-z_\-]+", "<TMP_PATH>", error_info
-        )
+        normalized_error_info = re.sub(r"/tmp/tmp[0-9A-Za-z_\-]+", "<TMP_PATH>", error_info)
 
         query_template = "Syntax error:\n```\n{}```\n"
         query_template += "\nCode\n```\n{}```\n"
@@ -596,9 +566,7 @@ Response with the Rust code only, do not include any explanation."""
             examples = get_examples(self.config, "syntax", self.logger)
 
             # Save prompt for debugging
-            prompt_file = (
-                prompt_dir() / f"repair_general_syntax_{len(context.trials)}.txt"
-            )
+            prompt_file = prompt_dir() / f"repair_general_syntax_{len(context.trials)}.txt"
             prompt_file.write_text(instruction + "\n\n---\n\n" + query)
             self.logger.info(f"Saved syntax repair prompt to {prompt_file}")
 
@@ -640,9 +608,7 @@ Response with the Rust code only, do not include any explanation."""
 
         # If no safe responses found after all retries, fall back to original
         if not safe_responses:
-            self.logger.warning(
-                "No safe responses found after all retries, using original code"
-            )
+            self.logger.warning("No safe responses found after all retries, using original code")
             return code
 
         # Use the last safe response (since we break after finding one)
@@ -660,9 +626,7 @@ Response with the Rust code only, do not include any explanation."""
         Returns:
             List of example Seq usages
         """
-        examples_dir = os.path.join(
-            os.path.dirname(os.path.dirname(__file__)), "examples", "seq"
-        )
+        examples_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "examples", "seq")
         examples = []
         try:
             for file in os.listdir(examples_dir):
@@ -694,9 +658,7 @@ Response with the Rust code only, do not include any explanation."""
             error_info += "\n" + "\n".join(error_lines[:20])  # Limit to first 20 lines
 
         # Normalize variable tmp paths to a stable placeholder so prompts are identical across runs
-        normalized_error_info = re.sub(
-            r"/tmp/tmp[0-9A-Za-z_\-]+", "<TMP_PATH>", error_info
-        )
+        normalized_error_info = re.sub(r"/tmp/tmp[0-9A-Za-z_\-]+", "<TMP_PATH>", error_info)
 
         query_template = "Syntax error:\n```\n{}```\n"
         query_template += "\nCode\n```\n{}```\n"
@@ -722,9 +684,7 @@ Response with the Rust code only, do not include any explanation."""
             examples = get_examples(self.config, "syntax", self.logger)
 
             # Save prompt for debugging
-            prompt_file = (
-                prompt_dir() / f"repair_general_syntax_{len(context.trials)}.txt"
-            )
+            prompt_file = prompt_dir() / f"repair_general_syntax_{len(context.trials)}.txt"
             prompt_file.write_text(instruction + "\n\n---\n\n" + query)
             self.logger.info(f"Saved syntax repair prompt to {prompt_file}")
 
@@ -766,9 +726,7 @@ Response with the Rust code only, do not include any explanation."""
 
         # If no safe responses found after all retries, fall back to original
         if not safe_responses:
-            self.logger.warning(
-                "No safe responses found after all retries, using original code"
-            )
+            self.logger.warning("No safe responses found after all retries, using original code")
             return code
 
         # Use the last safe response (since we break after finding one)
@@ -786,9 +744,7 @@ Response with the Rust code only, do not include any explanation."""
         Returns:
             List of example Seq usages
         """
-        examples_dir = os.path.join(
-            os.path.dirname(os.path.dirname(__file__)), "examples", "seq"
-        )
+        examples_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "examples", "seq")
         examples = []
         try:
             for file in os.listdir(examples_dir):
@@ -820,9 +776,7 @@ Response with the Rust code only, do not include any explanation."""
             error_info += "\n" + "\n".join(error_lines[:20])  # Limit to first 20 lines
 
         # Normalize variable tmp paths to a stable placeholder so prompts are identical across runs
-        normalized_error_info = re.sub(
-            r"/tmp/tmp[0-9A-Za-z_\-]+", "<TMP_PATH>", error_info
-        )
+        normalized_error_info = re.sub(r"/tmp/tmp[0-9A-Za-z_\-]+", "<TMP_PATH>", error_info)
 
         query_template = "Syntax error:\n```\n{}```\n"
         query_template += "\nCode\n```\n{}```\n"
@@ -848,9 +802,7 @@ Response with the Rust code only, do not include any explanation."""
             examples = get_examples(self.config, "syntax", self.logger)
 
             # Save prompt for debugging
-            prompt_file = (
-                prompt_dir() / f"repair_general_syntax_{len(context.trials)}.txt"
-            )
+            prompt_file = prompt_dir() / f"repair_general_syntax_{len(context.trials)}.txt"
             prompt_file.write_text(instruction + "\n\n---\n\n" + query)
             self.logger.info(f"Saved syntax repair prompt to {prompt_file}")
 
@@ -892,9 +844,7 @@ Response with the Rust code only, do not include any explanation."""
 
         # If no safe responses found after all retries, fall back to original
         if not safe_responses:
-            self.logger.warning(
-                "No safe responses found after all retries, using original code"
-            )
+            self.logger.warning("No safe responses found after all retries, using original code")
             return code
 
         # Use the last safe response (since we break after finding one)
@@ -912,9 +862,7 @@ Response with the Rust code only, do not include any explanation."""
         Returns:
             List of example Seq usages
         """
-        examples_dir = os.path.join(
-            os.path.dirname(os.path.dirname(__file__)), "examples", "seq"
-        )
+        examples_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "examples", "seq")
         examples = []
         try:
             for file in os.listdir(examples_dir):

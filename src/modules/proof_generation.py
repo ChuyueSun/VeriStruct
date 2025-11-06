@@ -60,9 +60,7 @@ class ProofGenerationModule(BaseModule):
             # Log the complete query content for debugging
             self.logger.debug("=== LLM Query Content ===")
             self.logger.debug(f"Retry Attempt: {retry_attempt}")
-            self.logger.debug(
-                f"Temperature: {1.0 + (retry_attempt * temperature_boost)}"
-            )
+            self.logger.debug(f"Temperature: {1.0 + (retry_attempt * temperature_boost)}")
             self.logger.debug(f"Cache Enabled: {use_cache}")
             self.logger.debug("\n=== Instruction ===\n" + instruction)
             self.logger.debug("\n=== Code ===\n" + code)
@@ -128,6 +126,7 @@ class ProofGenerationModule(BaseModule):
             - Replace invalid @ notation when View not defined
             - Parenthesize casted ints in arithmetic (i as int) * 64
             """
+
             # 0) CRITICAL: Validate and fix assert forall syntax
             # Check if assert forall exists without 'by' clause
             def validate_and_fix_assert_forall(code_text: str) -> str:
@@ -164,9 +163,7 @@ class ProofGenerationModule(BaseModule):
                             for al in assert_lines:
                                 if ";" in al:
                                     # Replace semicolon with 'by { }'
-                                    fixed_lines.append(
-                                        al.replace(";", " by {\n    \n}")
-                                    )
+                                    fixed_lines.append(al.replace(";", " by {\n    \n}"))
                                 else:
                                     fixed_lines.append(al)
 
@@ -213,14 +210,10 @@ class ProofGenerationModule(BaseModule):
 
             # Also handle: 0 <= n <= EXPR (double <= chain, no final <)
             # This prevents the bug where <= gets split into < =
-            code = re.sub(
-                r"0\s*<=\s*(\w+)\s*<=\s*([^\n,)+-/*<]+)", r"0 <= \1 && \1 <= \2", code
-            )
+            code = re.sub(r"0\s*<=\s*(\w+)\s*<=\s*([^\n,)+-/*<]+)", r"0 <= \1 && \1 <= \2", code)
 
             # Simpler case: 0 <= k < EXPR (double chained with < only)
-            code = re.sub(
-                r"0\s*<=\s*(\w+)\s*<\s*([^\n,)+-/*=]+)", r"0 <= \1 && \1 < \2", code
-            )
+            code = re.sub(r"0\s*<=\s*(\w+)\s*<\s*([^\n,)+-/*=]+)", r"0 <= \1 && \1 < \2", code)
 
             # General chained case: X <= Y < Z
             code = re.sub(
@@ -233,13 +226,8 @@ class ProofGenerationModule(BaseModule):
             code = re.sub(r"(\w+)\s+as\s+int\s*\*\s*64", r"(\1 as int) * 64", code)
 
             # 4) CRITICAL: Add assert_seqs_equal import if macro is used
-            if (
-                "assert_seqs_equal!" in code
-                and "use vstd::assert_seqs_equal" not in code
-            ):
-                self.logger.warning(
-                    "Code uses assert_seqs_equal! but missing import, adding it"
-                )
+            if "assert_seqs_equal!" in code and "use vstd::assert_seqs_equal" not in code:
+                self.logger.warning("Code uses assert_seqs_equal! but missing import, adding it")
                 # Add import after use vstd::prelude::*;
                 code = code.replace(
                     "use vstd::prelude::*;",
@@ -250,9 +238,7 @@ class ProofGenerationModule(BaseModule):
             # LLM sometimes adds boilerplate "fn main() {}" when code already has "pub fn main()"
             main_count = code.count("fn main(") + code.count("fn main {")
             if main_count > 1:
-                self.logger.warning(
-                    f"Found {main_count} main functions, removing duplicates"
-                )
+                self.logger.warning(f"Found {main_count} main functions, removing duplicates")
                 lines = code.split("\n")
                 result_lines = []
                 for i, line in enumerate(lines):
@@ -285,13 +271,9 @@ class ProofGenerationModule(BaseModule):
             # Apply regex-based syntax fixes AFTER normalization to clean up any issues
             from src.modules.repair_regex import fix_common_syntax_errors
 
-            final_response, was_changed = fix_common_syntax_errors(
-                final_response, self.logger
-            )
+            final_response, was_changed = fix_common_syntax_errors(final_response, self.logger)
             if was_changed:
-                self.logger.info(
-                    "Applied regex syntax fixes to proof generation response"
-                )
+                self.logger.info("Applied regex syntax fixes to proof generation response")
 
             # Check if the generated code is safe
             if code_change_is_safe(
@@ -301,13 +283,9 @@ class ProofGenerationModule(BaseModule):
                 logger=self.logger,
             ):
                 safe_responses.append(final_response)
-                self.logger.info(
-                    f"Generated proof code passed safety check{context_msg}"
-                )
+                self.logger.info(f"Generated proof code passed safety check{context_msg}")
             else:
-                self.logger.warning(
-                    f"Generated proof code failed safety check{context_msg}"
-                )
+                self.logger.warning(f"Generated proof code failed safety check{context_msg}")
         return safe_responses
 
     # ---------------------------------------------------------------------
@@ -379,9 +357,7 @@ class ProofGenerationModule(BaseModule):
 
         # Early exit if no proof markers exist
         if self._should_skip(code):
-            self.logger.info(
-                "No '// TODO: add proof' markers found – skipping proof generation."
-            )
+            self.logger.info("No '// TODO: add proof' markers found – skipping proof generation.")
             return code
 
         # Detect code features to customize instruction dynamically
@@ -403,9 +379,7 @@ class ProofGenerationModule(BaseModule):
         safe_responses = []
 
         for retry_attempt in range(max_retries):
-            self.logger.info(
-                f"Proof generation attempt {retry_attempt + 1}/{max_retries}"
-            )
+            self.logger.info(f"Proof generation attempt {retry_attempt + 1}/{max_retries}")
 
             # Build instruction with common Verus knowledge and match guidelines
             instruction = build_instruction(
@@ -418,8 +392,12 @@ class ProofGenerationModule(BaseModule):
 
             # Dynamically add lemma invocation guidance if lemmas detected
             if lemmas_in_code:
-                lemma_guidance = f"\n\n**DETECTED LEMMAS IN THIS FILE**: {', '.join(lemmas_in_code)}\n\n"
-                lemma_guidance += "**CRITICAL: You MUST invoke these lemmas in your proof blocks!**\n\n"
+                lemma_guidance = (
+                    f"\n\n**DETECTED LEMMAS IN THIS FILE**: {', '.join(lemmas_in_code)}\n\n"
+                )
+                lemma_guidance += (
+                    "**CRITICAL: You MUST invoke these lemmas in your proof blocks!**\n\n"
+                )
                 lemma_guidance += "Call the relevant lemmas:\n"
                 lemma_guidance += "```rust\n"
                 lemma_guidance += "proof {\n"
@@ -427,9 +405,13 @@ class ProofGenerationModule(BaseModule):
                     lemma_guidance += "    use_type_invariant(&*self);  // First\n"
                 for lemma in lemmas_in_code[:3]:  # Show up to 3 examples
                     if "mod_auto" in lemma:
-                        lemma_guidance += f"    {lemma}(self.ring.len() as int);  // For modulo operations\n"
+                        lemma_guidance += (
+                            f"    {lemma}(self.ring.len() as int);  // For modulo operations\n"
+                        )
                     else:
-                        lemma_guidance += f"    {lemma}(...);  // Check lemma signature for parameters\n"
+                        lemma_guidance += (
+                            f"    {lemma}(...);  // Check lemma signature for parameters\n"
+                        )
                 lemma_guidance += "}\n```\n"
                 lemma_guidance += f"\n**These lemmas establish properties** that help prove your assertions. Check each lemma's `ensures` clause to understand what it proves.\n"
 
@@ -437,9 +419,7 @@ class ProofGenerationModule(BaseModule):
 
             # Load examples showing completed proofs/invariants (answer-only format)
             # Dynamic selection based on detected code features
-            raw_examples = get_examples(
-                self.config, "proof", self.logger, max_examples=20
-            )
+            raw_examples = get_examples(self.config, "proof", self.logger, max_examples=20)
 
             # Prioritize examples based on code features
             scored_examples = []
@@ -462,9 +442,7 @@ class ProofGenerationModule(BaseModule):
 
                 # Tree/BST structures (bst_map, treemap, node)
                 if any(kw in code for kw in ["left", "right", "Node<", "TreeNode"]):
-                    if any(
-                        kw in answer for kw in ["left", "right", "TreeNode", "tree"]
-                    ):
+                    if any(kw in answer for kw in ["left", "right", "TreeNode", "tree"]):
                         score += 35
 
                 # Map operations (bst_map, treemap)
@@ -574,9 +552,7 @@ class ProofGenerationModule(BaseModule):
 
         # If no safe responses found after all retries, fall back to original
         if not safe_responses:
-            self.logger.warning(
-                "No safe responses found after all retries, using original code"
-            )
+            self.logger.warning("No safe responses found after all retries, using original code")
             return original_code
 
         # Evaluate samples and select the best one

@@ -49,9 +49,7 @@ class RepairPostcondModule(BaseRepairModule):
         # If a specific failure isn't provided, try to get one from the last trial
         if failure_to_fix is None:
             last_trial = context.trials[-1]
-            postcond_failures = last_trial.eval.get_failures(
-                error_type=VerusErrorType.PostCondFail
-            )
+            postcond_failures = last_trial.eval.get_failures(error_type=VerusErrorType.PostCondFail)
             private_failures = last_trial.eval.get_failures(
                 error_type=VerusErrorType.ensure_private
             )
@@ -59,9 +57,7 @@ class RepairPostcondModule(BaseRepairModule):
             failures = postcond_failures + private_failures
 
             if not failures:
-                self.logger.warning(
-                    "No postcondition failures found in the last trial."
-                )
+                self.logger.warning("No postcondition failures found in the last trial.")
                 return code  # Return original code if no error
             failure_to_fix = self.get_one_failure(failures)
             if not failure_to_fix:
@@ -112,9 +108,7 @@ If you are not sure about the correctness of the post-condition, you may weaken 
 Response with the Rust code only, do not include any explanation."""
         instruction += "\n\n" + self.proof_block_info
         instruction = self.add_seq_knowledge(code, instruction)
-        instruction += (
-            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
-        )
+        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
 
         examples = get_examples(self.config, "postcond", self.logger)
         query_template = "Failed post-condition\n```\n{}```\n"
@@ -129,13 +123,9 @@ Response with the Rust code only, do not include any explanation."""
             if location_trace.label == VerusErrorLabel.FailedThisPostCond:
                 location_trace, postcond_trace = postcond_trace, location_trace
 
-            post_cond_info = (
-                f"Line {postcond_trace.lines[0]}-{postcond_trace.lines[1]}:\n"
-            )
+            post_cond_info = f"Line {postcond_trace.lines[0]}-{postcond_trace.lines[1]}:\n"
             post_cond_info += postcond_trace.get_text() + "\n"
-            location_info = (
-                f"Line {location_trace.lines[0]}-{location_trace.lines[1]}:\n"
-            )
+            location_info = f"Line {location_trace.lines[0]}-{location_trace.lines[1]}:\n"
             location_info += location_trace.get_text() + "\n"
             query = query_template.format(post_cond_info, location_info, code)
         else:
@@ -143,9 +133,7 @@ Response with the Rust code only, do not include any explanation."""
             single_trace = failure_to_fix.trace[0]
             post_cond_info = f"Line {single_trace.lines[0]}-{single_trace.lines[1]}:\n"
             post_cond_info += single_trace.get_text() + "\n"
-            query = query_template.format(
-                post_cond_info, "(location unavailable)", code
-            )
+            query = query_template.format(post_cond_info, "(location unavailable)", code)
 
         # Use tracking wrapper for LLM calls
         if context is not None and hasattr(context, "infer_llm_with_tracking"):
@@ -214,9 +202,7 @@ Common fixes include:
 
 Response with the Rust code only, do not include any explanation."""
         instruction += self.add_seq_knowledge(code, instruction)
-        instruction += (
-            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
-        )
+        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
 
         examples = get_examples(self.config, "postcond", self.logger)
         query_template = "Failed post-condition\n```\n{}```\n"
@@ -231,13 +217,9 @@ Response with the Rust code only, do not include any explanation."""
             if location_trace.label == VerusErrorLabel.FailedThisPostCond:
                 location_trace, postcond_trace = postcond_trace, location_trace
 
-            post_cond_info = (
-                f"Line {postcond_trace.lines[0]}-{postcond_trace.lines[1]}:\n"
-            )
+            post_cond_info = f"Line {postcond_trace.lines[0]}-{postcond_trace.lines[1]}:\n"
             post_cond_info += postcond_trace.get_text() + "\n"
-            location_info = (
-                f"Line {location_trace.lines[0]}-{location_trace.lines[1]}:\n"
-            )
+            location_info = f"Line {location_trace.lines[0]}-{location_trace.lines[1]}:\n"
             location_info += location_trace.get_text() + "\n"
             query = query_template.format(post_cond_info, location_info, code)
         else:
@@ -245,9 +227,7 @@ Response with the Rust code only, do not include any explanation."""
             single_trace = failure_to_fix.trace[0]
             post_cond_info = f"Line {single_trace.lines[0]}-{single_trace.lines[1]}:\n"
             post_cond_info += single_trace.get_text() + "\n"
-            query = query_template.format(
-                post_cond_info, "(location unavailable)", code
-            )
+            query = query_template.format(post_cond_info, "(location unavailable)", code)
 
         # Use tracking wrapper for LLM calls
         if context is not None and hasattr(context, "infer_llm_with_tracking"):

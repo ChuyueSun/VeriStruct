@@ -44,18 +44,10 @@ class RepairRegistry:
         self.output_paths = {}
 
         # Timeout tracking for repair attempts
-        self.repair_timeout_threshold = config.get(
-            "repair_timeout", 120
-        )  # 2 minutes default
-        self.llm_timeout_threshold = config.get(
-            "repair_llm_timeout", 60
-        )  # 1 minute for LLM calls
-        self.slow_repair_threshold = config.get(
-            "slow_repair_threshold", 30
-        )  # 30 seconds is "slow"
-        self.max_repair_retries = config.get(
-            "max_repair_retries", 1
-        )  # Retry once on timeout
+        self.repair_timeout_threshold = config.get("repair_timeout", 120)  # 2 minutes default
+        self.llm_timeout_threshold = config.get("repair_llm_timeout", 60)  # 1 minute for LLM calls
+        self.slow_repair_threshold = config.get("slow_repair_threshold", 30)  # 30 seconds is "slow"
+        self.max_repair_retries = config.get("max_repair_retries", 1)  # Retry once on timeout
         self.error_type_timeouts = {}  # Track which error types consistently timeout
 
     @classmethod
@@ -115,9 +107,7 @@ class RepairRegistry:
 
         # Initialize and register test assertion repair module (for test function assertions)
         # Test functions are IMMUTABLE - this module fixes production code postconditions instead
-        test_assertion_repair = RepairTestAssertionModule(
-            config, logger, immutable_funcs
-        )
+        test_assertion_repair = RepairTestAssertionModule(config, logger, immutable_funcs)
         registry.register_module(
             "repair_test_assertion",
             test_assertion_repair,
@@ -240,9 +230,7 @@ class RepairRegistry:
         for name, module in self.repair_modules.items():
             context.register_module(name, module)
 
-        self.logger.info(
-            f"Registered repair modules: {list(self.repair_modules.keys())}"
-        )
+        self.logger.info(f"Registered repair modules: {list(self.repair_modules.keys())}")
 
     def register_module(
         self,
@@ -338,9 +326,7 @@ class RepairRegistry:
         default_priority = 100
 
         # Sort failures based on priority
-        return sorted(
-            failures, key=lambda f: priority_order.get(f.error, default_priority)
-        )
+        return sorted(failures, key=lambda f: priority_order.get(f.error, default_priority))
 
     def repair_error(
         self, context, error: VerusError, output_dir: Optional[Path] = None
@@ -358,9 +344,7 @@ class RepairRegistry:
         """
         module = self.get_module_for_error(error)
         if not module:
-            self.logger.warning(
-                f"No repair module registered for error type: {error.error.name}"
-            )
+            self.logger.warning(f"No repair module registered for error type: {error.error.name}")
             return None
 
         self.logger.info(f"Attempting {error.error.name} repair with {module.name}...")
@@ -378,9 +362,7 @@ class RepairRegistry:
 
                 output_file = output_dir / output_path
                 output_file.write_text(result)
-                self.logger.info(
-                    f"Saved {error.error.name} repair result to {output_file}"
-                )
+                self.logger.info(f"Saved {error.error.name} repair result to {output_file}")
 
         return result
 
@@ -448,14 +430,10 @@ class RepairRegistry:
                 from src.modules.repair_regex import fix_common_syntax_errors
 
                 current_code = context.trials[-1].code
-                fixed_code, was_changed = fix_common_syntax_errors(
-                    current_code, self.logger
-                )
+                fixed_code, was_changed = fix_common_syntax_errors(current_code, self.logger)
 
                 if was_changed:
-                    self.logger.info(
-                        "Regex-based syntax fixer made changes. Verifying..."
-                    )
+                    self.logger.info("Regex-based syntax fixer made changes. Verifying...")
 
                     # Verify if the regex fix resolved the compilation error
                     from src.modules.veval import VEval
@@ -465,9 +443,7 @@ class RepairRegistry:
                     before_score = context.trials[-1].eval.get_score()
 
                     if regex_score > before_score:
-                        self.logger.info(
-                            "✅ Regex-based fixes resolved the compilation error!"
-                        )
+                        self.logger.info("✅ Regex-based fixes resolved the compilation error!")
                         context.add_trial(fixed_code)
 
                         if progress_logger:
@@ -483,9 +459,7 @@ class RepairRegistry:
                         if not context.trials[-1].eval.compilation_error:
                             failures = context.trials[-1].eval.get_failures()
                             if not failures:
-                                self.logger.info(
-                                    "All errors fixed by regex-based fixer!"
-                                )
+                                self.logger.info("All errors fixed by regex-based fixer!")
                                 result_map["compilation"] = fixed_code
                                 return result_map
 
@@ -496,16 +470,12 @@ class RepairRegistry:
                             "Regex fixes didn't resolve the compilation error. Trying LLM-based repair..."
                         )
                 else:
-                    self.logger.info(
-                        "No regex-based fixes applicable. Trying LLM-based repair..."
-                    )
+                    self.logger.info("No regex-based fixes applicable. Trying LLM-based repair...")
 
                 # SECOND: If regex didn't fix it, try LLM-based syntax repair
                 # Check timeout before attempting LLM-based repair
                 if check_round_timeout():
-                    self.logger.error(
-                        "🚨 Repair round timed out before LLM-based syntax repair"
-                    )
+                    self.logger.error("🚨 Repair round timed out before LLM-based syntax repair")
                     return result_map
 
                 self.logger.info("Attempting LLM-based syntax repair…")
@@ -537,10 +507,7 @@ class RepairRegistry:
 
                         # Update checkpoint best if this compilation repair is better
                         current_best_score = context.get_best_score()
-                        if (
-                            current_best_score is None
-                            or after_score > current_best_score
-                        ):
+                        if current_best_score is None or after_score > current_best_score:
                             self.logger.info(
                                 f"Updating checkpoint best after compilation error repair: {after_score}"
                             )
@@ -560,15 +527,11 @@ class RepairRegistry:
                         if not last_trial.eval.compilation_error:
                             failures = last_trial.eval.get_failures()
                             if not failures:
-                                self.logger.info(
-                                    "All errors fixed after compilation repair."
-                                )
+                                self.logger.info("All errors fixed after compilation repair.")
                                 result_map["compilation"] = compilation_result
                                 return result_map
                     else:
-                        self.logger.warning(
-                            "Syntax repair did not improve score – skipping."
-                        )
+                        self.logger.warning("Syntax repair did not improve score – skipping.")
                         if progress_logger:
                             progress_logger.add_repair(
                                 "CompilationError",
@@ -584,9 +547,7 @@ class RepairRegistry:
 
         # Check timeout after compilation error handling
         if check_round_timeout():
-            self.logger.error(
-                "🚨 Repair round timed out during compilation error handling"
-            )
+            self.logger.error("🚨 Repair round timed out during compilation error handling")
             return result_map
 
         # Prioritize failures
@@ -603,21 +564,15 @@ class RepairRegistry:
         for error_type, type_failures in error_type_map.items():
             # Check timeout before processing each error type
             if check_round_timeout():
-                self.logger.error(
-                    f"🚨 Repair round timed out before processing {error_type.name}"
-                )
+                self.logger.error(f"🚨 Repair round timed out before processing {error_type.name}")
                 break
 
             if error_type in self.error_to_module_map:
                 module = self.error_to_module_map[error_type]
-                self.logger.info(
-                    f"Attempting {error_type.name} repair with {module.name}..."
-                )
+                self.logger.info(f"Attempting {error_type.name} repair with {module.name}...")
 
                 # Store the state before repair
-                before_score = (
-                    context.trials[-1].eval.get_score() if context.trials else None
-                )
+                before_score = context.trials[-1].eval.get_score() if context.trials else None
                 repair_start_time = time.time()
 
                 # Use the first failure of this type with timeout protection
@@ -643,9 +598,7 @@ class RepairRegistry:
 
                         # Check if this attempt timed out
                         current_threshold = (
-                            self.repair_timeout_threshold
-                            if attempt == 0
-                            else retry_timeout
+                            self.repair_timeout_threshold if attempt == 0 else retry_timeout
                         )
                         if repair_time > current_threshold:
                             self.logger.warning(
@@ -755,9 +708,7 @@ class RepairRegistry:
                         )
 
                         if fallback_result and fallback_score:
-                            self.logger.info(
-                                "Fallback repair improved score. Adding to trials."
-                            )
+                            self.logger.info("Fallback repair improved score. Adding to trials.")
                             # Add successful fallback as new trial
                             context.add_trial(fallback_result)
                             result_map[error_type] = fallback_result
@@ -765,10 +716,7 @@ class RepairRegistry:
 
                             # Update checkpoint best if fallback is better
                             current_best_score = context.get_best_score()
-                            if (
-                                current_best_score is None
-                                or fallback_score > current_best_score
-                            ):
+                            if current_best_score is None or fallback_score > current_best_score:
                                 self.logger.info(
                                     f"Updating checkpoint best after fallback repair: {fallback_score}"
                                 )
@@ -789,10 +737,7 @@ class RepairRegistry:
                             current_best_code = context.get_best_code()
 
                             # Update if this is better than current checkpoint best
-                            if (
-                                current_best_score is None
-                                or after_score > current_best_score
-                            ):
+                            if current_best_score is None or after_score > current_best_score:
                                 self.logger.info(
                                     f"Updating checkpoint best after {error_type.name} repair: {after_score}"
                                 )
@@ -878,9 +823,7 @@ class RepairRegistry:
         # Check 2: Length comparison with original (if provided)
         if original_code is not None:
             original_lines = original_code.splitlines()
-            length_ratio = (
-                len(lines) / len(original_lines) if len(original_lines) > 0 else 0
-            )
+            length_ratio = len(lines) / len(original_lines) if len(original_lines) > 0 else 0
 
             # File shouldn't shrink by more than 30% (allows some comment/whitespace removal)
             if length_ratio < 0.7:
@@ -931,9 +874,7 @@ class RepairRegistry:
 
         # Validate brace closure
         if open_braces != 0:
-            self.logger.warning(
-                f"Unclosed blocks detected: {open_braces} unclosed braces"
-            )
+            self.logger.warning(f"Unclosed blocks detected: {open_braces} unclosed braces")
             if open_braces > 0:
                 self.logger.warning("Some blocks were not closed")
             else:
@@ -971,14 +912,10 @@ class RepairRegistry:
         result_lines = len(result.splitlines())
 
         # Log sizes for debugging
-        self.logger.info(
-            f"Repair result size: {result_bytes} bytes, {result_lines} lines"
-        )
+        self.logger.info(f"Repair result size: {result_bytes} bytes, {result_lines} lines")
 
         if result_bytes < min_size:
-            self.logger.warning(
-                f"Repair result suspiciously small: {result_bytes} bytes"
-            )
+            self.logger.warning(f"Repair result suspiciously small: {result_bytes} bytes")
             return False
 
         # If we have original size, compare
@@ -986,9 +923,7 @@ class RepairRegistry:
             # Allow some variance but catch major discrepancies
             size_ratio = result_bytes / original_size
             if size_ratio < 0.5:  # Less than 50% of original
-                self.logger.warning(
-                    f"Repair result much smaller than original: {size_ratio:.2%}"
-                )
+                self.logger.warning(f"Repair result much smaller than original: {size_ratio:.2%}")
                 return False
 
         # Check structural completeness (no original_code available here)
@@ -1026,9 +961,7 @@ class RepairRegistry:
         # Note: _check_file_size also calls _check_file_completeness internally,
         # but we check here first for early rejection and clearer error messages
         if not self._check_file_size(result):
-            self.logger.warning(
-                f"Skipping save of invalid size repair result for {repair_type}"
-            )
+            self.logger.warning(f"Skipping save of invalid size repair result for {repair_type}")
             return
 
         # Get file ID from environment
@@ -1046,9 +979,7 @@ class RepairRegistry:
         )
 
         # Final validation before write (no original_code available here)
-        if self._check_file_completeness(
-            result, original_code=None
-        ):  # Double-check to be safe
+        if self._check_file_completeness(result, original_code=None):  # Double-check to be safe
             output_file.write_text(result)
 
             # Verify written file
@@ -1061,9 +992,7 @@ class RepairRegistry:
                         f"Saved {repair_type} repair result to {output_file} after {repair_time:.2f}s"
                     )
                 else:
-                    self.logger.info(
-                        f"Saved {repair_type} repair result to {output_file}"
-                    )
+                    self.logger.info(f"Saved {repair_type} repair result to {output_file}")
         else:
             self.logger.error(
                 f"Final validation failed - repair result became incomplete, skipping save"
@@ -1140,18 +1069,14 @@ class RepairRegistry:
             self.logger.info(f"Fallback repair attempt {attempt}/{max_attempts}")
 
             # Check for modules registered to handle syntax errors
-            syntax_modules = [
-                m for m in self.repair_modules.values() if m.name == "repair_syntax"
-            ]
+            syntax_modules = [m for m in self.repair_modules.values() if m.name == "repair_syntax"]
 
             if not syntax_modules:
                 self.logger.warning("No repair module found for compilation errors.")
                 return None, None
 
             syntax_module = syntax_modules[0]
-            self.logger.info(
-                f"Attempting compilation error repair with {syntax_module.name}..."
-            )
+            self.logger.info(f"Attempting compilation error repair with {syntax_module.name}...")
 
             # Try repair
             result = syntax_module.exec(context)
@@ -1194,9 +1119,7 @@ class RepairRegistry:
         self.logger.warning(f"All {max_attempts} fallback attempts failed.")
         return None, None
 
-    def repair_compilation_error(
-        self, context, output_dir: Optional[Path] = None
-    ) -> Optional[str]:
+    def repair_compilation_error(self, context, output_dir: Optional[Path] = None) -> Optional[str]:
         """
         Handle compilation errors that may not have a specific VerusErrorType.
         This includes syntax errors and other compilation issues.

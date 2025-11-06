@@ -33,9 +33,7 @@ def main():
         # Validate that the benchmark exists
         todo_file = f"benchmarks-complete/{args.benchmark}.rs"
         if not os.path.exists(todo_file):
-            print(
-                f"Error: Benchmark '{args.benchmark}' not found. Expected file: {todo_file}"
-            )
+            print(f"Error: Benchmark '{args.benchmark}' not found. Expected file: {todo_file}")
             print("Available benchmarks:")
             for todo_path in glob.glob("benchmarks-complete/*_todo.rs"):
                 name = os.path.splitext(os.path.basename(todo_path))[0]
@@ -69,9 +67,7 @@ def main():
             log_file = os.path.join(bench_dir, "output.log")
             log_files.append(log_file)
 
-            print(
-                f"Starting {benchmark_name} with {cfg} (cache disabled) -> log: {log_file}"
-            )
+            print(f"Starting {benchmark_name} with {cfg} (cache disabled) -> log: {log_file}")
 
             # Set environment to disable cache
             env = os.environ.copy()
@@ -111,9 +107,7 @@ def main():
             if proc.returncode == 0:
                 print(f"  ✓ Completed {benchmark_name}")
             else:
-                print(
-                    f"  ✗ Error running {benchmark_name} (exit code: {proc.returncode})"
-                )
+                print(f"  ✗ Error running {benchmark_name} (exit code: {proc.returncode})")
 
 
 if __name__ == "__main__":

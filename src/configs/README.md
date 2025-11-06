@@ -5,6 +5,7 @@ This directory contains configuration files for VerusAgent. The actual configura
 ## Quick Start
 
 1. **Copy the template:**
+
    ```bash
    cp config.json.template config.json
    ```
@@ -24,6 +25,7 @@ This directory contains configuration files for VerusAgent. The actual configura
 ### API Settings
 
 #### Azure OpenAI
+
 ```json
 {
   "aoai_api_key": "your-azure-api-key",
@@ -35,6 +37,7 @@ This directory contains configuration files for VerusAgent. The actual configura
 ```
 
 #### OpenAI
+
 ```json
 {
   "openai_api_key": "sk-...",
@@ -43,6 +46,7 @@ This directory contains configuration files for VerusAgent. The actual configura
 ```
 
 #### Anthropic Claude
+
 ```json
 {
   "anthropic_api_key": "sk-ant-...",
@@ -51,6 +55,7 @@ This directory contains configuration files for VerusAgent. The actual configura
 ```
 
 #### DeepSeek
+
 ```json
 {
   "deepseek_api_key": "your-deepseek-key",
@@ -83,30 +88,35 @@ This directory contains configuration files for VerusAgent. The actual configura
 ## Current Configurations
 
 ### Available
+
 - **config-azure.json** - Azure OpenAI configuration (currently set up)
 - **config.json.template** - Template for creating new configurations
 
 ### Creating Additional Configurations
 
 #### For Azure OpenAI
+
 ```bash
 # Already configured in config-azure.json
 # Edit config-azure.json to update your Azure credentials
 ```
 
 #### For OpenAI
+
 ```bash
 cp config.json.template config-oai.json
 # Edit config-oai.json with your OpenAI API key
 ```
 
 #### For Anthropic Claude
+
 ```bash
 cp config.json.template config-anthropic.json
 # Edit config-anthropic.json with your Anthropic API key
 ```
 
 #### For DeepSeek
+
 ```bash
 cp config.json.template config-deepseek.json
 # Edit config-deepseek.json with your DeepSeek API key
@@ -117,11 +127,13 @@ cp config.json.template config-deepseek.json
 ⚠️ **IMPORTANT - API Key Protection**:
 
 ✅ **Already Protected:**
+
 - All `config*.json` files (except `.template`) are automatically ignored by git
 - Your API keys in `config-azure.json` will **NEVER** be committed to the repository
 - The `.gitignore` file ensures these files stay local only
 
 ⚠️ **Best Practices:**
+
 - Never manually add config files to git (don't use `git add -f`)
 - Never commit files containing actual API keys
 - Keep your API keys secure and rotate them regularly
@@ -140,14 +152,17 @@ export AZURE_OPENAI_API_KEY="your-key-here"
 ## Troubleshooting
 
 **Config file not found:**
+
 - Ensure you've copied the template to `config.json`
 - Check that the file is in `src/configs/` directory
 
 **API authentication errors:**
+
 - Verify your API key is correct
 - Check API endpoint URLs are valid
 - Ensure your API subscription is active
 
 **Path errors:**
+
 - Verify Verus is installed and `verus_path` is correct
 - Check that benchmark and output directories exist

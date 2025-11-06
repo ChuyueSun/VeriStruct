@@ -46,12 +46,8 @@ class RepairInvariantModule(BaseRepairModule):
         # If a specific failure isn't provided, try to get one from the last trial
         if failure_to_fix is None:
             last_trial = context.trials[-1]
-            front_failures = last_trial.eval.get_failures(
-                error_type=VerusErrorType.InvFailFront
-            )
-            end_failures = last_trial.eval.get_failures(
-                error_type=VerusErrorType.InvFailEnd
-            )
+            front_failures = last_trial.eval.get_failures(error_type=VerusErrorType.InvFailFront)
+            end_failures = last_trial.eval.get_failures(error_type=VerusErrorType.InvFailEnd)
             failures = front_failures + end_failures
 
             if not failures:
@@ -93,9 +89,7 @@ class RepairInvariantModule(BaseRepairModule):
         code = context.trials[-1].code
 
         error_trace = failure_to_fix.trace[0]
-        error_highlight = (
-            error_trace.get_highlights()[0] if error_trace.get_highlights() else ""
-        )
+        error_highlight = error_trace.get_highlights()[0] if error_trace.get_highlights() else ""
 
         instruction = """Your mission is to fix the invariant not satisfied error before the loop for the following code. Here are several general and possible ways to fix the error:
 
@@ -108,9 +102,7 @@ Please think twice about which way is the best to fix the error!
 Response with the Rust code only, do not include any explanation."""
         instruction += "\n\n" + self.proof_block_info
         instruction = self.add_seq_knowledge(code, instruction)
-        instruction += (
-            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
-        )
+        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
 
         # Load examples
         examples = get_examples(self.config, "inv-front", self.logger)
@@ -125,7 +117,6 @@ Response with the Rust code only, do not include any explanation."""
         # Use tracking wrapper for LLM calls
 
         if context is not None and hasattr(context, "infer_llm_with_tracking"):
-
             result = context.infer_llm_with_tracking(
                 engine=self.config.get("aoai_debug_model", "gpt-4"),
                 instruction=instruction,
@@ -142,7 +133,6 @@ Response with the Rust code only, do not include any explanation."""
             responses = result[0] if isinstance(result, tuple) else result
 
         else:
-
             responses = self.llm.infer_llm(
                 engine=self.config.get("aoai_debug_model", "gpt-4"),
                 instruction=instruction,
@@ -185,9 +175,7 @@ Response with the Rust code only, do not include any explanation."""
 Response with the Rust code only, do not include any explanation."""
         instruction += "\n\n" + self.proof_block_info
         instruction = self.add_seq_knowledge(code, instruction)
-        instruction += (
-            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
-        )
+        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
 
         # Load examples
         examples = get_examples(self.config, "inv-end", self.logger)
@@ -203,7 +191,6 @@ Response with the Rust code only, do not include any explanation."""
         # Use tracking wrapper for LLM calls
 
         if context is not None and hasattr(context, "infer_llm_with_tracking"):
-
             result = context.infer_llm_with_tracking(
                 engine=self.config.get("aoai_debug_model", "gpt-4"),
                 instruction=instruction,
@@ -220,7 +207,6 @@ Response with the Rust code only, do not include any explanation."""
             responses = result[0] if isinstance(result, tuple) else result
 
         else:
-
             responses = self.llm.infer_llm(
                 engine=self.config.get("aoai_debug_model", "gpt-4"),
                 instruction=instruction,

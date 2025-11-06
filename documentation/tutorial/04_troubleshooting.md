@@ -9,6 +9,7 @@ This guide helps you diagnose and fix common verification problems in VerusAgent
 ### 1. Verification Failures
 
 #### Symptom
+
 ```rust
 error: assertion failed
    |
@@ -17,7 +18,9 @@ error: assertion failed
 ```
 
 #### Solutions
+
 1. Check invariants:
+
 ```rust
 #[verifier::type_invariant]
 pub closed spec fn inv(&self) -> bool {
@@ -26,6 +29,7 @@ pub closed spec fn inv(&self) -> bool {
 ```
 
 2. Add preconditions:
+
 ```rust
 pub fn increment(&mut self) -> bool
     requires
@@ -33,6 +37,7 @@ pub fn increment(&mut self) -> bool
 ```
 
 3. Strengthen postconditions:
+
 ```rust
 ensures
     self@.value <= 100,  // Add explicit bound
@@ -42,6 +47,7 @@ ensures
 ### 2. Type Errors
 
 #### Symptom
+
 ```rust
 error: type mismatch
    |
@@ -50,18 +56,22 @@ error: type mismatch
 ```
 
 #### Solutions
+
 1. Add type conversions:
+
 ```rust
 ensures
     ret as nat == self@.value  // Add conversion
 ```
 
 2. Use correct types:
+
 ```rust
 type V = (Seq<T>, usize)  // Use correct type
 ```
 
 3. Handle type bounds:
+
 ```rust
 requires
     index as nat < self@.len()  // Add conversion
@@ -70,6 +80,7 @@ requires
 ### 3. Proof Failures
 
 #### Symptom
+
 ```rust
 error: proof obligation not satisfied
    |
@@ -78,7 +89,9 @@ error: proof obligation not satisfied
 ```
 
 #### Solutions
+
 1. Add intermediate assertions:
+
 ```rust
 proof {
     assert(self.head < self.ring.len());  // Add step
@@ -88,6 +101,7 @@ proof {
 ```
 
 2. Use appropriate lemmas:
+
 ```rust
 proof {
     lemma_mod_auto(self@.1 as int);  // Add lemma
@@ -95,6 +109,7 @@ proof {
 ```
 
 3. Break down complex proofs:
+
 ```rust
 proof {
     // Step 1: Prove bounds
@@ -129,6 +144,7 @@ graph TD
 ## Common Patterns
 
 ### 1. Missing Invariants
+
 ```rust
 // Problem
 pub fn increment(&mut self) -> bool {
@@ -153,6 +169,7 @@ pub fn increment(&mut self) -> bool
 ```
 
 ### 2. Type Mismatches
+
 ```rust
 // Problem
 ensures
@@ -165,6 +182,7 @@ ensures
 ```
 
 ### 3. Incomplete Proofs
+
 ```rust
 // Problem
 proof {
@@ -187,6 +205,7 @@ proof {
 ## Debugging Techniques
 
 ### 1. Isolate Issues
+
 ```rust
 // Break down complex functions
 fn complex_operation(&mut self) {
@@ -200,6 +219,7 @@ fn complex_operation(&mut self) {
 ```
 
 ### 2. Add Assertions
+
 ```rust
 proof {
     // Add intermediate checks
@@ -212,6 +232,7 @@ proof {
 ```
 
 ### 3. Use Debug Output
+
 ```rust
 self.logger.debug(f"Current state: {self.value}");
 self.logger.debug(f"Operation result: {result}");
@@ -286,12 +307,14 @@ self.logger.debug(f"Operation result: {result}");
 ## Conclusion
 
 This guide covered:
+
 - Common issues
 - Solutions
 - Prevention
 - Best practices
 
 Remember:
+
 1. Start simple
 2. Build gradually
 3. Test thoroughly

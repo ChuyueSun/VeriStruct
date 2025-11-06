@@ -41,9 +41,7 @@ def write_and_verify_file(file_path: Path, content: str, logger) -> bool:
     """Helper function to write content to a file and verify the write was successful."""
     file_path.write_text(content)
     if file_path.exists():
-        logger.info(
-            f"Saved file to {file_path} (size: {file_path.stat().st_size} bytes)"
-        )
+        logger.info(f"Saved file to {file_path} (size: {file_path.stat().st_size} bytes)")
         return True
     else:
         logger.warning(f"Failed to write file: {file_path}")
@@ -53,9 +51,7 @@ def write_and_verify_file(file_path: Path, content: str, logger) -> bool:
 def handle_checkpoint_best(context, output_dir, file_id, progress_logger, logger):
     """Handle the checkpoint best code and score logic."""
     checkpoint_best_code = context.get_best_code()
-    logger.debug(
-        f"Main - Final checkpoint_best_code is None: {checkpoint_best_code is None}"
-    )
+    logger.debug(f"Main - Final checkpoint_best_code is None: {checkpoint_best_code is None}")
 
     if not checkpoint_best_code:
         final_score = context.trials[-1].eval.get_score()
@@ -123,14 +119,10 @@ def handle_checkpoint_best(context, output_dir, file_id, progress_logger, logger
             checkpoint_best_with_score,
             logger,
         )
-        write_and_verify_file(
-            output_dir / "final_result.rs", checkpoint_best_with_score, logger
-        )
+        write_and_verify_file(output_dir / "final_result.rs", checkpoint_best_with_score, logger)
         progress_logger.record_final_result(checkpoint_best_score, checkpoint_best_code)
     else:
-        write_and_verify_file(
-            output_dir / "final_result.rs", context.trials[-1].code, logger
-        )
+        write_and_verify_file(output_dir / "final_result.rs", context.trials[-1].code, logger)
         progress_logger.record_final_result(final_score, final_code)
 
 
@@ -159,9 +151,7 @@ def main():
             logger.info(f"Verus path set to: {verus.verus_path}")
             # Also set as environment variable for modules to access
             os.environ["VERUS_PATH"] = str(config["verus_path"])
-            logger.info(
-                f"VERUS_PATH environment variable set to: {os.environ['VERUS_PATH']}"
-            )
+            logger.info(f"VERUS_PATH environment variable set to: {os.environ['VERUS_PATH']}")
         else:
             logger.warning("verus_path not found in configuration")
     except Exception as e:
@@ -198,9 +188,7 @@ def main():
         if (sample_code.find("Option<Box<") != -1 and sample_code.find("TreeMap") == -1)
         else "false"
     )
-    logger.info(
-        f"Should add Option guidelines: {os.environ['VERUS_ADD_OPT_GUIDELINES']}"
-    )
+    logger.info(f"Should add Option guidelines: {os.environ['VERUS_ADD_OPT_GUIDELINES']}")
 
     # Check for baseline mode early to skip preprocessing
     baseline_mode = os.environ.get("VERUS_BASELINE_MODE", "0") == "1"
@@ -409,9 +397,7 @@ def main():
                 f"// Baseline VEval Score: {baseline_score}\n"
                 f"// Verified: {baseline_score.verified}, Errors: {baseline_score.errors}, Verus Errors: {baseline_score.verus_errors}"
             )
-            write_and_verify_file(
-                baseline_output_path, baseline_result_with_score, logger
-            )
+            write_and_verify_file(baseline_output_path, baseline_result_with_score, logger)
         else:
             write_and_verify_file(baseline_output_path, baseline_result, logger)
 
@@ -419,9 +405,7 @@ def main():
 
         # Log baseline progress
         if context.trials and context.trials[-1].eval:
-            progress_logger.end_step(
-                context.trials[-1].eval.get_score(), len(baseline_result)
-            )
+            progress_logger.end_step(context.trials[-1].eval.get_score(), len(baseline_result))
 
         # Handle checkpoint best code
         handle_checkpoint_best(context, output_dir, file_id, progress_logger, logger)
@@ -530,9 +514,7 @@ def main():
     for module_name in execution_order:
         # Ensure the module exists
         if module_name not in context.modules:
-            logger.warning(
-                f"Module '{module_name}' not found in registered modules. Skipping."
-            )
+            logger.warning(f"Module '{module_name}' not found in registered modules. Skipping.")
             continue
 
         module = context.modules[module_name]
@@ -574,9 +556,7 @@ def main():
 
         # Log step progress
         if context.trials and context.trials[-1].eval:
-            progress_logger.end_step(
-                context.trials[-1].eval.get_score(), len(step_result)
-            )
+            progress_logger.end_step(context.trials[-1].eval.get_score(), len(step_result))
 
         step_number += 1
 
@@ -648,9 +628,7 @@ def main():
                     f"Round {current_round}: No repairs were completed in {repair_round_time:.2f}s"
                 )
                 progress_logger.end_repair_round()
-                logger.info(
-                    "Continuing to next repair round even though no repairs were made..."
-                )
+                logger.info("Continuing to next repair round even though no repairs were made...")
 
             # Get the new failures after repairs
             last_trial = context.trials[-1]
@@ -710,13 +688,9 @@ def main():
                 f"// Verified: {round_score.verified}, Errors: {round_score.errors}, Verus Errors: {round_score.verus_errors}"
             )
 
-            repair_round_path = (
-                output_dir / f"repair_round_{current_round-1}_{file_id}.rs"
-            )
+            repair_round_path = output_dir / f"repair_round_{current_round-1}_{file_id}.rs"
             write_and_verify_file(repair_round_path, round_result_with_score, logger)
-            logger.info(
-                f"Repair round {current_round-1} result saved to {repair_round_path}"
-            )
+            logger.info(f"Repair round {current_round-1} result saved to {repair_round_path}")
 
             # After three consecutive rounds with no improvement and score worse than original,
             # fallback to the best repair we've seen
@@ -760,9 +734,7 @@ def main():
                     f"// Verified: {fallback_score.verified}, Errors: {fallback_score.errors}, Verus Errors: {fallback_score.verus_errors}"
                 )
 
-                fallback_path = (
-                    output_dir / f"fallback_result_{current_round-1}_{file_id}.rs"
-                )
+                fallback_path = output_dir / f"fallback_result_{current_round-1}_{file_id}.rs"
                 write_and_verify_file(fallback_path, fallback_with_score, logger)
                 logger.info(f"Fallback result saved to {fallback_path}")
 
@@ -775,9 +747,7 @@ def main():
                 and all(failure.error.name == "Other" for failure in failures)
                 and not repair_results
             ):
-                logger.info(
-                    "Only 'Other' type errors remain. Attempting fallback strategy..."
-                )
+                logger.info("Only 'Other' type errors remain. Attempting fallback strategy...")
 
                 # Find the best trial among trials generated in the spec_inference
                 # stage or later. Earlier trials are often structurally incomplete
@@ -787,14 +757,10 @@ def main():
                 best_trial = None
                 best_score = None
 
-                search_start = (
-                    spec_trial_start_index if spec_trial_start_index is not None else 1
-                )
+                search_start = spec_trial_start_index if spec_trial_start_index is not None else 1
 
                 for trial in context.trials[search_start:]:
-                    if trial.eval and (
-                        best_score is None or trial.eval.get_score() > best_score
-                    ):
+                    if trial.eval and (best_score is None or trial.eval.get_score() > best_score):
                         best_score = trial.eval.get_score()
                         best_trial = trial
 
@@ -825,9 +791,7 @@ def main():
                     failures = fallback_trial.eval.get_failures()
 
                     # Log the fallback
-                    logger.info(
-                        f"Fallback complete. New failure count: {len(failures)}"
-                    )
+                    logger.info(f"Fallback complete. New failure count: {len(failures)}")
 
                     # Save the fallback result
                     fallback_code = fallback_trial.code
@@ -840,9 +804,7 @@ def main():
                         f"// Verified: {fallback_score.verified}, Errors: {fallback_score.errors}, Verus Errors: {fallback_score.verus_errors}"
                     )
 
-                    fallback_path = (
-                        output_dir / f"fallback_result_{current_round-1}_{file_id}.rs"
-                    )
+                    fallback_path = output_dir / f"fallback_result_{current_round-1}_{file_id}.rs"
                     write_and_verify_file(fallback_path, fallback_with_score, logger)
                     logger.info(f"Fallback result saved to {fallback_path}")
 
@@ -893,9 +855,7 @@ def main():
     logger.info(f"{'OUTPUT FILE SUMMARY':^70}")
     logger.info("=" * 70)
     logger.info(f"Input File: {test_file_path.absolute()}")
-    logger.info(
-        f"Final Result (with timestamp): {output_dir / f'final_result_{file_id}.rs'}"
-    )
+    logger.info(f"Final Result (with timestamp): {output_dir / f'final_result_{file_id}.rs'}")
     logger.info(
         f"Final Result (by input name): {output_dir / f'final_result_{input_file_base}.rs'}"
     )
@@ -907,9 +867,7 @@ def main():
 
     # Show progress logs
     logger.info(f"Progress Logs: {progress_logger.log_file}")
-    logger.info(
-        f"Summary: {progress_logger.log_dir / f'summary_{progress_logger.file_id}.txt'}"
-    )
+    logger.info(f"Summary: {progress_logger.log_dir / f'summary_{progress_logger.file_id}.txt'}")
     logger.info("=" * 70)
 
 

@@ -29,9 +29,7 @@ def main():
         # Validate that the benchmark exists
         todo_file = f"benchmarks-complete/{args.benchmark}.rs"
         if not os.path.exists(todo_file):
-            print(
-                f"Error: Benchmark '{args.benchmark}' not found. Expected file: {todo_file}"
-            )
+            print(f"Error: Benchmark '{args.benchmark}' not found. Expected file: {todo_file}")
             print("Available benchmarks:")
             for todo_path in glob.glob("benchmarks-complete/*_todo.rs"):
                 name = os.path.splitext(os.path.basename(todo_path))[0]
@@ -67,9 +65,7 @@ def main():
             try:
                 subprocess.run(cmd, check=True, text=True, shell=True)
             except subprocess.CalledProcessError:
-                print(
-                    f"Error running {benchmark_name} with {cfg}, see {log_file} for details"
-                )
+                print(f"Error running {benchmark_name} with {cfg}, see {log_file} for details")
 
 
 if __name__ == "__main__":

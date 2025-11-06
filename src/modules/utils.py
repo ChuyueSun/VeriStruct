@@ -103,9 +103,7 @@ def evaluate_samples(
             scores.append(score)
 
             # Write the sample with its score
-            write_candidate_code(
-                sample, veval, score, output_dir, prefix, i + 1, logger
-            )
+            write_candidate_code(sample, veval, score, output_dir, prefix, i + 1, logger)
 
             # Log the score details
             logger.info(f"Sample {i+1} score: {score}")
@@ -168,9 +166,7 @@ def save_selection_info(
 
         # Also note the best sample file path
         best_sample_path = f"{output_dir}/{prefix}_sample_{best_idx}.rs"
-        logger.info(
-            f"Best {prefix} sample was #{best_idx}, located at {best_sample_path}"
-        )
+        logger.info(f"Best {prefix} sample was #{best_idx}, located at {best_sample_path}")
     except Exception as e:
         logger.error(f"Error saving selection details: {e}")
 
@@ -277,9 +273,7 @@ def update_checkpoint_best(
     # Debug logging
     logger.debug(f"update_checkpoint_best - Candidate score: {score}")
     logger.debug(f"update_checkpoint_best - Current best score: {best_score_of_all}")
-    logger.debug(
-        f"update_checkpoint_best - Has best code: {best_code_of_all is not None}"
-    )
+    logger.debug(f"update_checkpoint_best - Has best code: {best_code_of_all is not None}")
 
     # Make sure the directory exists
     if not temp_dir.exists():
@@ -300,9 +294,7 @@ def update_checkpoint_best(
     # Compare scores
     try:
         is_better = score > best_score_of_all
-        logger.debug(
-            f"update_checkpoint_best - Candidate is better than current best: {is_better}"
-        )
+        logger.debug(f"update_checkpoint_best - Candidate is better than current best: {is_better}")
     except Exception as e:
         logger.error(f"Error comparing scores: {e}")
         is_better = False
@@ -482,10 +474,8 @@ def fix_one_type_error_in_code(code, err_trace, verbose=True):
     # TODO: this is a hack, we should fix the mutability mismatch in the code instead.
     if err_label is not None and (
         "no method named `view` found for struct" in err_label
-        or "cannot call function `vstd::atomic_ghost::impl&%21::load` with mode exec"
-        in err_label
-        or "cannot call function `vstd::atomic_ghost::impl&%21::store` with mode exec"
-        in err_label
+        or "cannot call function `vstd::atomic_ghost::impl&%21::load` with mode exec" in err_label
+        or "cannot call function `vstd::atomic_ghost::impl&%21::store` with mode exec" in err_label
         or "no field `ghost` on type" in err_label
     ):
         err_lnum = err_trace.get_lines()[0]
@@ -497,9 +487,7 @@ def fix_one_type_error_in_code(code, err_trace, verbose=True):
 
         logger.info(f"Error label: {err_label}")
         # Drop that line from the source.
-        new_code_lines = [
-            line for idx, line in enumerate(code.splitlines()) if idx != linenum
-        ]
+        new_code_lines = [line for idx, line in enumerate(code.splitlines()) if idx != linenum]
         if verbose:
             sys.stderr.write(
                 f"[fix_one_type_error_in_code] removed line {err_lnum} due to mutability mismatch.\n"
@@ -530,9 +518,7 @@ def fix_one_type_error_in_code(code, err_trace, verbose=True):
             newlines.append(line)
         else:
             if not err_exp in line:
-                sys.stderr.write(
-                    "Fatal error: `" + err_exp + "' does not exist in " + line
-                )
+                sys.stderr.write("Fatal error: `" + err_exp + "' does not exist in " + line)
                 return ""
             if err_exp != line[cstart : cend + 1]:
                 sys.stderr.write(
@@ -593,24 +579,17 @@ def debug_type_error(code: str, verus_error=None, num=1, logger=None) -> tuple:
 
     # Handle dummy mode - if verus_error is a string rather than a VerusError object
     if isinstance(verus_error, str):
-        logger.warning(
-            "Received string error in dummy mode instead of VerusError object"
-        )
+        logger.warning("Received string error in dummy mode instead of VerusError object")
         return code, 0
 
     if verus_error:
         # fix the reported one
-        if (
-            not hasattr(verus_error, "error")
-            or verus_error.error != VerusErrorType.MismatchedType
-        ):
+        if not hasattr(verus_error, "error") or verus_error.error != VerusErrorType.MismatchedType:
             logger.warning(
                 f"Warning: a non type error is passed to debug_type_error: {getattr(verus_error, 'error', 'unknown')}"
             )
         else:
-            newcode = fix_one_type_error_in_code(
-                code, verus_error.trace[0], verbose=False
-            )
+            newcode = fix_one_type_error_in_code(code, verus_error.trace[0], verbose=False)
             if newcode:
                 code = newcode
 
@@ -633,14 +612,9 @@ def debug_type_error(code: str, verus_error=None, num=1, logger=None) -> tuple:
                 logger.warning(f"Skipping string failure in dummy mode: {cur_failure}")
                 continue
 
-            if (
-                hasattr(cur_failure, "error")
-                and cur_failure.error == VerusErrorType.MismatchedType
-            ):
+            if hasattr(cur_failure, "error") and cur_failure.error == VerusErrorType.MismatchedType:
                 has_typeerr = True
-                newcode = fix_one_type_error_in_code(
-                    code, cur_failure.trace[0], verbose=False
-                )
+                newcode = fix_one_type_error_in_code(code, cur_failure.trace[0], verbose=False)
                 # when newcode is "", the above function failed to fix any type error
                 if newcode:
                     fixed_typeerr = True
@@ -746,9 +720,7 @@ def get_nonlinear_lines(code, logger):
                 return lines
             else:
                 if logger:
-                    logger.warning(
-                        f"Lynette nonlinear detection failed: {result.stderr}"
-                    )
+                    logger.warning(f"Lynette nonlinear detection failed: {result.stderr}")
                 return []
 
     except Exception as e:
@@ -783,9 +755,7 @@ def code_change_is_safe(
         changed_body = get_func_body(changed_code, func_name, util_path, logger)
 
         if origin_body is None or changed_body is None:
-            logger.warning(
-                f"Could not compare immutable function '{func_name}'. Assuming unsafe."
-            )
+            logger.warning(f"Could not compare immutable function '{func_name}'. Assuming unsafe.")
             return False
 
         origin = remove_rust_comments(origin_body)
@@ -811,11 +781,7 @@ def code_change_is_safe(
         if util_path is None:
             # Use default path calculation
             cargopath = (
-                Path(__file__).parent.parent.parent
-                / "utils"
-                / "lynette"
-                / "source"
-                / "Cargo.toml"
+                Path(__file__).parent.parent.parent / "utils" / "lynette" / "source" / "Cargo.toml"
             )
             cargopath = str(cargopath.resolve())
         else:
@@ -824,11 +790,7 @@ def code_change_is_safe(
         if not os.path.exists(cargopath):
             # Attempt relative path from src/modules/utils.py if absolute fails
             cargopath = (
-                Path(__file__).parent.parent.parent
-                / "utils"
-                / "lynette"
-                / "source"
-                / "Cargo.toml"
+                Path(__file__).parent.parent.parent / "utils" / "lynette" / "source" / "Cargo.toml"
             )
             if not cargopath.exists():
                 logger.warning(
@@ -849,9 +811,7 @@ def code_change_is_safe(
             + [orig_f.name, changed_f.name]
         )
 
-        m = subprocess.run(
-            verus_compare_cmd, capture_output=True, text=True, timeout=30
-        )
+        m = subprocess.run(verus_compare_cmd, capture_output=True, text=True, timeout=30)
         logger.info(f"Lynette comparison output: {m.stdout}")
         logger.info(f"Lynette comparison error: {m.stderr}")
         logger.info(f"Lynette comparison return code: {m.returncode}")
@@ -919,9 +879,7 @@ def get_func_body(code, fname, util_path=None, logger=None):
         # Debug: Log the exact file path and working directory
         logger.info(f"Absolute path: {os.path.abspath(orig_f.name)}")
 
-        m = subprocess.run(
-            lynette_extract_cmd, capture_output=True, text=True, cwd=os.getcwd()
-        )
+        m = subprocess.run(lynette_extract_cmd, capture_output=True, text=True, cwd=os.getcwd())
         # logger.info(f"Lynette extract command: {lynette_extract_cmd}")
         # logger.info(f"Lynette extract output: {m.stdout}")
         # logger.info(f"Lynette extract error: {m.stderr}")
@@ -952,9 +910,7 @@ def get_func_body(code, fname, util_path=None, logger=None):
 
 def evaluate(code, verus_path, func_name=None):
     """Simple Verus evaluation, returns score tuple and subprocess result."""
-    fn = tempfile.NamedTemporaryFile(
-        mode="w", delete=False, prefix="llm4v_eval", suffix=".rs"
-    )
+    fn = tempfile.NamedTemporaryFile(mode="w", delete=False, prefix="llm4v_eval", suffix=".rs")
     fn.write(code)
     fn.close()
 
@@ -987,11 +943,7 @@ def compress_nl_assertion(code):
     new_code = ""
     for line in lines:
         if not inside:
-            if (
-                line.strip().startswith("assert")
-                and "by" in line
-                and "nonlinear_arith" in line
-            ):
+            if line.strip().startswith("assert") and "by" in line and "nonlinear_arith" in line:
                 inside = True
                 tmp_line += line
             else:
@@ -1058,9 +1010,7 @@ def insert_loop_isolation(code):
         print("No verus! found in the code.")
         return code
     insert_line = "\n#[verifier::loop_isolation(false)]"
-    new_code = "\n".join(
-        lines[: verus_line + 1] + [insert_line] + lines[verus_line + 1 :]
-    )
+    new_code = "\n".join(lines[: verus_line + 1] + [insert_line] + lines[verus_line + 1 :])
     return new_code
 
 
@@ -1398,9 +1348,7 @@ def parse_plan_execution_order(
 
     if not steps_section:
         if logger:
-            logger.warning(
-                "No Execution Steps section found in plan, using default workflow"
-            )
+            logger.warning("No Execution Steps section found in plan, using default workflow")
         # Sensible default: do view inference, then specs, then proof generation
         return ["view_inference", "spec_inference", "proof_generation"]
 
@@ -1417,9 +1365,7 @@ def parse_plan_execution_order(
 
     if not execution_steps:
         if logger:
-            logger.warning(
-                "No valid execution steps found in plan, using default workflow"
-            )
+            logger.warning("No valid execution steps found in plan, using default workflow")
         return ["view_inference", "spec_inference", "proof_generation"]
 
     if logger:

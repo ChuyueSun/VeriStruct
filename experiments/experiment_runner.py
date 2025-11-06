@@ -50,9 +50,7 @@ class ExperimentMetricsCollector:
         initial_trial = context.trials[0] if context.trials else None
 
         if not final_trial:
-            return self._create_failed_run_metrics(
-                benchmark_name, category, elapsed_seconds
-            )
+            return self._create_failed_run_metrics(benchmark_name, category, elapsed_seconds)
 
         final_eval = final_trial.eval
         initial_eval = initial_trial.eval if initial_trial else None
@@ -61,9 +59,7 @@ class ExperimentMetricsCollector:
         robustness = {
             "success": not final_eval.compilation_error and final_eval.errors == 0,
             "modules_completed": self._count_completed_modules(context),
-            "errors_encountered": len(final_eval.verus_errors)
-            if final_eval.verus_errors
-            else 0,
+            "errors_encountered": len(final_eval.verus_errors) if final_eval.verus_errors else 0,
             "errors_repaired": self._count_repaired_errors(context),
             "safety_checks_passed": self._count_safety_checks(context, passed=True),
             "safety_checks_failed": self._count_safety_checks(context, passed=False),
@@ -84,16 +80,12 @@ class ExperimentMetricsCollector:
         }
 
         cost["cache_hit_rate"] = (
-            cost["cache_hits"] / max(cost["api_calls"], 1)
-            if cost["api_calls"] > 0
-            else 0.0
+            cost["cache_hits"] / max(cost["api_calls"], 1) if cost["api_calls"] > 0 else 0.0
         )
 
         # Effectiveness metrics
         initial_errors = (
-            len(initial_eval.verus_errors)
-            if initial_eval and initial_eval.verus_errors
-            else 0
+            len(initial_eval.verus_errors) if initial_eval and initial_eval.verus_errors else 0
         )
         final_errors = len(final_eval.verus_errors) if final_eval.verus_errors else 0
 
@@ -107,18 +99,12 @@ class ExperimentMetricsCollector:
                 else 0.0
             ),
             "verification_success": final_eval.errors == 0,
-            "verified_functions": final_eval.verified
-            if hasattr(final_eval, "verified")
-            else 0,
+            "verified_functions": final_eval.verified if hasattr(final_eval, "verified") else 0,
             "veval_score": {
                 "compilation_error": final_eval.compilation_error,
-                "verified": final_eval.verified
-                if hasattr(final_eval, "verified")
-                else 0,
+                "verified": final_eval.verified if hasattr(final_eval, "verified") else 0,
                 "errors": final_eval.errors,
-                "verus_errors": len(final_eval.verus_errors)
-                if final_eval.verus_errors
-                else 0,
+                "verus_errors": len(final_eval.verus_errors) if final_eval.verus_errors else 0,
             },
         }
 
@@ -162,14 +148,10 @@ class ExperimentMetricsCollector:
             return 0
 
         initial_errors = (
-            len(context.trials[0].eval.verus_errors)
-            if context.trials[0].eval.verus_errors
-            else 0
+            len(context.trials[0].eval.verus_errors) if context.trials[0].eval.verus_errors else 0
         )
         final_errors = (
-            len(context.trials[-1].eval.verus_errors)
-            if context.trials[-1].eval.verus_errors
-            else 0
+            len(context.trials[-1].eval.verus_errors) if context.trials[-1].eval.verus_errors else 0
         )
 
         return max(0, initial_errors - final_errors)
@@ -245,10 +227,7 @@ class ExperimentMetricsCollector:
         input_tokens = self._sum_input_tokens(context)
         output_tokens = self._sum_output_tokens(context)
 
-        cost = (
-            input_tokens / 1000 * INPUT_COST_PER_1K
-            + output_tokens / 1000 * OUTPUT_COST_PER_1K
-        )
+        cost = input_tokens / 1000 * INPUT_COST_PER_1K + output_tokens / 1000 * OUTPUT_COST_PER_1K
 
         return round(cost, 4)
 
@@ -428,13 +407,9 @@ def main():
         "--corpus", type=Path, required=True, help="Path to benchmark corpus JSON file"
     )
 
-    parser.add_argument(
-        "--experiment-name", type=str, required=True, help="Name of the experiment"
-    )
+    parser.add_argument("--experiment-name", type=str, required=True, help="Name of the experiment")
 
-    parser.add_argument(
-        "--config", type=str, default="config-azure", help="Config name to use"
-    )
+    parser.add_argument("--config", type=str, default="config-azure", help="Config name to use")
 
     parser.add_argument(
         "--output-dir",
@@ -443,13 +418,9 @@ def main():
         help="Base output directory for results",
     )
 
-    parser.add_argument(
-        "--repair-rounds", type=int, default=5, help="Number of repair rounds"
-    )
+    parser.add_argument("--repair-rounds", type=int, default=5, help="Number of repair rounds")
 
-    parser.add_argument(
-        "--limit", type=int, help="Limit number of benchmarks to run (for testing)"
-    )
+    parser.add_argument("--limit", type=int, help="Limit number of benchmarks to run (for testing)")
 
     args = parser.parse_args()
 

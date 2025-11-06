@@ -95,6 +95,7 @@ python experiment_runner.py \
 ```
 
 **What it does:**
+
 - Runs VerusAgent on each benchmark in the corpus
 - Collects metrics: robustness, cost, effectiveness
 - Handles timeouts (30 minutes per benchmark)
@@ -170,6 +171,7 @@ A benchmark corpus is a JSON file defining the benchmarks to test:
 ```
 
 **Categories** (from EXPERIMENT_PLAN.md):
+
 - `simple_data_structures` - Basic data structures
 - `complex_data_structures` - Trees, maps, advanced structures
 - `algorithms` - Sorting, searching, traversal
@@ -300,6 +302,7 @@ The analyzer performs several statistical tests:
 ### Hypothesis Testing
 
 **Success Rate Test:**
+
 - H₀: Success rate ≤ 50% (no better than baseline)
 - H₁: Success rate > 50%
 - Test: One-sample proportion test
@@ -308,6 +311,7 @@ The analyzer performs several statistical tests:
 ### Confidence Intervals
 
 95% confidence intervals are computed for:
+
 - Success rate (binomial confidence interval)
 - Mean cost (bootstrap or t-distribution)
 - Mean time (t-distribution)
@@ -315,6 +319,7 @@ The analyzer performs several statistical tests:
 ### Comparison Tests
 
 When comparing configurations:
+
 - **Mann-Whitney U test**: Compare distributions (non-parametric)
 - **Kruskal-Wallis H test**: Compare >2 groups
 - **Paired t-test**: Before/after on same benchmarks

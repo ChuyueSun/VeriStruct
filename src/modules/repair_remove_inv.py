@@ -45,13 +45,9 @@ class RepairRemoveInv(BaseRepairModule):
         # If a specific failure isn't provided, try to get one from the last trial
         if failure_to_fix is None:
             last_trial = context.trials[-1]
-            failures = last_trial.eval.get_failures(
-                error_type=VerusErrorType.require_private
-            )
+            failures = last_trial.eval.get_failures(error_type=VerusErrorType.require_private)
             if not failures:
-                failures = last_trial.eval.get_failures(
-                    error_type=VerusErrorType.ensure_private
-                )
+                failures = last_trial.eval.get_failures(error_type=VerusErrorType.ensure_private)
 
             if not failures:
                 self.logger.warning("No inv-related failures found in the last trial.")
@@ -121,7 +117,6 @@ Respond with the full corrected code only."""
             responses = result[0] if isinstance(result, tuple) else result
 
         else:
-
             responses = self.llm.infer_llm(
                 engine=self.config.get("aoai_generation_model", "gpt-4"),
                 instruction=instruction,

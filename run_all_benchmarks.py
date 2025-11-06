@@ -134,16 +134,13 @@ def main():
     print("DETAILED RESULTS:")
     print("-" * 80)
     for name, status, elapsed, log_file in sorted(results):
-        status_icon = {"SUCCESS": "✅", "FAILED": "❌", "TIMEOUT": "⏱️", "ERROR": "❌"}[
-            status
-        ]
+        status_icon = {"SUCCESS": "✅", "FAILED": "❌", "TIMEOUT": "⏱️", "ERROR": "❌"}[status]
         print(f"{status_icon} {name:30s} {status:10s} {elapsed:8.1f}s  {log_file}")
     print("=" * 80)
 
     # Create summary file
     summary_file = (
-        PROJECT_ROOT
-        / f"benchmark_summary_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
+        PROJECT_ROOT / f"benchmark_summary_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
     )
     with open(summary_file, "w") as f:
         f.write("VERUSAGENT PARALLEL BENCHMARK RUN SUMMARY\n")

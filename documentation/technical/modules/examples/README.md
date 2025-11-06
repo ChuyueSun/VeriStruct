@@ -7,14 +7,18 @@ This directory contains detailed examples showing how VerusAgent modules process
 ## Examples
 
 ### 1. [RingBuffer](rb_type_invariant.md)
+
 A circular buffer implementation demonstrating:
+
 - Sequence abstraction
 - Wrap-around operations
 - Capacity management
 - Index bounds verification
 
 ### 2. [BitMap](bitmap.md)
+
 A bit vector implementation showing:
+
 - Bit-level operations
 - Mathematical mapping
 - Macro integration
@@ -33,28 +37,34 @@ A bit vector implementation showing:
 ## Module Processing
 
 ### View Inference
+
 - RingBuffer: Sequence + capacity abstraction
 - BitMap: Boolean sequence abstraction
 
 ### View Refinement
+
 - RingBuffer: Maintains dual representation
 - BitMap: Uses flat boolean sequence
 
 ### Invariant Inference
+
 - RingBuffer: Explicit structural invariants
 - BitMap: Relies on Vec invariants
 
 ### Specification Inference
+
 - RingBuffer: State transition specs
 - BitMap: Bit operation specs
 
 ### Proof Generation
+
 - RingBuffer: State consistency proofs
 - BitMap: Operation correctness proofs
 
 ## Verification Patterns
 
 ### 1. State Management
+
 ```rust
 // RingBuffer: State transitions
 ensures
@@ -67,6 +77,7 @@ ensures
 ```
 
 ### 2. Operation Verification
+
 ```rust
 // RingBuffer: Sequence operations
 proof {
@@ -81,6 +92,7 @@ proof {
 ```
 
 ### 3. Abstraction Mapping
+
 ```rust
 // RingBuffer: Wrap-around handling
 if self.tail >= self.head {

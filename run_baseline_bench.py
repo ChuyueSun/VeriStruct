@@ -115,9 +115,7 @@ def run_single_baseline(
             print(f"  ✓ Completed in {elapsed_time:.1f}s")
         else:
             stats["success"] = False
-            print(
-                f"  ✗ Failed (exit code: {result.returncode}) after {elapsed_time:.1f}s"
-            )
+            print(f"  ✗ Failed (exit code: {result.returncode}) after {elapsed_time:.1f}s")
 
     except subprocess.TimeoutExpired:
         stats["timeout"] = True
@@ -145,9 +143,7 @@ def collect_summary_stats(all_stats: list) -> dict:
     timeouts = sum(1 for s in all_stats if s["timeout"])
     errors = sum(1 for s in all_stats if s["error"])
 
-    execution_times = [
-        s["execution_time"] for s in all_stats if s["execution_time"] > 0
-    ]
+    execution_times = [s["execution_time"] for s in all_stats if s["execution_time"] > 0]
 
     summary = {
         "total_benchmarks": total_benchmarks,
@@ -155,9 +151,7 @@ def collect_summary_stats(all_stats: list) -> dict:
         "failed": total_benchmarks - successful,
         "timeouts": timeouts,
         "errors": errors,
-        "success_rate": (successful / total_benchmarks * 100)
-        if total_benchmarks > 0
-        else 0,
+        "success_rate": (successful / total_benchmarks * 100) if total_benchmarks > 0 else 0,
         "total_execution_time": sum(execution_times),
         "average_execution_time": sum(execution_times) / len(execution_times)
         if execution_times
@@ -171,9 +165,7 @@ def collect_summary_stats(all_stats: list) -> dict:
     return summary
 
 
-def save_statistics(
-    baseline_dir: Path, config_name: str, all_stats: list, summary: dict
-):
+def save_statistics(baseline_dir: Path, config_name: str, all_stats: list, summary: dict):
     """
     Save detailed statistics to JSON files.
 
@@ -229,9 +221,7 @@ def save_statistics(
             elif stat["error"]:
                 status = f"ERROR: {stat['error']}"
 
-            f.write(
-                f"{stat['benchmark']:<30} {status:<15} {stat['execution_time']:.1f}s\n"
-            )
+            f.write(f"{stat['benchmark']:<30} {status:<15} {stat['execution_time']:.1f}s\n")
 
     print(f"\nStatistics saved to {stats_dir}/")
 
@@ -256,12 +246,8 @@ def main():
         default="benchmarks-complete",
         help="Directory containing benchmark files",
     )
-    parser.add_argument(
-        "--pattern", default="*_todo.rs", help="Pattern for benchmark files"
-    )
-    parser.add_argument(
-        "--timeout", type=int, default=15, help="Timeout per benchmark in minutes"
-    )
+    parser.add_argument("--pattern", default="*_todo.rs", help="Pattern for benchmark files")
+    parser.add_argument("--timeout", type=int, default=15, help="Timeout per benchmark in minutes")
     parser.add_argument(
         "--max-benchmarks",
         type=int,

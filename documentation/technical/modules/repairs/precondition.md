@@ -109,6 +109,7 @@ graph TD
 ### 2. Repair Process
 
 1. Error Detection:
+
 ```python
 precond_failures = last_trial.eval.get_failures(
     error_type=VerusErrorType.PreCondFail
@@ -122,6 +123,7 @@ private_failures = last_trial.eval.get_failures(
 ```
 
 2. Error Analysis:
+
 ```python
 # Extract error information
 precond_trace, location_trace = failure_to_fix.trace[0], failure_to_fix.trace[1]
@@ -130,6 +132,7 @@ if location_trace.label == VerusErrorLabel.FailedThisPreCond:
 ```
 
 3. Proof Generation:
+
 ```python
 # Generate appropriate proofs
 proof {
@@ -144,24 +147,28 @@ proof {
 ## Features
 
 ### 1. Error Handling
+
 - General preconditions
 - Vector length checks
 - Private access rules
 - Visibility requirements
 
 ### 2. Proof Generation
+
 - Precondition proofs
 - Length requirements
 - Bounds checking
 - Access validation
 
 ### 3. Context Integration
+
 - Function preconditions
 - Loop invariants
 - Called functions
 - Type invariants
 
 ### 4. Result Management
+
 - Best result tracking
 - Sample preservation
 - Context updates
@@ -170,6 +177,7 @@ proof {
 ## Common Repairs
 
 ### 1. General Preconditions
+
 ```rust
 // Before
 fn_with_precond(x);
@@ -183,6 +191,7 @@ fn_with_precond(x);
 ```
 
 ### 2. Vector Length
+
 ```rust
 // Before
 vec[index] = value;
@@ -196,6 +205,7 @@ vec[index] = value;
 ```
 
 ### 3. Private Access
+
 ```rust
 // Before
 self.private_field.method();
@@ -237,6 +247,7 @@ self.private_field.method();
 ## Extension Points
 
 1. Error Handling:
+
 ```python
 def add_error_handler(self, error_type: str, handler: Callable):
     """Add new error handler."""
@@ -244,6 +255,7 @@ def add_error_handler(self, error_type: str, handler: Callable):
 ```
 
 2. Proof Generation:
+
 ```python
 def add_proof_template(self, template: str, conditions: List[str]):
     """Add new proof template."""
@@ -251,6 +263,7 @@ def add_proof_template(self, template: str, conditions: List[str]):
 ```
 
 3. Context Integration:
+
 ```python
 def add_context_source(self, source: str):
     """Add new context source."""
@@ -260,6 +273,7 @@ def add_context_source(self, source: str):
 ## Common Issues
 
 ### 1. Missing Preconditions
+
 ```rust
 // Problem: Unchecked precondition
 fn_requiring_positive(x);
@@ -272,6 +286,7 @@ fn_requiring_positive(x);
 ```
 
 ### 2. Vector Bounds
+
 ```rust
 // Problem: Unchecked bounds
 vec.set(i, val);
@@ -285,6 +300,7 @@ vec.set(i, val);
 ```
 
 ### 3. Private Access
+
 ```rust
 // Problem: Invalid access
 private_method();
@@ -300,12 +316,14 @@ private_method();
 ## Conclusion
 
 The Precondition Repair Module provides:
+
 1. Comprehensive error handling
 2. Intelligent proof generation
 3. Vector length management
 4. Access control verification
 
 Key strengths:
+
 1. Multiple error types
 2. Context awareness
 3. Safe repairs

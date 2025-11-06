@@ -188,9 +188,7 @@ def main():
     # Print success rate
     if "SUCCESS" in status_counts:
         success_rate = (status_counts["SUCCESS"] / len(results)) * 100
-        print(
-            f"\n✅ Success Rate: {success_rate:.1f}% ({status_counts['SUCCESS']}/{len(results)})"
-        )
+        print(f"\n✅ Success Rate: {success_rate:.1f}% ({status_counts['SUCCESS']}/{len(results)})")
 
 
 if __name__ == "__main__":

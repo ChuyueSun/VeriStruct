@@ -68,9 +68,7 @@ class ExperimentAnalyzer:
         # Success by category
         if "category" in df.columns:
             category_success = df.groupby("category").apply(
-                lambda g: g["robustness"]
-                .apply(lambda x: x.get("success", False))
-                .mean()
+                lambda g: g["robustness"].apply(lambda x: x.get("success", False)).mean()
             )
             results["success_by_category"] = category_success.to_dict()
 
@@ -79,9 +77,7 @@ class ExperimentAnalyzer:
             df["robustness"].apply(lambda x: x.get("compilation_success", False)).mean()
         )
         verification_success = (
-            df["robustness"]
-            .apply(lambda x: x.get("verification_success", False))
-            .mean()
+            df["robustness"].apply(lambda x: x.get("verification_success", False)).mean()
         )
 
         results["compilation_success_rate"] = compilation_success
@@ -133,9 +129,7 @@ class ExperimentAnalyzer:
         # Cost by category
         if "category" in df.columns:
             category_cost = df.groupby("category").apply(
-                lambda g: g["cost"]
-                .apply(lambda x: x.get("estimated_cost_usd", 0))
-                .mean()
+                lambda g: g["cost"].apply(lambda x: x.get("estimated_cost_usd", 0)).mean()
             )
             results["cost_by_category"] = category_cost.to_dict()
 
@@ -158,13 +152,9 @@ class ExperimentAnalyzer:
             lambda x: x.get("verification_success", False)
         )
 
-        improvement_rate = df_valid["effectiveness"].apply(
-            lambda x: x.get("improvement_rate", 0)
-        )
+        improvement_rate = df_valid["effectiveness"].apply(lambda x: x.get("improvement_rate", 0))
 
-        errors_reduced = df_valid["effectiveness"].apply(
-            lambda x: x.get("errors_reduced", 0)
-        )
+        errors_reduced = df_valid["effectiveness"].apply(lambda x: x.get("errors_reduced", 0))
 
         results = {
             "verification_success_rate": verification_success.mean(),
@@ -197,15 +187,10 @@ class ExperimentAnalyzer:
         if "category" in df.columns:
             plt.figure()
             success_by_cat = df.groupby("category").apply(
-                lambda g: g["robustness"]
-                .apply(lambda x: x.get("success", False))
-                .mean()
-                * 100
+                lambda g: g["robustness"].apply(lambda x: x.get("success", False)).mean() * 100
             )
             success_by_cat.plot(kind="bar", color="steelblue")
-            plt.title(
-                "Success Rate by Benchmark Category", fontsize=14, fontweight="bold"
-            )
+            plt.title("Success Rate by Benchmark Category", fontsize=14, fontweight="bold")
             plt.ylabel("Success Rate (%)")
             plt.xlabel("Category")
             plt.xticks(rotation=45, ha="right")
@@ -253,9 +238,7 @@ class ExperimentAnalyzer:
 
         # 5. Success/Failure pie chart
         plt.figure()
-        success_counts = (
-            df["robustness"].apply(lambda x: x.get("success", False)).value_counts()
-        )
+        success_counts = df["robustness"].apply(lambda x: x.get("success", False)).value_counts()
         colors = ["#90EE90", "#FFB6C1"]  # Light green and light red
         plt.pie(
             success_counts.values,
@@ -439,7 +422,9 @@ formal verification for Rust/Verus code.
 """
 
         if p_value < 0.05:
-            report += "The success rate is **statistically significantly better than random chance**.\n\n"
+            report += (
+                "The success rate is **statistically significantly better than random chance**.\n\n"
+            )
         else:
             report += "The success rate is **not statistically significantly better than random chance**.\n\n"
 
@@ -463,20 +448,14 @@ Based on the experimental results, we recommend:
         if cost["cost_usd"]["mean"] < 5:
             report += "2. ✓ **Cost is reasonable** for automation value provided\n"
         else:
-            report += (
-                "2. ⚠ **Cost optimization recommended** to improve cost-effectiveness\n"
-            )
+            report += "2. ⚠ **Cost optimization recommended** to improve cost-effectiveness\n"
 
         if cost["cache"]["mean_hit_rate"] < 0.5:
-            report += (
-                "3. ⚠ **Enable caching** to reduce costs and improve performance\n"
-            )
+            report += "3. ⚠ **Enable caching** to reduce costs and improve performance\n"
 
         if "success_by_category" in robustness:
             weak_categories = [
-                cat
-                for cat, rate in robustness["success_by_category"].items()
-                if rate < 0.5
+                cat for cat, rate in robustness["success_by_category"].items() if rate < 0.5
             ]
             if weak_categories:
                 report += f"4. 🎯 **Focus improvement efforts** on: {', '.join(weak_categories)}\n"
@@ -516,9 +495,7 @@ Based on the experimental results, we recommend:
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Analyze VerusAgent experimental results"
-    )
+    parser = argparse.ArgumentParser(description="Analyze VerusAgent experimental results")
 
     parser.add_argument(
         "--metrics",

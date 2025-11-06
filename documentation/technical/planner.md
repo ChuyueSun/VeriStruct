@@ -188,6 +188,7 @@ The planner generates an execution plan that specifies:
 The execution order is determined by:
 
 1. Module Dependencies:
+
 ```python
 def parse_plan_execution_order(plan_text, available_modules, logger):
     """Parse the plan to determine module execution order."""
@@ -199,6 +200,7 @@ def parse_plan_execution_order(plan_text, available_modules, logger):
 ```
 
 2. Error Priorities:
+
 ```python
 priority_order = {
     "type_errors": 1,
@@ -213,6 +215,7 @@ priority_order = {
 The planner integrates multiple knowledge sources:
 
 1. Task Overview:
+
 ```markdown
 ### Verus Specification Synthesis Task
 
@@ -226,6 +229,7 @@ Output: Fully verified Verus code
 ```
 
 2. Module Capabilities:
+
 ```python
 modules = {
     "view_inference": "Infer view functions for data structures",
@@ -236,6 +240,7 @@ modules = {
 ```
 
 3. Historical Knowledge:
+
 - Previous verification attempts
 - Successful repair strategies
 - Common failure patterns
@@ -267,6 +272,7 @@ modules = {
 The planner system provides several extension points:
 
 1. Custom Module Integration:
+
 ```python
 def register_module(name: str, module: BaseModule):
     """Register a new verification module."""
@@ -274,6 +280,7 @@ def register_module(name: str, module: BaseModule):
 ```
 
 2. Plan Templates:
+
 ```python
 def register_plan_template(name: str, template: Dict):
     """Register a new planning template."""
@@ -281,6 +288,7 @@ def register_plan_template(name: str, template: Dict):
 ```
 
 3. Knowledge Sources:
+
 ```python
 def add_knowledge_source(source: KnowledgeSource):
     """Add a new knowledge source."""
