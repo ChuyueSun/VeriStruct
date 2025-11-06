@@ -6,11 +6,13 @@ on:
       - main
       - master
       - develop
+      - new-workflow
   pull_request:
     branches:
       - main
       - master
       - develop
+      - new-workflow
 
 jobs:
   pre-commit:
@@ -33,12 +35,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install pre-commit
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-
-      - name: Set up Rust (for Rust hooks)
-        uses: actions-rust-lang/setup-rust-toolchain@v1
-        with:
-          toolchain: stable
-          components: rustfmt, clippy
 
       - name: Cache pre-commit hooks
         uses: actions/cache@v3

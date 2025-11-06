@@ -67,15 +67,6 @@ repos:
       - id: markdownlint
         args: ['--fix']
 
-  # Rust formatting (if Rust code is committed)
-  - repo: https://github.com/doublify/pre-commit-rust
-    rev: v1.0
-    hooks:
-      - id: fmt
-        args: ['--manifest-path=Cargo.toml', '--']
-      - id: clippy
-        args: ['--manifest-path=Cargo.toml', '--', '-D', 'warnings']
-
 # Exclude certain directories and files
 exclude: |
   (?x)^(
