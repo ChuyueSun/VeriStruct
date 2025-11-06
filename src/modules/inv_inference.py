@@ -48,7 +48,15 @@ IMPORTANT:
 - Look for functions named `well_formed`, `inv`, `invariant`, `inv`, or similar that are marked with TODO or are empty.
 - Do NOT rename existing functions or create new `spec fn inv` functions unless explicitly requested.
 - When `struct_with_invariants` is present in the input file, use library knowledge to construct the correct invariant. Use `invariant on field with` to construct the invariants for the target class.
-- Use `===` instead of `==>` and `!==>` for bidirectional equivalence in invariants - this is more precise for verification.
+- **CRITICAL - Choosing between implication (==>) and biconditional (===):**
+  * Use IMPLICATION (==>) when expressing "elements/values that exist in a collection must satisfy a property"
+    - Pattern: "forall |x| collection.contains(x) ==> property(x)" means "if x is in collection, then property holds"
+    - This does NOT claim that all values satisfying the property must be in the collection
+  * Use BICONDITIONAL (===) ONLY when two predicates are logically equivalent in both directions
+    - Pattern: "predicate_A(x) === predicate_B(x)" means both predicates are always true or false together
+    - Use for equivalence of two different representations of the same fact
+  * Default to implication (==>) for structural invariants on sparse/selective data structures (trees, maps, filtered collections)
+  * Most invariants constrain "what is present" not "what must be present" - use implication for these
 - Return the ENTIRE file with your changes integrated into the original code, not just the inv function definition.
 - Do not modify other parts of the code.
 - Do not add explanatory text.

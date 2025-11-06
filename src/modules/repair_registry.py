@@ -390,6 +390,8 @@ class RepairRegistry:
         failures: List[VerusError],
         output_dir: Optional[Path] = None,
         progress_logger=None,
+        round_timeout: Optional[float] = None,
+        round_start_time: Optional[float] = None,
     ) -> Dict[VerusErrorType, str]:
         """
         Attempt to repair all errors in the list using appropriate modules.
@@ -399,11 +401,24 @@ class RepairRegistry:
             failures: List of errors to repair
             output_dir: Optional directory to save repair results
             progress_logger: Optional progress logger to track repair operations
+            round_timeout: Maximum time allowed for the entire repair round (seconds)
+            round_start_time: Start time of the repair round
 
         Returns:
             Dictionary mapping error types to repaired code
         """
         result_map = {}
+
+        # Helper function to check if round has timed out
+        def check_round_timeout():
+            if round_timeout and round_start_time:
+                elapsed = time.time() - round_start_time
+                if elapsed > round_timeout:
+                    self.logger.warning(
+                        f"⏱️ Repair round timeout reached: {elapsed:.2f}s / {round_timeout:.2f}s"
+                    )
+                    return True
+            return False
 
         # Track if we've made any progress (even if we can't repair all errors)
         made_progress = False
@@ -486,6 +501,13 @@ class RepairRegistry:
                     )
 
                 # SECOND: If regex didn't fix it, try LLM-based syntax repair
+                # Check timeout before attempting LLM-based repair
+                if check_round_timeout():
+                    self.logger.error(
+                        "🚨 Repair round timed out before LLM-based syntax repair"
+                    )
+                    return result_map
+
                 self.logger.info("Attempting LLM-based syntax repair…")
 
                 # Store the state before repair
@@ -560,6 +582,13 @@ class RepairRegistry:
                     "Compilation error appears alongside specific Verus failures – deferring to specialised repair modules."
                 )
 
+        # Check timeout after compilation error handling
+        if check_round_timeout():
+            self.logger.error(
+                "🚨 Repair round timed out during compilation error handling"
+            )
+            return result_map
+
         # Prioritize failures
         prioritized_failures = self.prioritize_failures(failures)
 
@@ -572,6 +601,13 @@ class RepairRegistry:
 
         # Process each error type in priority order
         for error_type, type_failures in error_type_map.items():
+            # Check timeout before processing each error type
+            if check_round_timeout():
+                self.logger.error(
+                    f"🚨 Repair round timed out before processing {error_type.name}"
+                )
+                break
+
             if error_type in self.error_to_module_map:
                 module = self.error_to_module_map[error_type]
                 self.logger.info(
@@ -785,6 +821,13 @@ class RepairRegistry:
                         after_score,
                         repair_time,
                     )
+
+                # Check timeout after completing this repair
+                if check_round_timeout():
+                    self.logger.warning(
+                        f"⏱️ Repair round timed out after completing {error_type.name} repair"
+                    )
+                    break
             else:
                 self.logger.warning(
                     f"No repair module registered for error type: {error_type.name}"

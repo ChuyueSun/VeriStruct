@@ -1,60 +1,63 @@
 #!/bin/bash
-# Check status of all benchmark runs
-
-RESULTS_DIR=$(ls -dt benchmark_results_* 2>/dev/null | head -1)
-
-if [ -z "$RESULTS_DIR" ]; then
-    echo "No benchmark results directory found"
-    exit 1
-fi
+# Quick status check for parallel benchmark run
 
 echo "=========================================="
-echo "Benchmark Status: $RESULTS_DIR"
+echo "VERUSAGENT PARALLEL RUN STATUS"
 echo "=========================================="
-echo ""
+echo
 
-# Count running processes
-RUNNING=$(ps aux | grep "run_agent.py" | grep -v grep | wc -l)
-echo "Active processes: $RUNNING"
-echo ""
+# Check if running
+PROCESS_COUNT=$(ps aux | grep "run_all_benchmarks.py" | grep -v grep | wc -l)
+if [ $PROCESS_COUNT -gt 0 ]; then
+    echo "✅ Status: RUNNING"
+    echo "   Active processes: $PROCESS_COUNT"
+    echo
 
-# Show progress
-if [ -f "$RESULTS_DIR/progress.log" ]; then
-    echo "Recent activity:"
-    tail -10 "$RESULTS_DIR/progress.log"
-    echo ""
-fi
+    # Show latest output
+    echo "Latest output (last 10 lines):"
+    echo "------------------------------------------"
+    tail -10 run_all_benchmarks.out 2>/dev/null || echo "No output yet"
+    echo
 
-# Count completed
-STARTED=$(grep -c "Starting:" "$RESULTS_DIR/progress.log" 2>/dev/null || echo 0)
-FINISHED=$(grep -c "Finished:" "$RESULTS_DIR/progress.log" 2>/dev/null || echo 0)
-
-echo "Progress: $FINISHED / $STARTED benchmarks completed"
-echo ""
-
-# Quick status of each
-echo "Individual Status:"
-echo "------------------"
-for log in "$RESULTS_DIR"/*.log; do
-    if [ -f "$log" ] && [ "$(basename $log)" != "progress.log" ]; then
-        name=$(basename "$log" .log)
-        lines=$(wc -l < "$log" 2>/dev/null || echo 0)
-
-        if grep -q "Verification Success: Yes" "$log" 2>/dev/null; then
-            status="✅ SUCCESS"
-        elif grep -q "Verification Success: No" "$log" 2>/dev/null; then
-            status="⚠️  PARTIAL"
-        elif [ "$lines" -gt 500 ]; then
-            status="🔄 RUNNING ($lines lines)"
-        elif [ "$lines" -gt 50 ]; then
-            status="🔄 STARTING ($lines lines)"
-        else
-            status="⏳ PENDING"
-        fi
-
-        printf "%-25s %s\n" "$name" "$status"
+    # Show log files created
+    LOG_COUNT=$(ls logs/*_todo_*.log 2>/dev/null | wc -l)
+    echo "Benchmark logs created: $LOG_COUNT / 13"
+    if [ $LOG_COUNT -gt 0 ]; then
+        echo
+        echo "Most recent logs:"
+        ls -t logs/*_todo_*.log 2>/dev/null | head -5 | while read log; do
+            echo "  - $(basename $log)"
+        done
     fi
-done
+    echo
 
-echo ""
-echo "To watch live: watch -n 5 $0"
+    # Show output directories
+    OUTPUT_COUNT=$(ls -d output/*_todo 2>/dev/null | wc -l)
+    echo "Output directories: $OUTPUT_COUNT / 13"
+
+else
+    echo "❌ Status: NOT RUNNING"
+    echo
+
+    # Check if completed
+    if [ -f run_all_benchmarks.out ]; then
+        echo "Checking for completion..."
+        if grep -q "SUMMARY" run_all_benchmarks.out; then
+            echo "✅ RUN COMPLETED!"
+            echo
+            tail -30 run_all_benchmarks.out | grep -A 30 "SUMMARY"
+        else
+            echo "Run was stopped or crashed. Check run_all_benchmarks.out"
+        fi
+    else
+        echo "No run output found. Has the run started?"
+    fi
+fi
+
+echo
+echo "=========================================="
+echo "Commands:"
+echo "  Monitor output:  tail -f run_all_benchmarks.out"
+echo "  Check logs:      ls -lth logs/"
+echo "  Check results:   ls -lth output/"
+echo "=========================================="

@@ -1,268 +1,182 @@
 #!/usr/bin/env python3
 """
-Script to run all benchmarks from benchmarks-complete directory in parallel.
+Script to run all TODO benchmarks in parallel.
+Launches one VerusAgent process for each benchmark file.
 """
-import argparse
+
+import multiprocessing
+import os
 import subprocess
 import sys
-from concurrent.futures import ProcessPoolExecutor, as_completed
+import time
 from datetime import datetime
 from pathlib import Path
 
+# Get the project root directory
+PROJECT_ROOT = Path(__file__).parent.absolute()
+BENCHMARKS_DIR = PROJECT_ROOT / "benchmarks-complete"
 
-def run_benchmark(benchmark_file, config, verus_path, num_repair_rounds, no_cache_read):
-    """Run a single benchmark using run_agent.py"""
-    benchmark_name = benchmark_file.stem
+# List of all TODO benchmarks
+BENCHMARKS = [
+    "atomics_todo.rs",
+    "bitmap_2_todo.rs",
+    "bitmap_todo.rs",
+    "bst_map_todo.rs",
+    "invariants_todo.rs",
+    "node_todo.rs",
+    "option_todo.rs",
+    "rb_type_invariant_todo.rs",
+    "rwlock_vstd_todo.rs",
+    "set_from_vec_todo.rs",
+    "transfer_todo.rs",
+    "treemap_todo.rs",
+    "vectors_todo.rs",
+]
+
+
+def run_benchmark(benchmark_file):
+    """Run a single benchmark file."""
+    benchmark_path = BENCHMARKS_DIR / benchmark_file
+    benchmark_name = benchmark_file.replace(".rs", "")
+
+    print(f"[{benchmark_name}] Starting...")
+    start_time = time.time()
+
+    # Set up environment variables
+    env = os.environ.copy()
+    env["VERUS_TEST_FILE"] = str(benchmark_path)
+    env["VERUS_CONFIG"] = "config-azure"
+
+    # Create log file for this benchmark
+    log_dir = PROJECT_ROOT / "logs"
+    log_dir.mkdir(exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_dir = Path("output") / benchmark_name / timestamp
-
-    cmd = [
-        sys.executable,
-        "run_agent.py",
-        "--test-file",
-        str(benchmark_file),
-        "--config",
-        config,
-        "--output-dir",
-        str(output_dir),
-        "--num-repair-rounds",
-        str(num_repair_rounds),
-    ]
-
-    if verus_path:
-        cmd.extend(["--verus-path", verus_path])
-
-    if no_cache_read:
-        cmd.append("--no-cache-read")
-
-    print(f"\n{'='*80}")
-    print(f"Starting: {benchmark_name}")
-    print(f"Command: {' '.join(cmd)}")
-    print(f"Output: {output_dir}")
-    print(f"{'='*80}\n")
-
-    start_time = datetime.now()
+    log_file = log_dir / f"{benchmark_name}_{timestamp}.log"
 
     try:
-        result = subprocess.run(
-            cmd, capture_output=True, text=True, cwd=Path(__file__).parent
-        )
+        # Run main.py with the benchmark
+        with open(log_file, "w") as f:
+            process = subprocess.run(
+                [sys.executable, "-m", "src.main"],
+                cwd=PROJECT_ROOT,
+                env=env,
+                stdout=f,
+                stderr=subprocess.STDOUT,
+                timeout=7200,  # 2 hour timeout per benchmark
+            )
 
-        end_time = datetime.now()
-        duration = (end_time - start_time).total_seconds()
+        elapsed = time.time() - start_time
 
-        # Save output logs
-        output_dir.mkdir(parents=True, exist_ok=True)
+        if process.returncode == 0:
+            print(f"[{benchmark_name}] ✅ COMPLETED in {elapsed:.1f}s - Log: {log_file}")
+            return (benchmark_name, "SUCCESS", elapsed, log_file)
+        else:
+            print(
+                f"[{benchmark_name}] ❌ FAILED (exit code {process.returncode}) in {elapsed:.1f}s - Log: {log_file}"
+            )
+            return (benchmark_name, "FAILED", elapsed, log_file)
 
-        with open(output_dir / "stdout.log", "w") as f:
-            f.write(result.stdout)
-
-        with open(output_dir / "stderr.log", "w") as f:
-            f.write(result.stderr)
-
-        status = "SUCCESS" if result.returncode == 0 else "FAILED"
-
-        return {
-            "benchmark": benchmark_name,
-            "status": status,
-            "returncode": result.returncode,
-            "duration": duration,
-            "output_dir": str(output_dir),
-        }
-
+    except subprocess.TimeoutExpired:
+        elapsed = time.time() - start_time
+        print(f"[{benchmark_name}] ⏱️ TIMEOUT after {elapsed:.1f}s - Log: {log_file}")
+        return (benchmark_name, "TIMEOUT", elapsed, log_file)
     except Exception as e:
-        end_time = datetime.now()
-        duration = (end_time - start_time).total_seconds()
-
-        return {
-            "benchmark": benchmark_name,
-            "status": "ERROR",
-            "returncode": -1,
-            "duration": duration,
-            "error": str(e),
-            "output_dir": str(output_dir),
-        }
+        elapsed = time.time() - start_time
+        print(f"[{benchmark_name}] ❌ ERROR: {e} - Log: {log_file}")
+        return (benchmark_name, "ERROR", elapsed, log_file)
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Run all benchmarks from benchmarks-complete directory in parallel"
-    )
-    parser.add_argument(
-        "--benchmarks-dir",
-        help="Directory containing benchmark files",
-        default="benchmarks-complete",
-    )
-    parser.add_argument(
-        "--pattern",
-        help="Glob pattern to match benchmark files",
-        default="*_todo.rs",
-    )
-    parser.add_argument(
-        "--max-workers",
-        type=int,
-        help="Maximum number of parallel workers (default: 4)",
-        default=4,
-    )
-    parser.add_argument(
-        "--verus-path",
-        help="Path to the Verus executable",
-        default=None,
-    )
-    parser.add_argument(
-        "--config",
-        help="Config file to use (default: config-azure)",
-        default="config-azure",
-    )
-    parser.add_argument(
-        "--num-repair-rounds",
-        type=int,
-        help="Number of repair rounds to run (default: 5)",
-        default=5,
-    )
-    parser.add_argument(
-        "--no-cache-read",
-        action="store_true",
-        help="Disable reading from LLM cache",
-    )
-    parser.add_argument(
-        "--dry-run",
-        action="store_true",
-        help="Print what would be run without actually running",
-    )
+    """Main function to run all benchmarks in parallel."""
+    print("=" * 80)
+    print("VERUSAGENT PARALLEL BENCHMARK RUN")
+    print("=" * 80)
+    print(f"Total benchmarks: {len(BENCHMARKS)}")
+    print(f"Project root: {PROJECT_ROOT}")
+    print(f"Benchmarks dir: {BENCHMARKS_DIR}")
+    print(f"Start time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
-    args = parser.parse_args()
-
-    # Find all benchmark files
-    benchmarks_dir = Path(args.benchmarks_dir)
-    if not benchmarks_dir.exists():
-        print(f"Error: Benchmarks directory not found: {benchmarks_dir}")
-        sys.exit(1)
-
-    benchmark_files = sorted(benchmarks_dir.glob(args.pattern))
-
-    if not benchmark_files:
-        print(f"No benchmark files found matching pattern: {args.pattern}")
-        sys.exit(1)
-
-    print(f"\n{'='*80}")
-    print(f"PARALLEL BENCHMARK RUNNER")
-    print(f"{'='*80}")
-    print(f"Benchmarks directory: {benchmarks_dir.absolute()}")
-    print(f"Pattern: {args.pattern}")
-    print(f"Found {len(benchmark_files)} benchmarks:")
-    for bf in benchmark_files:
-        print(f"  - {bf.name}")
-    print(f"Max workers: {args.max_workers}")
-    print(f"Config: {args.config}")
-    print(f"Repair rounds: {args.num_repair_rounds}")
-    print(f"{'='*80}\n")
-
-    if args.dry_run:
-        print("DRY RUN - No benchmarks will be executed")
-        return
+    # Determine number of parallel workers
+    # Use half of available CPUs to avoid overwhelming the system
+    num_workers = max(1, multiprocessing.cpu_count() // 2)
+    print(f"Parallel workers: {num_workers}")
+    print("=" * 80)
+    print()
 
     # Run benchmarks in parallel
-    start_time = datetime.now()
-    results = []
+    overall_start = time.time()
 
-    with ProcessPoolExecutor(max_workers=args.max_workers) as executor:
-        # Submit all tasks
-        future_to_benchmark = {
-            executor.submit(
-                run_benchmark,
-                bf,
-                args.config,
-                args.verus_path,
-                args.num_repair_rounds,
-                args.no_cache_read,
-            ): bf
-            for bf in benchmark_files
-        }
+    with multiprocessing.Pool(processes=num_workers) as pool:
+        results = pool.map(run_benchmark, BENCHMARKS)
 
-        # Collect results as they complete
-        for future in as_completed(future_to_benchmark):
-            benchmark_file = future_to_benchmark[future]
-            try:
-                result = future.result()
-                results.append(result)
-
-                status_symbol = "✓" if result["status"] == "SUCCESS" else "✗"
-                print(
-                    f"\n{status_symbol} {result['benchmark']}: {result['status']} "
-                    f"(took {result['duration']:.2f}s)"
-                )
-
-            except Exception as e:
-                print(f"\n✗ {benchmark_file.stem}: EXCEPTION - {e}")
-                results.append(
-                    {
-                        "benchmark": benchmark_file.stem,
-                        "status": "EXCEPTION",
-                        "error": str(e),
-                    }
-                )
-
-    end_time = datetime.now()
-    total_duration = (end_time - start_time).total_seconds()
+    overall_elapsed = time.time() - overall_start
 
     # Print summary
-    print(f"\n{'='*80}")
-    print(f"SUMMARY")
-    print(f"{'='*80}")
-    print(f"Total time: {total_duration:.2f}s")
-    print(f"Total benchmarks: {len(results)}")
+    print()
+    print("=" * 80)
+    print("SUMMARY")
+    print("=" * 80)
 
-    success_count = sum(1 for r in results if r["status"] == "SUCCESS")
-    failed_count = sum(
-        1 for r in results if r["status"] in ["FAILED", "ERROR", "EXCEPTION"]
-    )
+    success_count = sum(1 for _, status, _, _ in results if status == "SUCCESS")
+    failed_count = sum(1 for _, status, _, _ in results if status == "FAILED")
+    timeout_count = sum(1 for _, status, _, _ in results if status == "TIMEOUT")
+    error_count = sum(1 for _, status, _, _ in results if status == "ERROR")
 
-    print(f"Successful: {success_count}")
-    print(f"Failed: {failed_count}")
-    print(f"\nResults by benchmark:")
+    print(f"Total: {len(results)}")
+    print(f"✅ Success: {success_count}")
+    print(f"❌ Failed: {failed_count}")
+    print(f"⏱️ Timeout: {timeout_count}")
+    print(f"❌ Error: {error_count}")
+    print(f"Total time: {overall_elapsed:.1f}s ({overall_elapsed/60:.1f}min)")
+    print()
 
-    for result in sorted(results, key=lambda x: x["benchmark"]):
-        status_symbol = "✓" if result["status"] == "SUCCESS" else "✗"
-        duration_str = f"{result['duration']:.2f}s" if "duration" in result else "N/A"
-        print(
-            f"  {status_symbol} {result['benchmark']:30s} {result['status']:10s} {duration_str:>10s}"
-        )
-        if "output_dir" in result:
-            print(f"      Output: {result['output_dir']}")
+    # Print detailed results
+    print("DETAILED RESULTS:")
+    print("-" * 80)
+    for name, status, elapsed, log_file in sorted(results):
+        status_icon = {"SUCCESS": "✅", "FAILED": "❌", "TIMEOUT": "⏱️", "ERROR": "❌"}[
+            status
+        ]
+        print(f"{status_icon} {name:30s} {status:10s} {elapsed:8.1f}s  {log_file}")
+    print("=" * 80)
 
-    print(f"{'='*80}\n")
-
-    # Save summary to file
+    # Create summary file
     summary_file = (
-        Path("output")
+        PROJECT_ROOT
         / f"benchmark_summary_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
     )
-    summary_file.parent.mkdir(parents=True, exist_ok=True)
-
     with open(summary_file, "w") as f:
-        f.write(f"Benchmark Summary - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
-        f.write(f"{'='*80}\n")
-        f.write(f"Total time: {total_duration:.2f}s\n")
-        f.write(f"Total benchmarks: {len(results)}\n")
-        f.write(f"Successful: {success_count}\n")
+        f.write("VERUSAGENT PARALLEL BENCHMARK RUN SUMMARY\n")
+        f.write("=" * 80 + "\n")
+        f.write(f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+        f.write(f"Total: {len(results)}\n")
+        f.write(f"Success: {success_count}\n")
         f.write(f"Failed: {failed_count}\n")
-        f.write(f"\nResults:\n")
-        for result in sorted(results, key=lambda x: x["benchmark"]):
-            status_symbol = "✓" if result["status"] == "SUCCESS" else "✗"
-            duration_str = (
-                f"{result['duration']:.2f}s" if "duration" in result else "N/A"
-            )
-            f.write(
-                f"  {status_symbol} {result['benchmark']:30s} {result['status']:10s} {duration_str:>10s}\n"
-            )
-            if "output_dir" in result:
-                f.write(f"      Output: {result['output_dir']}\n")
+        f.write(f"Timeout: {timeout_count}\n")
+        f.write(f"Error: {error_count}\n")
+        f.write(f"Total time: {overall_elapsed:.1f}s\n")
+        f.write("\nDETAILED RESULTS:\n")
+        f.write("-" * 80 + "\n")
+        for name, status, elapsed, log_file in sorted(results):
+            f.write(f"{name:30s} {status:10s} {elapsed:8.1f}s  {log_file}\n")
 
-    print(f"Summary saved to: {summary_file}\n")
+    print(f"\nSummary saved to: {summary_file}")
 
-    sys.exit(0 if failed_count == 0 else 1)
+    # Check outputs directory
+    output_dir = PROJECT_ROOT / "output"
+    if output_dir.exists():
+        print(f"\nCheck individual benchmark outputs in: {output_dir}")
+
+    # Exit with appropriate code
+    if success_count == len(results):
+        sys.exit(0)
+    else:
+        sys.exit(1)
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\n\nInterrupted by user!")
+        sys.exit(130)

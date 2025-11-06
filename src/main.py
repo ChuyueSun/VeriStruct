@@ -615,13 +615,28 @@ def main():
             # Track time for this repair round
             repair_round_start = time.time()
 
+            # Get repair round timeout from config (default: 900 seconds = 15 minutes)
+            repair_round_timeout = config.get("repair_round_timeout", 900)
+
             # Use the repair registry to handle all failures
             repair_results = repair_registry.repair_all(
-                context, failures, output_dir, progress_logger
+                context,
+                failures,
+                output_dir,
+                progress_logger,
+                round_timeout=repair_round_timeout,
+                round_start_time=repair_round_start,
             )
 
             # Calculate repair round time
             repair_round_time = time.time() - repair_round_start
+
+            # Check if the round timed out
+            if repair_round_time > repair_round_timeout:
+                logger.warning(
+                    f"⏱️ Repair round {current_round} exceeded timeout: "
+                    f"{repair_round_time:.2f}s / {repair_round_timeout:.2f}s"
+                )
 
             # Check if any repairs were successful
             if repair_results:

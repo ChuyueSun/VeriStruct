@@ -248,6 +248,39 @@ class SpecInferenceModule(BaseModule):
             "   - Return the ENTIRE file with your changes, not just modified parts"
         )
 
+    @staticmethod
+    def detect_low_level_patterns(code: str) -> Dict[str, bool]:
+        """
+        Detect patterns indicating need for concrete-level postconditions.
+
+        Returns:
+            Dictionary with pattern flags
+        """
+        patterns = {
+            "has_bit_vector_proofs": False,
+            "has_packed_structure": False,
+            "has_low_level_ops": False,
+            "needs_concrete_specs": False,
+        }
+
+        # Detect bit-vector proof functions
+        if re.search(
+            r"#\[verifier::bit_vector\]|_proof\(.*u64.*\)|get_bit64!|set_bit64!", code
+        ):
+            patterns["has_bit_vector_proofs"] = True
+            patterns["needs_concrete_specs"] = True
+
+        # Detect packed structures
+        if re.search(r"Vec<u64>", code) and re.search(r"Seq<bool>", code):
+            patterns["has_packed_structure"] = True
+            patterns["needs_concrete_specs"] = True
+
+        # Detect low-level operations
+        if re.search(r"[|&^]|<<|>>", code) and "proof fn" in code:
+            patterns["has_low_level_ops"] = True
+
+        return patterns
+
     def _build_invariant_instruction(self, has_type_invariant: bool) -> str:
         """Build invariant-specific instruction based on code features."""
         if has_type_invariant:
@@ -526,6 +559,14 @@ class SpecInferenceModule(BaseModule):
                 "Detected #[verifier::type_invariant] - will customize instruction"
             )
 
+        # Detect low-level patterns for abstraction level selection
+        low_level_patterns = self.detect_low_level_patterns(code)
+        if low_level_patterns["needs_concrete_specs"]:
+            self.logger.info(
+                f"Detected low-level patterns: {[k for k, v in low_level_patterns.items() if v]}"
+            )
+            self.logger.info("Will prioritize examples with concrete postconditions")
+
         max_retries = 3
         safe_responses = []
         all_candidates = []
@@ -600,6 +641,41 @@ class SpecInferenceModule(BaseModule):
                     if any(kw in answer for kw in ["Atomic", "lock"]):
                         score += 40
 
+                # Low-level/packed structures - prioritize concrete postcondition examples
+                if low_level_patterns["needs_concrete_specs"]:
+                    filename = ex.get("file", "").lower()
+
+                    # HIGHEST PRIORITY: Educational examples teaching abstraction levels
+                    if (
+                        "why_concrete" in filename
+                        or "abstraction_comparison" in filename
+                    ):
+                        score += 100  # Explains WHY and shows both ways
+                        self.logger.debug(
+                            f"  ++ Abstraction teaching example (+100): {filename[:50]}"
+                        )
+
+                    if "concrete_packed" in filename:
+                        score += 90  # Shows concrete pattern for packed structures
+                        self.logger.debug(
+                            f"  ++ Packed structure example (+90): {filename[:50]}"
+                        )
+
+                    # Examples with extraction patterns at chunk/unit level
+                    if (
+                        "extract_component" in answer
+                        or "get_element_from_unit" in answer
+                        or "bit_is_set" in answer
+                    ):
+                        score += 70  # Generic concrete patterns
+
+                    if "extract_" in answer or "_from_chunk" in answer:
+                        score += 60  # Other extraction patterns
+
+                    # De-prioritize abstract-only examples when concrete needed
+                    if "abstract_simple" in filename:
+                        score -= 20  # Counter-example showing when NOT to use concrete
+
                 # Bit operations (bitmap)
                 if any(kw in code for kw in ["bit", "BitMap", "u64"]):
                     if any(kw in answer for kw in ["bit", "BitMap"]):
@@ -646,6 +722,10 @@ class SpecInferenceModule(BaseModule):
             )
             if has_type_invariant:
                 self.logger.info("  - Prioritized type_invariant examples")
+            if low_level_patterns["needs_concrete_specs"]:
+                self.logger.info(
+                    "  - Prioritized abstraction-level examples (concrete postconditions)"
+                )
             if "Option<Box<" in code:
                 self.logger.info("  - Prioritized Option<Box<>> examples")
             if "Map<" in code:
