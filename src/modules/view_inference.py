@@ -267,28 +267,48 @@ DO NOT return the entire file. ONLY return the view implementation as shown abov
             (has_spec_fn, struct_name, start_pos, end_pos)
             where start_pos and end_pos define the TODO region to replace
         """
-        # Look for: [pub] [open|closed] spec fn view(&self) -> SomeType { ... }
-        # Pattern matches visibility (pub), modifiers (open/closed), and spec fn view
-        # Note: We now only match up to the opening brace, then use _find_matching_brace
-        pattern = r"struct\s+(\w+).*?impl\s+\1\s*(?:<[^>]*>)?\s*\{.*?((?:pub\s+)?(?:open\s+|closed\s+)?spec\s+fn\s+view\s*\(\s*&\s*self\s*\)\s*->\s*[^{]+)\{"
+        # Search for impl blocks that contain spec fn view
+        # This is more robust than requiring struct definition and impl to be adjacent
 
-        match = re.search(pattern, code, re.DOTALL)
-        if match:
-            struct_name = match.group(1)
-            # Find the opening brace position (right after the match)
-            opening_brace_pos = match.end() - 1
+        # Pattern to find impl blocks: impl StructName<...> {
+        impl_pattern = r"impl\s+(\w+)\s*(?:<[^>]*>)?\s*\{"
 
-            # Find the matching closing brace
-            closing_brace_pos = ViewInferenceModule._find_matching_brace(code, opening_brace_pos)
+        # Pattern to find spec fn view within an impl block
+        spec_fn_pattern = r"((?:pub\s+)?(?:open\s+|closed\s+)?spec\s+fn\s+view\s*\(\s*&\s*self\s*\)\s*->\s*[^{]+)\{"
 
-            if closing_brace_pos == -1:
-                return False, "", -1, -1
+        # Find all impl blocks
+        for impl_match in re.finditer(impl_pattern, code):
+            struct_name = impl_match.group(1)
+            impl_start = impl_match.end() - 1  # Position of opening brace
 
-            # The body is between the opening and closing braces
-            start_pos = opening_brace_pos + 1
-            end_pos = closing_brace_pos
+            # Find the end of this impl block
+            impl_end = ViewInferenceModule._find_matching_brace(code, impl_start)
+            if impl_end == -1:
+                continue
 
-            return True, struct_name, start_pos, end_pos
+            # Extract the impl block body
+            impl_body = code[impl_start : impl_end + 1]
+
+            # Search for spec fn view within this impl block
+            spec_fn_match = re.search(spec_fn_pattern, impl_body)
+            if spec_fn_match:
+                # Found spec fn view in this impl block
+                # Calculate absolute position in original code
+                opening_brace_pos = impl_start + spec_fn_match.end() - 1
+
+                # Find the matching closing brace for the spec fn view
+                closing_brace_pos = ViewInferenceModule._find_matching_brace(
+                    code, opening_brace_pos
+                )
+
+                if closing_brace_pos == -1:
+                    continue
+
+                # The body is between the opening and closing braces
+                start_pos = opening_brace_pos + 1
+                end_pos = closing_brace_pos
+
+                return True, struct_name, start_pos, end_pos
 
         return False, "", -1, -1
 
@@ -413,12 +433,27 @@ DO NOT return the entire file. ONLY return the view implementation as shown abov
         Returns:
             Modified code with view body inserted
         """
-        # Add proper indentation (typically 8 spaces for function body)
+        # Normalize indentation: detect minimum indentation and strip it, then add 8 spaces
         lines = view_body.split("\n")
+
+        # Find minimum indentation level (excluding empty lines)
+        min_indent = float("inf")
+        for line in lines:
+            if line.strip():  # Only consider non-empty lines
+                leading_spaces = len(line) - len(line.lstrip())
+                min_indent = min(min_indent, leading_spaces)
+
+        # If all lines were empty, set min_indent to 0
+        if min_indent == float("inf"):
+            min_indent = 0
+
+        # Strip the minimum indentation and add 8 spaces
         indented_lines = []
         for line in lines:
             if line.strip():  # Don't indent empty lines
-                indented_lines.append("        " + line)
+                # Strip min_indent spaces, then add 8 spaces
+                stripped_line = line[min_indent:] if len(line) >= min_indent else line.lstrip()
+                indented_lines.append("        " + stripped_line)
             else:
                 indented_lines.append(line)
         indented_body = "\n".join(indented_lines)
