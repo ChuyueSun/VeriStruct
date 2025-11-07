@@ -15,11 +15,9 @@
    In a spec function, you cannot directly call instance methods such as vector.is_full().
 2. Use the @ Operator:
    To invoke methods on a variable within a spec, first convert it to its specification-level representation View with @.
-3. Use @ for View Operations:
-   Always use `vector@.len()` to access the length of the spec-level view. Both `vector.len()` and `vector@.len()` are correct in spec contexts, but prefer `vector@.len()` for consistency with other view operations like `vector@[i]`.
-4. Simplify Boolean Conjunctions:
+3. Simplify Boolean Conjunctions:
    When combining multiple conditions, avoid excessive &&&. Fewer (or well-structured) conjunctions make the spec code easier to read and debug.
-5. Parentheses Usage:
+4. Parentheses Usage:
    ALWAYS wrap conditions in parentheses, even for simple expressions. This makes precedence explicit and prevents errors.
 
 ## Proof Blocks - CRITICAL SYNTAX RULES

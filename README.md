@@ -111,8 +111,8 @@ python run_agent.py --test-file benchmarks-complete/rb_type_invariant.rs \
 │  • Spec Inference                   │
 │  • View Inference                   │
 │  • Invariant Inference              │
-│  • Repair Modules (12 types)        │
 │  • Proof Generation                 │
+│  • Repair Modules (12 types)        │
 └──────┬──────────────────────────────┘
        │
        ▼
