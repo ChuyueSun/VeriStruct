@@ -1,8 +1,8 @@
-# VerusAgent Example Documentation
+# VeriStruct Example Documentation
 
 ## Overview
 
-This directory contains detailed examples showing how VerusAgent modules process different types of data structures and verification challenges.
+This directory contains detailed examples showing how VeriStruct modules process different types of data structures and verification challenges.
 
 ## Examples
 
@@ -154,7 +154,7 @@ Seq::new(total_bits, |i: int|
 
 ## Conclusion
 
-These examples demonstrate how VerusAgent modules adapt to different verification challenges:
+These examples demonstrate how VeriStruct modules adapt to different verification challenges:
 
 1. Abstraction Level:
    - High-level sequence operations

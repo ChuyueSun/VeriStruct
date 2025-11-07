@@ -1,5 +1,5 @@
 #!/bin/bash
-# Quick experiment launcher for VerusAgent testing
+# Quick experiment launcher for VeriStruct testing
 # Usage: ./run_quick_experiment.sh [experiment_name] [num_benchmarks]
 
 set -e  # Exit on error
@@ -22,7 +22,7 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
 
 echo -e "${BLUE}╔════════════════════════════════════════════════════════════╗${NC}"
-echo -e "${BLUE}║        VerusAgent Quick Experiment Launcher               ║${NC}"
+echo -e "${BLUE}║        VeriStruct Quick Experiment Launcher               ║${NC}"
 echo -e "${BLUE}╔════════════════════════════════════════════════════════════╗${NC}"
 echo ""
 echo -e "${GREEN}Experiment Name:${NC} $EXPERIMENT_NAME"

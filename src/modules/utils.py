@@ -1,5 +1,5 @@
 """
-Utility functions for VerusAgent modules.
+Utility functions for VeriStruct modules.
 
 This module provides shared functionality used across different inference and refinement modules,
 particularly for writing, evaluating, and scoring code samples.

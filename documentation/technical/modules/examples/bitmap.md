@@ -1,6 +1,6 @@
 # BitMap Example - Module Workflow
 
-This document illustrates how each VerusAgent module processes the BitMap example (`bitmap_2.rs`), a more complex data structure with bit-level operations.
+This document illustrates how each VeriStruct module processes the BitMap example (`bitmap_2.rs`), a more complex data structure with bit-level operations.
 
 ## View Inference Module
 
@@ -202,4 +202,4 @@ The BitMap example differs from RingBuffer in several ways:
    - BitMap: Uses bit-level and sequence specifications
    - RingBuffer: Uses sequence and capacity specifications
 
-This example demonstrates how VerusAgent modules handle different verification challenges and adapt to various data structure requirements.
+This example demonstrates how VeriStruct modules handle different verification challenges and adapt to various data structure requirements.

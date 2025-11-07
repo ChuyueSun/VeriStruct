@@ -1,6 +1,6 @@
-# VerusAgent Experimental Evaluation Framework
+# VeriStruct Experimental Evaluation Framework
 
-This directory contains tools and scripts for conducting systematic experimental evaluations of the VerusAgent workflow, following the comprehensive experiment plan outlined in `../EXPERIMENT_PLAN.md`.
+This directory contains tools and scripts for conducting systematic experimental evaluations of the VeriStruct workflow, following the comprehensive experiment plan outlined in `../EXPERIMENT_PLAN.md`.
 
 ## Quick Start
 
@@ -80,7 +80,7 @@ experiments/
 
 ### Experiment Runner
 
-The `experiment_runner.py` script automates running VerusAgent on multiple benchmarks and collecting comprehensive metrics.
+The `experiment_runner.py` script automates running VeriStruct on multiple benchmarks and collecting comprehensive metrics.
 
 **Full Options:**
 
@@ -88,7 +88,7 @@ The `experiment_runner.py` script automates running VerusAgent on multiple bench
 python experiment_runner.py \
   --corpus CORPUS_FILE \           # Path to benchmark corpus JSON
   --experiment-name NAME \         # Name of experiment (for output files)
-  --config CONFIG_NAME \           # VerusAgent config (e.g., config-azure)
+  --config CONFIG_NAME \           # VeriStruct config (e.g., config-azure)
   --output-dir DIR \               # Base output directory
   --repair-rounds N \              # Number of repair rounds (default: 5)
   --limit N                        # Limit to N benchmarks (for testing)
@@ -96,7 +96,7 @@ python experiment_runner.py \
 
 **What it does:**
 
-- Runs VerusAgent on each benchmark in the corpus
+- Runs VeriStruct on each benchmark in the corpus
 - Collects metrics: robustness, cost, effectiveness
 - Handles timeouts (30 minutes per benchmark)
 - Saves results to `{experiment_name}_metrics.json`
@@ -352,7 +352,7 @@ When comparing configurations:
 ### Experiment Runner Issues
 
 **Problem**: `No module named 'src'`
-**Solution**: Run from VerusAgent root directory, not experiments/
+**Solution**: Run from VeriStruct root directory, not experiments/
 
 **Problem**: Timeout on every benchmark
 **Solution**: Increase timeout in `experiment_runner.py` or check Verus installation
@@ -422,11 +422,11 @@ When adding new experiments or analysis:
 ## References
 
 - **Main Experiment Plan**: `../EXPERIMENT_PLAN.md`
-- **VerusAgent Docs**: `../README.md`
+- **VeriStruct Docs**: `../README.md`
 - **VEval Scoring**: `../src/modules/veval.py`
 - **Repair Modules**: `../src/modules/repair_*.py`
 
 ---
 
 **Questions or Issues?**
-Contact the VerusAgent team or open an issue in the repository.
+Contact the VeriStruct team or open an issue in the repository.

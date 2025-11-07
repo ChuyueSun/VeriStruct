@@ -1,5 +1,5 @@
 """
-Enhanced Statistics Collection System for VerusAgent
+Enhanced Statistics Collection System for VeriStruct
 
 This module tracks detailed statistics for research paper reporting:
 - Number of LLM calls per stage/module
@@ -22,7 +22,7 @@ from src.modules.veval import EvalScore, VerusErrorType
 
 class StatisticsCollector:
     """
-    Collects detailed statistics during VerusAgent execution for research analysis.
+    Collects detailed statistics during VeriStruct execution for research analysis.
     """
 
     def __init__(self, output_dir: Path, benchmark_name: str, logger):
@@ -443,7 +443,7 @@ class StatisticsCollector:
         """
         with open(report_file, "w") as f:
             f.write("=" * 80 + "\n")
-            f.write(f"VerusAgent Statistics Report - {self.benchmark_name}\n")
+            f.write(f"VeriStruct Statistics Report - {self.benchmark_name}\n")
             f.write("=" * 80 + "\n\n")
 
             # Execution Summary

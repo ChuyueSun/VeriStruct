@@ -1,4 +1,4 @@
-# VerusAgent Modules
+# VeriStruct Modules
 
 This repository contains modules for automatic verification of Verus code.
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Automated experiment runner for VerusAgent workflow testing.
+Automated experiment runner for VeriStruct workflow testing.
 Implements the experiment plan defined in EXPERIMENT_PLAN.md
 """
 
@@ -14,7 +14,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List
 
-# Add parent directory to path to import VerusAgent modules
+# Add parent directory to path to import VeriStruct modules
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.context import Context
@@ -253,7 +253,7 @@ class ExperimentMetricsCollector:
 
 
 class ExperimentRunner:
-    """Runs experimental evaluations of VerusAgent workflow"""
+    """Runs experimental evaluations of VeriStruct workflow"""
 
     def __init__(self, config_name: str, output_base: Path):
         self.config_name = config_name
@@ -268,7 +268,7 @@ class ExperimentRunner:
     def run_single_benchmark(
         self, benchmark_path: Path, category: str, repair_rounds: int = 5
     ) -> Dict[str, Any]:
-        """Run VerusAgent on a single benchmark"""
+        """Run VeriStruct on a single benchmark"""
 
         print(f"\n{'='*80}")
         print(f"Running benchmark: {benchmark_path.name}")
@@ -278,7 +278,7 @@ class ExperimentRunner:
         start_time = time.time()
 
         try:
-            # Run VerusAgent
+            # Run VeriStruct
             cmd = [
                 sys.executable,
                 "run_agent.py",
@@ -400,7 +400,7 @@ class ExperimentRunner:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Run VerusAgent experiments with comprehensive metrics collection"
+        description="Run VeriStruct experiments with comprehensive metrics collection"
     )
 
     parser.add_argument(

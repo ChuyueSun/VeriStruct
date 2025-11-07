@@ -12,7 +12,7 @@ from src.modules.veval import EvalScore
 
 class ProgressLogger:
     """
-    Tracks and logs the progress of VerusAgent execution, including:
+    Tracks and logs the progress of VeriStruct execution, including:
     - Step timing
     - VEval results after each step
     - Repair information for each round
@@ -281,7 +281,7 @@ class ProgressLogger:
         self.progress["total_execution_time"] = total_time
 
         self.logger.info(
-            f"VerusAgent completed in {total_time:.2f}s with final score: {final_score}"
+            f"VeriStruct completed in {total_time:.2f}s with final score: {final_score}"
         )
 
         # Record final state in statistics collector
@@ -340,7 +340,7 @@ class ProgressLogger:
 
             # Write summary
             with open(summary_file, "w") as f:
-                f.write("# VerusAgent Execution Summary\n\n")
+                f.write("# VeriStruct Execution Summary\n\n")
 
                 # Add input file information
                 f.write("## Input and Output Files\n\n")

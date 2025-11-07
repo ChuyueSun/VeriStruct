@@ -179,7 +179,7 @@ Then update config to use env var:
 
 ## ✨ **Ready to Run!**
 
-Your VerusAgent is now fully configured with:
+Your VeriStruct is now fully configured with:
 
 - Azure OpenAI o1 model
 - All latest features

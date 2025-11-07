@@ -1,8 +1,8 @@
-# VerusAgent Technical Workflow Report
+# VeriStruct Technical Workflow Report
 
 ## Overview
 
-VerusAgent streamlines Rust code verification in the Verus framework with a modular workflow that coordinates planning, checking, and repair.
+VeriStruct streamlines Rust code verification in the Verus framework with a modular workflow that coordinates planning, checking, and repair.
 Large language models guide these steps, making decisions and generating code to overcome verification challenges.
 
 ## System Architecture
@@ -374,7 +374,7 @@ def _process_responses(self, responses: List[str], original_code: str):
 
 ## Conclusion
 
-VerusAgent provides a comprehensive, modular, and robust framework for automated verification of Rust code using the Verus verification system. Its sophisticated workflow combines planning, verification, and repair strategies with extensive error handling and result management capabilities. The system's use of LLM for intelligent decision-making, combined with its robust module architecture and safety mechanisms, makes it a powerful tool for code verification.
+VeriStruct provides a comprehensive, modular, and robust framework for automated verification of Rust code using the Verus verification system. Its sophisticated workflow combines planning, verification, and repair strategies with extensive error handling and result management capabilities. The system's use of LLM for intelligent decision-making, combined with its robust module architecture and safety mechanisms, makes it a powerful tool for code verification.
 
 The system's key strengths lie in:
 

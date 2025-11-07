@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This guide helps you diagnose and fix common verification problems in VerusAgent.
+This guide helps you diagnose and fix common verification problems in VeriStruct.
 
 ## Common Issues
 

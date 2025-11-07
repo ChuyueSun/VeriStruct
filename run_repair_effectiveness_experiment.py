@@ -79,7 +79,7 @@ class RepairEffectivenessExperiment:
             "parallel": parallel,
             "configurations": {
                 "full_pipeline": {
-                    "description": "Full VerusAgent pipeline with all repair modules",
+                    "description": "Full VeriStruct pipeline with all repair modules",
                     "num_repair_rounds": num_repair_rounds,
                     "baseline_mode": False,
                 },

@@ -1,8 +1,8 @@
-# VerusAgent Planner System
+# VeriStruct Planner System
 
 ## Overview
 
-The Planner system in VerusAgent determines the optimal verification workflow for each piece of Verus code.
+The Planner system in VeriStruct determines the optimal verification workflow for each piece of Verus code.
 It analyzes the code and leverages LLM-based decision making.
 The planner also integrates existing knowledge to assemble an effective verification strategy.
 
@@ -297,4 +297,4 @@ def add_knowledge_source(source: KnowledgeSource):
 
 ## Conclusion
 
-The VerusAgent Planner system provides a sophisticated approach to verification workflow planning. By combining code analysis, LLM-based decision making, and extensive knowledge integration, it creates effective verification strategies tailored to specific code characteristics and requirements. The system's modular design and extension points allow for continuous improvement and adaptation to new verification challenges.
+The VeriStruct Planner system provides a sophisticated approach to verification workflow planning. By combining code analysis, LLM-based decision making, and extensive knowledge integration, it creates effective verification strategies tailored to specific code characteristics and requirements. The system's modular design and extension points allow for continuous improvement and adaptation to new verification challenges.

@@ -1,8 +1,8 @@
-# Getting Started with VerusAgent
+# Getting Started with VeriStruct
 
 ## Introduction
 
-Learn how VerusAgent checks Rust code.
+Learn how VeriStruct checks Rust code.
 This tutorial covers a simple counter, core concepts, and common patterns.
 
 ## Basic Concepts
@@ -111,7 +111,7 @@ verus! {
 
 ### 1. View Inference
 
-VerusAgent first generates the mathematical abstraction:
+VeriStruct first generates the mathematical abstraction:
 
 ```mermaid
 graph TD

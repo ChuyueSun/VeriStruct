@@ -1,6 +1,6 @@
 # Configuration Setup
 
-This directory contains configuration files for VerusAgent. The actual configuration files are ignored by git to prevent exposing API keys.
+This directory contains configuration files for VeriStruct. The actual configuration files are ignored by git to prevent exposing API keys.
 
 ## Quick Start
 

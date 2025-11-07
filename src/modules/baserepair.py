@@ -1,5 +1,5 @@
 """
-Base class for Repair modules in VerusAgent.
+Base class for Repair modules in VeriStruct.
 """
 
 import logging

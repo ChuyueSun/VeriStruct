@@ -1,8 +1,8 @@
-# VerusAgent Repair Modules
+# VeriStruct Repair Modules
 
 ## Overview
 
-VerusAgent includes a comprehensive set of repair modules that handle different types of verification errors. Each module specializes in fixing specific issues while maintaining code safety and correctness.
+VeriStruct includes a comprehensive set of repair modules that handle different types of verification errors. Each module specializes in fixing specific issues while maintaining code safety and correctness.
 
 ## Error Priority Order
 

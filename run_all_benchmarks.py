@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Script to run all TODO benchmarks in parallel.
-Launches one VerusAgent process for each benchmark file.
+Launches one VeriStruct process for each benchmark file.
 """
 
 import argparse

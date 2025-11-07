@@ -1,7 +1,7 @@
 {
-  "name": "VerusAgent Benchmark Corpus",
+  "name": "VeriStruct Benchmark Corpus",
   "version": "1.0",
-  "description": "Categorized benchmark corpus for systematic evaluation of VerusAgent workflow",
+  "description": "Categorized benchmark corpus for systematic evaluation of VeriStruct workflow",
   "created": "2025-11-05",
   "total_benchmarks": 10,
   "benchmarks": [

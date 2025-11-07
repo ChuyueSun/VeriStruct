@@ -1,4 +1,4 @@
-# Advanced Verification with VerusAgent
+# Advanced Verification with VeriStruct
 
 ## Introduction
 

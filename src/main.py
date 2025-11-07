@@ -128,10 +128,10 @@ def handle_checkpoint_best(context, output_dir, file_id, progress_logger, logger
 
 def main():
     """
-    Main entry point for VerusAgent
+    Main entry point for VeriStruct
     """
     start_time = time.time()
-    logger.info("Starting VerusAgent")
+    logger.info("Starting VeriStruct")
 
     # Use our custom config
     try:
@@ -847,7 +847,7 @@ def main():
 
     total_time = time.time() - start_time
     logger.info(
-        f"VerusAgent completed in {total_time:.2f}s! Results saved to {output_dir.absolute()}"
+        f"VeriStruct completed in {total_time:.2f}s! Results saved to {output_dir.absolute()}"
     )
 
     # Display a summary of important file paths for easy reference

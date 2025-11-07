@@ -83,7 +83,7 @@ def run_single_baseline(
         env["VERUS_OUTPUT_DIR"] = str(bench_output_dir.absolute())
         env["VERUS_BASELINE_MODE"] = "1"  # Flag to indicate baseline mode
 
-        # Run the main VerusAgent with baseline configuration
+        # Run the main VeriStruct with baseline configuration
         cmd = [sys.executable, "-m", "src.main"]
 
         start_time = time.time()

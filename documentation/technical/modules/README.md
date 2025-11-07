@@ -1,8 +1,8 @@
-# VerusAgent Modules Documentation
+# VeriStruct Modules Documentation
 
 ## Overview
 
-This directory provides documentation for each VerusAgent module, which together form a comprehensive verification solution.
+This directory provides documentation for each VeriStruct module, which together form a comprehensive verification solution.
 
 ## Running Example
 
@@ -173,4 +173,4 @@ When extending modules:
 
 ## Conclusion
 
-The VerusAgent module system provides a comprehensive approach to code verification. Each module focuses on a specific aspect while maintaining integration with the overall system. The modular architecture allows for continuous improvement and adaptation to new verification challenges. Together, the modules collaborate to transform individual analyses into a cohesive verification workflow.
+The VeriStruct module system provides a comprehensive approach to code verification. Each module focuses on a specific aspect while maintaining integration with the overall system. The modular architecture allows for continuous improvement and adaptation to new verification challenges. Together, the modules collaborate to transform individual analyses into a cohesive verification workflow.

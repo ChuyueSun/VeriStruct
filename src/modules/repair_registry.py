@@ -1,5 +1,5 @@
 """
-Registry for repair modules in VerusAgent.
+Registry for repair modules in VeriStruct.
 Maps error types to appropriate repair modules.
 """
 

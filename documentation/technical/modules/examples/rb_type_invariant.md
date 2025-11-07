@@ -1,6 +1,6 @@
 # RingBuffer Example - Module Workflow
 
-This document illustrates how each VerusAgent module processes the RingBuffer example (`rb_type_invariant.rs`).
+This document illustrates how each VeriStruct module processes the RingBuffer example (`rb_type_invariant.rs`).
 
 ## View Inference Module
 

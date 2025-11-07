@@ -1,4 +1,4 @@
-# Basic Verification with VerusAgent
+# Basic Verification with VeriStruct
 
 ## Introduction
 

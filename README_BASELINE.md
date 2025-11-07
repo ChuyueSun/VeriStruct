@@ -1,4 +1,4 @@
-# Baseline Mode for VerusAgent (New-Workflow Branch)
+# Baseline Mode for VeriStruct (New-Workflow Branch)
 
 This document explains how to use the baseline mode functionality that provides a single-shot LLM approach for comparison with the multi-stage pipeline on the new-workflow branch.
 
@@ -46,7 +46,7 @@ export VERUS_CONFIG="config-azure"
 export VERUS_OUTPUT_DIR="baseline_output"
 export VERUS_BASELINE_MODE="1"
 
-# Run VerusAgent in baseline mode
+# Run VeriStruct in baseline mode
 python -m src.main
 ```
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Statistical analysis and visualization for VerusAgent experiments.
+Statistical analysis and visualization for VeriStruct experiments.
 Implements analysis methodology from EXPERIMENT_PLAN.md
 """
 
@@ -269,7 +269,7 @@ class ExperimentAnalyzer:
         }
 
         # Generate markdown report
-        report = f"""# VerusAgent Experimental Evaluation Results
+        report = f"""# VeriStruct Experimental Evaluation Results
 
 **Experiment**: {self.df['experiment_id'].iloc[0] if len(self.df) > 0 else 'Unknown'}
 **Date**: {self.df['timestamp'].iloc[0] if len(self.df) > 0 else 'Unknown'}
@@ -279,7 +279,7 @@ class ExperimentAnalyzer:
 
 ## Executive Summary
 
-This report presents the results of a comprehensive experimental evaluation of the VerusAgent workflow,
+This report presents the results of a comprehensive experimental evaluation of the VeriStruct workflow,
 assessing its **robustness**, **cost-effectiveness**, and **overall effectiveness** in automating
 formal verification for Rust/Verus code.
 
@@ -495,7 +495,7 @@ Based on the experimental results, we recommend:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Analyze VerusAgent experimental results")
+    parser = argparse.ArgumentParser(description="Analyze VeriStruct experimental results")
 
     parser.add_argument(
         "--metrics",
