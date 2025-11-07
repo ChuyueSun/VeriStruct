@@ -232,6 +232,7 @@ class SpecInferenceModule(BaseModule):
             "   - For types without View: use direct field access `self.field`\n"
             "   - For types with View: use `self@.field` (the @ is shorthand for .view())\n"
             "   - For tuple views: use `self@.0`, `self@.1`, etc.\n"
+            "   - For vectors/collections with View: ALWAYS prefer `v@.len()` over `v.len()` for consistency\n"
             "     * CRITICAL: When using tuple access with comparison operators (e.g., `<`, `>`), wrap BOTH sides in parentheses\n"
             "     * CORRECT: `(x as nat) < (self@.0)`\n"
             "     * INCORRECT: `x as nat < self@.0` (causes parser error 'expected `,`')\n"
