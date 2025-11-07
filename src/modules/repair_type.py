@@ -8,12 +8,7 @@ from typing import Any, Dict, List, Optional
 
 from src.infer import LLM
 from src.modules.baserepair import BaseRepairModule
-from src.modules.utils import (
-    clean_code,
-    evaluate_samples,
-    fix_one_type_error_in_code,
-    get_examples,
-)
+from src.modules.utils import clean_code, evaluate_samples, fix_one_type_error_in_code, get_examples
 from src.modules.veval import VerusError, VerusErrorLabel, VerusErrorType, VEval
 from src.prompts.template import build_instruction
 from src.utils.path_utils import best_dir, prompt_dir, samples_dir
@@ -51,9 +46,7 @@ class RepairTypeModule(BaseRepairModule):
         # If a specific failure isn't provided, try to get one from the last trial
         if failure_to_fix is None:
             last_trial = context.trials[-1]
-            type_failures = last_trial.eval.get_failures(
-                error_type=VerusErrorType.MismatchedType
-            )
+            type_failures = last_trial.eval.get_failures(error_type=VerusErrorType.MismatchedType)
             annotation_failures = last_trial.eval.get_failures(
                 error_type=VerusErrorType.TypeAnnotation
             )
@@ -146,9 +139,7 @@ Response with the Rust code only, do not include any explanation."""
 
         error_trace = failure_to_fix.trace[0] if failure_to_fix.trace else None
         error_info = (
-            error_trace.get_text() + "\n"
-            if error_trace
-            else failure_to_fix.error_text + "\n"
+            error_trace.get_text() + "\n" if error_trace else failure_to_fix.error_text + "\n"
         )
         query = query_template.format(error_info, code)
 
@@ -215,9 +206,7 @@ Respond with the **fixed Rust code only** and do not include any explanation."""
 
         error_trace = failure_to_fix.trace[0] if failure_to_fix.trace else None
         error_info = (
-            error_trace.get_text() + "\n"
-            if error_trace
-            else failure_to_fix.error_text + "\n"
+            error_trace.get_text() + "\n" if error_trace else failure_to_fix.error_text + "\n"
         )
         query = query_template.format(error_info, code)
 
@@ -225,9 +214,7 @@ Respond with the **fixed Rust code only** and do not include any explanation."""
         safe_responses = []
 
         for retry_attempt in range(max_retries):
-            self.logger.info(
-                f"Type annotation repair attempt {retry_attempt + 1}/{max_retries}"
-            )
+            self.logger.info(f"Type annotation repair attempt {retry_attempt + 1}/{max_retries}")
 
             # Build complete instruction using the prompt system
             instruction = build_instruction(
@@ -241,9 +228,7 @@ Respond with the **fixed Rust code only** and do not include any explanation."""
             examples = get_examples(self.config, "type_annotation", self.logger)
 
             # Save prompt for debugging
-            prompt_file = (
-                prompt_dir() / f"repair_type_annotation_{len(context.trials)}.txt"
-            )
+            prompt_file = prompt_dir() / f"repair_type_annotation_{len(context.trials)}.txt"
             prompt_file.write_text(instruction + "\n\n---\n\n" + query)
             self.logger.info(f"Saved type annotation repair prompt to {prompt_file}")
 
@@ -285,9 +270,7 @@ Respond with the **fixed Rust code only** and do not include any explanation."""
 
         # If no safe responses found after all retries, fall back to original
         if not safe_responses:
-            self.logger.warning(
-                "No safe responses found after all retries, using original code"
-            )
+            self.logger.warning("No safe responses found after all retries, using original code")
             return code
 
         # Use the last safe response (since we break after finding one)
@@ -298,9 +281,7 @@ Respond with the **fixed Rust code only** and do not include any explanation."""
 
         return best_code
 
-    def repair_constructor_type_invariant(
-        self, context, failure_to_fix: VerusError
-    ) -> str:
+    def repair_constructor_type_invariant(self, context, failure_to_fix: VerusError) -> str:
         """
         Repair constructor type invariant errors.
 
@@ -323,14 +304,14 @@ Often, this means adding `requires` to the constructor function so that the `inv
 
 Respond with the **fixed Rust code only** and do not include any explanation."""
 
-        query_template = "In constructor, the declared type invariant is not satisfied:\n```\n{}```\n"
+        query_template = (
+            "In constructor, the declared type invariant is not satisfied:\n```\n{}```\n"
+        )
         query_template += "\nCode\n```\n{}```\n"
 
         error_trace = failure_to_fix.trace[0] if failure_to_fix.trace else None
         error_info = (
-            error_trace.get_text() + "\n"
-            if error_trace
-            else failure_to_fix.error_text + "\n"
+            error_trace.get_text() + "\n" if error_trace else failure_to_fix.error_text + "\n"
         )
         query = query_template.format(error_info, code)
 
@@ -351,19 +332,14 @@ Respond with the **fixed Rust code only** and do not include any explanation."""
             )
 
             # Load examples
-            examples = get_examples(
-                self.config, "constructor_type_invariant", self.logger
-            )
+            examples = get_examples(self.config, "constructor_type_invariant", self.logger)
 
             # Save prompt for debugging
             prompt_file = (
-                prompt_dir()
-                / f"repair_constructor_type_invariant_{len(context.trials)}.txt"
+                prompt_dir() / f"repair_constructor_type_invariant_{len(context.trials)}.txt"
             )
             prompt_file.write_text(instruction + "\n\n---\n\n" + query)
-            self.logger.info(
-                f"Saved constructor type invariant repair prompt to {prompt_file}"
-            )
+            self.logger.info(f"Saved constructor type invariant repair prompt to {prompt_file}")
 
             # Get responses from LLM
             responses = self._get_llm_responses(
@@ -403,9 +379,7 @@ Respond with the **fixed Rust code only** and do not include any explanation."""
 
         # If no safe responses found after all retries, fall back to original
         if not safe_responses:
-            self.logger.warning(
-                "No safe responses found after all retries, using original code"
-            )
+            self.logger.warning("No safe responses found after all retries, using original code")
             return code
 
         # Use the last safe response (since we break after finding one)
@@ -440,9 +414,7 @@ Respond with the Rust code only, do not include any explanation."""
 
         error_trace = failure_to_fix.trace[0] if failure_to_fix.trace else None
         error_info = (
-            error_trace.get_text() + "\n"
-            if error_trace
-            else failure_to_fix.error_text + "\n"
+            error_trace.get_text() + "\n" if error_trace else failure_to_fix.error_text + "\n"
         )
         query = query_template.format(error_info, code)
 
@@ -450,9 +422,7 @@ Respond with the Rust code only, do not include any explanation."""
         safe_responses = []
 
         for retry_attempt in range(max_retries):
-            self.logger.info(
-                f"Default type repair attempt {retry_attempt + 1}/{max_retries}"
-            )
+            self.logger.info(f"Default type repair attempt {retry_attempt + 1}/{max_retries}")
 
             # Build complete instruction using the prompt system
             instruction = build_instruction(
@@ -463,9 +433,7 @@ Respond with the Rust code only, do not include any explanation."""
             )
 
             # Save prompt for debugging
-            prompt_file = (
-                prompt_dir() / f"repair_default_type_{len(context.trials)}.txt"
-            )
+            prompt_file = prompt_dir() / f"repair_default_type_{len(context.trials)}.txt"
             prompt_file.write_text(instruction + "\n\n---\n\n" + query)
             self.logger.info(f"Saved default type repair prompt to {prompt_file}")
 
@@ -506,9 +474,7 @@ Respond with the Rust code only, do not include any explanation."""
 
         # If no safe responses found after all retries, fall back to original
         if not safe_responses:
-            self.logger.warning(
-                "No safe responses found after all retries, using original code"
-            )
+            self.logger.warning("No safe responses found after all retries, using original code")
             return code
 
         # Use the last safe response (since we break after finding one)

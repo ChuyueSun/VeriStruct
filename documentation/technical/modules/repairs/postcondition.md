@@ -95,6 +95,7 @@ graph TD
 ### 2. Repair Process
 
 1. Error Detection:
+
 ```python
 postcond_failures = last_trial.eval.get_failures(
     error_type=VerusErrorType.PostCondFail
@@ -105,6 +106,7 @@ private_failures = last_trial.eval.get_failures(
 ```
 
 2. Error Analysis:
+
 ```python
 # Extract error information
 location_trace, postcond_trace = failure_to_fix.trace[0], failure_to_fix.trace[1]
@@ -113,6 +115,7 @@ if location_trace.label == VerusErrorLabel.FailedThisPostCond:
 ```
 
 3. Repair Generation:
+
 ```python
 # For postcondition failures
 proof {
@@ -132,24 +135,28 @@ pub spec fn get_private_state(&self) -> T {
 ## Features
 
 ### 1. Error Handling
+
 - General postconditions
 - Private field access
 - Loop invariants
 - Exit points
 
 ### 2. Repair Strategies
+
 - Proof generation
 - Invariant modification
 - Access control
 - State exposure
 
 ### 3. Context Integration
+
 - Function state
 - Loop invariants
 - Exit points
 - Public interface
 
 ### 4. Result Management
+
 - Best result tracking
 - Sample preservation
 - Context updates
@@ -158,6 +165,7 @@ pub spec fn get_private_state(&self) -> T {
 ## Common Repairs
 
 ### 1. General Postconditions
+
 ```rust
 // Before
 fn method(&mut self) -> bool
@@ -183,6 +191,7 @@ fn method(&mut self) -> bool
 ```
 
 ### 2. Loop Invariants
+
 ```rust
 // Before
 while i < n {
@@ -202,6 +211,7 @@ while i < n
 ```
 
 ### 3. Private Access
+
 ```rust
 // Before
 fn method(&mut self)
@@ -253,6 +263,7 @@ fn method(&mut self)
 ## Extension Points
 
 1. Error Handling:
+
 ```python
 def add_error_handler(self, error_type: str, handler: Callable):
     """Add new error handler."""
@@ -260,6 +271,7 @@ def add_error_handler(self, error_type: str, handler: Callable):
 ```
 
 2. Repair Strategies:
+
 ```python
 def add_repair_strategy(self, strategy_type: str, strategy: Callable):
     """Add new repair strategy."""
@@ -267,6 +279,7 @@ def add_repair_strategy(self, strategy_type: str, strategy: Callable):
 ```
 
 3. Context Integration:
+
 ```python
 def add_context_source(self, source: str):
     """Add new context source."""
@@ -276,6 +289,7 @@ def add_context_source(self, source: str):
 ## Common Issues
 
 ### 1. Missing Proofs
+
 ```rust
 // Problem: Unproven postcondition
 ensures
@@ -289,6 +303,7 @@ proof {
 ```
 
 ### 2. Loop Invariants
+
 ```rust
 // Problem: Missing invariant
 while i < vec.len() {
@@ -302,6 +317,7 @@ invariant
 ```
 
 ### 3. Private Access
+
 ```rust
 // Problem: Direct private access
 ensures
@@ -318,12 +334,14 @@ ensures
 ## Conclusion
 
 The Postcondition Repair Module provides:
+
 1. Comprehensive error handling
 2. Multiple repair strategies
 3. Access control management
 4. Context-aware repairs
 
 Key strengths:
+
 1. Multiple error types
 2. Proof generation
 3. Access control

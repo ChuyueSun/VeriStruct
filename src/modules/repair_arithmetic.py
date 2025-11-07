@@ -8,12 +8,7 @@ from typing import Any, Dict, List, Optional
 
 from src.infer import LLM
 from src.modules.baserepair import BaseRepairModule
-from src.modules.utils import (
-    clean_code,
-    evaluate_samples,
-    get_examples,
-    get_nonlinear_lines,
-)
+from src.modules.utils import clean_code, evaluate_samples, get_examples, get_nonlinear_lines
 from src.modules.veval import VerusError, VerusErrorLabel, VerusErrorType, VEval
 from src.utils.path_utils import best_dir, samples_dir
 
@@ -50,9 +45,7 @@ class RepairArithmeticModule(BaseRepairModule):
         # If a specific failure isn't provided, try to get one from the last trial
         if failure_to_fix is None:
             last_trial = context.trials[-1]
-            failures = last_trial.eval.get_failures(
-                error_type=VerusErrorType.ArithmeticFlow
-            )
+            failures = last_trial.eval.get_failures(error_type=VerusErrorType.ArithmeticFlow)
             if not failures:
                 self.logger.warning("No arithmetic failures found in the last trial.")
                 return code  # Return original code if no arithmetic error
@@ -189,9 +182,7 @@ Please check the given program, and add nonlinear_arith assertion for the follow
         code = context.trials[-1].code
 
         error_trace = failure_to_fix.trace[0]
-        error_highlight = (
-            error_trace.get_highlights()[0] if error_trace.get_highlights() else ""
-        )
+        error_highlight = error_trace.get_highlights()[0] if error_trace.get_highlights() else ""
 
         instruction = f"""Your mission is to fix the arithmetic underflow/overflow error for the following code.
 Basically, for each variable involved in the expression `{error_highlight}' in line `{error_trace.get_text().strip()}' of the program, there are several general ways to fix the error:

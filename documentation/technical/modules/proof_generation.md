@@ -100,6 +100,7 @@ def _process_responses(self, responses: List[str], original_code: str):
 ## Workflow
 
 ### 1. Initialization
+
 ```python
 def __init__(self, config, logger):
     super().__init__(
@@ -114,6 +115,7 @@ def __init__(self, config, logger):
 ### 2. Execution Process
 
 1. Code Analysis:
+
 ```python
 def exec(self, context) -> str:
     code = context.trials[-1].code
@@ -124,6 +126,7 @@ def exec(self, context) -> str:
 ```
 
 2. Multiple Retry Attempts:
+
 ```python
 max_retries = 3
 for retry_attempt in range(max_retries):
@@ -138,6 +141,7 @@ for retry_attempt in range(max_retries):
 3. Response Processing:
 The module logs type errors, uses the original response when fixes are not
 produced, and then validates safety.
+
 ```python
 def _process_responses(self, responses, original_code, verus_path):
     safe_responses = []
@@ -151,6 +155,7 @@ def _process_responses(self, responses, original_code, verus_path):
 ## Features
 
 ### 1. Proof Block Generation
+
 - Regular function proofs
 - Proof function assertions
 - Type invariant usage
@@ -158,6 +163,7 @@ def _process_responses(self, responses, original_code, verus_path):
 - Strategic assertions
 
 ### 2. Loop Invariant Generation
+
 - Variable read tracking
 - Variable write tracking
 - Initial value invariants
@@ -165,12 +171,14 @@ def _process_responses(self, responses, original_code, verus_path):
 - Invariant repetition
 
 ### 3. Error Handling
+
 - Multiple retry attempts
 - Temperature adjustment
 - Type error fixing
 - Comprehensive logging
 
 ### 4. Result Management
+
 - Best result tracking
 - Sample preservation
 - Score-based evaluation
@@ -179,7 +187,9 @@ def _process_responses(self, responses, original_code, verus_path):
 ## Best Practices
 
 ### 1. Proof Implementation
+
 - Use appropriate block structure:
+
   ```rust
   proof {
       use_type_invariant(&*self);
@@ -189,7 +199,9 @@ def _process_responses(self, responses, original_code, verus_path):
   ```
 
 ### 2. Loop Invariant Implementation
+
 - Track all variables:
+
   ```rust
   proof {
       invariant i >= 0 && i <= v.len();
@@ -198,12 +210,14 @@ def _process_responses(self, responses, original_code, verus_path):
   ```
 
 ### 3. Safety Checks
+
 - Validate code changes
 - Check type safety
 - Preserve semantics
 - Maintain structure
 
 ### 4. Result Optimization
+
 - Track best results
 - Evaluate samples
 - Preserve history
@@ -212,6 +226,7 @@ def _process_responses(self, responses, original_code, verus_path):
 ## Common Proof Locations
 
 1. Function Start:
+
 ```rust
 fn example(&self) {
     proof {
@@ -222,6 +237,7 @@ fn example(&self) {
 ```
 
 2. Before Loops:
+
 ```rust
 proof {
     // Setup loop invariants
@@ -234,6 +250,7 @@ while i < n {
 ```
 
 3. After Key Operations:
+
 ```rust
 v.push(x);
 proof {
@@ -245,6 +262,7 @@ proof {
 ## Extension Points
 
 1. Custom Proof Patterns:
+
 ```python
 def add_proof_pattern(self, pattern: str, handler: Callable):
     """Register new proof pattern handler."""
@@ -252,6 +270,7 @@ def add_proof_pattern(self, pattern: str, handler: Callable):
 ```
 
 2. Invariant Patterns:
+
 ```python
 def add_invariant_pattern(self, pattern: str, handler: Callable):
     """Register new invariant pattern handler."""
@@ -259,6 +278,7 @@ def add_invariant_pattern(self, pattern: str, handler: Callable):
 ```
 
 3. Result Evaluation:
+
 ```python
 def add_evaluation_metric(self, metric: Callable):
     """Add custom evaluation metric."""
@@ -268,18 +288,21 @@ def add_evaluation_metric(self, metric: Callable):
 ## Guidelines
 
 ### 1. Proof Structure
+
 - Use appropriate block type
 - Include necessary assertions
 - Apply relevant lemmas
 - Follow verification patterns
 
 ### 2. Loop Invariants
+
 - Track all variables
 - Handle array bounds
 - Maintain state relations
 - Ensure completeness
 
 ### 3. Implementation Style
+
 - Keep proofs minimal
 - Use clear assertions
 - Apply appropriate lemmas

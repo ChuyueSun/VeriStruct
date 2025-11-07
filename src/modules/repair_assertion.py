@@ -57,9 +57,7 @@ class RepairAssertionModule(BaseRepairModule):
         # If a specific failure isn't provided, try to get one from the last trial
         if failure_to_fix is None:
             last_trial = context.trials[-1]
-            assert_failures = last_trial.eval.get_failures(
-                error_type=VerusErrorType.AssertFail
-            )
+            assert_failures = last_trial.eval.get_failures(error_type=VerusErrorType.AssertFail)
             split_assert_failures = last_trial.eval.get_failures(
                 error_type=VerusErrorType.TestAssertFail
             )
@@ -97,9 +95,7 @@ class RepairAssertionModule(BaseRepairModule):
         elif failure_to_fix.error == VerusErrorType.TestAssertFail:
             return self.repair_test_assert_fail(context, failure_to_fix)
 
-    def repair_assert_fail(
-        self, context, failure_to_fix: VerusError, num=1, temp=1.0
-    ) -> List[str]:
+    def repair_assert_fail(self, context, failure_to_fix: VerusError, num=1, temp=1.0) -> List[str]:
         """
         Repair a regular assertion failure.
 
@@ -114,9 +110,7 @@ class RepairAssertionModule(BaseRepairModule):
         code = context.trials[-1].code
 
         # First try special assertion fixes for common patterns
-        newcode = self.repair_special_assertion_error(
-            code, failure_to_fix, num=num, temp=temp
-        )
+        newcode = self.repair_special_assertion_error(code, failure_to_fix, num=num, temp=temp)
         if newcode:
             return [newcode]
 
@@ -220,10 +214,7 @@ Response with the Rust code only, do not include any explanation."""
         # Handle subrange operations
         if ".subrange(" in assertion_info:
             self.logger.info("Special fix: adding subrange lemmas")
-            if (
-                not "lemma_seq_subrange_ascend" in code
-                and not "lemma_seq_subrange_all" in code
-            ):
+            if not "lemma_seq_subrange_ascend" in code and not "lemma_seq_subrange_all" in code:
                 newcode = insert_lemma_func(
                     code,
                     ["seq_subrange_ascend", "seq_subrange_all"],
@@ -232,9 +223,7 @@ Response with the Rust code only, do not include any explanation."""
             elif not "lemma_seq_subrange_all" in code:
                 newcode = insert_lemma_func(code, ["seq_subrange_all"], self.lemma_path)
             elif not "lemma_seq_subrange_ascend" in code:
-                newcode = insert_lemma_func(
-                    code, ["seq_subrange_ascend"], self.lemma_path
-                )
+                newcode = insert_lemma_func(code, ["seq_subrange_ascend"], self.lemma_path)
             else:
                 newcode = code
 
@@ -245,9 +234,7 @@ Response with the Rust code only, do not include any explanation."""
         # Handle contains operations
         if ".contains(" in assertion_info:
             self.logger.info("Special fix: adding vector lemmas")
-            newcode = insert_lemma_func(
-                code, ["vec_push", "vec_remove"], self.lemma_path
-            )
+            newcode = insert_lemma_func(code, ["vec_push", "vec_remove"], self.lemma_path)
             if newcode:
                 did_special_fix = True
                 code = newcode
@@ -288,9 +275,7 @@ Provide only the modified Rust code—no explanations.
 
         instruction = self.add_seq_knowledge(code, instruction)
         instruction += "\n\n" + self.proof_block_info
-        instruction += (
-            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
-        )
+        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
 
         # Load examples (use test_assert examples for test assertion repair)
         examples = get_examples(self.config, "test_assert", self.logger)
@@ -347,9 +332,7 @@ Provide only the modified Rust code—no explanations.
         # Check if we made progress
         if best_score:
             self.logger.info(f"Split assertion repair score: {best_score}")
-            self.logger.info(
-                f"Best code saved to {output_dir}/repair_split_assertion_sample_*.rs"
-            )
+            self.logger.info(f"Best code saved to {output_dir}/repair_split_assertion_sample_*.rs")
 
         # Add the best result to context
         context.add_trial(best_code)

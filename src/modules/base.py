@@ -119,9 +119,7 @@ class BaseModule:
             return code_change_is_safe(
                 origin_code=original_code,
                 changed_code=new_code,
-                verus_path=(
-                    self.config.get("verus_path", "verus") if self.config else "verus"
-                ),
+                verus_path=(self.config.get("verus_path", "verus") if self.config else "verus"),
                 logger=self.logger,
                 immutable_funcs=self.immutable_funcs,
             )

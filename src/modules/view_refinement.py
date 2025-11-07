@@ -80,9 +80,7 @@ Please provide only the complete Rust code of the file with no additional commen
         """Load example files for view refinement."""
         examples = []
         try:
-            example_path = (
-                Path(self.config.get("example_path", "examples")) / "input-view-refine"
-            )
+            example_path = Path(self.config.get("example_path", "examples")) / "input-view-refine"
             if example_path.exists():
                 for f in sorted(example_path.iterdir()):
                     if f.suffix == ".rs":
@@ -95,9 +93,7 @@ Please provide only the complete Rust code of the file with no additional commen
                         answer = answer_path.read_text() if answer_path.exists() else ""
                         examples.append({"query": input_content, "answer": answer})
             else:
-                self.logger.warning(
-                    "Example path does not exist - proceeding without examples"
-                )
+                self.logger.warning("Example path does not exist - proceeding without examples")
         except Exception as e:
             self.logger.error(f"Error loading examples: {e}")
         return examples
@@ -159,7 +155,9 @@ Please provide only the complete Rust code of the file with no additional commen
 
             # Extract view function body
             # Pattern: closed spec fn view(&self) -> Self::V { ... }
-            view_fn_pattern = r"(?:closed\s+)?spec\s+fn\s+view\s*\([^)]*\)[^{]*\{([^}]*(?:\{[^}]*\}[^}]*)*)\}"
+            view_fn_pattern = (
+                r"(?:closed\s+)?spec\s+fn\s+view\s*\([^)]*\)[^{]*\{([^}]*(?:\{[^}]*\}[^}]*)*)\}"
+            )
             view_fn_match = re.search(view_fn_pattern, code, re.DOTALL)
 
             if not view_fn_match:
@@ -290,9 +288,7 @@ Please provide only the complete Rust code of the file with no additional commen
             # Log the complete query content for debugging
             self.logger.debug("=== LLM Query Content ===")
             self.logger.debug(f"Retry Attempt: {retry_attempt}")
-            self.logger.debug(
-                f"Temperature: {1.0 + (retry_attempt * temperature_boost)}"
-            )
+            self.logger.debug(f"Temperature: {1.0 + (retry_attempt * temperature_boost)}")
             self.logger.debug(f"Cache Enabled: {use_cache}")
             self.logger.debug("\n=== Instruction ===\n" + instruction)
             self.logger.debug("\n=== Code ===\n" + code)
@@ -442,9 +438,7 @@ Please provide only the complete Rust code of the file with no additional commen
         safe_responses = []
 
         for retry_attempt in range(max_retries):
-            self.logger.info(
-                f"View refinement attempt {retry_attempt + 1}/{max_retries}"
-            )
+            self.logger.info(f"View refinement attempt {retry_attempt + 1}/{max_retries}")
 
             # Save prompt for debugging
             prompt_path = prompt_dir()
@@ -477,9 +471,7 @@ Please provide only the complete Rust code of the file with no additional commen
 
         # If no safe responses found after all retries, fall back to original
         if not safe_responses:
-            self.logger.warning(
-                "No safe responses found after all retries, using original code"
-            )
+            self.logger.warning("No safe responses found after all retries, using original code")
             safe_responses = [original_code]
 
         # Setup directories
@@ -489,9 +481,7 @@ Please provide only the complete Rust code of the file with no additional commen
         # Compilation retry loop
         max_compile_attempts = 3
         compile_attempt = 0
-        skip_compilation_retry = (
-            False  # Flag to skip retry when we just did trivial view retry
-        )
+        skip_compilation_retry = False  # Flag to skip retry when we just did trivial view retry
 
         while compile_attempt < max_compile_attempts:
             if compile_attempt > 0 and not skip_compilation_retry:
@@ -520,9 +510,7 @@ Please provide only the complete Rust code of the file with no additional commen
 
             # Check if there's a compilation error
             if not best_score.compilation_error:
-                self.logger.info(
-                    f"Found compiling code on attempt {compile_attempt + 1}"
-                )
+                self.logger.info(f"Found compiling code on attempt {compile_attempt + 1}")
 
                 # CRITICAL CHECK: Detect trivial views and reject them
                 if self._is_trivial_view(best_code):
@@ -533,9 +521,7 @@ Please provide only the complete Rust code of the file with no additional commen
 
                     # Try to get better responses with specific feedback
                     if compile_attempt < max_compile_attempts - 1:
-                        self.logger.info(
-                            "Calling LLM again with feedback about trivial view issue"
-                        )
+                        self.logger.info("Calling LLM again with feedback about trivial view issue")
 
                         # Build instruction with trivial view feedback
                         trivial_view_feedback = """
@@ -565,8 +551,7 @@ Is your tuple size STRICTLY LESS than the field count? If not, you're not abstra
 """
 
                         retry_instruction = build_instruction(
-                            base_instruction=self.refinement_instruction
-                            + trivial_view_feedback,
+                            base_instruction=self.refinement_instruction + trivial_view_feedback,
                             add_common=True,
                             add_view=True,
                             add_match=False,
@@ -607,9 +592,7 @@ Is your tuple size STRICTLY LESS than the field count? If not, you're not abstra
                                     "No responses received from LLM for trivial view retry"
                                 )
                         except Exception as e:
-                            self.logger.error(
-                                f"Error during trivial view retry LLM call: {e}"
-                            )
+                            self.logger.error(f"Error during trivial view retry LLM call: {e}")
 
                         # If we couldn't get new responses, fall through to fallback
                         self.logger.warning(

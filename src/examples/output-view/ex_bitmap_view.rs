@@ -1,19 +1,18 @@
 use vstd::prelude::*;
 use vstd::seq_lib::*;
 
+verus! {
 /// Generic container of packed 64-bit chunks.
-/// Shows an output-view style `View` implementation without relying on
-/// specific identifiers from the source benchmark.
+/// Shows filling in a spec fn view body for a bitmap structure.
 pub struct S {
     v: Vec<u64>,
 }
 
+impl S {
 // ========== INFERRED VIEW IMPLEMENTATION ==========
-impl View for S {
-    /// Logical representation as a sequence of booleans
-    type V_list = Seq<bool>;
-
-    pub closed spec fn view(&self) -> self::V_list {
+    /// Logical view: flatten the u64 chunks into a boolean sequence.
+    /// Each u64 represents 64 bits, so total size is len * 64.
+    spec fn view(&self) -> Seq<bool> {
         let total_bits = self.v@.len() * 64;
         Seq::new(total_bits, |i: int| {
             let ci = i / 64;
@@ -21,5 +20,6 @@ impl View for S {
             ((0x1u64 & (self.v@[ci] >> bi)) == 1)
         })
     }
-}
 // ==================================================
+}
+}

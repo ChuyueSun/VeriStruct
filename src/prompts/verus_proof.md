@@ -63,17 +63,20 @@ proof {
 **CRITICAL**: The `assert_seqs_equal!` macro must come AFTER the state modification, not before!
 
 **Common mistakes to AVOID**:
+
 - ❌ DON'T write: `assert forall|i: int| ...` (this will fail!)
 - ❌ DON'T try to prove sequence equality manually
 - ❌ DON'T skip this macro and leave proof block empty
 
 **When to use this**:
+
 - Any function that modifies exactly one position in a Seq-based view
 - After calling operations like `self.data.set(...)` to update a single element
 - When postcondition mentions `old(self)@.update(...)`
 - When the function semantics are "change element at index i, keep rest unchanged"
 
 **This macro automatically**:
+
 - Proves sequence lengths match
 - Proves element-wise equality with proper triggers
 - Handles the connection between low-level field updates and high-level view updates
@@ -132,13 +135,13 @@ General pattern: For any `&mut self` method that (1) accesses elements via indic
 ## 2. Loop Invariants
 
 - Carefully review all existing lemmas defined in the file and invoke each one that is relevant to the current proof context, using the syntax `lemma_name(arg1, arg2, ...)`.
-  * For example, if there are lemmas about sequence bounds or modular arithmetic, call them as needed, such as `lemma_mod_auto(self.vt.len() as int)`.
-  * For lemmas about sequence properties, use the appropriate generic syntax, e.g., `broadcast use group_seq_properties`.
-  * When reasoning about sequences or specifications, ensure that all applicable modular arithmetic and sequence-related lemmas from the file are called to support your proof.
+  - For example, if there are lemmas about sequence bounds or modular arithmetic, call them as needed, such as `lemma_mod_auto(self.vt.len() as int)`.
+  - For lemmas about sequence properties, use the appropriate generic syntax, e.g., `broadcast use group_seq_properties`.
+  - When reasoning about sequences or specifications, ensure that all applicable modular arithmetic and sequence-related lemmas from the file are called to support your proof.
 - Use assertions strategically with `assert(condition)`
 - When helpful, use the `by(...)` syntax for proof steps:
-  * `by(nonlinear_arith)` for arithmetic reasoning
-  * `by { ... }` for explicit proof steps
+  - `by(nonlinear_arith)` for arithmetic reasoning
+  - `by { ... }` for explicit proof steps
 
 ### Mandatory Checklist
 
@@ -155,13 +158,13 @@ General pattern: For any `&mut self` method that (1) accesses elements via indic
 When adding loop invariants (marked by `// TODO: add invariants`), include:
 
 - Identify and add invariants for EVERY variable that is READ in the loop:
-  * For scalar variables (e.g., x, y)
-  * For array/vector elements (e.g., x[k], v[i])
-  * Include invariants about their initial values
+  - For scalar variables (e.g., x, y)
+  - For array/vector elements (e.g., x[k], v[i])
+  - Include invariants about their initial values
 - Identify and add invariants for EVERY variable that is WRITTEN in the loop:
-  * For direct assignments (e.g., y = ...)
-  * For vector/array updates (e.g., v.set(..., ...))
-  * Repeat relevant invariants even if specified earlier
+  - For direct assignments (e.g., y = ...)
+  - For vector/array updates (e.g., v.set(..., ...))
+  - Repeat relevant invariants even if specified earlier
 - Fully utilize spec functions and proof functions in the invariants
 
 ### Inherit Precondition Properties into Loop Invariants
@@ -177,6 +180,7 @@ When a loop's correctness depends on properties from the function's precondition
 5. **Structural properties**: Any property about the structure of data that the algorithm relies on
 
 **Abstract Pattern:**
+
 ```rust
 fn algorithm(data: &DataStructure, target: ValueType) -> (result: ResultType)
     requires
@@ -215,21 +219,25 @@ while condition
 **Common patterns:**
 
 1. **Incrementing counter** (`while i < n`):
+
    ```rust
    decreases n - i
    ```
 
 2. **Decrementing counter** (`while i > 0`):
+
    ```rust
    decreases i
    ```
 
 3. **Binary search / narrowing range** (`while i1 < i2`):
+
    ```rust
    decreases i2 - i1
    ```
 
 4. **Narrowing range with != condition** (`while i1 != i2`):
+
    ```rust
    decreases i2 - i1  // Ensure i1 and i2 converge
    ```
@@ -237,11 +245,13 @@ while condition
 5. **Complex expressions** - use the value that strictly decreases each iteration
 
 **The decreases expression must:**
+
 - Be non-negative (type `int` or `nat`)
 - Strictly decrease on each loop iteration
 - Prove the loop eventually terminates
 
 **Key insight for narrowing range algorithms**: When maintaining a search range [i1, i2], ensure the invariant states that the target exists within the **current range** [i1, i2], not just somewhere in the entire collection. For example:
+
 - ❌ Weak: `exists|i: int| 0 <= i < v.len() && v[i] == k`
 - ✅ Strong: `exists|i: int| i1 <= i <= i2 && v[i] == k`
 
@@ -250,6 +260,7 @@ This ensures that when the loop exits with i1 == i2, the invariant directly prov
 ### Pattern: Recognizing When Bridge Invariants Are Needed
 
 **Before writing loop invariants, check:**
+
 1. Does the data structure have a `spec fn view(&self)` or similar abstraction function?
 2. Is the postcondition expressed in terms of `view()` rather than raw fields?
 3. Does the loop modify the underlying concrete representation?
@@ -282,6 +293,7 @@ for cursor in 0..midpoint
 ```
 
 **Why all three regions matter:**
+
 - When loop exits at `cursor = midpoint`
 - Left covers `[0, midpoint)`
 - Middle becomes `[midpoint, midpoint)` = **empty**
@@ -293,6 +305,7 @@ for cursor in 0..midpoint
 **Pattern: Multiple cursors/partitions**
 
 For algorithms with multiple moving boundaries (e.g., partitioning, quicksort-style):
+
 ```rust
 while condition
     invariant
@@ -315,10 +328,12 @@ while condition
 When loops access arrays/vectors using loop variables, Verus needs strong invariants to prove bounds safety:
 
 1. **Track array lengths explicitly**: If accessing arrays/vectors using loop variables, add:
+
    ```rust
    n == self.data@.len(),
    n == other.data@.len(),
    ```
+
    where `n` is the loop bound. This helps Verus prove `i < array.len()` at each access.
 
 2. **Add "bridge invariants" connecting concrete and abstract representations**:
@@ -328,18 +343,21 @@ When loops access arrays/vectors using loop variables, Verus needs strong invari
 If the struct has `spec fn view(&self)` and the postcondition mentions `view()`, you MUST add TWO invariants:
 
    When a data structure has both:
-   - Concrete representation (e.g., `data: Vec<ChunkType>`)
-   - Abstract specification via `spec fn view(&self) -> Seq<ElementType>`
+
+- Concrete representation (e.g., `data: Vec<ChunkType>`)
+- Abstract specification via `spec fn view(&self) -> Seq<ElementType>`
 
    You MUST add invariants at BOTH levels:
 
    **Raw level** (concrete):
+
    ```rust
    forall|j: int| 0 <= j < i ==>
        result.data@[j] == combine_chunks(self.data@[j], other.data@[j])
    ```
 
    **Spec level** (abstract) - **REQUIRED to prove postconditions about view()**:
+
    ```rust
    forall|k: int| 0 <= k < i * ITEMS_PER_CHUNK ==>
        extract_from_chunks(result.data@, k) ==
@@ -358,10 +376,13 @@ If the struct has `spec fn view(&self)` and the postcondition mentions `view()`,
    1. **Find** the `spec fn view(&self)` definition in the struct
    2. **Copy** the exact expression used inside `Seq::new(...)`
    3. **Add raw-level invariant** (about concrete fields):
+
       ```rust
       forall|j: int| 0 <= j < i ==> result.data@[j] == combine(self.data@[j], other.data@[j])
       ```
+
    4. **Add bridge invariant** (REQUIRED - copy the view() expression):
+
       ```rust
       forall|k: int| 0 <= k < i * CHUNK_SIZE ==>
           expression_from_view(result.data@, k) ==
@@ -369,9 +390,8 @@ If the struct has `spec fn view(&self)` and the postcondition mentions `view()`,
                          expression_from_view(other.data@, k))
       ```
 
+   3. **Add proof blocks INSIDE loops**: After modifying data structures in a loop, add proof blocks to establish invariants for the new iteration:
 
-
-3. **Add proof blocks INSIDE loops**: After modifying data structures in a loop, add proof blocks to establish invariants for the new iteration:
    ```rust
    result = DataStructure { data: new_data };
    proof {
@@ -390,10 +410,12 @@ When arrays/vectors store data in fixed-size chunks (e.g., machine words), but t
 **Goal**: Prove a spec-level property for all elements/bits, while the loop processes one chunk per iteration.
 
 **Invariants (before each iteration i):**
+
 - 0 <= i <= chunks
 - Result growth (if constructing a new buffer): `result_bits@.len() == i`
 - Lengths are fixed: `self@.len() == n`, `other@.len() == n`
 - Spec-level bridge for processed region:
+
   ```rust
   forall|k: int| #![auto]
       0 <= k < i * CHUNK_SIZE ==>
@@ -402,6 +424,7 @@ When arrays/vectors store data in fixed-size chunks (e.g., machine words), but t
 
 **After producing the next chunk (at index i):**
 Place a proof block that re-establishes only the new segment `[i*CHUNK_SIZE, (i+1)*CHUNK_SIZE)`:
+
 ```rust
 proof {
     assert forall|b: int| 0 <= b < CHUNK_SIZE implies
@@ -418,11 +441,13 @@ proof {
 ```
 
 **Tips**
+
 - Split proof into two regions each iteration: processed-old `[0, i*CHUNK_SIZE)` carried by the invariant, plus new `[i*CHUNK_SIZE, (i+1)*CHUNK_SIZE)` proved in the by-block.
 - Keep arithmetic in `int` for invariants and proofs; perform casts only at concrete operation sites.
 - Add a `decreases` clause, e.g., `decreases chunks - i`.
 
 **Postconditions** (example):
+
 ```rust
 ensures
     ret@.len() == self@.len(),
@@ -430,6 +455,7 @@ ensures
 ```
 
 **Common mistakes to avoid**
+
 - Writing a single large `forall k < (i+1)*CHUNK_SIZE` without splitting; prove only the new segment each iteration.
 - Mixing `nat` and `int` in indices; use `int` in specs, cast at the boundary.
 - Placing the per-segment proof before the actual mutation; the proof must come after updating the concrete state.
@@ -468,6 +494,7 @@ while i < chunks
 ```
 
 Notes:
+
 - Keep names generic (`combine`, `chunk_op`, `chunk_op_lemma`, `CHUNK_SIZE`).
 - Follow the order: concrete mutation → proof of the new segment.
 
@@ -478,6 +505,7 @@ Notes:
 When you see `#[verifier::type_invariant]` in the code, **EVERY** proof block in that impl block **MUST** start with `use_type_invariant(...)`:
 
 **Syntax**:
+
 ```rust
 // For &mut self methods (most common):
 proof {
@@ -492,6 +520,7 @@ proof {
 ```
 
 **Common errors if missing**:
+
 - "possible arithmetic underflow/overflow"
 - "possible division by zero"
 - "precondition not satisfied" for array access
@@ -500,13 +529,13 @@ proof {
 **Pattern**: Always make this the **first line** in any proof block when type invariant exists.
 
 - Carefully review all existing lemmas defined in the file and invoke each one that is relevant to the current proof context, using the syntax `lemma_name(arg1, arg2, ...)`.
-  * For example, if there are lemmas about sequence bounds or modular arithmetic, call them as needed, such as `lemma_mod_auto(self.vt.len() as int)`.
-  * For lemmas about sequence properties, use the appropriate generic syntax, e.g., `broadcast use group_seq_properties`.
-  * When reasoning about sequences or specifications, ensure that all applicable modular arithmetic and sequence-related lemmas from the file are called to support your proof.
+  - For example, if there are lemmas about sequence bounds or modular arithmetic, call them as needed, such as `lemma_mod_auto(self.vt.len() as int)`.
+  - For lemmas about sequence properties, use the appropriate generic syntax, e.g., `broadcast use group_seq_properties`.
+  - When reasoning about sequences or specifications, ensure that all applicable modular arithmetic and sequence-related lemmas from the file are called to support your proof.
 - Use assertions strategically with `assert(condition)`
 - When helpful, use the `by(...)` syntax for proof steps:
-  * `by(nonlinear_arith)` for arithmetic reasoning
-  * `by { ... }` for explicit proof steps
+  - `by(nonlinear_arith)` for arithmetic reasoning
+  - `by { ... }` for explicit proof steps
 
 ## 4. COMMON PROOF LOCATIONS
 

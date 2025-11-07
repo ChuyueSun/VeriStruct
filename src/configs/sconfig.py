@@ -40,9 +40,7 @@ if "config-azure" in configs:
     config = configs["config-azure"]
 else:
     # Use the first config found or the default
-    config = (
-        next(iter(configs.values())) if configs else configs.get("config-default", {})
-    )
+    config = next(iter(configs.values())) if configs else configs.get("config-default", {})
 
 # Hard code the example, lemma, and util paths
 config["example_path"] = Path(__file__).parent.parent / "examples"

@@ -1,8 +1,8 @@
-# VerusAgent Tutorial
+# VeriStruct Tutorial
 
 ## Overview
 
-This tutorial walks you through the process of verifying Rust code using VerusAgent. We'll use real examples to demonstrate each step of the verification workflow.
+This tutorial walks you through the process of verifying Rust code using VeriStruct. We'll use real examples to demonstrate each step of the verification workflow.
 
 ## Table of Contents
 
@@ -15,11 +15,12 @@ This tutorial walks you through the process of verifying Rust code using VerusAg
 
 - Basic understanding of Rust
 - Familiarity with formal verification concepts
-- Installed Verus and VerusAgent
+- Installed Verus and VeriStruct
 
 ## Tutorial Structure
 
 Each section includes:
+
 - Concepts and theory
 - Practical examples
 - Step-by-step instructions

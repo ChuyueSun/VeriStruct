@@ -6,17 +6,30 @@ import subprocess
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Run all *_todo.rs benchmarks with specified configs."
+        description="Run benchmarks from benchmarks-complete/ directory with one or more configs",
+        epilog="""Examples:
+  Single benchmark, single config:
+    python run_bench.py --configs config-azure --benchmark vectors_todo
+
+  Single benchmark, multiple configs (for comparison):
+    python run_bench.py --configs config-azure config-openai --benchmark vectors_todo
+
+  All benchmarks:
+    python run_bench.py --configs config-azure
+""",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
         "--configs",
         nargs="+",
         default=["config-azure"],
-        help="List of config file names (without .json) to pass to run_agent.py",
+        help="One or more config names (without .json), e.g., 'config-azure config-openai'",
+        metavar="NAME",
     )
     parser.add_argument(
         "--benchmark",
-        help="Run a specific benchmark by name (e.g., 'bst_map_todo' or 'atomics_todo'). If not specified, runs all benchmarks.",
+        help="Benchmark name only (e.g., 'vectors_todo', NOT full path). Omit to run all benchmarks.",
+        metavar="NAME",
     )
     args = parser.parse_args()
 
@@ -29,9 +42,7 @@ def main():
         # Validate that the benchmark exists
         todo_file = f"benchmarks-complete/{args.benchmark}.rs"
         if not os.path.exists(todo_file):
-            print(
-                f"Error: Benchmark '{args.benchmark}' not found. Expected file: {todo_file}"
-            )
+            print(f"Error: Benchmark '{args.benchmark}' not found. Expected file: {todo_file}")
             print("Available benchmarks:")
             for todo_path in glob.glob("benchmarks-complete/*_todo.rs"):
                 name = os.path.splitext(os.path.basename(todo_path))[0]
@@ -67,9 +78,7 @@ def main():
             try:
                 subprocess.run(cmd, check=True, text=True, shell=True)
             except subprocess.CalledProcessError:
-                print(
-                    f"Error running {benchmark_name} with {cfg}, see {log_file} for details"
-                )
+                print(f"Error running {benchmark_name} with {cfg}, see {log_file} for details")
 
 
 if __name__ == "__main__":

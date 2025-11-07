@@ -39,6 +39,7 @@ The module specializes in implementing invariant functions with specific charact
 - Bidirectional equivalence using `===`
 
 Example instruction template:
+
 ```python
 inv_instruction = """
 You are an expert in Verus (a Rust-based verification framework).
@@ -93,6 +94,7 @@ def replace_at_len_in_type_invariant(self, content: str) -> str:
 ## Workflow
 
 ### 1. Initialization
+
 ```python
 def __init__(self, config, logger):
     super().__init__(
@@ -109,6 +111,7 @@ def __init__(self, config, logger):
 The module follows a systematic execution process:
 
 1. Code Analysis:
+
 ```python
 def exec(self, context) -> str:
     code = context.trials[-1].code
@@ -116,6 +119,7 @@ def exec(self, context) -> str:
 ```
 
 2. Multiple Retry Attempts:
+
 ```python
 max_retries = 3
 for retry_attempt in range(max_retries):
@@ -129,6 +133,7 @@ for retry_attempt in range(max_retries):
 ```
 
 3. Response Processing:
+
 ```python
 def _process_responses(self, responses: List[str], original_code: str):
     safe_responses = []
@@ -138,9 +143,11 @@ def _process_responses(self, responses: List[str], original_code: str):
         if self.check_code_safety(original_code, fixed_processed):
             safe_responses.append(fixed_processed)
 ```
+
 This step fixes type errors prior to running safety checks, mirroring the architectural flow from LLM output to sample evaluation.
 
 4. Best Result Selection:
+
 ```python
 best_code, best_score, _ = evaluate_samples(
     samples=safe_responses,
@@ -153,24 +160,28 @@ best_code, best_score, _ = evaluate_samples(
 ## Features
 
 ### 1. Intelligent Invariant Generation
+
 - Understands data structure semantics
 - Preserves existing function names
 - Maintains code structure
 - Handles complex invariant patterns
 
 ### 2. Safety Mechanisms
+
 - Code change validation
 - Type safety checking
 - Semantic preservation
 - Structure preservation
 
 ### 3. Error Handling
+
 - Multiple retry attempts
 - Temperature adjustment
 - Fallback strategies
 - Comprehensive logging
 
 ### 4. Result Management
+
 - Best result tracking
 - Sample preservation
 - Score-based evaluation
@@ -205,6 +216,7 @@ best_code, best_score, _ = evaluate_samples(
 ## Extension Points
 
 1. Custom Safety Checks:
+
 ```python
 def add_safety_check(self, check_function):
     """Add custom safety check."""
@@ -212,6 +224,7 @@ def add_safety_check(self, check_function):
 ```
 
 2. Invariant Patterns:
+
 ```python
 def add_invariant_pattern(self, pattern: str, handler: Callable):
     """Register new invariant pattern handler."""
@@ -219,6 +232,7 @@ def add_invariant_pattern(self, pattern: str, handler: Callable):
 ```
 
 3. Result Evaluation:
+
 ```python
 def add_evaluation_metric(self, metric: Callable):
     """Add custom evaluation metric."""

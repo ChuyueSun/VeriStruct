@@ -1,6 +1,6 @@
 # RingBuffer Example - Module Workflow
 
-This document illustrates how each VerusAgent module processes the RingBuffer example (`rb_type_invariant.rs`).
+This document illustrates how each VeriStruct module processes the RingBuffer example (`rb_type_invariant.rs`).
 
 ## View Inference Module
 
@@ -35,6 +35,7 @@ impl<T: Copy> View for RingBuffer<T> {
 ```
 
 Key decisions:
+
 1. Uses `Seq<T>` for the mathematical sequence type
 2. Includes capacity as part of the view
 3. Handles both linear and wrap-around cases
@@ -68,6 +69,7 @@ closed spec fn inv(&self) -> bool {
 ```
 
 Key invariants:
+
 1. Index bounds for head and tail
 2. Non-empty ring buffer requirement
 3. Relationship to capacity
@@ -95,6 +97,7 @@ pub fn enqueue(&mut self, val: T) -> (succ: bool)
 ```
 
 Key specifications:
+
 1. Success conditions
 2. State preservation
 3. Element ordering
@@ -123,6 +126,7 @@ pub fn enqueue(&mut self, val: T) -> (succ: bool)
 ```
 
 Key proof elements:
+
 1. Type invariant usage
 2. Modulo arithmetic lemmas
 3. State transition proofs

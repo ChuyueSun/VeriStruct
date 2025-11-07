@@ -94,6 +94,7 @@ graph TD
 ### 2. Repair Process
 
 1. Error Detection:
+
 ```python
 mode_failures = last_trial.eval.get_failures(
     error_type=VerusErrorType.CannotCallFunc
@@ -104,6 +105,7 @@ visibility_failures = last_trial.eval.get_failures(
 ```
 
 2. Repair Selection:
+
 ```python
 # Choose repair strategy based on error type
 if error_type == CannotCallFunc:
@@ -113,6 +115,7 @@ else:
 ```
 
 3. Fix Application:
+
 ```python
 # Add mode blocks or visibility modifiers
 proof {
@@ -127,24 +130,28 @@ pub open spec fn visible_to_clients() -> bool {
 ## Features
 
 ### 1. Mode Management
+
 - Context analysis
 - Mode blocks
 - Function modes
 - Trusted bridges
 
 ### 2. Visibility Control
+
 - Open/closed analysis
 - API requirements
 - Privacy preservation
 - Client access
 
 ### 3. Code Generation
+
 - Mode blocks
 - Visibility modifiers
 - Function bridges
 - API design
 
 ### 4. Result Management
+
 - Best result tracking
 - Sample preservation
 - Context updates
@@ -153,6 +160,7 @@ pub open spec fn visible_to_clients() -> bool {
 ## Common Repairs
 
 ### 1. Mode Blocks
+
 ```rust
 // Before
 fn exec_function() {
@@ -168,6 +176,7 @@ fn exec_function() {
 ```
 
 ### 2. Function Modes
+
 ```rust
 // Before
 fn calculate_property(&self) -> bool {
@@ -181,6 +190,7 @@ spec fn calculate_property(&self) -> bool {
 ```
 
 ### 3. Visibility Control
+
 ```rust
 // Before
 pub spec fn get_abstract_state(&self) -> bool {
@@ -222,6 +232,7 @@ pub closed spec fn get_abstract_state(&self) -> bool {
 ## Extension Points
 
 1. Mode Analysis:
+
 ```python
 def add_mode_analyzer(self, analyzer: Callable):
     """Add new mode analyzer."""
@@ -229,6 +240,7 @@ def add_mode_analyzer(self, analyzer: Callable):
 ```
 
 2. Visibility Analysis:
+
 ```python
 def add_visibility_analyzer(self, analyzer: Callable):
     """Add new visibility analyzer."""
@@ -236,6 +248,7 @@ def add_visibility_analyzer(self, analyzer: Callable):
 ```
 
 3. Bridge Generation:
+
 ```python
 def add_bridge_generator(self, generator: Callable):
     """Add new bridge generator."""
@@ -245,6 +258,7 @@ def add_bridge_generator(self, generator: Callable):
 ## Common Issues
 
 ### 1. Mode Mismatches
+
 ```rust
 // Problem: Calling spec from exec
 fn process_data(&mut self) {
@@ -260,6 +274,7 @@ fn process_data(&mut self) {
 ```
 
 ### 2. Visibility Issues
+
 ```rust
 // Problem: Unclear visibility
 pub spec fn get_state(&self) -> State {
@@ -275,6 +290,7 @@ pub closed spec fn get_state(&self) -> State
 ```
 
 ### 3. Complex Mode Interactions
+
 ```rust
 // Problem: Mixed mode operations
 fn verify_state(&self) {
@@ -296,12 +312,14 @@ fn verify_state(&self) {
 ## Conclusion
 
 The Mode Repair Module provides:
+
 1. Comprehensive mode handling
 2. Visibility control
 3. Clear mode separation
 4. Context-aware fixes
 
 Key strengths:
+
 1. Mode management
 2. Visibility control
 3. Bridge generation

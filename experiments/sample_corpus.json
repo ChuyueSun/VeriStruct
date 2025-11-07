@@ -1,0 +1,147 @@
+{
+  "name": "VeriStruct Benchmark Corpus",
+  "version": "1.0",
+  "description": "Categorized benchmark corpus for systematic evaluation of VeriStruct workflow",
+  "created": "2025-11-05",
+  "total_benchmarks": 10,
+  "benchmarks": [
+    {
+      "path": "benchmarks-complete/bitmap_2_todo.rs",
+      "name": "bitmap_2_todo",
+      "category": "complex_data_structures",
+      "subcategory": "bit_manipulation",
+      "complexity": "high",
+      "lines_of_code": 371,
+      "features": ["bit_vectors", "packed_structures", "low_level_ops"],
+      "expected_difficulty": "hard",
+      "notes": "Requires concrete-level postconditions for bit operations"
+    },
+    {
+      "path": "benchmarks-complete/simple_counter.rs",
+      "name": "simple_counter",
+      "category": "simple_data_structures",
+      "subcategory": "basic_operations",
+      "complexity": "low",
+      "lines_of_code": 50,
+      "features": ["basic_arithmetic", "simple_specs"],
+      "expected_difficulty": "easy",
+      "notes": "Basic counter with increment/decrement operations"
+    },
+    {
+      "path": "benchmarks-complete/bst_map.rs",
+      "name": "bst_map",
+      "category": "complex_data_structures",
+      "subcategory": "trees",
+      "complexity": "high",
+      "lines_of_code": 450,
+      "features": ["binary_search_tree", "recursive_specs", "Option<Box<T>>"],
+      "expected_difficulty": "hard",
+      "notes": "Binary search tree with map abstraction"
+    },
+    {
+      "path": "benchmarks-complete/vectors.rs",
+      "name": "vectors",
+      "category": "simple_data_structures",
+      "subcategory": "collections",
+      "complexity": "medium",
+      "lines_of_code": 120,
+      "features": ["vector_operations", "sequence_specs"],
+      "expected_difficulty": "medium",
+      "notes": "Vector manipulation with sequence specifications"
+    },
+    {
+      "path": "benchmarks-complete/atomics.rs",
+      "name": "atomics",
+      "category": "concurrency",
+      "subcategory": "atomic_operations",
+      "complexity": "high",
+      "lines_of_code": 200,
+      "features": ["atomics", "concurrency", "special_specs"],
+      "expected_difficulty": "hard",
+      "notes": "Atomic operations requiring special specification handling"
+    },
+    {
+      "path": "benchmarks-complete/binary_search.rs",
+      "name": "binary_search",
+      "category": "algorithms",
+      "subcategory": "search",
+      "complexity": "medium",
+      "lines_of_code": 80,
+      "features": ["loop_invariants", "decreases_clauses", "sortedness"],
+      "expected_difficulty": "medium",
+      "notes": "Classic binary search requiring loop invariants"
+    },
+    {
+      "path": "benchmarks-complete/treemap.rs",
+      "name": "treemap",
+      "category": "complex_data_structures",
+      "subcategory": "trees",
+      "complexity": "high",
+      "lines_of_code": 600,
+      "features": ["red_black_tree", "complex_invariants", "map_abstraction"],
+      "expected_difficulty": "very_hard",
+      "notes": "Red-black tree with complex invariants and map abstraction"
+    },
+    {
+      "path": "benchmarks-complete/option_handling.rs",
+      "name": "option_handling",
+      "category": "edge_cases",
+      "subcategory": "optional_types",
+      "complexity": "medium",
+      "lines_of_code": 100,
+      "features": ["Option<T>", "pattern_matching", "conditional_specs"],
+      "expected_difficulty": "medium",
+      "notes": "Option type handling with conditional specifications"
+    },
+    {
+      "path": "benchmarks-complete/queue.rs",
+      "name": "queue",
+      "category": "simple_data_structures",
+      "subcategory": "collections",
+      "complexity": "medium",
+      "lines_of_code": 150,
+      "features": ["FIFO", "sequence_operations", "capacity_invariants"],
+      "expected_difficulty": "medium",
+      "notes": "Queue implementation with capacity constraints"
+    },
+    {
+      "path": "benchmarks-complete/graph_traversal.rs",
+      "name": "graph_traversal",
+      "category": "algorithms",
+      "subcategory": "graph",
+      "complexity": "high",
+      "lines_of_code": 300,
+      "features": ["graph_algorithms", "set_operations", "reachability"],
+      "expected_difficulty": "hard",
+      "notes": "Graph traversal algorithm with reachability specs"
+    }
+  ],
+  "categories": {
+    "simple_data_structures": {
+      "count": 3,
+      "description": "Basic data structures with straightforward specifications"
+    },
+    "complex_data_structures": {
+      "count": 3,
+      "description": "Advanced data structures with complex invariants"
+    },
+    "algorithms": {
+      "count": 2,
+      "description": "Algorithmic implementations requiring loop invariants"
+    },
+    "concurrency": {
+      "count": 1,
+      "description": "Concurrent data structures and atomic operations"
+    },
+    "edge_cases": {
+      "count": 1,
+      "description": "Special cases and boundary conditions"
+    }
+  },
+  "difficulty_distribution": {
+    "easy": 1,
+    "medium": 4,
+    "hard": 4,
+    "very_hard": 1
+  }
+}

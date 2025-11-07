@@ -68,17 +68,13 @@ Return the complete, corrected Rust code. Do not include explanations."""
         try:
             # Add retry marker to instruction to ensure cache miss for retries
             if retry_attempt > 0:
-                instruction = (
-                    f"{instruction}\n[Baseline Retry Attempt: {retry_attempt}]"
-                )
+                instruction = f"{instruction}\n[Baseline Retry Attempt: {retry_attempt}]"
                 use_cache = False  # Disable cache for retries
 
             # Log the query details
             self.logger.info("=== Baseline LLM Query ===")
             self.logger.info(f"Retry Attempt: {retry_attempt}")
-            self.logger.info(
-                f"Model: {self.config.get('aoai_generation_model', 'gpt-4')}"
-            )
+            self.logger.info(f"Model: {self.config.get('aoai_generation_model', 'gpt-4')}")
             self.logger.info(f"Temperature: {0.7 + (retry_attempt * 0.1)}")
             self.logger.info(f"Answer Num: 5")
             self.logger.info(f"Max Tokens: {self.config.get('max_token', 16384)}")
@@ -142,7 +138,9 @@ Return the complete, corrected Rust code. Do not include explanations."""
             Path to the saved file
         """
         # Save the code with input name
-        code_filename = f"baseline_{self.input_name}_candidate_{candidate_idx}_attempt_{attempt_num}.rs"
+        code_filename = (
+            f"baseline_{self.input_name}_candidate_{candidate_idx}_attempt_{attempt_num}.rs"
+        )
         code_path = output_dir / code_filename
         try:
             code_path.write_text(candidate_code)
@@ -185,7 +183,9 @@ Return the complete, corrected Rust code. Do not include explanations."""
             veval: VEval object with error details
             is_best: Whether this is currently the best candidate
         """
-        eval_filename = f"baseline_{self.input_name}_eval_{candidate_idx}_attempt_{attempt_num}.json"
+        eval_filename = (
+            f"baseline_{self.input_name}_eval_{candidate_idx}_attempt_{attempt_num}.json"
+        )
         eval_path = output_dir / eval_filename
 
         eval_data = {
@@ -288,9 +288,7 @@ Return the complete, corrected Rust code. Do not include explanations."""
                 "verified": best_score.verified if best_score else -1,
                 "errors": best_score.errors if best_score else 999,
                 "verus_errors": best_score.verus_errors if best_score else 999,
-                "compilation_error": best_score.compilation_error
-                if best_score
-                else True,
+                "compilation_error": best_score.compilation_error if best_score else True,
                 "is_correct": best_score.is_correct() if best_score else False,
             },
             "success": best_score.is_correct() if best_score else False,
@@ -301,12 +299,9 @@ Return the complete, corrected Rust code. Do not include explanations."""
             summary["per_attempt_stats"] = per_attempt_stats
 
             # Add aggregated timing info
-            total_llm_time = sum(
-                a.get("llm_time_seconds", 0) for a in per_attempt_stats
-            )
+            total_llm_time = sum(a.get("llm_time_seconds", 0) for a in per_attempt_stats)
             total_eval_time = (
-                sum(a.get("total_time_seconds", 0) for a in per_attempt_stats)
-                - total_llm_time
+                sum(a.get("total_time_seconds", 0) for a in per_attempt_stats) - total_llm_time
             )
             summary["timing"] = {
                 "total_llm_time_seconds": total_llm_time,
@@ -436,17 +431,13 @@ Return the complete, corrected Rust code. Do not include explanations."""
             llm_time = (llm_end_time - llm_start_time).total_seconds()
 
             if not responses:
-                self.logger.warning(
-                    f"No responses from LLM on attempt {retry_attempt + 1}"
-                )
+                self.logger.warning(f"No responses from LLM on attempt {retry_attempt + 1}")
                 # Save attempt stats even if failed
                 per_attempt_stats.append(
                     {
                         "attempt": retry_attempt + 1,
                         "llm_time": llm_time,
-                        "total_time": (
-                            datetime.now() - attempt_start_time
-                        ).total_seconds(),
+                        "total_time": (datetime.now() - attempt_start_time).total_seconds(),
                         "candidates": [],
                         "best_verus_errors": None,
                         "success": False,
@@ -463,8 +454,7 @@ Return the complete, corrected Rust code. Do not include explanations."""
 
                     # Save raw sample
                     sample_path = (
-                        output_dir
-                        / f"baseline_raw_sample_{candidate_num}_attempt_{attempt_num}.rs"
+                        output_dir / f"baseline_raw_sample_{candidate_num}_attempt_{attempt_num}.rs"
                     )
                     sample_path.write_text(response)
                     self.logger.info(
@@ -474,9 +464,7 @@ Return the complete, corrected Rust code. Do not include explanations."""
                     # Parse the response to extract code
                     candidate_code = parse_llm_response(response, self.logger)
                     if not candidate_code.strip():
-                        self.logger.warning(
-                            f"Empty candidate code from response {candidate_num}"
-                        )
+                        self.logger.warning(f"Empty candidate code from response {candidate_num}")
                         continue
 
                     # Save parsed candidate code with metadata
@@ -543,9 +531,7 @@ Return the complete, corrected Rust code. Do not include explanations."""
                     if is_new_best:
                         best_score = score
                         best_code = candidate_code
-                        self.logger.info(
-                            f"New best baseline candidate with score: {score}"
-                        )
+                        self.logger.info(f"New best baseline candidate with score: {score}")
 
                         # Save the new best code
                         self._save_best_code(
@@ -561,9 +547,7 @@ Return the complete, corrected Rust code. Do not include explanations."""
 
                         trial_id = len(context.trials)
                         tmp_dir = self.config.get("tmp_dir", "tmp")
-                        trial_path = os.path.join(
-                            tmp_dir, f"baseline_trial_{trial_id}.rs"
-                        )
+                        trial_path = os.path.join(tmp_dir, f"baseline_trial_{trial_id}.rs")
                         with open(trial_path, "w") as f:
                             f.write(candidate_code)
                         trial = Trial(trial_id, veval, trial_path, self.logger)
@@ -598,9 +582,7 @@ Return the complete, corrected Rust code. Do not include explanations."""
                             return candidate_code
 
                 except Exception as e:
-                    self.logger.error(
-                        f"Error evaluating candidate {candidate_num}: {e}"
-                    )
+                    self.logger.error(f"Error evaluating candidate {candidate_num}: {e}")
                     import traceback
 
                     self.logger.debug(f"Traceback: {traceback.format_exc()}")
@@ -614,9 +596,7 @@ Return the complete, corrected Rust code. Do not include explanations."""
             attempt_best_verus_errors = None
             attempt_best_candidate_num = None
             if attempt_candidates:
-                attempt_best_verus_errors = min(
-                    [c["verus_errors"] for c in attempt_candidates]
-                )
+                attempt_best_verus_errors = min([c["verus_errors"] for c in attempt_candidates])
                 for c in attempt_candidates:
                     if c["verus_errors"] == attempt_best_verus_errors:
                         attempt_best_candidate_num = c["candidate_num"]

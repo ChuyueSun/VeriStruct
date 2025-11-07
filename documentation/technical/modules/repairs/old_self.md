@@ -93,12 +93,14 @@ graph TD
 ### 2. Repair Process
 
 1. Error Location:
+
 ```python
 error_line = error_trace.get_lines()[0] - 1  # 0-based
 error_text = error_trace.get_text()
 ```
 
 2. Clause Detection:
+
 ```python
 requires_range = self._find_requires_clause(
     lines, error_line
@@ -107,6 +109,7 @@ requires_start, requires_end = requires_range
 ```
 
 3. Fix Application:
+
 ```python
 # Replace each self reference
 for i in range(requires_start, requires_end + 1):
@@ -117,24 +120,28 @@ for i in range(requires_start, requires_end + 1):
 ## Features
 
 ### 1. Clause Detection
+
 - Context search
 - Multi-line support
 - Nested handling
 - Format preservation
 
 ### 2. Pattern Management
+
 - Self references
 - Old self syntax
 - Multiple occurrences
 - Line preservation
 
 ### 3. Error Handling
+
 - Location tracking
 - Range validation
 - Error reporting
 - Context preservation
 
 ### 4. Result Management
+
 - Line tracking
 - Change logging
 - Context updates
@@ -143,6 +150,7 @@ for i in range(requires_start, requires_end + 1):
 ## Common Repairs
 
 ### 1. Single Line Requires
+
 ```rust
 // Before
 fn push(&mut self, value: i32)
@@ -160,6 +168,7 @@ fn push(&mut self, value: i32)
 ```
 
 ### 2. Multi-line Requires
+
 ```rust
 // Before
 fn complex_op(&mut self, value: i32)
@@ -183,6 +192,7 @@ fn complex_op(&mut self, value: i32)
 ```
 
 ### 3. Mixed Conditions
+
 ```rust
 // Before
 fn conditional_push(&mut self, value: i32)
@@ -232,6 +242,7 @@ fn conditional_push(&mut self, value: i32)
 ## Extension Points
 
 1. Pattern Analysis:
+
 ```python
 def add_pattern_analyzer(self, analyzer: Callable):
     """Add new pattern analyzer."""
@@ -239,6 +250,7 @@ def add_pattern_analyzer(self, analyzer: Callable):
 ```
 
 2. Clause Detection:
+
 ```python
 def add_clause_detector(self, detector: Callable):
     """Add new clause detector."""
@@ -246,6 +258,7 @@ def add_clause_detector(self, detector: Callable):
 ```
 
 3. Fix Generation:
+
 ```python
 def add_fix_generator(self, generator: Callable):
     """Add new fix generator."""
@@ -255,6 +268,7 @@ def add_fix_generator(self, generator: Callable):
 ## Common Issues
 
 ### 1. Nested References
+
 ```rust
 // Problem: Nested self references
 requires
@@ -266,6 +280,7 @@ requires
 ```
 
 ### 2. Complex Conditions
+
 ```rust
 // Problem: Complex condition structure
 requires
@@ -279,6 +294,7 @@ requires
 ```
 
 ### 3. Mixed Contexts
+
 ```rust
 // Problem: Mixed self and parameter references
 requires
@@ -294,12 +310,14 @@ requires
 ## Conclusion
 
 The Old Self Repair Module provides:
+
 1. Comprehensive requires clause handling
 2. Pattern-based fixes
 3. Format preservation
 4. Context-aware repairs
 
 Key strengths:
+
 1. Multi-line support
 2. Pattern management
 3. Error handling

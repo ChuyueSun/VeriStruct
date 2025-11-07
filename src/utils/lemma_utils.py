@@ -24,9 +24,7 @@ def insert_proof_func(code: str, proof_func_dict: dict) -> str:
     if verus_line == -1:
         return code
     proof_func_code = "\n\n".join(proof_func_dict.values())
-    new_code = "\n".join(
-        lines[: verus_line + 1] + [proof_func_code] + lines[verus_line + 1 :]
-    )
+    new_code = "\n".join(lines[: verus_line + 1] + [proof_func_code] + lines[verus_line + 1 :])
     return new_code
 
 

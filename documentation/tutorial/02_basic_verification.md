@@ -1,4 +1,4 @@
-# Basic Verification with VerusAgent
+# Basic Verification with VeriStruct
 
 ## Introduction
 
@@ -43,6 +43,7 @@ impl<T: Copy> View for RingBuffer<T> {
 ```
 
 Key points:
+
 - Use `Seq<T>` for sequence abstraction
 - Track capacity separately
 - Handle wrap-around case
@@ -61,6 +62,7 @@ closed spec fn inv(&self) -> bool {
 ```
 
 Key points:
+
 - Bound constraints
 - Capacity constraints
 - Structural properties
@@ -88,6 +90,7 @@ pub fn enqueue(&mut self, val: T) -> bool
 ```
 
 Key points:
+
 - Clear preconditions
 - Complete postconditions
 - State preservation
@@ -116,6 +119,7 @@ pub fn enqueue(&mut self, val: T) -> bool {
 ```
 
 Key points:
+
 - Invariant usage
 - Required lemmas
 - State consistency
@@ -141,6 +145,7 @@ graph TD
 ## Common Patterns
 
 ### 1. Sequence Operations
+
 ```rust
 // Subrange selection
 self.ring@.subrange(start, end)
@@ -153,6 +158,7 @@ self@.0.len() == old(self)@.0.len() + 1
 ```
 
 ### 2. Bound Checking
+
 ```rust
 // Index bounds
 self.head < self.ring.len()
@@ -162,6 +168,7 @@ old(self)@.0.len() < old(self)@.1 - 1
 ```
 
 ### 3. State Preservation
+
 ```rust
 // Capacity preservation
 self@.1 == old(self)@.1
@@ -192,6 +199,7 @@ forall|i: int|
 ## Common Challenges
 
 ### 1. Wrap-Around Handling
+
 ```rust
 // Challenge: Handling circular buffer wrap-around
 if self.tail >= self.head {
@@ -202,6 +210,7 @@ if self.tail >= self.head {
 ```
 
 ### 2. Modulo Arithmetic
+
 ```rust
 // Challenge: Proving modulo properties
 proof {
@@ -210,6 +219,7 @@ proof {
 ```
 
 ### 3. Quantifier Usage
+
 ```rust
 // Challenge: Proper quantifier bounds
 forall|i: int|
@@ -247,6 +257,7 @@ forall|i: int|
 ## Conclusion
 
 This guide covered:
+
 - RingBuffer verification
 - Common patterns
 - Verification workflow

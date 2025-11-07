@@ -1,6 +1,7 @@
 # Verus Set Usage Guide
 
 ## Overview
+
 `Set<A>` is a specification type representing mathematical sets. Sets can be finite or infinite and are used primarily in specifications (spec functions, requires/ensures clauses).
 
 ## Construction
@@ -58,6 +59,7 @@ s.disjoint(s2)         // s and s2 have no common elements
 ## Equality
 
 Use extensional equality `=~=` to compare sets:
+
 ```rust
 ensures s1 =~= s2      // s1 and s2 contain same elements
 ```
@@ -65,6 +67,7 @@ ensures s1 =~= s2      // s1 and s2 contain same elements
 ## Common Axioms
 
 Key broadcast axioms automatically available:
+
 - `axiom_set_insert_same`: `s.insert(a).contains(a)`
 - `axiom_set_remove_same`: `!s.remove(a).contains(a)`
 - `axiom_set_union`: `s1.union(s2).contains(a) == (s1.contains(a) || s2.contains(a))`

@@ -107,6 +107,7 @@ graph TD
 ### 2. Repair Process
 
 1. Error Detection:
+
 ```python
 failures = last_trial.eval.get_failures(
     error_type=VerusErrorType.ArithmeticFlow
@@ -114,6 +115,7 @@ failures = last_trial.eval.get_failures(
 ```
 
 2. Expression Analysis:
+
 ```python
 # Check for nonlinear expressions
 nl_lines = get_nonlinear_lines(code, self.logger)
@@ -124,6 +126,7 @@ filtered_nl_lines = [
 ```
 
 3. Repair Generation:
+
 ```python
 # For nonlinear arithmetic
 assert(expression) by (nonlinear_arith)
@@ -141,24 +144,28 @@ invariant
 ## Features
 
 ### 1. Nonlinear Handling
+
 - Expression identification
 - Bound requirements
 - Overflow prevention
 - Proof generation
 
 ### 2. Flow Control
+
 - Variable bounds
 - Expression limits
 - Loop invariants
 - Index handling
 
 ### 3. Proof Generation
+
 - Nonlinear proofs
 - Bound assertions
 - Range checks
 - Overflow prevention
 
 ### 4. Result Management
+
 - Best result tracking
 - Sample preservation
 - Context updates
@@ -167,6 +174,7 @@ invariant
 ## Common Repairs
 
 ### 1. Nonlinear Arithmetic
+
 ```rust
 // Before
 x * x * x <= max_value
@@ -180,6 +188,7 @@ assert(x * x * x <= 1000) by (nonlinear_arith)
 ```
 
 ### 2. Expression Bounds
+
 ```rust
 // Before
 result = a * b + c
@@ -193,6 +202,7 @@ invariant
 ```
 
 ### 3. Loop Variables
+
 ```rust
 // Before
 while i < n {
@@ -239,6 +249,7 @@ while i < n
 ## Extension Points
 
 1. Expression Analysis:
+
 ```python
 def add_expression_analyzer(self, analyzer: Callable):
     """Add new expression analyzer."""
@@ -246,6 +257,7 @@ def add_expression_analyzer(self, analyzer: Callable):
 ```
 
 2. Bound Generation:
+
 ```python
 def add_bound_generator(self, generator: Callable):
     """Add new bound generator."""
@@ -253,6 +265,7 @@ def add_bound_generator(self, generator: Callable):
 ```
 
 3. Proof Strategy:
+
 ```python
 def add_proof_strategy(self, strategy: Callable):
     """Add new proof strategy."""
@@ -262,6 +275,7 @@ def add_proof_strategy(self, strategy: Callable):
 ## Common Issues
 
 ### 1. Missing Bounds
+
 ```rust
 // Problem: Unbounded multiplication
 result = x * y;
@@ -274,6 +288,7 @@ invariant
 ```
 
 ### 2. Nonlinear Overflow
+
 ```rust
 // Problem: Nonlinear overflow
 cube = x * x * x;
@@ -287,6 +302,7 @@ assert(x * x * x <= max_cube) by (nonlinear_arith)
 ```
 
 ### 3. Loop Indices
+
 ```rust
 // Problem: Unbounded loop
 while i < n {
@@ -304,12 +320,14 @@ invariant
 ## Conclusion
 
 The Arithmetic Repair Module provides:
+
 1. Comprehensive error handling
 2. Nonlinear arithmetic support
 3. Overflow/underflow prevention
 4. Context-aware repairs
 
 Key strengths:
+
 1. Multiple error types
 2. Proof generation
 3. Bound handling

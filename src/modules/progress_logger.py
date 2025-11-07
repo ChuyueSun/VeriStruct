@@ -12,7 +12,7 @@ from src.modules.veval import EvalScore
 
 class ProgressLogger:
     """
-    Tracks and logs the progress of VerusAgent execution, including:
+    Tracks and logs the progress of VeriStruct execution, including:
     - Step timing
     - VEval results after each step
     - Repair information for each round
@@ -55,9 +55,7 @@ class ProgressLogger:
         # Log file paths with file ID
         self.log_file = self.log_dir / f"progress_{self.file_id}.json"
 
-        self.logger.info(
-            f"Progress logger initialized. Logs will be saved to {self.log_file}"
-        )
+        self.logger.info(f"Progress logger initialized. Logs will be saved to {self.log_file}")
 
         # Initialize statistics collector
         benchmark_name = os.environ.get("VERUS_INPUT_FILE", "unknown")
@@ -187,9 +185,7 @@ class ProgressLogger:
             execution_time: Time taken for the repair
         """
         if not self.progress["repair_rounds"]:
-            self.logger.warning(
-                "Attempting to add a repair, but no repair round is in progress"
-            )
+            self.logger.warning("Attempting to add a repair, but no repair round is in progress")
             return
 
         repair_round = self.progress["repair_rounds"][-1]
@@ -236,17 +232,13 @@ class ProgressLogger:
     def end_repair_round(self) -> None:
         """End the current repair round and record timing information."""
         if not self.progress["repair_rounds"]:
-            self.logger.warning(
-                "Attempting to end a repair round, but no round is in progress"
-            )
+            self.logger.warning("Attempting to end a repair round, but no round is in progress")
             return
 
         repair_round = self.progress["repair_rounds"][-1]
 
         if repair_round.get("end_time") is not None:
-            self.logger.warning(
-                f"Repair round {repair_round['round_number']} already ended"
-            )
+            self.logger.warning(f"Repair round {repair_round['round_number']} already ended")
             return
 
         start_time = datetime.fromisoformat(repair_round["start_time"])
@@ -257,9 +249,7 @@ class ProgressLogger:
         repair_round["execution_time"] = execution_time
 
         repairs_used = [r["repair_module"] for r in repair_round["repairs"]]
-        errors_fixed = [
-            r["error_type"] for r in repair_round["repairs"] if r["success"]
-        ]
+        errors_fixed = [r["error_type"] for r in repair_round["repairs"] if r["success"]]
 
         self.logger.info(
             f"Completed repair round {repair_round['round_number']} in {execution_time:.2f}s. "
@@ -267,9 +257,7 @@ class ProgressLogger:
         )
         self._save_progress()
 
-    def record_final_result(
-        self, final_score: EvalScore, final_code: str = None
-    ) -> None:
+    def record_final_result(self, final_score: EvalScore, final_code: str = None) -> None:
         """
         Record the final verification result.
 
@@ -293,7 +281,7 @@ class ProgressLogger:
         self.progress["total_execution_time"] = total_time
 
         self.logger.info(
-            f"VerusAgent completed in {total_time:.2f}s with final score: {final_score}"
+            f"VeriStruct completed in {total_time:.2f}s with final score: {final_score}"
         )
 
         # Record final state in statistics collector
@@ -324,9 +312,7 @@ class ProgressLogger:
             # Calculate some statistics
             total_steps = len(self.progress["steps"])
             total_repair_rounds = len(self.progress["repair_rounds"])
-            total_repairs = sum(
-                len(round["repairs"]) for round in self.progress["repair_rounds"]
-            )
+            total_repairs = sum(len(round["repairs"]) for round in self.progress["repair_rounds"])
             successful_repairs = sum(
                 sum(1 for repair in round["repairs"] if repair["success"])
                 for round in self.progress["repair_rounds"]
@@ -345,20 +331,16 @@ class ProgressLogger:
                 for repair in round["repairs"]
                 if "execution_time" in repair
             ]
-            avg_repair_time = (
-                sum(repair_times) / len(repair_times) if repair_times else 0
-            )
+            avg_repair_time = sum(repair_times) / len(repair_times) if repair_times else 0
 
             # Get input file info
             input_file = os.environ.get("VERUS_TEST_FILE", "Unknown")
-            input_file_name = (
-                os.path.basename(input_file) if input_file != "Unknown" else "Unknown"
-            )
+            input_file_name = os.path.basename(input_file) if input_file != "Unknown" else "Unknown"
             file_id = os.environ.get("VERUS_FILE_ID", self.file_id)
 
             # Write summary
             with open(summary_file, "w") as f:
-                f.write("# VerusAgent Execution Summary\n\n")
+                f.write("# VeriStruct Execution Summary\n\n")
 
                 # Add input file information
                 f.write("## Input and Output Files\n\n")
@@ -409,18 +391,13 @@ class ProgressLogger:
                 f.write("## Repair Rounds\n\n")
                 for round in self.progress["repair_rounds"]:
                     f.write(f"Round {round['round_number']}\n")
-                    if (
-                        "execution_time" in round
-                        and round["execution_time"] is not None
-                    ):
+                    if "execution_time" in round and round["execution_time"] is not None:
                         f.write(f"  Time: {round['execution_time']:.2f}s\n")
 
                     for repair in round["repairs"]:
                         before = repair["before_score"]
                         after = repair["after_score"]
-                        f.write(
-                            f"  {repair['repair_module']} for {repair['error_type']}\n"
-                        )
+                        f.write(f"  {repair['repair_module']} for {repair['error_type']}\n")
                         f.write(
                             f"    Before: Verified={before['verified']}, Errors={before['errors']}, Verus Errors={before['verus_errors']}\n"
                         )
@@ -445,9 +422,7 @@ class ProgressLogger:
         except Exception as e:
             self.logger.error(f"Error saving statistics: {e}")
 
-    def record_initial_state(
-        self, code: str, eval_score: EvalScore, failures: List = None
-    ):
+    def record_initial_state(self, code: str, eval_score: EvalScore, failures: List = None):
         """
         Record the initial state of the benchmark.
 

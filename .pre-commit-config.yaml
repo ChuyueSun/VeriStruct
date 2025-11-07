@@ -1,17 +1,81 @@
+# Pre-commit configuration for VerusAgent
+# Install pre-commit: pip install pre-commit
+# Install hooks: pre-commit install
+# Run manually: pre-commit run --all-files
+
 repos:
--   repo: https://github.com/pycqa/isort
-    rev: 5.12.0
+  # General file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
     hooks:
-    -   id: isort
-        name: isort (python)
-        args: ["--profile", "black"]
--   repo: https://github.com/psf/black
-    rev: 22.6.0
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: end-of-file-fixer
+      - id: check-yaml
+        args: [--unsafe]
+      - id: check-json
+      - id: check-toml
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+      - id: check-merge-conflict
+      - id: check-case-conflict
+      - id: detect-private-key
+      - id: mixed-line-ending
+        args: ['--fix=lf']
+
+  # Python code formatting with black
+  - repo: https://github.com/psf/black
+    rev: 23.12.1
     hooks:
-    -   id: black
--   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.3.0
+      - id: black
+        language_version: python3
+        args: ['--line-length=100']
+
+  # Python import sorting
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
     hooks:
-    -   id: check-yaml
-    -   id: end-of-file-fixer
-    -   id: trailing-whitespace
+      - id: isort
+        args: ['--profile', 'black', '--line-length', '100']
+
+  # Python linting with flake8
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.0.0
+    hooks:
+      - id: flake8
+
+  # Python type checking (optional - can be slow)
+  # - repo: https://github.com/pre-commit/mirrors-mypy
+  #   rev: v1.8.0
+  #   hooks:
+  #     - id: mypy
+  #       args: [--ignore-missing-imports]
+  #       additional_dependencies: [types-all]
+
+  # Shell script linting
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.9.0.6
+    hooks:
+      - id: shellcheck
+
+  # Markdown linting
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.39.0
+    hooks:
+      - id: markdownlint
+        args: ['--fix']
+
+# Exclude certain directories and files
+exclude: |
+  (?x)^(
+    .*\.log|
+    .*\.out|
+    tmp.*|
+    llm_cache/.*|
+    output/.*|
+    logs/.*|
+    external/.*|
+    \.git/.*|
+    benchmark.*/.*|
+    benchmarks-.*/.*
+  )$

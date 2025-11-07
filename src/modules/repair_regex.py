@@ -11,9 +11,7 @@ import re
 from typing import Tuple
 
 
-def fix_common_syntax_errors(
-    code: str, logger: logging.Logger = None
-) -> Tuple[str, bool]:
+def fix_common_syntax_errors(code: str, logger: logging.Logger = None) -> Tuple[str, bool]:
     """
     Fix common syntax errors using regex patterns.
 
@@ -128,9 +126,7 @@ def fix_common_syntax_errors(
     return code, was_changed
 
 
-def fix_syntax_errors_with_regex(
-    code: str, logger: logging.Logger = None
-) -> Tuple[str, bool]:
+def fix_syntax_errors_with_regex(code: str, logger: logging.Logger = None) -> Tuple[str, bool]:
     """
     Convenience wrapper for fix_common_syntax_errors.
 
@@ -145,9 +141,7 @@ def fix_syntax_errors_with_regex(
 
 
 # Additional utility function for more aggressive fixing
-def fix_aggressive_syntax_errors(
-    code: str, logger: logging.Logger = None
-) -> Tuple[str, bool]:
+def fix_aggressive_syntax_errors(code: str, logger: logging.Logger = None) -> Tuple[str, bool]:
     """
     Apply more aggressive regex fixes that might have false positives.
     Use this only when standard fixes don't work.

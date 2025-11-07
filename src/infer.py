@@ -55,9 +55,7 @@ class LLM:
             )
             # Still honor the deprecated variable if it's set to disable caching
             if deprecated_cache_env == "0":
-                self.logger.warning(
-                    "Disabling cache due to deprecated LLM_CACHE_ENABLED=0 setting"
-                )
+                self.logger.warning("Disabling cache due to deprecated LLM_CACHE_ENABLED=0 setting")
                 enable_cache_env = "0"
 
         # Cache is enabled if passed parameter is True and environment variable is "1"
@@ -88,14 +86,10 @@ class LLM:
         if platform_type_log in ["openai", "xai", "azure"]:
             self.logger.info(f"Config base URLs: {self.config.get('aoai_api_base')}")
         else:
-            self.logger.info(
-                "Config: using non-OpenAI platform; base URL list not applicable"
-            )
+            self.logger.info("Config: using non-OpenAI platform; base URL list not applicable")
 
         # Log which platform we are going to initialize
-        self.logger.info(
-            f"LLM initializing for platform: {self.config.get('platform', 'openai')}"
-        )
+        self.logger.info(f"LLM initializing for platform: {self.config.get('platform', 'openai')}")
 
         if self.dummy_mode:
             self.logger.warning("LLM in dummy mode. Will return placeholder responses.")
@@ -103,9 +97,7 @@ class LLM:
         # Pick a random backend index
         self.client_id = 0
 
-    def _extract_responses_api_answers(
-        self, response_json: dict, final_answers: List[str]
-    ):
+    def _extract_responses_api_answers(self, response_json: dict, final_answers: List[str]):
         """Extract answers from OpenAI Responses API format."""
         out = response_json.get("output") or response_json.get("choices")
         if isinstance(out, list) and out:
@@ -180,9 +172,7 @@ class LLM:
         if self.dummy_mode:
             self.logger.warning("LLM in dummy mode. Returning placeholder responses.")
             if query and len(query) > 100:
-                dummy_response = (
-                    "// This is a placeholder response from dummy mode.\n" + query
-                )
+                dummy_response = "// This is a placeholder response from dummy mode.\n" + query
             else:
                 dummy_response = "This is a placeholder response from dummy mode."
 
@@ -205,9 +195,7 @@ class LLM:
         if use_cache and self.cache.enabled:
             # Double-check environment variable in case it changed after the call started
             if os.environ.get("ENABLE_LLM_CACHE", "1") == "0":
-                self.logger.debug(
-                    "Cache disabled by environment variable for this call"
-                )
+                self.logger.debug("Cache disabled by environment variable for this call")
             else:
                 cached_responses = self.cache.get(
                     engine, instruction, query, max_tokens, exemplars, system_info
@@ -273,10 +261,7 @@ class LLM:
             # Check repair types first (more specific patterns)
             if "fix the syntax error" in instruction.lower():
                 module_type = "syntax"
-            elif (
-                "fix the type" in instruction.lower()
-                or "mismatched type" in instruction.lower()
-            ):
+            elif "fix the type" in instruction.lower() or "mismatched type" in instruction.lower():
                 module_type = "type"
             elif "fix the precondition not satisfied" in instruction.lower():
                 module_type = "repair_precond"
@@ -287,9 +272,7 @@ class LLM:
                 or "test assertion" in instruction.lower()
             ):
                 module_type = "repair_assertion"
-            elif (
-                "fix the" in instruction.lower() and "invariant" in instruction.lower()
-            ):
+            elif "fix the" in instruction.lower() and "invariant" in instruction.lower():
                 module_type = "repair_invariant"
             # Then check generation types (broader patterns)
             elif "add.*requires.*and.*ensures" in instruction.lower() or (
@@ -298,15 +281,9 @@ class LLM:
                 and "add" in instruction.lower()
             ):
                 module_type = "spec"
-            elif (
-                "todo.*proof" in instruction.lower()
-                or "add proof" in instruction.lower()
-            ):
+            elif "todo.*proof" in instruction.lower() or "add proof" in instruction.lower():
                 module_type = "proof"
-            elif (
-                "invariant" in instruction.lower()
-                and "implement" in instruction.lower()
-            ):
+            elif "invariant" in instruction.lower() and "implement" in instruction.lower():
                 module_type = "inv"
             elif "view" in instruction.lower() and (
                 "generate" in instruction.lower() or "implement" in instruction.lower()
@@ -349,8 +326,7 @@ class LLM:
         if exemplars:
             # Check if using answer-only format (query is just a title)
             is_answer_only = exemplars and all(
-                ex.get("query", "").startswith("Example ")
-                and len(ex.get("query", "")) < 100
+                ex.get("query", "").startswith("Example ") and len(ex.get("query", "")) < 100
                 for ex in exemplars[:3]  # Check first 3
             )
 
@@ -369,9 +345,7 @@ class LLM:
                     full_instruction = None  # Already added
                 for ex in exemplars:
                     messages.append({"role": "user", "content": ex.get("query", "")})
-                    messages.append(
-                        {"role": "assistant", "content": ex.get("answer", "")}
-                    )
+                    messages.append({"role": "assistant", "content": ex.get("answer", "")})
 
         if full_instruction:
             messages.append({"role": "user", "content": full_instruction})
@@ -415,14 +389,10 @@ class LLM:
                 headers["api-key"] = self.config["aoai_api_key"][0]
                 url = f"{base}openai/deployments/{model}/chat/completions?api-version={api_version}"
                 # Use max_completion_tokens for reasoning models, max_tokens for others
-                payload[
-                    "max_completion_tokens" if is_reasoning else "max_tokens"
-                ] = max_tokens
+                payload["max_completion_tokens" if is_reasoning else "max_tokens"] = max_tokens
             elif platform_type == "anthropic":
                 # Anthropic Claude API
-                anthropic_model = self.config.get(
-                    "anthropic_generation_model", "claude-sonnet-4-5"
-                )
+                anthropic_model = self.config.get("anthropic_generation_model", "claude-sonnet-4-5")
                 anthropic_key = self.config.get("anthropic_api_key", [""])[0]
                 headers = {
                     "x-api-key": anthropic_key,
@@ -439,17 +409,13 @@ class LLM:
                 }
             else:
                 # Standard OpenAI/XAI
-                key = self.config.get(
-                    "aoai_api_key", [os.environ.get("OPENAI_API_KEY", "")]
-                )[0]
+                key = self.config.get("aoai_api_key", [os.environ.get("OPENAI_API_KEY", "")])[0]
                 if key:
                     headers["Authorization"] = f"Bearer {key}"
                 if is_reasoning:
                     # OpenAI Responses API
                     url = "https://api.openai.com/v1/responses"
-                    joined = "\n\n".join(
-                        [f"{m['role']}: {m['content']}" for m in messages]
-                    )
+                    joined = "\n\n".join([f"{m['role']}: {m['content']}" for m in messages])
                     payload = {
                         "model": model,
                         "input": joined,
@@ -463,18 +429,12 @@ class LLM:
                     payload["max_tokens"] = max_tokens
 
             # Make request with appropriate timeout
-            resp = requests.post(
-                url, headers=headers, json=payload, timeout=api_timeout
-            )
+            resp = requests.post(url, headers=headers, json=payload, timeout=api_timeout)
             resp.raise_for_status()
             response_json = resp.json()
 
             # Extract token usage
-            usage = (
-                response_json.get("usage", {})
-                if isinstance(response_json, dict)
-                else {}
-            )
+            usage = response_json.get("usage", {}) if isinstance(response_json, dict) else {}
             input_tokens = usage.get("input_tokens") or usage.get("prompt_tokens")
             output_tokens = usage.get("output_tokens") or usage.get("completion_tokens")
 
@@ -488,16 +448,12 @@ class LLM:
                     or {}
                 )
                 reasoning_tokens = (
-                    details.get("reasoning_tokens")
-                    if isinstance(details, dict)
-                    else None
+                    details.get("reasoning_tokens") if isinstance(details, dict) else None
                 )
 
             # Log token usage
             if input_tokens or output_tokens:
-                log_msg = (
-                    f"Token usage - Input: {input_tokens}, Output: {output_tokens}"
-                )
+                log_msg = f"Token usage - Input: {input_tokens}, Output: {output_tokens}"
                 if reasoning_tokens:
                     log_msg += f", Reasoning: {reasoning_tokens}"
                 self.logger.debug(log_msg)
@@ -550,18 +506,11 @@ class LLM:
             return []
 
         # Cache the result if caching is enabled or always_write is enabled
-        cache_saving_enabled = (
-            use_cache and self.cache.enabled
-        ) or self.cache.always_write
+        cache_saving_enabled = (use_cache and self.cache.enabled) or self.cache.always_write
         if cache_saving_enabled:
             # Double-check environment variable in case it changed during the call
-            if (
-                os.environ.get("ENABLE_LLM_CACHE", "1") == "0"
-                and not self.cache.always_write
-            ):
-                self.logger.debug(
-                    "Cache save skipped - disabled by environment variable"
-                )
+            if os.environ.get("ENABLE_LLM_CACHE", "1") == "0" and not self.cache.always_write:
+                self.logger.debug("Cache save skipped - disabled by environment variable")
             else:
                 self.cache.save(
                     engine,
@@ -573,9 +522,7 @@ class LLM:
                     system_info,
                 )
                 if self.cache.enabled:
-                    self.logger.debug(
-                        f"Saved response to cache (time: {infer_time:.2f}s)"
-                    )
+                    self.logger.debug(f"Saved response to cache (time: {infer_time:.2f}s)")
                 else:
                     self.logger.debug(
                         f"Saved response to cache in write-only mode (time: {infer_time:.2f}s)"
@@ -589,11 +536,7 @@ class LLM:
             usage_meta["reasoning_tokens"] = reasoning_tokens
 
         try:
-            usage = (
-                response_json.get("usage", {})
-                if isinstance(response_json, dict)
-                else {}
-            )
+            usage = response_json.get("usage", {}) if isinstance(response_json, dict) else {}
             total_tokens = usage.get("total_tokens")
             if total_tokens is not None:
                 usage_meta["total_tokens"] = total_tokens
@@ -607,9 +550,7 @@ class LLM:
         # Build return value based on requested metadata
         if return_msg:
             returned_messages = messages + (
-                [{"role": "assistant", "content": final_answers[0]}]
-                if final_answers
-                else []
+                [{"role": "assistant", "content": final_answers[0]}] if final_answers else []
             )
             if return_usage_meta:
                 return final_answers, returned_messages, usage_meta

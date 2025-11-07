@@ -50,17 +50,13 @@ class RepairTestAssertionModule(BaseRepairModule):
         original_code = code
 
         if not failure_to_fix:
-            self.logger.warning(
-                "No specific failure provided for test assertion repair."
-            )
+            self.logger.warning("No specific failure provided for test assertion repair.")
             return code
 
         # Extract error information
         error_trace = failure_to_fix.trace[0] if failure_to_fix.trace else None
         error_info = (
-            error_trace.get_text() + "\n"
-            if error_trace
-            else failure_to_fix.error_text + "\n"
+            error_trace.get_text() + "\n" if error_trace else failure_to_fix.error_text + "\n"
         )
 
         # Try to identify which production function is being tested
@@ -116,9 +112,7 @@ Respond with the **complete fixed Rust code** only, do not include explanations.
         safe_responses = []
 
         for retry_attempt in range(max_retries):
-            self.logger.info(
-                f"Test assertion repair attempt {retry_attempt + 1}/{max_retries}"
-            )
+            self.logger.info(f"Test assertion repair attempt {retry_attempt + 1}/{max_retries}")
 
             # Build complete instruction using the prompt system
             instruction = build_instruction(
@@ -129,9 +123,7 @@ Respond with the **complete fixed Rust code** only, do not include explanations.
             )
 
             # Save prompt for debugging
-            prompt_file = (
-                prompt_dir() / f"repair_test_assertion_{len(context.trials)}.txt"
-            )
+            prompt_file = prompt_dir() / f"repair_test_assertion_{len(context.trials)}.txt"
             prompt_file.write_text(instruction + "\n\n---\n\n" + query)
             self.logger.info(f"Saved test assertion repair prompt to {prompt_file}")
 
@@ -177,9 +169,7 @@ Respond with the **complete fixed Rust code** only, do not include explanations.
 
         # If no safe responses found after all retries, fall back to original
         if not safe_responses:
-            self.logger.warning(
-                "No safe responses found after all retries, using original code"
-            )
+            self.logger.warning("No safe responses found after all retries, using original code")
             return code
 
         # Use the last safe response (since we break after finding one)
@@ -222,9 +212,7 @@ Respond with the **complete fixed Rust code** only, do not include explanations.
                 func_name = match.group(1)
                 # Skip common methods that aren't the main function being tested
                 if func_name not in ["push", "len", "new", "assert"]:
-                    self.logger.info(
-                        f"Identified tested function: {func_name} (from line {i})"
-                    )
+                    self.logger.info(f"Identified tested function: {func_name} (from line {i})")
                     return func_name
 
         return None

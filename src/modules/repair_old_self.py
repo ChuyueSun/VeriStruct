@@ -95,9 +95,7 @@ class RepairOldSelfModule(BaseRepairModule):
         # If a specific failure isn't provided, try to get one from the last trial
         if failure_to_fix is None:
             last_trial = context.trials[-1]
-            failures = last_trial.eval.get_failures(
-                error_type=VerusErrorType.RequiresOldSelf
-            )
+            failures = last_trial.eval.get_failures(error_type=VerusErrorType.RequiresOldSelf)
             if not failures:
                 self.logger.warning("No old(self) failures found in the last trial.")
                 return code  # Return original code if no old(self) error
@@ -194,9 +192,7 @@ class RepairOldSelfModule(BaseRepairModule):
 
         return "\n".join(lines)
 
-    def _find_requires_clause(
-        self, lines: list[str], error_line: int
-    ) -> Optional[tuple[int, int]]:
+    def _find_requires_clause(self, lines: list[str], error_line: int) -> Optional[tuple[int, int]]:
         """
         Find the requires clause containing or near the error line.
 
@@ -249,17 +245,13 @@ class RepairOldSelfModule(BaseRepairModule):
                     self.logger.debug(
                         f"Found end of requires clause at line {i + 1} (function body)"
                     )
-                elif paren_count == 0 and stripped.endswith(
-                    ")"
-                ):  # Balanced parentheses
+                elif paren_count == 0 and stripped.endswith(")"):  # Balanced parentheses
                     requires_end = i
                     in_requires = False
                     self.logger.debug(
                         f"Found end of requires clause at line {i + 1} (balanced parens)"
                     )
-                elif stripped and not stripped.endswith(
-                    ","
-                ):  # Non-empty line without continuation
+                elif stripped and not stripped.endswith(","):  # Non-empty line without continuation
                     requires_end = i
                     in_requires = False
                     self.logger.debug(

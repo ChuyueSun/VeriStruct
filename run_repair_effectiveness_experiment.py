@@ -79,7 +79,7 @@ class RepairEffectivenessExperiment:
             "parallel": parallel,
             "configurations": {
                 "full_pipeline": {
-                    "description": "Full VerusAgent pipeline with all repair modules",
+                    "description": "Full VeriStruct pipeline with all repair modules",
                     "num_repair_rounds": num_repair_rounds,
                     "baseline_mode": False,
                 },
@@ -259,9 +259,7 @@ class RepairEffectivenessExperiment:
             print(f"{'-'*80}\n")
 
             for benchmark in benchmarks:
-                result = self.run_configuration(
-                    config_name, benchmark, output_dir, config_settings
-                )
+                result = self.run_configuration(config_name, benchmark, output_dir, config_settings)
                 results[config_name].append(result)
 
                 # Save incremental results
@@ -314,9 +312,7 @@ class RepairEffectivenessExperiment:
                 timeouts = sum(1 for r in config_results if r.get("timeout", False))
                 failed = total_benchmarks - successful - timeouts
 
-                success_rate = (
-                    (successful / total_benchmarks * 100) if total_benchmarks > 0 else 0
-                )
+                success_rate = (successful / total_benchmarks * 100) if total_benchmarks > 0 else 0
 
                 f.write(f"Total Benchmarks: {total_benchmarks}\n")
                 f.write(f"Successful: {successful} ({success_rate:.1f}%)\n")
@@ -335,19 +331,14 @@ class RepairEffectivenessExperiment:
                 # Detailed statistics if available
                 results_with_stats = [r for r in config_results if "statistics" in r]
                 if results_with_stats:
-                    f.write(
-                        f"Detailed Statistics (from {len(results_with_stats)} benchmarks):\n\n"
-                    )
+                    f.write(f"Detailed Statistics (from {len(results_with_stats)} benchmarks):\n\n")
 
                     # LLM calls
                     total_llm_calls = sum(
-                        r["statistics"]["llm_calls"]["total"]
-                        for r in results_with_stats
+                        r["statistics"]["llm_calls"]["total"] for r in results_with_stats
                     )
                     avg_llm_calls = (
-                        total_llm_calls / len(results_with_stats)
-                        if results_with_stats
-                        else 0
+                        total_llm_calls / len(results_with_stats) if results_with_stats else 0
                     )
                     f.write(f"  Total LLM Calls: {total_llm_calls}\n")
                     f.write(f"  Avg LLM Calls per Benchmark: {avg_llm_calls:.1f}\n\n")
@@ -355,24 +346,19 @@ class RepairEffectivenessExperiment:
                     # Repairs (only for non-baseline)
                     if config_name != "baseline":
                         total_repairs = sum(
-                            r["statistics"]["repairs"]["total_repairs"]
-                            for r in results_with_stats
+                            r["statistics"]["repairs"]["total_repairs"] for r in results_with_stats
                         )
                         successful_repairs = sum(
                             r["statistics"]["repairs"]["successful_repairs"]
                             for r in results_with_stats
                         )
                         repair_success_rate = (
-                            (successful_repairs / total_repairs * 100)
-                            if total_repairs > 0
-                            else 0
+                            (successful_repairs / total_repairs * 100) if total_repairs > 0 else 0
                         )
 
                         f.write(f"  Total Repairs Attempted: {total_repairs}\n")
                         f.write(f"  Successful Repairs: {successful_repairs}\n")
-                        f.write(
-                            f"  Repair Success Rate: {repair_success_rate:.1f}%\n\n"
-                        )
+                        f.write(f"  Repair Success Rate: {repair_success_rate:.1f}%\n\n")
 
                         # Repair modules used
                         if config_name == "full_pipeline":
@@ -381,9 +367,7 @@ class RepairEffectivenessExperiment:
                                 for module, count in r["statistics"]["repairs"][
                                     "repairs_by_heuristic"
                                 ].items():
-                                    repair_modules[module] = (
-                                        repair_modules.get(module, 0) + count
-                                    )
+                                    repair_modules[module] = repair_modules.get(module, 0) + count
 
                             if repair_modules:
                                 f.write(f"  Repair Modules Used:\n")
@@ -395,18 +379,14 @@ class RepairEffectivenessExperiment:
 
                     # Errors
                     initial_errors = sum(
-                        r["statistics"]["errors"]["initial_error_count"]
-                        for r in results_with_stats
+                        r["statistics"]["errors"]["initial_error_count"] for r in results_with_stats
                     )
                     final_errors = sum(
-                        r["statistics"]["errors"]["final_error_count"]
-                        for r in results_with_stats
+                        r["statistics"]["errors"]["final_error_count"] for r in results_with_stats
                     )
                     errors_fixed = initial_errors - final_errors
                     error_reduction = (
-                        (errors_fixed / initial_errors * 100)
-                        if initial_errors > 0
-                        else 0
+                        (errors_fixed / initial_errors * 100) if initial_errors > 0 else 0
                     )
 
                     f.write(f"  Initial Errors: {initial_errors}\n")
@@ -424,9 +404,7 @@ class RepairEffectivenessExperiment:
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Run repair pipeline effectiveness experiment"
-    )
+    parser = argparse.ArgumentParser(description="Run repair pipeline effectiveness experiment")
     parser.add_argument(
         "--benchmarks-dir",
         type=Path,
