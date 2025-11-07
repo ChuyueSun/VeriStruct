@@ -4,6 +4,7 @@ Script to run all TODO benchmarks in parallel.
 Launches one VerusAgent process for each benchmark file.
 """
 
+import argparse
 import multiprocessing
 import os
 import subprocess
@@ -34,8 +35,9 @@ BENCHMARKS = [
 ]
 
 
-def run_benchmark(benchmark_file):
+def run_benchmark(args_tuple):
     """Run a single benchmark file."""
+    benchmark_file, configs = args_tuple
     benchmark_path = BENCHMARKS_DIR / benchmark_file
     benchmark_name = benchmark_file.replace(".rs", "")
 
@@ -45,7 +47,8 @@ def run_benchmark(benchmark_file):
     # Set up environment variables
     env = os.environ.copy()
     env["VERUS_TEST_FILE"] = str(benchmark_path)
-    env["VERUS_CONFIG"] = "config-azure"
+    # Use first config if multiple are provided
+    env["VERUS_CONFIG"] = configs[0] if configs else "config-azure"
 
     # Create log file for this benchmark
     log_dir = PROJECT_ROOT / "logs"
@@ -88,10 +91,35 @@ def run_benchmark(benchmark_file):
 
 def main():
     """Main function to run all benchmarks in parallel."""
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(
+        description="Run all benchmarks in parallel with one or more configs",
+        epilog="""Examples:
+  Run all benchmarks with single config:
+    python run_all_benchmarks.py --configs config-azure
+
+  Run all benchmarks with multiple configs (runs sequentially for each config):
+    python run_all_benchmarks.py --configs config-azure config-openai
+
+Note: If multiple configs are provided, currently only the first is used.
+      Use run_bench.py for proper multi-config support.
+""",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "--configs",
+        nargs="+",
+        default=["config-azure"],
+        help="One or more config names (without .json), e.g., 'config-azure'",
+        metavar="NAME",
+    )
+    args = parser.parse_args()
+
     print("=" * 80)
-    print("VERUSAGENT PARALLEL BENCHMARK RUN")
+    print("VERISTRUCT PARALLEL BENCHMARK RUN")
     print("=" * 80)
     print(f"Total benchmarks: {len(BENCHMARKS)}")
+    print(f"Config(s): {', '.join(args.configs)}")
     print(f"Project root: {PROJECT_ROOT}")
     print(f"Benchmarks dir: {BENCHMARKS_DIR}")
     print(f"Start time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
@@ -106,8 +134,11 @@ def main():
     # Run benchmarks in parallel
     overall_start = time.time()
 
+    # Create list of (benchmark, configs) tuples
+    benchmark_args = [(b, args.configs) for b in BENCHMARKS]
+
     with multiprocessing.Pool(processes=num_workers) as pool:
-        results = pool.map(run_benchmark, BENCHMARKS)
+        results = pool.map(run_benchmark, benchmark_args)
 
     overall_elapsed = time.time() - overall_start
 
@@ -143,7 +174,7 @@ def main():
         PROJECT_ROOT / f"benchmark_summary_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
     )
     with open(summary_file, "w") as f:
-        f.write("VERUSAGENT PARALLEL BENCHMARK RUN SUMMARY\n")
+        f.write("VERISTRUCT PARALLEL BENCHMARK RUN SUMMARY\n")
         f.write("=" * 80 + "\n")
         f.write(f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
         f.write(f"Total: {len(results)}\n")

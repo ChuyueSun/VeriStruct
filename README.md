@@ -1,8 +1,8 @@
-# VerusAgent (VeriStruct)
+# VeriStruct
 
 **An AI-Powered Assistant for Verus Formal Verification**
 
-VerusAgent is an automated system that helps develop, debug, and refine Rust code with Verus formal specifications. It uses Large Language Models (LLMs) to generate specifications, infer invariants, and repair verification errors.
+VeriStruct is an automated system that helps develop, debug, and refine Rust code with Verus formal specifications. It uses Large Language Models (LLMs) to generate specifications, infer invariants, and repair verification errors.
 
 📄 **Paper**: [VeriStruct: AI-assisted Automated Verification of Data-Structure Modules in Verus](https://arxiv.org/abs/2510.25015) (arXiv:2510.25015)
 
@@ -10,7 +10,7 @@ VerusAgent is an automated system that helps develop, debug, and refine Rust cod
 
 ## 🎯 Overview
 
-VerusAgent automates the challenging process of formal verification by:
+VeriStruct automates the challenging process of formal verification by:
 
 - **Generating specifications** (preconditions, postconditions, invariants)
 - **Inferring mathematical abstractions** (View functions)
@@ -43,8 +43,8 @@ VerusAgent automates the challenging process of formal verification by:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/VerusAgent.git
-cd VerusAgent
+git clone https://github.com/ChuyueSun/VeriStruct.git
+cd VeriStruct
 
 # Install dependencies
 pip install -r requirements.txt
@@ -63,21 +63,35 @@ cp src/configs/config.json.template src/configs/config-custom.json
 # See src/configs/README.md for detailed configuration instructions
 ```
 
-### Running VerusAgent
+### Running VeriStruct
+
+#### Quick Reference: Which Script to Use?
+
+| Goal | Script | Key Arguments |
+|------|--------|---------------|
+| Single file, one config | `run_agent.py` | `--test-file <path>` `--config <name>` |
+| Single benchmark, one/multiple configs | `run_bench.py` | `--benchmark <name>` `--configs <name(s)>` |
+| All benchmarks, one/multiple configs | `run_all_benchmarks.py` | `--configs <name(s)>` |
+| Benchmark without cache | `run_bench_no_cache.py` | `--benchmark <name>` `--configs <name(s)>` |
+
+#### Usage Examples
 
 ```bash
-# Run on a single file with default config
+# Single file with run_agent.py (most flexible, any file path)
 python run_agent.py --test-file benchmarks-complete/vectors_todo.rs --config config-azure
 
-# Run on all benchmarks
+# Single benchmark with run_bench.py (benchmark name only, supports multiple configs)
+python run_bench.py --configs config-azure --benchmark vectors_todo
+
+# Multiple configs for the same benchmark
+python run_bench.py --configs config-azure config-openai --benchmark vectors_todo
+
+# All benchmarks
 python run_all_benchmarks.py --configs config-azure
 
-# Run specific file with options
-python run_bench.py --config config-azure --test-file benchmarks-complete/my_file.rs
-
-# Run with immutable functions (e.g., test functions that shouldn't be modified)
+# With additional options
 python run_agent.py --test-file benchmarks-complete/rb_type_invariant.rs \
-  --immutable-functions test --config config-azure
+  --config config-azure --immutable-functions test
 ```
 
 ---
@@ -129,9 +143,32 @@ Verus Verification
 
 ---
 
+## 📝 Design Rationale: Script Arguments
+
+The different scripts use different argument patterns for specific reasons:
+
+### `run_agent.py` - General Purpose Runner
+
+- **Uses**: `--test-file` (full path) + `--config` (singular)
+- **Purpose**: Maximum flexibility for running any Rust file
+- **Use when**: Testing custom files, development, one-off verification tasks
+- **Why singular `--config`**: Designed for focused, single-configuration runs
+
+### `run_bench.py` / `run_all_benchmarks.py` - Benchmark Runners
+
+- **Uses**: `--benchmark` (name only) + `--configs` (plural)
+- **Purpose**: Structured benchmark evaluation with multiple configurations
+- **Use when**: Running standard benchmarks, comparing configurations, experiments
+- **Why plural `--configs`**: Supports running the same benchmark with multiple configs for comparison
+- **Why name only**: Enforces consistent benchmark location (`benchmarks-complete/`)
+
+This separation keeps the codebase clean while supporting both exploratory development and systematic evaluation.
+
+---
+
 ## 🧩 Modules
 
-VerusAgent includes specialized modules for different verification tasks:
+VeriStruct includes specialized modules for different verification tasks:
 
 ### Inference Modules
 
@@ -169,7 +206,7 @@ See [`documentation/technical/modules/`](documentation/technical/modules/) for d
 ## 📂 Project Structure
 
 ```
-VerusAgent/
+VeriStruct/
 ├── src/                              # Source code
 │   ├── modules/                      # Module implementations
 │   │   ├── spec_inference.py         # Specification generation
@@ -200,10 +237,10 @@ VerusAgent/
 ├── tests/                            # Test files
 ├── utils/                            # Utility scripts
 │
-├── run_agent.py                      # Run on single file
-├── run_all_benchmarks.py             # Run on all benchmarks
-├── run_bench.py                      # Run with specific config
-├── run_bench_no_cache.py             # Run without LLM cache
+├── run_agent.py                      # Run on single file (--test-file, --config)
+├── run_bench.py                      # Run benchmark (--benchmark, --configs)
+├── run_all_benchmarks.py             # Run all benchmarks (--configs)
+├── run_bench_no_cache.py             # Run benchmark without cache (--benchmark, --configs)
 ├── run_baseline_bench.py             # Run baseline experiments
 ├── run_repair_effectiveness_experiment.py  # Test repair modules
 ├── run_all_benchmarks_no_cache.sh    # Shell script for no-cache runs
@@ -249,7 +286,7 @@ export LLM_CACHE_DIR="llm_cache"
 
 ## 🧪 Benchmarks
 
-VerusAgent includes multiple benchmark suites:
+VeriStruct includes multiple benchmark suites:
 
 | Benchmark | Description | Functions |
 |-----------|-------------|-----------|
@@ -270,17 +307,20 @@ VerusAgent includes multiple benchmark suites:
 ### Running Benchmarks
 
 ```bash
-# Run all benchmarks
+# Run all benchmarks with one config
 python run_all_benchmarks.py --configs config-azure
 
-# Run specific benchmark
-python run_agent.py --test-file benchmarks-complete/vectors_todo.rs
+# Run all benchmarks with multiple configs (for comparison)
+python run_all_benchmarks.py --configs config-azure config-openai
 
-# Run with specific configuration
-python run_bench.py --config config-azure --benchmark vectors_todo
+# Run specific benchmark (recommended for benchmarks)
+python run_bench.py --configs config-azure --benchmark vectors_todo
 
-# Run without cache (for testing)
-python run_bench_no_cache.py --config config-azure --test-file benchmarks-complete/vectors_todo.rs
+# Run specific file (for any file, not just benchmarks)
+python run_agent.py --test-file benchmarks-complete/vectors_todo.rs --config config-azure
+
+# Run without cache (for testing, disables LLM cache)
+python run_bench_no_cache.py --configs config-azure --benchmark vectors_todo
 
 # Run all benchmarks without cache using shell script
 bash run_all_benchmarks_no_cache.sh
@@ -293,7 +333,7 @@ bash run_model_comparison.sh
 
 ## 📊 Statistics & Analysis
 
-VerusAgent collects comprehensive statistics for research:
+VeriStruct collects comprehensive statistics for research:
 
 - **LLM call counts** per stage/module
 - **Iteration counts** and convergence metrics
@@ -389,7 +429,7 @@ Register in `src/modules/repair_registry.py`.
 
 ## 📄 Citation
 
-If you use VerusAgent in your research, please cite our paper:
+If you use VeriStruct in your research, please cite our paper:
 
 ```bibtex
 @article{sun2025veristruct,

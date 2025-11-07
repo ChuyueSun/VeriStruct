@@ -11,17 +11,29 @@ import time
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Run all *_todo.rs benchmarks with cache disabled for accurate statistics."
+        description="Run benchmarks with LLM cache disabled (for accurate cost/time statistics)",
+        epilog="""Examples:
+  Single benchmark without cache:
+    python run_bench_no_cache.py --configs config-azure --benchmark vectors_todo
+
+  All benchmarks without cache:
+    python run_bench_no_cache.py --configs config-azure
+
+Note: This disables LLM cache to measure true API costs and response times.
+""",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
         "--configs",
         nargs="+",
         default=["config-azure"],
-        help="List of config file names (without .json) to pass to run_agent.py",
+        help="One or more config names (without .json), e.g., 'config-azure'",
+        metavar="NAME",
     )
     parser.add_argument(
         "--benchmark",
-        help="Run a specific benchmark by name (e.g., 'bst_map_todo' or 'atomics_todo'). If not specified, runs all benchmarks.",
+        help="Benchmark name only (e.g., 'vectors_todo'). Omit to run all benchmarks.",
+        metavar="NAME",
     )
     args = parser.parse_args()
 
