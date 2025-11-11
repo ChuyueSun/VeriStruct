@@ -97,7 +97,7 @@ python run_agent.py --test-file benchmarks-complete/rb_type_invariant.rs \
 │  • Spec Inference                   │
 │  • View Inference                   │
 │  • Invariant Inference              │
-│  • Repair Modules (12 types)        │
+│  • Repair Modules (14 types)        │
 │  • Proof Generation                 │
 └──────┬──────────────────────────────┘
        │
@@ -109,23 +109,16 @@ python run_agent.py --test-file benchmarks-complete/rb_type_invariant.rs \
 
 ### Workflow
 
-```
-Input Code (incomplete/buggy)
-    ↓
-Spec Inference → Generate specs
-    ↓
-Verus Verification
-    ↓
-    ├─→ ✅ Success → Done
-    │
-    └─→ ❌ Errors → Planner → Select Repair Module
-                         ↓
-                    Fix Errors
-                         ↓
-                    Retry Verification
-                         ↓
-                    (Iterate until success or max retries)
-```
+VeriStruct follows a **Plan Generation Workflow** that handles module-level synthesis and mitigates lack of training data:
+
+![VeriStruct Workflow](docs/images/workflow.png)
+
+**Key Design Principles:**
+
+1. **Plan Generation**: The Planner intelligently selects which module to run based on verification feedback
+2. **Module-Level Synthesis**: Generation modules produce specifications, views, invariants, and proofs to handle module-level synthesis
+3. **Iterative Repair**: Failed verification triggers specialized repair modules for different error types
+4. **Training Mitigation**: Few-shot examples and repair modules compensate for limited training data to mitigate lack of training
 
 ---
 
