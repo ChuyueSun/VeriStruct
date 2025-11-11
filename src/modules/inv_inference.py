@@ -48,7 +48,15 @@ IMPORTANT:
 - Look for functions named `well_formed`, `inv`, `invariant`, `inv`, or similar that are marked with TODO or are empty.
 - Do NOT rename existing functions or create new `spec fn inv` functions unless explicitly requested.
 - When `struct_with_invariants` is present in the input file, use library knowledge to construct the correct invariant. Use `invariant on field with` to construct the invariants for the target class.
-- Use `===` instead of `==>` and `!==>` for bidirectional equivalence in invariants - this is more precise for verification.
+- **CRITICAL - Choosing between implication (==>) and biconditional (===):**
+  * Use IMPLICATION (==>) when expressing "elements/values that exist in a collection must satisfy a property"
+    - Pattern: "forall |x| collection.contains(x) ==> property(x)" means "if x is in collection, then property holds"
+    - This does NOT claim that all values satisfying the property must be in the collection
+  * Use BICONDITIONAL (===) ONLY when two predicates are logically equivalent in both directions
+    - Pattern: "predicate_A(x) === predicate_B(x)" means both predicates are always true or false together
+    - Use for equivalence of two different representations of the same fact
+  * Default to implication (==>) for structural invariants on sparse/selective data structures (trees, maps, filtered collections)
+  * Most invariants constrain "what is present" not "what must be present" - use implication for these
 - Return the ENTIRE file with your changes integrated into the original code, not just the inv function definition.
 - Do not modify other parts of the code.
 - Do not add explanatory text.
@@ -83,9 +91,7 @@ CRITICAL: Quantifier Syntax
             # Log the complete query content for debugging
             self.logger.debug("=== LLM Query Content ===")
             self.logger.debug(f"Retry Attempt: {retry_attempt}")
-            self.logger.debug(
-                f"Temperature: {1.0 + (retry_attempt * temperature_boost)}"
-            )
+            self.logger.debug(f"Temperature: {1.0 + (retry_attempt * temperature_boost)}")
             self.logger.debug(f"Cache Enabled: {use_cache}")
             self.logger.debug("\n=== Instruction ===\n" + instruction)
             self.logger.debug("\n=== Code ===\n" + code)
@@ -144,24 +150,16 @@ CRITICAL: Quantifier Syntax
             # Apply regex-based syntax fixes
             from src.modules.repair_regex import fix_common_syntax_errors
 
-            final_response, was_changed = fix_common_syntax_errors(
-                temp_response, self.logger
-            )
+            final_response, was_changed = fix_common_syntax_errors(temp_response, self.logger)
             if was_changed:
-                self.logger.info(
-                    "Applied regex syntax fixes to invariant inference response"
-                )
+                self.logger.info("Applied regex syntax fixes to invariant inference response")
 
             # Check if the generated code is safe
             if self.check_code_safety(original_code, final_response):
                 safe_responses.append(final_response)
-                self.logger.info(
-                    f"Generated invariant code passed safety check{context_msg}"
-                )
+                self.logger.info(f"Generated invariant code passed safety check{context_msg}")
             else:
-                self.logger.warning(
-                    f"Generated invariant code failed safety check{context_msg}"
-                )
+                self.logger.warning(f"Generated invariant code failed safety check{context_msg}")
         return safe_responses
 
     def replace_at_len_in_type_invariant(self, content: str) -> str:
@@ -279,8 +277,7 @@ CRITICAL: Quantifier Syntax
 
             for i, sample in enumerate(responses):
                 sample_path = (
-                    output_dir
-                    / f"03_inv_inference_raw_sample_{i+1}_attempt_{retry_attempt+1}.rs"
+                    output_dir / f"03_inv_inference_raw_sample_{i+1}_attempt_{retry_attempt+1}.rs"
                 )
                 try:
                     sample_path.write_text(sample)
@@ -307,9 +304,7 @@ CRITICAL: Quantifier Syntax
 
         # If no safe responses found after all retries, fall back to original
         if not safe_responses:
-            self.logger.warning(
-                "No safe responses found after all retries, using original code"
-            )
+            self.logger.warning("No safe responses found after all retries, using original code")
             return original_code
 
         # Create a directory for tracking global best samples
@@ -325,9 +320,7 @@ CRITICAL: Quantifier Syntax
 
         # Final safety check on the best code
         if not self.check_code_safety(original_code, best_code):
-            self.logger.warning(
-                "Best generated code failed safety check, falling back to original"
-            )
+            self.logger.warning("Best generated code failed safety check, falling back to original")
             best_code = original_code
 
         # Get the global best from context

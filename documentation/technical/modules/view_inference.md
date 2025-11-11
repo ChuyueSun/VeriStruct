@@ -92,6 +92,7 @@ def _process_responses(self, responses: List[str], original_code: str):
 ## Workflow
 
 ### 1. Initialization
+
 ```python
 def __init__(self, config, logger):
     super().__init__(
@@ -106,6 +107,7 @@ def __init__(self, config, logger):
 ### 2. Execution Process
 
 1. Code Analysis:
+
 ```python
 def exec(self, context: Context) -> str:
     code = context.trials[-1].code
@@ -121,11 +123,13 @@ def exec(self, context: Context) -> str:
 ```
 
 2. Example Loading:
+
 ```python
 examples = get_examples(self.config, "view", self.logger)
 ```
 
 3. Multiple Retry Attempts:
+
 ```python
 max_retries = 3
 for retry_attempt in range(max_retries):
@@ -138,6 +142,7 @@ for retry_attempt in range(max_retries):
 ```
 
 4. Result Evaluation:
+
 ```python
 best_code, best_score, _ = evaluate_samples(
     samples=safe_responses,
@@ -150,24 +155,28 @@ best_code, best_score, _ = evaluate_samples(
 ## Features
 
 ### 1. Mathematical Abstraction
+
 - Pure specification-level representation
 - Minimal complete representation
 - Mathematical type system
 - Vector handling with @ notation
 
 ### 2. Response Processing
+
 - Sophisticated parsing
 - Pattern matching
 - Error correction
 - Safety validation
 
 ### 3. Error Handling
+
 - Multiple retry attempts
 - Temperature adjustment
 - Type error fixing
 - Comprehensive logging
 
 ### 4. Result Management
+
 - Best result tracking
 - Sample preservation
 - Score-based evaluation
@@ -202,6 +211,7 @@ best_code, best_score, _ = evaluate_samples(
 ## Extension Points
 
 1. Custom View Patterns:
+
 ```python
 def add_view_pattern(self, pattern: str, handler: Callable):
     """Register new View pattern handler."""
@@ -209,6 +219,7 @@ def add_view_pattern(self, pattern: str, handler: Callable):
 ```
 
 2. Mathematical Types:
+
 ```python
 def register_math_type(self, type_name: str, validator: Callable):
     """Register new mathematical type."""
@@ -216,6 +227,7 @@ def register_math_type(self, type_name: str, validator: Callable):
 ```
 
 3. Result Evaluation:
+
 ```python
 def add_evaluation_metric(self, metric: Callable):
     """Add custom evaluation metric."""
@@ -225,6 +237,7 @@ def add_evaluation_metric(self, metric: Callable):
 ## Guidelines
 
 ### 1. Mathematical Types
+
 - Use appropriate type for abstraction:
   - `bool` for binary states
   - `int`/`nat` for numeric values
@@ -233,12 +246,14 @@ def add_evaluation_metric(self, metric: Callable):
   - `Map<K, V>` for mappings
 
 ### 2. Vector Handling
+
 - Append "@" to Vec variable names
 - Use appropriate sequence operations
 - Maintain vector properties
 - Handle bounds correctly
 
 ### 3. Implementation Style
+
 - Keep abstractions minimal
 - Avoid reveal keyword
 - Use closed spec functions

@@ -1,6 +1,6 @@
 # BitMap Example - Module Workflow
 
-This document illustrates how each VerusAgent module processes the BitMap example (`bitmap_2.rs`), a more complex data structure with bit-level operations.
+This document illustrates how each VeriStruct module processes the BitMap example (`bitmap_2.rs`), a more complex data structure with bit-level operations.
 
 ## View Inference Module
 
@@ -23,6 +23,7 @@ impl BitMap {
 ```
 
 Key decisions:
+
 1. Uses `Seq<bool>` for the mathematical sequence type
 2. Flattens the bit vector into a sequence of booleans
 3. Handles bit-level operations through mathematical mapping
@@ -56,6 +57,7 @@ closed spec fn inv(&self) -> bool {
 ```
 
 Key aspects:
+
 1. Relies on Vec invariants
 2. Bit operations verified through separate proofs
 3. No additional structural invariants needed
@@ -88,6 +90,7 @@ fn or(&self, bm: &BitMap) -> (ret: BitMap)
 ```
 
 Key specifications:
+
 1. Bounds checking
 2. State updates
 3. Bitwise operation semantics
@@ -127,6 +130,7 @@ fn or(&self, bm: &BitMap) -> (ret: BitMap) {
 ```
 
 Key proof elements:
+
 1. Bit operation correctness
 2. Sequence equality assertions
 3. Bitwise operation proofs
@@ -198,4 +202,4 @@ The BitMap example differs from RingBuffer in several ways:
    - BitMap: Uses bit-level and sequence specifications
    - RingBuffer: Uses sequence and capacity specifications
 
-This example demonstrates how VerusAgent modules handle different verification challenges and adapt to various data structure requirements.
+This example demonstrates how VeriStruct modules handle different verification challenges and adapt to various data structure requirements.

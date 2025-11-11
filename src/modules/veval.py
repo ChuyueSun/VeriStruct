@@ -90,9 +90,7 @@ class Verus:
 
     def set_verus_path(self, path):
         self.verus_path = os.path.realpath(path)
-        self.vstd_path = os.path.realpath(
-            os.path.join(self.verus_path, "../../../vstd/")
-        )
+        self.vstd_path = os.path.realpath(os.path.join(self.verus_path, "../../../vstd/"))
         # print(f"verus path: {self.verus_path}")
         # print(f"vstd path: {self.vstd_path}")
 
@@ -123,18 +121,12 @@ class ErrorTrace:
         return self.vstd_err
 
     def get_text(self, snippet=True, pre=4, post=2):
-        ret = (
-            f"{VerusErrorLabel2m[self.label]}\n"
-            if VerusErrorLabel2m[self.label]
-            else ""
-        )
+        ret = f"{VerusErrorLabel2m[self.label]}\n" if VerusErrorLabel2m[self.label] else ""
         if not snippet or len(self.text) <= pre + post + 1:
             return ret + "\n".join([t.text for t in self.text])
         else:
             return ret + "\n".join(
-                [t.text for t in self.text[:pre]]
-                + ["..."]
-                + [t.text for t in self.text[-post:]]
+                [t.text for t in self.text[:pre]] + ["..."] + [t.text for t in self.text[-post:]]
             )
 
     # TO be refined
@@ -158,10 +150,10 @@ class VerusError:
 
         # Get the full error message including span labels
         if self.spans:
-            span_labels = [
-                span.get("label", "") for span in self.spans if "label" in span
-            ]
-            self.error_text = f"{self.error_text} ({'; '.join(label for label in span_labels if label)})"
+            span_labels = [span.get("label", "") for span in self.spans if "label" in span]
+            self.error_text = (
+                f"{self.error_text} ({'; '.join(label for label in span_labels if label)})"
+            )
 
         # Default to 'Other' unless a partial match is found
         self.error = VerusErrorType.Other
@@ -194,9 +186,7 @@ class VerusError:
                     if i < len(code_lines):
                         line = code_lines[i]
                         # Match function definition (with optional attributes like #[verifier::loop_isolation])
-                        fn_match = re.search(
-                            r"^\s*(?:#\[.*?\]\s*)?fn\s+(\w+)\s*\(", line
-                        )
+                        fn_match = re.search(r"^\s*(?:#\[.*?\]\s*)?fn\s+(\w+)\s*\(", line)
                         if fn_match:
                             func_name = fn_match.group(1)
                             # Check if function name contains "test"
@@ -218,9 +208,7 @@ class VerusError:
         elif self.error == VerusErrorType.AssertFail:
             # Debug: log why test detection didn't run
             if not self.code:
-                self.logger.debug(
-                    f"Test assertion detection skipped: code is empty or None"
-                )
+                self.logger.debug(f"Test assertion detection skipped: code is empty or None")
             elif not self.trace:
                 self.logger.debug(f"Test assertion detection skipped: trace is empty")
 
@@ -270,15 +258,11 @@ class VerusError:
         if not isinstance(value, VerusError):
             return False
 
-        return (
-            self.error_text == value.error_text and self.get_text() == value.get_text()
-        )
+        return self.error_text == value.error_text and self.get_text() == value.get_text()
 
 
 class EvalScore:
-    def __init__(
-        self, verified: int, errors: int, compilation_error: bool, verus_errors: int = 0
-    ):
+    def __init__(self, verified: int, errors: int, compilation_error: bool, verus_errors: int = 0):
         self.compilation_error = compilation_error
         self.verified = verified
         self.errors = errors
@@ -408,9 +392,7 @@ class EvalScore:
             # If any comparison fails, log it and return False
             import logging
 
-            logging.getLogger("EvalScore").warning(
-                f"Error during score comparison: {e}"
-            )
+            logging.getLogger("EvalScore").warning(f"Error during score comparison: {e}")
             return False
 
         return False
@@ -469,9 +451,7 @@ class VEval:
             if verus_from_env and os.path.exists(verus_from_env):
                 self.verus_path = verus_from_env
                 if self.logger:
-                    self.logger.info(
-                        f"Found Verus path from environment: {self.verus_path}"
-                    )
+                    self.logger.info(f"Found Verus path from environment: {self.verus_path}")
                 # Update the global verus object too
                 verus.set_verus_path(self.verus_path)
             elif os.environ.get("ENABLE_VEVAL", "1") == "1":
@@ -491,18 +471,14 @@ class VEval:
         elif self.dummy_mode and self.logger:
             self.logger.warning("VEval in dummy mode. Will return placeholder results.")
 
-    def eval_and_get_score(
-        self, max_errs=5, json_mode=True, func_name=None
-    ) -> EvalScore:
+    def eval_and_get_score(self, max_errs=5, json_mode=True, func_name=None) -> EvalScore:
         self.eval(max_errs, json_mode, func_name)
         return self.get_score()
 
     def get_score(self) -> EvalScore:
         verified = self.get_verified()
         errors = self.get_errors()
-        return EvalScore(
-            verified, errors, self.compilation_error, len(self.verus_errors)
-        )
+        return EvalScore(verified, errors, self.compilation_error, len(self.verus_errors))
 
     # Run verus on the code and parse the output.
     def eval(
@@ -516,9 +492,7 @@ class VEval:
     ) -> None:
         if self.dummy_mode:
             if self.logger:
-                self.logger.warning(
-                    "VEval in dummy mode. Generating placeholder results."
-                )
+                self.logger.warning("VEval in dummy mode. Generating placeholder results.")
 
             # Simulate a basic evaluation result
             self.verus_errors = ["Dummy error: TODO placeholder not implemented"]
@@ -603,9 +577,7 @@ class VEval:
         try:
             verified = self.verus_result["verification-results"]["verified"]
         except Exception as e:
-            self.logger.error(
-                f"Failure in VEval.get_verified. Verus Compilation error."
-            )
+            self.logger.error(f"Failure in VEval.get_verified. Verus Compilation error.")
             verified = -1
             self.compilation_error = True
         return verified
@@ -631,10 +603,7 @@ class VEval:
     def verus_succeed(self) -> bool:
         if not self.verus_result:
             Exception("No Verus result")
-        return (
-            self.compilation_error
-            and self.verus_result["verification-results"]["success"]
-        )
+        return self.compilation_error and self.verus_result["verification-results"]["success"]
 
     def score(self) -> tuple[int, int]:
         return (self.get_verified(), self.get_errors())
@@ -743,9 +712,7 @@ class VEval:
 
         # Handle Verus verification errors
         elif self.verus_errors:
-            error_parts.append(
-                f"VERIFICATION ERRORS ({len(self.verus_errors)} total):\n"
-            )
+            error_parts.append(f"VERIFICATION ERRORS ({len(self.verus_errors)} total):\n")
 
             # Format each Verus error with context
             for i, error in enumerate(self.verus_errors[:max_errors]):
@@ -755,9 +722,7 @@ class VEval:
                 else:
                     # Real VerusError object
                     try:
-                        error_type_name = (
-                            error.error.name if hasattr(error, "error") else "Unknown"
-                        )
+                        error_type_name = error.error.name if hasattr(error, "error") else "Unknown"
                         error_parts.append(f"\nError {i+1}: {error_type_name}")
 
                         if hasattr(error, "error_text"):
@@ -765,9 +730,7 @@ class VEval:
 
                         # Get formatted error trace with code snippets
                         if hasattr(error, "get_text"):
-                            error_text = error.get_text(
-                                snippet=True, pre=3, post=2, topdown=True
-                            )
+                            error_text = error.get_text(snippet=True, pre=3, post=2, topdown=True)
                             if error_text:
                                 error_parts.append("Location and context:")
                                 error_parts.append(error_text)
@@ -790,10 +753,7 @@ class VEval:
         # Limit total length to avoid overwhelming the prompt
         max_length = 4000
         if len(result) > max_length:
-            result = (
-                result[:max_length]
-                + f"\n\n... (truncated, total length: {len(result)} chars)"
-            )
+            result = result[:max_length] + f"\n\n... (truncated, total length: {len(result)} chars)"
 
         return result
 
@@ -880,9 +840,7 @@ if __name__ == "__main__":
 
     code = open(args.input).read()
     v = VEval(code, logger)
-    print(
-        f"Succeed: {v.verus_succeed()}, Verified: {v.get_verified()}, Errors: {v.get_errors()}"
-    )
+    print(f"Succeed: {v.verus_succeed()}, Verified: {v.get_verified()}, Errors: {v.get_errors()}")
     print("Failed postconds:")
     for t in v.get_failed_postconds():
         print(t.get_text())

@@ -105,6 +105,7 @@ graph TD
 ### 2. Repair Process
 
 1. Error Detection:
+
 ```python
 assert_failures = last_trial.eval.get_failures(
     error_type=VerusErrorType.AssertFail
@@ -115,6 +116,7 @@ test_failures = last_trial.eval.get_failures(
 ```
 
 2. Pattern Recognition:
+
 ```python
 # Check for special patterns
 if ".filter(" in assertion_info:
@@ -126,6 +128,7 @@ elif ".take(" in assertion_info:
 ```
 
 3. Lemma Management:
+
 ```python
 def insert_lemma_func(code, lemmas, lemma_path):
     # Add necessary lemmas
@@ -137,24 +140,28 @@ def insert_lemma_func(code, lemmas, lemma_path):
 ## Features
 
 ### 1. Pattern Recognition
+
 - Filter operations
 - Subrange operations
 - Take operations
 - Contains operations
 
 ### 2. Lemma Management
+
 - Automatic insertion
 - Pattern matching
 - Dependency handling
 - Context awareness
 
 ### 3. Repair Strategies
+
 - Special case handling
 - General repairs
 - Test-specific repairs
 - Proof generation
 
 ### 4. Result Management
+
 - Best result tracking
 - Sample preservation
 - Context updates
@@ -163,6 +170,7 @@ def insert_lemma_func(code, lemmas, lemma_path):
 ## Common Repairs
 
 ### 1. Filter Operations
+
 ```rust
 // Before
 assert(vec.filter(|x| x > 0).len() > 0);
@@ -175,6 +183,7 @@ proof {
 ```
 
 ### 2. Subrange Operations
+
 ```rust
 // Before
 assert(vec.subrange(0, i).len() == i);
@@ -187,6 +196,7 @@ proof {
 ```
 
 ### 3. Test Assertions
+
 ```rust
 // Before
 #[test]
@@ -234,6 +244,7 @@ fn push(&mut self, val: T)
 ## Extension Points
 
 1. Pattern Recognition:
+
 ```python
 def add_pattern(self, pattern: str, handler: Callable):
     """Add new pattern recognition."""
@@ -241,6 +252,7 @@ def add_pattern(self, pattern: str, handler: Callable):
 ```
 
 2. Lemma Management:
+
 ```python
 def add_lemma_source(self, source: str):
     """Add new lemma source."""
@@ -248,6 +260,7 @@ def add_lemma_source(self, source: str):
 ```
 
 3. Repair Strategies:
+
 ```python
 def add_repair_strategy(self, error_type: str, strategy: Callable):
     """Add new repair strategy."""
@@ -257,6 +270,7 @@ def add_repair_strategy(self, error_type: str, strategy: Callable):
 ## Common Issues
 
 ### 1. Missing Lemmas
+
 ```rust
 // Problem: Missing lemma
 assert(vec.subrange(0, i).len() == i);
@@ -267,6 +281,7 @@ assert(vec.subrange(0, i).len() == i);
 ```
 
 ### 2. Reveal Missing
+
 ```rust
 // Problem: Hidden function
 assert(seq.filter(|x| x > 0).len() > 0);
@@ -277,6 +292,7 @@ assert(seq.filter(|x| x > 0).len() > 0);
 ```
 
 ### 3. Test Failures
+
 ```rust
 // Problem: Missing ensures
 fn push(&mut self, val: T) {
@@ -295,12 +311,14 @@ fn push(&mut self, val: T)
 ## Conclusion
 
 The Assertion Repair Module provides:
+
 1. Pattern-based repairs
 2. Lemma management
 3. Test assertion handling
 4. Comprehensive repair strategies
 
 Key strengths:
+
 1. Pattern recognition
 2. Lemma integration
 3. Test support

@@ -19,6 +19,7 @@ You can use forall or exists for properties over sequences.
 **For functions that update a single element in a sequence-based view**:
 
 **✅ PREFER** - Use `.update()` for succinct, provable specifications:
+
 ```rust
 fn update_element(&mut self, idx: usize, value: T)
     requires
@@ -28,6 +29,7 @@ fn update_element(&mut self, idx: usize, value: T)
 ```
 
 **❌ AVOID** - Verbose element-wise specifications (makes proofs much harder):
+
 ```rust
 ensures
     self@.len() == old(self)@.len(),
@@ -36,12 +38,14 @@ ensures
 ```
 
 **Why `.update()` is better**:
+
 1. More concise and readable
 2. Directly matches proof patterns (pairs with `assert_seqs_equal!`)
 3. Easier for Verus SMT solver to reason about
 4. Standard pattern in Verus for sequence modifications
 
 **When to use this pattern**:
+
 - Any function that modifies exactly one position in a Seq-based view
 - After operations that update a single element (e.g., `self.data.set(index, value)`)
 - Functions with postconditions about changing one element while preserving others

@@ -1,8 +1,8 @@
-# VerusAgent Technical Workflow Report
+# VeriStruct Technical Workflow Report
 
 ## Overview
 
-VerusAgent streamlines Rust code verification in the Verus framework with a modular workflow that coordinates planning, checking, and repair.
+VeriStruct streamlines Rust code verification in the Verus framework with a modular workflow that coordinates planning, checking, and repair.
 Large language models guide these steps, making decisions and generating code to overcome verification challenges.
 
 ## System Architecture
@@ -45,7 +45,9 @@ graph TD
 ## Core Components
 
 ### 1. Main Controller (`main.py`)
+
 The main controller orchestrates the entire verification process and handles:
+
 - Configuration management and environment setup
 - Input file processing and lemma preprocessing
 - Module initialization and registration
@@ -55,6 +57,7 @@ The main controller orchestrates the entire verification process and handles:
 - Multiple fallback strategies for error handling
 
 Example configuration handling:
+
 ```python
 # Load configuration with fallback
 try:
@@ -73,7 +76,9 @@ else:
 ```
 
 ### 2. Context Management (`context.py`)
+
 The Context class serves as the central state manager:
+
 - Maintains verification trials history with trial scoring
 - Manages knowledge base for verification
 - Tracks global best code and scores
@@ -81,6 +86,7 @@ The Context class serves as the central state manager:
 - Processes library imports and documentation
 
 Example knowledge management:
+
 ```python
 def add_knowledge(self, id: str, knowledge: str, append=False):
     """Add knowledge to the context."""
@@ -98,13 +104,16 @@ def gen_knowledge(self):
 ```
 
 ### 3. Planning System (`planner.py`)
+
 The Planner determines the optimal verification workflow:
+
 - Analyzes input code characteristics
 - Determines module execution sequence
 - Generates verification plans using LLM
 - Normalizes task descriptions for consistent caching
 
 Example task description generation:
+
 ```python
 def get_normalized_task_desc(self, ctx: Context) -> str:
     """Generate normalized task description for cache consistency."""
@@ -164,7 +173,9 @@ graph TD
 ```
 
 ### Error Priority Order
+
 The system prioritizes errors in the following order:
+
 1. Type errors (MismatchedType)
 2. Vector length errors (PreCondFailVecLen)
 3. Arithmetic errors (ArithmeticFlow)
@@ -181,6 +192,7 @@ The system prioritizes errors in the following order:
 14. Private field access errors
 
 Example priority implementation:
+
 ```python
 priority_order = {
     VerusErrorType.MismatchedType: 1,
@@ -231,6 +243,7 @@ graph TD
 ```
 
 ### Safety Checking
+
 The system performs multiple safety checks:
 
 ```python
@@ -260,12 +273,14 @@ def check_code_safety(self, original_code: str, generated_code: str) -> bool:
 The system maintains multiple types of results:
 
 1. Timestamped Results:
+
 ```python
 run_timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 file_id = f"{input_file_base}__{data_structure}_{verification_type}_{run_timestamp}"
 ```
 
 2. Best Result Tracking:
+
 ```python
 def handle_checkpoint_best(context, output_dir, file_id, progress_logger, logger):
     checkpoint_best_code = context.get_best_code()
@@ -283,6 +298,7 @@ def handle_checkpoint_best(context, output_dir, file_id, progress_logger, logger
 ## Performance Optimizations
 
 1. LLM Caching:
+
 ```python
 def _get_llm_responses(self, instruction: str, code: str, retry_attempt: int = 0):
     # Cache only first attempt
@@ -297,6 +313,7 @@ def _get_llm_responses(self, instruction: str, code: str, retry_attempt: int = 0
 ```
 
 2. Trial Management:
+
 ```python
 def add_trial(self, code: str) -> None:
     trial_id = len(self.trials)
@@ -310,6 +327,7 @@ def add_trial(self, code: str) -> None:
 The system provides several extension points:
 
 1. Module System:
+
 ```python
 class BaseModule:
     def __init__(self, name: str, desc: str, config: Dict[str, Any]):
@@ -322,6 +340,7 @@ class BaseModule:
 ```
 
 2. Repair Registry:
+
 ```python
 def register_module(self, name: str, module: BaseRepairModule, error_types: List[VerusErrorType]):
     self.repair_modules[name] = module
@@ -332,6 +351,7 @@ def register_module(self, name: str, module: BaseRepairModule, error_types: List
 ## Best Practices
 
 1. Regular Checkpoint Saving:
+
 ```python
 def update_checkpoint_best(best_code, global_best_score, global_best_code, global_dir, logger):
     if best_code and (not global_best_score or best_score > global_best_score):
@@ -341,6 +361,7 @@ def update_checkpoint_best(best_code, global_best_score, global_best_code, globa
 ```
 
 2. Progressive Refinement:
+
 ```python
 def _process_responses(self, responses: List[str], original_code: str):
     safe_responses = []
@@ -353,9 +374,10 @@ def _process_responses(self, responses: List[str], original_code: str):
 
 ## Conclusion
 
-VerusAgent provides a comprehensive, modular, and robust framework for automated verification of Rust code using the Verus verification system. Its sophisticated workflow combines planning, verification, and repair strategies with extensive error handling and result management capabilities. The system's use of LLM for intelligent decision-making, combined with its robust module architecture and safety mechanisms, makes it a powerful tool for code verification.
+VeriStruct provides a comprehensive, modular, and robust framework for automated verification of Rust code using the Verus verification system. Its sophisticated workflow combines planning, verification, and repair strategies with extensive error handling and result management capabilities. The system's use of LLM for intelligent decision-making, combined with its robust module architecture and safety mechanisms, makes it a powerful tool for code verification.
 
 The system's key strengths lie in:
+
 1. Modular architecture allowing easy extension
 2. Sophisticated error handling and repair strategies
 3. Comprehensive result management and tracking

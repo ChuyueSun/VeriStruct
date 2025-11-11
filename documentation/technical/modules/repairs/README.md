@@ -1,8 +1,8 @@
-# VerusAgent Repair Modules
+# VeriStruct Repair Modules
 
 ## Overview
 
-VerusAgent includes a comprehensive set of repair modules that handle different types of verification errors. Each module specializes in fixing specific issues while maintaining code safety and correctness.
+VeriStruct includes a comprehensive set of repair modules that handle different types of verification errors. Each module specializes in fixing specific issues while maintaining code safety and correctness.
 
 ## Error Priority Order
 
@@ -52,21 +52,25 @@ graph TD
 ## Available Modules
 
 ### Core Repairs
+
 1. [Syntax Repair](syntax.md) - General syntax and compilation errors
 2. [Type Repair](type.md) - Type mismatches and annotations
 3. [Arithmetic Repair](arithmetic.md) - Arithmetic overflow/underflow
 
 ### Specification Repairs
+
 1. [Precondition Repair](precondition.md) - Precondition failures
 2. [Postcondition Repair](postcondition.md) - Postcondition failures
 3. [Invariant Repair](invariant.md) - Invariant failures
 
 ### Structural Repairs
+
 1. [Missing Element Repair](missing.md) - Missing imports/implementations
 2. [Mode Repair](mode.md) - Mode and visibility issues
 3. [Old(self) Repair](old_self.md) - Old(self) usage issues
 
 ### Verification Repairs
+
 1. [Assertion Repair](assertion.md) - Assertion failures
 2. [Decrease Repair](decrease.md) - Termination proofs
 3. [Invariant Removal](remove_inv.md) - Private field access
@@ -98,6 +102,7 @@ All repair modules share these features:
 The repair system integrates modules through:
 
 1. Registry Management:
+
 ```python
 def register_module(
     self,
@@ -112,6 +117,7 @@ def register_module(
 ```
 
 2. Error Handling:
+
 ```python
 def get_module_for_error(self, error: VerusError) -> Optional[BaseRepairModule]:
     if error.error in self.error_to_module_map:
@@ -120,6 +126,7 @@ def get_module_for_error(self, error: VerusError) -> Optional[BaseRepairModule]:
 ```
 
 3. Repair Process:
+
 ```python
 def repair_error(self, context, error: VerusError) -> Optional[str]:
     module = self.get_module_for_error(error)
@@ -157,6 +164,7 @@ def repair_error(self, context, error: VerusError) -> Optional[str]:
 ## Extension Points
 
 1. New Repair Modules:
+
 ```python
 class CustomRepairModule(BaseRepairModule):
     def exec(self, context, error) -> str:
@@ -164,6 +172,7 @@ class CustomRepairModule(BaseRepairModule):
 ```
 
 2. Error Type Mapping:
+
 ```python
 registry.register_module(
     "custom_repair",
@@ -173,6 +182,7 @@ registry.register_module(
 ```
 
 3. Result Processing:
+
 ```python
 def process_repair(self, result: str) -> str:
     # Add custom processing
@@ -181,6 +191,7 @@ def process_repair(self, result: str) -> str:
 ## Conclusion
 
 The repair module system provides:
+
 1. Comprehensive error handling
 2. Safe code modifications
 3. Extensible architecture

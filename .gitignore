@@ -98,3 +98,36 @@ output/
 prompt/
 log
 log2
+
+# Cursor-generated documentation and analysis files
+*_REFLECTION.md
+*_SUMMARY.md
+*_ANALYSIS.md
+*_GUIDE.md
+*_IMPROVEMENTS.md
+*_PLAN.md
+*_diagnosis.md
+*_debug_report.md
+abstraction_*.md
+benchmark_*.md
+examples_based_teaching.md
+planning_recommendations.md
+repair_system_improvements.md
+view_inference_coverage.md
+COMPLETE_*.md
+EXPERIMENT_*.md
+FINAL_*.md
+PARALLEL_*.md
+README_IMPROVEMENTS.md
+REPAIR_*.md
+TIMEOUT_*.md
+VEVAL_ERROR_*.md
+.git-commit-guide.md
+results_summary.md
+examples/repair_*.md
+docs/repair_*.md
+
+# Additional generated files
+TIMEOUT_IMPLEMENTATION_SUMMARY.txt
+benchmark_summary_*.txt
+check_benchmark_status.sh

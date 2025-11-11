@@ -54,9 +54,7 @@ class LemmaPreprocessor:
                                 f"Loaded explicitly mapped lemma {file_path.name} for keyword '{keyword}'"
                             )
                     except Exception as e:
-                        self.logger.error(
-                            f"Error loading explicit lemma {file_path}: {str(e)}"
-                        )
+                        self.logger.error(f"Error loading explicit lemma {file_path}: {str(e)}")
                 else:
                     self.logger.warning(
                         f"Explicitly mapped lemma file {file_path} not found for keyword '{keyword}'"

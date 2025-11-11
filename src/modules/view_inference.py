@@ -155,7 +155,349 @@ Mathematical types in Verus:
 - Every opening bracket [ must have a matching closing bracket ]
 - Every impl block must be properly closed
 
-Return the ENTIRE file with your changes integrated into the original code."""
+**OUTPUT FORMAT:**
+
+Return ONLY the view implementation, nothing else. Choose one of these formats:
+
+**Format A: If code has existing `spec fn view` - return just the function body:**
+```rust
+let total_bits = self.bits@.len() * 64;
+Seq::new(total_bits, |i: int| {
+    let chunk_i = i / 64;
+    let bit_i = i % 64;
+    let chunk = self.bits@[chunk_i];
+    get_bit64!(chunk, bit_i as u64)
+})
+```
+
+**Format B: If code needs View trait - return the complete impl block:**
+```rust
+impl View for StructName {
+    type V = Seq<bool>;
+
+    closed spec fn view(&self) -> Self::V {
+        // implementation
+    }
+}
+```
+
+DO NOT return the entire file. ONLY return the view implementation as shown above."""
+
+    @staticmethod
+    def _find_matching_brace(code: str, start_pos: int) -> int:
+        """
+        Find the position of the closing brace that matches the opening brace at start_pos.
+
+        Args:
+            code: The code string
+            start_pos: Position of the opening brace
+
+        Returns:
+            Position of the matching closing brace, or -1 if not found
+        """
+        if start_pos >= len(code) or code[start_pos] != "{":
+            return -1
+
+        brace_count = 1
+        i = start_pos + 1
+
+        while i < len(code) and brace_count > 0:
+            # Skip string literals and character literals to avoid counting braces inside them
+            if code[i] == '"':
+                i += 1
+                while i < len(code):
+                    if code[i] == "\\":
+                        i += 2  # Skip escaped character
+                    elif code[i] == '"':
+                        i += 1
+                        break
+                    else:
+                        i += 1
+                continue
+            elif code[i] == "'":
+                i += 1
+                while i < len(code):
+                    if code[i] == "\\":
+                        i += 2  # Skip escaped character
+                    elif code[i] == "'":
+                        i += 1
+                        break
+                    else:
+                        i += 1
+                continue
+            # Skip single-line comments
+            elif i + 1 < len(code) and code[i : i + 2] == "//":
+                while i < len(code) and code[i] != "\n":
+                    i += 1
+                continue
+            # Skip multi-line comments
+            elif i + 1 < len(code) and code[i : i + 2] == "/*":
+                i += 2
+                while i + 1 < len(code):
+                    if code[i : i + 2] == "*/":
+                        i += 2
+                        break
+                    i += 1
+                continue
+            # Count braces
+            elif code[i] == "{":
+                brace_count += 1
+            elif code[i] == "}":
+                brace_count -= 1
+                if brace_count == 0:
+                    return i
+
+            i += 1
+
+        return -1
+
+    @staticmethod
+    def has_spec_fn_view(code: str) -> tuple[bool, str, int, int]:
+        """
+        Check if code already has a spec fn view declaration.
+
+        Detects patterns:
+        1. spec fn view(&self)
+        2. pub spec fn view(&self)
+        3. closed spec fn view(&self)
+        4. pub closed spec fn view(&self)
+        5. open spec fn view(&self)
+
+        Returns:
+            (has_spec_fn, struct_name, start_pos, end_pos)
+            where start_pos and end_pos define the TODO region to replace
+        """
+        # Search for impl blocks that contain spec fn view
+        # This is more robust than requiring struct definition and impl to be adjacent
+
+        # Pattern to find impl blocks: impl StructName<...> {
+        impl_pattern = r"impl\s+(\w+)\s*(?:<[^>]*>)?\s*\{"
+
+        # Pattern to find spec fn view within an impl block
+        spec_fn_pattern = r"((?:pub\s+)?(?:open\s+|closed\s+)?spec\s+fn\s+view\s*\(\s*&\s*self\s*\)\s*->\s*[^{]+)\{"
+
+        # Find all impl blocks
+        for impl_match in re.finditer(impl_pattern, code):
+            struct_name = impl_match.group(1)
+            impl_start = impl_match.end() - 1  # Position of opening brace
+
+            # Find the end of this impl block
+            impl_end = ViewInferenceModule._find_matching_brace(code, impl_start)
+            if impl_end == -1:
+                continue
+
+            # Extract the impl block body
+            impl_body = code[impl_start : impl_end + 1]
+
+            # Search for spec fn view within this impl block
+            spec_fn_match = re.search(spec_fn_pattern, impl_body)
+            if spec_fn_match:
+                # Found spec fn view in this impl block
+                # Calculate absolute position in original code
+                opening_brace_pos = impl_start + spec_fn_match.end() - 1
+
+                # Find the matching closing brace for the spec fn view
+                closing_brace_pos = ViewInferenceModule._find_matching_brace(
+                    code, opening_brace_pos
+                )
+
+                if closing_brace_pos == -1:
+                    continue
+
+                # The body is between the opening and closing braces
+                start_pos = opening_brace_pos + 1
+                end_pos = closing_brace_pos
+
+                return True, struct_name, start_pos, end_pos
+
+        return False, "", -1, -1
+
+    @staticmethod
+    def has_view_trait_with_todo(code: str) -> tuple[bool, str, int, int]:
+        """
+        Check if code has impl View for with a TODO in the view function.
+
+        Detects patterns:
+        1. impl View for StructName { type V = ...; open spec fn view(...) { // TODO } }
+        2. impl View for StructName { type V = ...; closed spec fn view(...) { // TODO } }
+
+        Returns:
+            (has_view_trait, struct_name, start_pos, end_pos)
+            where start_pos and end_pos define the view function body to replace
+        """
+        # Look for impl View for with a view function
+        # Note: We now only match up to the opening brace, then use _find_matching_brace
+        pattern = r"impl\s*(?:<[^>]*>)?\s*View\s+for\s+(\w+)\s*(?:<[^>]*>)?\s*\{.*?type\s+V\s*=[^;]+;.*?((?:open\s+|closed\s+)?spec\s+fn\s+view\s*\([^)]*\)[^{]*)\{"
+
+        match = re.search(pattern, code, re.DOTALL)
+        if match:
+            struct_name = match.group(1)
+            # Find the opening brace position (right after the match)
+            opening_brace_pos = match.end() - 1
+
+            # Find the matching closing brace
+            closing_brace_pos = ViewInferenceModule._find_matching_brace(code, opening_brace_pos)
+
+            if closing_brace_pos == -1:
+                return False, "", -1, -1
+
+            # The body is between the opening and closing braces
+            start_pos = opening_brace_pos + 1
+            end_pos = closing_brace_pos
+            body = code[start_pos:end_pos]
+
+            # Only consider it a TODO case if:
+            # 1. Body explicitly contains TODO comment
+            # 2. Body is empty or only whitespace/comments
+            body_stripped = body.strip()
+            is_todo = (
+                "TODO" in body
+                or len(body_stripped) == 0
+                or (len(body_stripped) < 20 and "//" in body_stripped)  # Just a comment
+            )
+            if is_todo:
+                return True, struct_name, start_pos, end_pos
+
+        return False, "", -1, -1
+
+    @staticmethod
+    def extract_view_implementation(response: str, is_spec_fn: bool) -> str:
+        """
+        Extract the view implementation from LLM response.
+
+        Args:
+            response: LLM response text
+            is_spec_fn: If True, extract function body only; if False, extract impl block
+
+        Returns:
+            Extracted implementation
+        """
+        # Parse code blocks from response
+        code = parse_llm_response(response)
+
+        if is_spec_fn:
+            # For spec fn, we want just the function body
+            # Look for the code between the first { and last } that isn't part of impl View
+            # Remove any impl View for or spec fn view wrappers
+
+            # If LLM returned full function, extract body
+            # Pattern matches up to the opening brace (non-greedy)
+            fn_pattern = r"spec\s+fn\s+view\s*\([^)]*\)[^{]*\{"
+            match = re.search(fn_pattern, code, re.DOTALL)
+            if match:
+                # Find the opening brace position
+                opening_brace_pos = match.end() - 1
+
+                # Use _find_matching_brace to find the proper closing brace
+                closing_brace_pos = ViewInferenceModule._find_matching_brace(
+                    code, opening_brace_pos
+                )
+
+                if closing_brace_pos != -1:
+                    # Extract only the content between the braces (the function body)
+                    return code[opening_brace_pos + 1 : closing_brace_pos].strip()
+
+            # Otherwise, assume it's already just the body
+            return code.strip()
+        else:
+            # For View trait, we want the complete impl block
+            # Pattern matches up to the opening brace, then use _find_matching_brace
+            impl_pattern = r"(impl\s*(?:<[^>]*>)?\s*View\s+for\s+\w+.*?)\{"
+            match = re.search(impl_pattern, code, re.DOTALL)
+            if match:
+                # Find the opening brace position
+                opening_brace_pos = match.end() - 1
+
+                # Use _find_matching_brace to find the proper closing brace
+                closing_brace_pos = ViewInferenceModule._find_matching_brace(
+                    code, opening_brace_pos
+                )
+
+                if closing_brace_pos != -1:
+                    # Extract the entire impl block including braces
+                    return code[match.start() : closing_brace_pos + 1].strip()
+
+            return code.strip()
+
+    @staticmethod
+    def insert_view_body(original_code: str, view_body: str, start_pos: int, end_pos: int) -> str:
+        """
+        Insert view function body into the original code.
+
+        Args:
+            original_code: Original source code
+            view_body: The view function body to insert
+            start_pos: Start position to replace
+            end_pos: End position to replace
+
+        Returns:
+            Modified code with view body inserted
+        """
+        # Normalize indentation: detect minimum indentation and strip it, then add 8 spaces
+        lines = view_body.split("\n")
+
+        # Find minimum indentation level (excluding empty lines)
+        min_indent = float("inf")
+        for line in lines:
+            if line.strip():  # Only consider non-empty lines
+                leading_spaces = len(line) - len(line.lstrip())
+                min_indent = min(min_indent, leading_spaces)
+
+        # If all lines were empty, set min_indent to 0
+        if min_indent == float("inf"):
+            min_indent = 0
+
+        # Strip the minimum indentation and add 8 spaces
+        indented_lines = []
+        for line in lines:
+            if line.strip():  # Don't indent empty lines
+                # Strip min_indent spaces, then add 8 spaces
+                stripped_line = line[min_indent:] if len(line) >= min_indent else line.lstrip()
+                indented_lines.append("        " + stripped_line)
+            else:
+                indented_lines.append(line)
+        indented_body = "\n".join(indented_lines)
+
+        # Insert the body
+        return original_code[:start_pos] + "\n" + indented_body + "\n    " + original_code[end_pos:]
+
+    @staticmethod
+    def insert_view_trait(original_code: str, view_impl: str, struct_name: str) -> str:
+        """
+        Insert View trait implementation into the original code.
+
+        Args:
+            original_code: Original source code
+            view_impl: The View trait implementation
+            struct_name: Name of the struct
+
+        Returns:
+            Modified code with View trait inserted
+        """
+        # Find the struct definition
+        struct_pattern = rf"(pub\s+)?struct\s+{struct_name}\s*(?:<[^>]*>)?\s*\{{[^}}]*\}}"
+        match = re.search(struct_pattern, original_code, re.DOTALL)
+
+        if not match:
+            # Fallback: insert before impl block
+            impl_pattern = rf"impl\s*(?:<[^>]*>)?\s*{struct_name}"
+            match = re.search(impl_pattern, original_code)
+            if match:
+                insert_pos = match.start()
+                return original_code[:insert_pos] + view_impl + "\n\n" + original_code[insert_pos:]
+        else:
+            # Insert after struct definition
+            insert_pos = match.end()
+            return (
+                original_code[:insert_pos] + "\n\n" + view_impl + "\n" + original_code[insert_pos:]
+            )
+
+        # Last resort: add at the end before closing verus! block
+        verus_end = original_code.rfind("}")
+        if verus_end > 0:
+            return original_code[:verus_end] + "\n" + view_impl + "\n" + original_code[verus_end:]
+
+        return original_code + "\n\n" + view_impl
 
     @staticmethod
     def check_balanced_delimiters(code: str) -> tuple[bool, str]:
@@ -226,33 +568,49 @@ Return the ENTIRE file with your changes integrated into the original code."""
 
         # If parsing failed or returned empty string, log warning and return original
         if not parsed_code:
-            self.logger.warning(
-                "General parser couldn't extract code, using original response"
-            )
+            self.logger.warning("General parser couldn't extract code, using original response")
             return response
 
         # Check if the parser gave us a complete View implementation
-        if (
-            "impl" in parsed_code
-            and "View for" in parsed_code
-            and "type V =" in parsed_code
-        ):
+        if "impl" in parsed_code and "View for" in parsed_code and "type V =" in parsed_code:
             self.logger.info("Successfully extracted View implementation")
             return parsed_code
 
         # If we don't have a View implementation yet, try to extract it specifically
-        view_impl_pattern = r"impl\s*<.*?>\s*View\s+for\s+\w+.*?{.*?type\s+V\s*=.*?closed\s+spec\s+fn\s+view.*?}.*?}"
-        view_impls = re.findall(view_impl_pattern, parsed_code, re.DOTALL)
+        # Pattern matches up to the opening brace, then use _find_matching_brace
+        view_impl_pattern = r"impl\s*<.*?>\s*View\s+for\s+\w+.*?\{"
+        matches = list(re.finditer(view_impl_pattern, parsed_code, re.DOTALL))
 
-        if view_impls:
-            self.logger.info("Extracted specific View implementation from parsed code")
-            return view_impls[0]
+        if matches:
+            for match in matches:
+                # Check if this impl block contains the required elements
+                opening_brace_pos = match.end() - 1
+                closing_brace_pos = ViewInferenceModule._find_matching_brace(
+                    parsed_code, opening_brace_pos
+                )
+
+                if closing_brace_pos != -1:
+                    impl_block = parsed_code[match.start() : closing_brace_pos + 1]
+                    # Verify it contains the view function
+                    if "type V =" in impl_block and "spec fn view" in impl_block:
+                        self.logger.info("Extracted specific View implementation from parsed code")
+                        return impl_block
 
         # If we still don't have a View implementation, try the original response
-        view_impls = re.findall(view_impl_pattern, response, re.DOTALL)
-        if view_impls:
-            self.logger.info("Extracted View implementation from original response")
-            return view_impls[0]
+        matches = list(re.finditer(view_impl_pattern, response, re.DOTALL))
+        if matches:
+            for match in matches:
+                opening_brace_pos = match.end() - 1
+                closing_brace_pos = ViewInferenceModule._find_matching_brace(
+                    response, opening_brace_pos
+                )
+
+                if closing_brace_pos != -1:
+                    impl_block = response[match.start() : closing_brace_pos + 1]
+                    # Verify it contains the view function
+                    if "type V =" in impl_block and "spec fn view" in impl_block:
+                        self.logger.info("Extracted View implementation from original response")
+                        return impl_block
 
         # If nothing worked, return the parsed code anyway
         self.logger.warning(
@@ -280,9 +638,7 @@ Return the ENTIRE file with your changes integrated into the original code."""
             # Log the complete query content for debugging
             self.logger.debug("=== LLM Query Content ===")
             self.logger.debug(f"Retry Attempt: {retry_attempt}")
-            self.logger.debug(
-                f"Temperature: {1.0 + (retry_attempt * temperature_boost)}"
-            )
+            self.logger.debug(f"Temperature: {1.0 + (retry_attempt * temperature_boost)}")
             self.logger.debug(f"Cache Enabled: {use_cache}")
             self.logger.debug("\n=== Instruction ===\n" + instruction)
             self.logger.debug("\n=== Code ===\n" + code)
@@ -334,53 +690,105 @@ Return the ENTIRE file with your changes integrated into the original code."""
     def _process_responses(
         self, responses: List[str], original_code: str, context_msg: str = ""
     ) -> List[str]:
-        """Process and validate LLM responses."""
+        """Process and validate LLM responses, inserting view implementation into original code."""
         safe_responses = []
-        for response in responses:
-            # First parse the response to extract the View implementation
-            final_response = parsed_response = parse_llm_response(response)
 
-            # Check for balanced delimiters FIRST
-            is_balanced, error_msg = self.check_balanced_delimiters(final_response)
-            if not is_balanced:
-                self.logger.warning(
-                    f"Generated view code has unbalanced delimiters: {error_msg}{context_msg}"
-                )
-                continue
+        # Detect which pattern we have
+        # Pattern 1-2: spec fn view (with optional pub/open/closed modifiers)
+        has_spec_fn, struct_name, start_pos, end_pos = self.has_spec_fn_view(original_code)
 
-            # Then apply debug_type_error to fix any type errors
-            fixed_response, _ = debug_type_error(parsed_response, logger=self.logger)
-            temp_response = fixed_response if fixed_response else parsed_response
+        # Pattern 4: impl View for with TODO in view function
+        (
+            has_view_trait_todo,
+            view_trait_struct,
+            view_start,
+            view_end,
+        ) = self.has_view_trait_with_todo(original_code)
 
-            # Apply regex-based syntax fixes
-            from src.modules.repair_regex import fix_common_syntax_errors
-
-            final_response, was_changed = fix_common_syntax_errors(
-                temp_response, self.logger
+        if has_spec_fn:
+            self.logger.info(f"Pattern: spec fn view for {struct_name}, will fill in body only")
+            is_spec_fn = True
+        elif has_view_trait_todo:
+            self.logger.info(
+                f"Pattern: impl View for {view_trait_struct} with TODO, will fill in view function body"
             )
-            if was_changed:
-                self.logger.info(
-                    "Applied regex syntax fixes to view inference response"
-                )
+            is_spec_fn = True  # Treat similar to spec fn - just fill in body
+            struct_name = view_trait_struct
+            start_pos = view_start
+            end_pos = view_end
+        else:
+            self.logger.info(
+                "Pattern: Empty or no View, will insert complete View trait implementation"
+            )
+            is_spec_fn = False
 
-            # Re-check balanced delimiters after fixing type errors
-            is_balanced, error_msg = self.check_balanced_delimiters(final_response)
-            if not is_balanced:
-                self.logger.warning(
-                    f"View code has unbalanced delimiters after type error fixes: {error_msg}{context_msg}"
-                )
+        for response in responses:
+            try:
+                # Extract just the view implementation from response
+                view_impl = self.extract_view_implementation(response, is_spec_fn=is_spec_fn)
+
+                if not view_impl:
+                    self.logger.warning(
+                        f"Could not extract view implementation from response{context_msg}"
+                    )
+                    continue
+
+                # Check for balanced delimiters in the extracted implementation
+                is_balanced, error_msg = self.check_balanced_delimiters(view_impl)
+                if not is_balanced:
+                    self.logger.warning(
+                        f"Generated view implementation has unbalanced delimiters: {error_msg}{context_msg}"
+                    )
+                    continue
+
+                # Apply type error fixes to the view implementation
+                fixed_impl, _ = debug_type_error(view_impl, logger=self.logger)
+                view_impl = fixed_impl if fixed_impl else view_impl
+
+                # Apply regex-based syntax fixes
+                from src.modules.repair_regex import fix_common_syntax_errors
+
+                view_impl, was_changed = fix_common_syntax_errors(view_impl, self.logger)
+                if was_changed:
+                    self.logger.info("Applied regex syntax fixes to view implementation")
+
+                # Now insert the view implementation into the original code
+                if is_spec_fn:
+                    # Insert function body into existing spec fn view or View trait view function
+                    final_code = self.insert_view_body(original_code, view_impl, start_pos, end_pos)
+                else:
+                    # Insert complete View trait implementation
+                    # Try to detect struct name from original code
+                    struct_match = re.search(r"(?:pub\s+)?struct\s+(\w+)", original_code)
+                    if struct_match:
+                        struct_name = struct_match.group(1)
+                    else:
+                        self.logger.warning(
+                            f"Could not detect struct name from code for View trait insertion{context_msg}"
+                        )
+                        continue
+                    final_code = self.insert_view_trait(original_code, view_impl, struct_name)
+
+                # Validate the final assembled code
+                is_balanced, error_msg = self.check_balanced_delimiters(final_code)
+                if not is_balanced:
+                    self.logger.warning(
+                        f"Final code has unbalanced delimiters after insertion: {error_msg}{context_msg}"
+                    )
+                    continue
+
+                # Check if the generated code is safe
+                if self.check_code_safety(original_code, final_code):
+                    safe_responses.append(final_code)
+                    self.logger.info(
+                        f"View implementation successfully inserted and validated{context_msg}"
+                    )
+                else:
+                    self.logger.warning(f"Final code failed safety check{context_msg}")
+            except Exception as e:
+                self.logger.error(f"Error processing response: {e}{context_msg}")
                 continue
 
-            # Check if the generated code is safe
-            if self.check_code_safety(original_code, final_response):
-                safe_responses.append(final_response)
-                self.logger.info(
-                    f"Generated view code passed all checks (delimiters + safety){context_msg}"
-                )
-            else:
-                self.logger.warning(
-                    f"Generated view code failed safety check{context_msg}"
-                )
         return safe_responses
 
     def exec(self, context: Context) -> str:
@@ -433,9 +841,7 @@ Return the ENTIRE file with your changes integrated into the original code."""
         safe_responses = []
 
         for retry_attempt in range(max_retries):
-            self.logger.info(
-                f"View inference attempt {retry_attempt + 1}/{max_retries}"
-            )
+            self.logger.info(f"View inference attempt {retry_attempt + 1}/{max_retries}")
 
             # Save prompt for debugging
             prompt_path = prompt_dir()
@@ -465,19 +871,21 @@ Return the ENTIRE file with your changes integrated into the original code."""
                 break
 
             if retry_attempt < max_retries - 1:
-                instruction += f"\n\nIMPORTANT: Previous attempt failed validation checks. Common issues:\n"
-                instruction += f"1. Unbalanced delimiters - ensure ALL {{ }} ( ) [ ] are properly matched\n"
                 instruction += (
-                    f"2. Unclosed impl blocks - every 'impl' must have a closing }}\n"
+                    f"\n\nIMPORTANT: Previous attempt failed validation checks. Common issues:\n"
                 )
+                instruction += (
+                    f"1. Unbalanced delimiters - ensure ALL {{ }} ( ) [ ] are properly matched\n"
+                )
+                instruction += f"2. Unclosed impl blocks - every 'impl' must have a closing }}\n"
                 instruction += f"3. Code safety - do not modify immutable functions\n"
-                instruction += f"Please fix these issues. Attempt {retry_attempt + 2}/{max_retries}."
+                instruction += (
+                    f"Please fix these issues. Attempt {retry_attempt + 2}/{max_retries}."
+                )
 
         # If no safe responses found after all retries, fall back to original
         if not safe_responses:
-            self.logger.warning(
-                "No safe responses found after all retries, using original code"
-            )
+            self.logger.warning("No safe responses found after all retries, using original code")
             safe_responses = [original_code]
 
         # Save all generated samples
@@ -504,8 +912,9 @@ Return the ENTIRE file with your changes integrated into the original code."""
             context.get_best_code() if hasattr(context, "get_best_code") else None
         )
 
-        # If this is the first checkpoint_best_code, initialize it
+        # Compare and update checkpoint best if current is better
         if checkpoint_best_code is None:
+            # First time: initialize with current best
             self.logger.debug(
                 f"ViewInference - Initial checkpoint_best_code is None: {checkpoint_best_code is None}"
             )
@@ -513,11 +922,22 @@ Return the ENTIRE file with your changes integrated into the original code."""
                 f"ViewInference - Initial checkpoint_best_score: {checkpoint_best_score}"
             )
             self.logger.debug(f"ViewInference - Current best_score: {best_score}")
-            self.logger.info(
-                "ViewInference - Initializing checkpoint best with current best"
-            )
+            self.logger.info("ViewInference - Initializing checkpoint best with current best")
             checkpoint_best_code = best_code
             checkpoint_best_score = best_score
+        elif best_score > checkpoint_best_score:
+            # Current result is better: update checkpoint best
+            self.logger.info(
+                f"ViewInference - Found better result: {best_score} > {checkpoint_best_score}"
+            )
+            self.logger.info("ViewInference - Updating checkpoint best with current best")
+            checkpoint_best_code = best_code
+            checkpoint_best_score = best_score
+        else:
+            # Previous checkpoint was better: keep it
+            self.logger.info(
+                f"ViewInference - Keeping previous checkpoint best: {checkpoint_best_score} >= {best_score}"
+            )
 
         # Save the module-specific best from this step
         module_best_path = output_dir / "01_view_inference_global_best.rs"

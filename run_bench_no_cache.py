@@ -11,17 +11,29 @@ import time
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Run all *_todo.rs benchmarks with cache disabled for accurate statistics."
+        description="Run benchmarks with LLM cache disabled (for accurate cost/time statistics)",
+        epilog="""Examples:
+  Single benchmark without cache:
+    python run_bench_no_cache.py --configs config-azure --benchmark vectors_todo
+
+  All benchmarks without cache:
+    python run_bench_no_cache.py --configs config-azure
+
+Note: This disables LLM cache to measure true API costs and response times.
+""",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
         "--configs",
         nargs="+",
         default=["config-azure"],
-        help="List of config file names (without .json) to pass to run_agent.py",
+        help="One or more config names (without .json), e.g., 'config-azure'",
+        metavar="NAME",
     )
     parser.add_argument(
         "--benchmark",
-        help="Run a specific benchmark by name (e.g., 'bst_map_todo' or 'atomics_todo'). If not specified, runs all benchmarks.",
+        help="Benchmark name only (e.g., 'vectors_todo'). Omit to run all benchmarks.",
+        metavar="NAME",
     )
     args = parser.parse_args()
 
@@ -33,9 +45,7 @@ def main():
         # Validate that the benchmark exists
         todo_file = f"benchmarks-complete/{args.benchmark}.rs"
         if not os.path.exists(todo_file):
-            print(
-                f"Error: Benchmark '{args.benchmark}' not found. Expected file: {todo_file}"
-            )
+            print(f"Error: Benchmark '{args.benchmark}' not found. Expected file: {todo_file}")
             print("Available benchmarks:")
             for todo_path in glob.glob("benchmarks-complete/*_todo.rs"):
                 name = os.path.splitext(os.path.basename(todo_path))[0]
@@ -69,9 +79,7 @@ def main():
             log_file = os.path.join(bench_dir, "output.log")
             log_files.append(log_file)
 
-            print(
-                f"Starting {benchmark_name} with {cfg} (cache disabled) -> log: {log_file}"
-            )
+            print(f"Starting {benchmark_name} with {cfg} (cache disabled) -> log: {log_file}")
 
             # Set environment to disable cache
             env = os.environ.copy()
@@ -111,9 +119,7 @@ def main():
             if proc.returncode == 0:
                 print(f"  ✓ Completed {benchmark_name}")
             else:
-                print(
-                    f"  ✗ Error running {benchmark_name} (exit code: {proc.returncode})"
-                )
+                print(f"  ✗ Error running {benchmark_name} (exit code: {proc.returncode})")
 
 
 if __name__ == "__main__":

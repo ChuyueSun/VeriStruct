@@ -118,6 +118,7 @@ def _handle_compilation_retry(
 ## Workflow
 
 ### 1. Initialization
+
 ```python
 def __init__(self, config, logger):
     super().__init__(
@@ -132,6 +133,7 @@ def __init__(self, config, logger):
 ### 2. Execution Process
 
 1. Code Analysis:
+
 ```python
 def exec(self, context) -> str:
     code = context.trials[-1].code
@@ -145,6 +147,7 @@ def exec(self, context) -> str:
 ```
 
 2. Multiple Retry Attempts:
+
 ```python
 max_retries = 3
 for retry_attempt in range(max_retries):
@@ -157,6 +160,7 @@ for retry_attempt in range(max_retries):
 ```
 
 3. Compilation Handling:
+
 ```python
 max_compile_attempts = 3
 while compile_attempt < max_compile_attempts:
@@ -169,24 +173,28 @@ while compile_attempt < max_compile_attempts:
 ## Features
 
 ### 1. View Refinement
+
 - Abstraction improvement
 - Semantic preservation
 - Minimal representation
 - Type safety
 
 ### 2. Error Handling
+
 - Multiple retry attempts
 - Compilation error recovery
 - Type error fixing
 - Safety validation
 
 ### 3. Example Integration
+
 - Example loading
 - Pattern matching
 - Answer validation
 - Context awareness
 
 ### 4. Result Management
+
 - Best result tracking
 - Sample preservation
 - Score-based evaluation
@@ -195,7 +203,9 @@ while compile_attempt < max_compile_attempts:
 ## Best Practices
 
 ### 1. View Refinement
+
 Example of good refinement:
+
 ```rust
 // Before
 impl<T> View for DataStructure<T> {
@@ -217,6 +227,7 @@ impl<T> View for DataStructure<T> {
 ```
 
 ### 2. Safety Checks
+
 ```python
 def check_code_safety(self, original_code: str, generated_code: str) -> bool:
     """Ensure refinement maintains safety."""
@@ -226,6 +237,7 @@ def check_code_safety(self, original_code: str, generated_code: str) -> bool:
 ```
 
 ### 3. Error Recovery
+
 ```python
 def _process_responses(self, responses: List[str], original_code: str):
     safe_responses = []
@@ -238,6 +250,7 @@ def _process_responses(self, responses: List[str], original_code: str):
 ## Extension Points
 
 1. Custom Refinement Patterns:
+
 ```python
 def add_refinement_pattern(self, pattern: str, handler: Callable):
     """Register new refinement pattern handler."""
@@ -245,6 +258,7 @@ def add_refinement_pattern(self, pattern: str, handler: Callable):
 ```
 
 2. Example Management:
+
 ```python
 def add_example_source(self, source: ExampleSource):
     """Add new example source."""
@@ -252,6 +266,7 @@ def add_example_source(self, source: ExampleSource):
 ```
 
 3. Result Evaluation:
+
 ```python
 def add_evaluation_metric(self, metric: Callable):
     """Add custom evaluation metric."""
@@ -261,18 +276,21 @@ def add_evaluation_metric(self, metric: Callable):
 ## Guidelines
 
 ### 1. Abstraction Principles
+
 - Use mathematical types
 - Minimize representation
 - Preserve semantics
 - Maintain type safety
 
 ### 2. Refinement Patterns
+
 - Simplify tuples
 - Use sequences
 - Abstract collections
 - Maintain invariants
 
 ### 3. Implementation Style
+
 - Clear abstractions
 - Minimal representation
 - Type safety
@@ -281,6 +299,7 @@ def add_evaluation_metric(self, metric: Callable):
 ## Common Refinement Patterns
 
 1. Collection Abstraction:
+
 ```rust
 // Before
 type V = (Vec<T>, usize);
@@ -290,6 +309,7 @@ type V = Seq<T>;
 ```
 
 2. State Simplification:
+
 ```rust
 // Before
 type V = (bool, bool, usize);
@@ -299,6 +319,7 @@ type V = nat;  // Encode state in a single number
 ```
 
 3. Map Abstraction:
+
 ```rust
 // Before
 type V = (Vec<K>, Vec<V>);

@@ -94,6 +94,7 @@ graph TD
 ### 2. Repair Process
 
 1. Error Detection:
+
 ```python
 import_failures = last_trial.eval.get_failures(
     error_type=VerusErrorType.MissingImport
@@ -104,6 +105,7 @@ impl_failures = last_trial.eval.get_failures(
 ```
 
 2. Repair Selection:
+
 ```python
 # Choose repair strategy based on error type
 if error_type == MissingImport:
@@ -113,6 +115,7 @@ else:
 ```
 
 3. Fix Application:
+
 ```python
 # Add imports or implementations
 use vstd::prelude::*;
@@ -124,24 +127,28 @@ impl Trait for Type {
 ## Features
 
 ### 1. Import Management
+
 - Module analysis
 - Use statements
 - Prelude handling
 - Path resolution
 
 ### 2. Implementation Handling
+
 - Trait analysis
 - Method generation
 - Signature matching
 - Edge case handling
 
 ### 3. Code Generation
+
 - Style matching
 - Safety checks
 - Invariant maintenance
 - Error handling
 
 ### 4. Result Management
+
 - Best result tracking
 - Sample preservation
 - Context updates
@@ -150,6 +157,7 @@ impl Trait for Type {
 ## Common Repairs
 
 ### 1. Missing Imports
+
 ```rust
 // Before
 fn main() {
@@ -166,6 +174,7 @@ fn main() {
 ```
 
 ### 2. Missing Implementations
+
 ```rust
 // Before
 trait MyTrait {
@@ -191,6 +200,7 @@ impl MyTrait for MyType {
 ```
 
 ### 3. Complex Implementations
+
 ```rust
 // Before
 pub trait Collection {
@@ -238,6 +248,7 @@ pub trait Collection {
 ## Extension Points
 
 1. Import Analysis:
+
 ```python
 def add_import_analyzer(self, analyzer: Callable):
     """Add new import analyzer."""
@@ -245,6 +256,7 @@ def add_import_analyzer(self, analyzer: Callable):
 ```
 
 2. Implementation Generation:
+
 ```python
 def add_impl_generator(self, generator: Callable):
     """Add new implementation generator."""
@@ -252,6 +264,7 @@ def add_impl_generator(self, generator: Callable):
 ```
 
 3. Safety Check:
+
 ```python
 def add_safety_check(self, check: Callable):
     """Add new safety check."""
@@ -261,6 +274,7 @@ def add_safety_check(self, check: Callable):
 ## Common Issues
 
 ### 1. Missing Prelude
+
 ```rust
 // Problem: Basic Verus features unavailable
 fn verify_seq(s: Seq<u64>) { }
@@ -273,6 +287,7 @@ fn verify_seq(s: Seq<u64>) { }
 ```
 
 ### 2. Incomplete Implementation
+
 ```rust
 // Problem: Missing required methods
 trait DataStructure {
@@ -307,6 +322,7 @@ impl DataStructure for MyType {
 ```
 
 ### 3. Missing Module Features
+
 ```rust
 // Problem: Missing module features
 struct MyStruct {
@@ -325,12 +341,14 @@ struct MyStruct {
 ## Conclusion
 
 The Missing Repair Module provides:
+
 1. Comprehensive import handling
 2. Complete implementation generation
 3. Style-matching fixes
 4. Context-aware repairs
 
 Key strengths:
+
 1. Import management
 2. Implementation generation
 3. Safety validation

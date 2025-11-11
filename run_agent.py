@@ -15,7 +15,7 @@ def display_banner(file_path=None):
     banner_width = max(80, len(file_path_str) + 20)
 
     print("\n" + "=" * banner_width)
-    print(f"{'VERUS AGENT':^{banner_width}}")
+    print(f"{'VERISTRUCT':^{banner_width}}")
     print(f"{'PROCESSING FILE:':^{banner_width}}")
     print(f"{file_name:^{banner_width}}")
     print(f"{file_path_str:^{banner_width}}")
@@ -28,18 +28,23 @@ def display_banner(file_path=None):
 def main():
     # Parse command line arguments
     parser = argparse.ArgumentParser(
-        description="Run VerusAgent for formal verification"
+        description="Run VeriStruct for formal verification on a single file",
+        epilog="Example: python run_agent.py --test-file benchmarks-complete/vectors_todo.rs --config config-azure",
     )
     parser.add_argument(
-        "--test-file", help="Path to the Rust file to verify", default=None
+        "--test-file",
+        help="Path to the Rust file to verify (can be any .rs file)",
+        default=None,
+        metavar="PATH",
     )
     parser.add_argument(
-        "--verus-path", help="Path to the Verus executable", default=None
+        "--verus-path", help="Path to the Verus executable", default=None, metavar="PATH"
     )
     parser.add_argument(
         "--config",
-        help="Config file to use (default: config-azure)",
+        help="Config name to use, e.g., 'config-azure' (singular, one config only)",
         default="config-azure",
+        metavar="NAME",
     )
     parser.add_argument(
         "--no-cache-read", action="store_true", help="Disable reading from LLM cache"
@@ -52,9 +57,7 @@ def main():
         help="Comma-separated list of function names that should not be modified during generation or repair",
         default=None,
     )
-    parser.add_argument(
-        "--num-repair-rounds", help="Number of repair rounds to run", default=5
-    )
+    parser.add_argument("--num-repair-rounds", help="Number of repair rounds to run", default=5)
     args = parser.parse_args()
 
     # Set environment variables if arguments are provided

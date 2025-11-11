@@ -1,5 +1,5 @@
 """
-Base class for Repair modules in VerusAgent.
+Base class for Repair modules in VeriStruct.
 """
 
 import logging
@@ -144,9 +144,7 @@ You can use forall or exists for properties over sequences."""
 
         # If no candidates are safe, fall back to original
         if not safe_candidates:
-            self.logger.warning(
-                "No safe repair candidates found, returning original code"
-            )
+            self.logger.warning("No safe repair candidates found, returning original code")
             return original_code
 
         # Evaluate safe candidates and return the best one
@@ -208,9 +206,7 @@ You can use forall or exists for properties over sequences."""
             # Log the complete query content for debugging
             self.logger.debug("=== LLM Query Content ===")
             self.logger.debug(f"Retry Attempt: {retry_attempt}")
-            self.logger.debug(
-                f"Temperature: {1.0 + (retry_attempt * temperature_boost)}"
-            )
+            self.logger.debug(f"Temperature: {1.0 + (retry_attempt * temperature_boost)}")
             self.logger.debug(f"Cache Enabled: {use_cache}")
             self.logger.debug("\n=== Instruction ===\n" + instruction)
             self.logger.debug("\n=== Query ===\n" + final_query)
@@ -293,6 +289,4 @@ You can use forall or exists for properties over sequences."""
         Returns:
             The potentially repaired code string.
         """
-        raise NotImplementedError(
-            "Repair module subclasses must implement exec() method"
-        )
+        raise NotImplementedError("Repair module subclasses must implement exec() method")

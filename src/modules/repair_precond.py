@@ -49,9 +49,7 @@ class RepairPrecondModule(BaseRepairModule):
         # If a specific failure isn't provided, try to get one from the last trial
         if failure_to_fix is None:
             last_trial = context.trials[-1]
-            precond_failures = last_trial.eval.get_failures(
-                error_type=VerusErrorType.PreCondFail
-            )
+            precond_failures = last_trial.eval.get_failures(error_type=VerusErrorType.PreCondFail)
             veclen_failures = last_trial.eval.get_failures(
                 error_type=VerusErrorType.PreCondFailVecLen
             )
@@ -108,9 +106,7 @@ class RepairPrecondModule(BaseRepairModule):
 Response with the Rust code only, do not include any explanation."""
         instruction += "\n\n" + self.proof_block_info
         instruction = self.add_seq_knowledge(code, instruction)
-        instruction += (
-            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
-        )
+        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
 
         examples = get_examples(self.config, "precond", self.logger)
         query_template = "Failed pre-condition\n```\n{}```\n"
@@ -222,9 +218,7 @@ Response Format:
 - Include the entire program, not just the added proof blocks"""
         instruction += "\n\n" + self.proof_block_info
         instruction = self.add_seq_knowledge(code, instruction)
-        instruction += (
-            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
-        )
+        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
 
         examples = get_examples(self.config, "precond", self.logger)
         query_template = "Failed pre-condition\n```\n{}```\n"
@@ -297,9 +291,7 @@ Response Format:
 Response with the Rust code only, do not include any explanation."""
         instruction += "\n\n" + self.proof_block_info
         instruction = self.add_seq_knowledge(code, instruction)
-        instruction += (
-            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
-        )
+        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
 
         examples = get_examples(self.config, "precond", self.logger)
         query_template = "Failed pre-condition\n```\n{}```\n"

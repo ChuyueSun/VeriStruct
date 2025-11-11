@@ -104,6 +104,7 @@ def _process_responses(self, responses: List[str], original_code: str):
 ## Workflow
 
 ### 1. Initialization
+
 ```python
 def __init__(self, config, logger, immutable_funcs=None):
     super().__init__(
@@ -119,6 +120,7 @@ def __init__(self, config, logger, immutable_funcs=None):
 ### 2. Execution Process
 
 1. Code Analysis:
+
 ```python
 def exec(self, context) -> str:
     code = context.trials[-1].code
@@ -126,6 +128,7 @@ def exec(self, context) -> str:
 ```
 
 2. Multiple Retry Attempts:
+
 ```python
 max_retries = 3
 for retry_attempt in range(max_retries):
@@ -141,6 +144,7 @@ for retry_attempt in range(max_retries):
 Note: `exec` currently sets `knowledge=""` instead of calling `context.gen_knowledge()`.
 
 3. Response Evaluation:
+
 ```python
 best_code, best_score, _ = evaluate_samples(
     samples=safe_responses,
@@ -153,24 +157,28 @@ best_code, best_score, _ = evaluate_samples(
 ## Features
 
 ### 1. Intelligent Specification Generation
+
 - Function signature enhancement
 - Appropriate requires/ensures clauses
 - View-aware field access
 - Trait method specifications
 
 ### 2. Safety Mechanisms
+
 - Code change validation
 - TODO marker preservation
 - Type safety checking
 - Semantic preservation
 
 ### 3. Error Handling
+
 - Multiple retry attempts
 - Temperature adjustment
 - Compilation error repair
 - Comprehensive logging
 
 ### 4. Result Management
+
 - Best result tracking
 - Sample preservation
 - Score-based evaluation
@@ -205,6 +213,7 @@ best_code, best_score, _ = evaluate_samples(
 ## Extension Points
 
 1. Custom Safety Checks:
+
 ```python
 def add_safety_check(self, check_function):
     """Add custom safety check."""
@@ -212,6 +221,7 @@ def add_safety_check(self, check_function):
 ```
 
 2. Specification Patterns:
+
 ```python
 def add_spec_pattern(self, pattern: str, handler: Callable):
     """Register new specification pattern handler."""
@@ -219,6 +229,7 @@ def add_spec_pattern(self, pattern: str, handler: Callable):
 ```
 
 3. Result Evaluation:
+
 ```python
 def add_evaluation_metric(self, metric: Callable):
     """Add custom evaluation metric."""
@@ -228,18 +239,21 @@ def add_evaluation_metric(self, metric: Callable):
 ## Guidelines
 
 ### 1. Function Specifications
+
 - Add appropriate return type annotations
 - Include necessary requires clauses
 - Specify ensures clauses
 - Handle field access correctly
 
 ### 2. Trait Methods
+
 - Add ensures clauses only
 - State return value conditions
 - Follow field access patterns
 - Maintain trait semantics
 
 ### 3. Spec Functions
+
 - Implement based on context
 - Use match/let as needed
 - Follow View trait patterns

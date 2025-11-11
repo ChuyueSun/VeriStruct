@@ -16,6 +16,7 @@ These examples teach the LLM **patterns** for common verification scenarios, not
 ### Pattern 1: Use @ Shorthand for View
 
 **DON'T**:
+
 ```rust
 requires
     index < self.view().len()
@@ -24,6 +25,7 @@ ensures
 ```
 
 **DO**:
+
 ```rust
 requires
     index < self@.len()
@@ -38,6 +40,7 @@ ensures
 ### Pattern 2: Setter Uses .update()
 
 **DON'T**:
+
 ```rust
 ensures
     self@.len() == old(self)@.len(),
@@ -46,6 +49,7 @@ ensures
 ```
 
 **DO**:
+
 ```rust
 ensures
     self@ == old(self)@.update(index as int, value),
@@ -58,6 +62,7 @@ ensures
 ### Pattern 3: Loop Invariants Must Connect Levels
 
 **DON'T** (incomplete):
+
 ```rust
 while i < n
     invariant
@@ -66,6 +71,7 @@ while i < n
 ```
 
 **DO** (complete):
+
 ```rust
 while i < n
     invariant
@@ -86,6 +92,7 @@ while i < n
 ### Pattern 4: Simple Proof Blocks
 
 **DON'T** (over-engineered):
+
 ```rust
 proof {
     lemma_function(args);
@@ -100,6 +107,7 @@ proof {
 ```
 
 **DO** (minimalist):
+
 ```rust
 proof {
     lemma_function(args);
@@ -116,6 +124,7 @@ proof {
 ### Pattern 5: Avoid Empty `by {}` Clauses
 
 **DON'T**:
+
 ```rust
 assert forall|x| P(x) ==> Q(x) by {
     // Empty - Verus won't be able to prove this!
@@ -123,6 +132,7 @@ assert forall|x| P(x) ==> Q(x) by {
 ```
 
 **DO** (Option A - Preferred):
+
 ```rust
 // Just don't use assert forall if you have nothing to say
 proof {
@@ -131,6 +141,7 @@ proof {
 ```
 
 **DO** (Option B - If really needed):
+
 ```rust
 assert forall|x| P(x) implies Q(x) by {
     lemma_that_helps(x);
@@ -147,11 +158,13 @@ assert forall|x| P(x) implies Q(x) by {
 ### For spec_inference (requires/ensures)
 
 **Input**: `input-requires/ex_*.rs`
+
 - Shows code with `// TODO: add requires and ensures`
 - Uses generic names (DataStructure, Container, ItemType, etc.)
 - Demonstrates common patterns (getter, setter, constructor, etc.)
 
 **Output**: `output-requires/ex_*.rs`
+
 - Shows completed specs using `@` notation
 - Demonstrates correct patterns
 - Includes explanatory comments
@@ -159,11 +172,13 @@ assert forall|x| P(x) implies Q(x) by {
 ### For proof_generation (loop invariants and proofs)
 
 **Input**: `input-proof/ex_*.rs`
+
 - Shows code with `// TODO: add loop invariant` and `// TODO: add proof`
 - Uses generic names
 - Demonstrates common loop patterns
 
 **Output**: `output-proof/ex_*.rs`
+
 - Shows complete loop invariants with concrete/abstract connections
 - Shows simple proof blocks
 - Includes explanatory comments about critical patterns
@@ -173,12 +188,14 @@ assert forall|x| P(x) implies Q(x) by {
 ## How LLM Uses These
 
 ### During spec_inference
+
 1. LLM sees input example with TODOs
 2. LLM sees output example with completed specs using `@`
 3. LLM learns: "Use `@` not `.view()`", "Use `.update()` for setters"
 4. LLM applies pattern to actual code
 
 ### During proof_generation
+
 1. LLM sees input with TODO markers in loops
 2. LLM sees output with complete invariants connecting `n == vec.len()`
 3. LLM learns: "Add `n == container@.len()` facts", "Keep proofs simple"
@@ -239,7 +256,9 @@ To add a new pattern:
 ## Impact on bitmap_todo
 
 ### Before Examples
+
 Original spec_inference output used:
+
 ```rust
 self.view().len()           // Verbose ❌
 old(self).view().field      // Verbose ❌
@@ -247,7 +266,9 @@ ret.view()[index]           // Verbose ❌
 ```
 
 ### With Examples
+
 Should generate:
+
 ```rust
 self@.len()                 // Clean ✅
 old(self)@.field            // Clean ✅
@@ -255,13 +276,16 @@ ret@[index]                 // Clean ✅
 ```
 
 ### Loop Invariant Improvement
+
 Before:
+
 ```rust
 invariant
     self@.len() == other@.len(),  // Missing connection! ❌
 ```
 
 After (with examples):
+
 ```rust
 invariant
     n == self.items@.len(),       // Connected! ✅

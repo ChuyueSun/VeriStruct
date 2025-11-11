@@ -81,9 +81,7 @@ def fix_spec_syntax_issues(code: str) -> str:
             in_spec_clause = True
             spec_clause_type = "recommends"
         elif (
-            stripped.startswith("{")
-            or stripped.startswith("fn ")
-            or stripped.startswith("pub fn")
+            stripped.startswith("{") or stripped.startswith("fn ") or stripped.startswith("pub fn")
         ):
             in_spec_clause = False
             spec_clause_type = None
@@ -138,13 +136,10 @@ def fix_spec_syntax_issues(code: str) -> str:
 
         # Track spec clause context
         if any(
-            stripped.startswith(kw)
-            for kw in ["requires", "ensures", "recommends", "invariant"]
+            stripped.startswith(kw) for kw in ["requires", "ensures", "recommends", "invariant"]
         ):
             in_spec_clause = True
-        elif stripped.startswith("{") or (
-            stripped.startswith("fn ") and "spec fn" not in line
-        ):
+        elif stripped.startswith("{") or (stripped.startswith("fn ") and "spec fn" not in line):
             in_spec_clause = False
 
         # In spec clauses, aggressively replace .view() with @
@@ -237,6 +232,7 @@ class SpecInferenceModule(BaseModule):
             "   - For types without View: use direct field access `self.field`\n"
             "   - For types with View: use `self@.field` (the @ is shorthand for .view())\n"
             "   - For tuple views: use `self@.0`, `self@.1`, etc.\n"
+            "   - For vectors/collections with View: ALWAYS prefer `v@.len()` over `v.len()` for consistency\n"
             "     * CRITICAL: When using tuple access with comparison operators (e.g., `<`, `>`), wrap BOTH sides in parentheses\n"
             "     * CORRECT: `(x as nat) < (self@.0)`\n"
             "     * INCORRECT: `x as nat < self@.0` (causes parser error 'expected `,`')\n"
@@ -247,6 +243,37 @@ class SpecInferenceModule(BaseModule):
             "**RETURN FORMAT:**\n"
             "   - Return the ENTIRE file with your changes, not just modified parts"
         )
+
+    @staticmethod
+    def detect_low_level_patterns(code: str) -> Dict[str, bool]:
+        """
+        Detect patterns indicating need for concrete-level postconditions.
+
+        Returns:
+            Dictionary with pattern flags
+        """
+        patterns = {
+            "has_bit_vector_proofs": False,
+            "has_packed_structure": False,
+            "has_low_level_ops": False,
+            "needs_concrete_specs": False,
+        }
+
+        # Detect bit-vector proof functions
+        if re.search(r"#\[verifier::bit_vector\]|_proof\(.*u64.*\)|get_bit64!|set_bit64!", code):
+            patterns["has_bit_vector_proofs"] = True
+            patterns["needs_concrete_specs"] = True
+
+        # Detect packed structures
+        if re.search(r"Vec<u64>", code) and re.search(r"Seq<bool>", code):
+            patterns["has_packed_structure"] = True
+            patterns["needs_concrete_specs"] = True
+
+        # Detect low-level operations
+        if re.search(r"[|&^]|<<|>>", code) and "proof fn" in code:
+            patterns["has_low_level_ops"] = True
+
+        return patterns
 
     def _build_invariant_instruction(self, has_type_invariant: bool) -> str:
         """Build invariant-specific instruction based on code features."""
@@ -306,9 +333,7 @@ class SpecInferenceModule(BaseModule):
             # Log the complete query content for debugging
             self.logger.debug("=== LLM Query Content ===")
             self.logger.debug(f"Retry Attempt: {retry_attempt}")
-            self.logger.debug(
-                f"Temperature: {1.0 + (retry_attempt * temperature_boost)}"
-            )
+            self.logger.debug(f"Temperature: {1.0 + (retry_attempt * temperature_boost)}")
             self.logger.debug(f"Cache Enabled: {use_cache}")
             self.logger.debug("\n=== Instruction ===\n" + instruction)
             self.logger.debug("\n=== Code ===\n" + code)
@@ -320,9 +345,7 @@ class SpecInferenceModule(BaseModule):
             self.logger.debug("=====================")
 
             engine = self.config.get("aoai_generation_model", "gpt-4")
-            self.logger.info(
-                f"Calling LLM engine: {engine}, answer_num: 3, use_cache: {use_cache}"
-            )
+            self.logger.info(f"Calling LLM engine: {engine}, answer_num: 3, use_cache: {use_cache}")
 
             if context is not None:
                 result = context.infer_llm_with_tracking(
@@ -352,9 +375,7 @@ class SpecInferenceModule(BaseModule):
                 )
 
                 if not result:
-                    self.logger.error(
-                        "CRITICAL: LLM returned empty result after unwrapping!"
-                    )
+                    self.logger.error("CRITICAL: LLM returned empty result after unwrapping!")
                 elif isinstance(result, list) and len(result) == 0:
                     self.logger.error("CRITICAL: LLM returned empty list!")
 
@@ -474,33 +495,23 @@ class SpecInferenceModule(BaseModule):
             # Apply regex-based syntax fixes FIRST (fast, deterministic)
             from src.modules.repair_regex import fix_common_syntax_errors
 
-            temp_response, was_changed = fix_common_syntax_errors(
-                temp_response, self.logger
-            )
+            temp_response, was_changed = fix_common_syntax_errors(temp_response, self.logger)
             if was_changed:
-                self.logger.info(
-                    "Applied regex syntax fixes to spec inference response"
-                )
+                self.logger.info("Applied regex syntax fixes to spec inference response")
 
             # Fix syntax issues in requires/ensures clauses (prevents syntax errors)
             final_response = fix_spec_syntax_issues(temp_response)
 
             # Log if we fixed syntax issues
             if final_response != temp_response:
-                self.logger.info(
-                    f"Fixed syntax issues in requires/ensures clauses{context_msg}"
-                )
+                self.logger.info(f"Fixed syntax issues in requires/ensures clauses{context_msg}")
 
             # Check if the generated code is safe
             if self.check_code_safety(original_code, final_response):
                 safe_responses.append(final_response)
-                self.logger.info(
-                    f"Generated spec code passed safety check{context_msg}"
-                )
+                self.logger.info(f"Generated spec code passed safety check{context_msg}")
             else:
-                self.logger.warning(
-                    f"Generated spec code failed safety check{context_msg}"
-                )
+                self.logger.warning(f"Generated spec code failed safety check{context_msg}")
         return safe_responses
 
     def exec(self, context) -> str:
@@ -522,23 +533,25 @@ class SpecInferenceModule(BaseModule):
         # Detect if code has type invariant
         has_type_invariant = self._has_type_invariant(code)
         if has_type_invariant:
+            self.logger.info("Detected #[verifier::type_invariant] - will customize instruction")
+
+        # Detect low-level patterns for abstraction level selection
+        low_level_patterns = self.detect_low_level_patterns(code)
+        if low_level_patterns["needs_concrete_specs"]:
             self.logger.info(
-                "Detected #[verifier::type_invariant] - will customize instruction"
+                f"Detected low-level patterns: {[k for k, v in low_level_patterns.items() if v]}"
             )
+            self.logger.info("Will prioritize examples with concrete postconditions")
 
         max_retries = 3
         safe_responses = []
         all_candidates = []
 
         for retry_attempt in range(max_retries):
-            self.logger.info(
-                f"Spec inference attempt {retry_attempt + 1}/{max_retries}"
-            )
+            self.logger.info(f"Spec inference attempt {retry_attempt + 1}/{max_retries}")
 
             # Build base instruction with invariant-specific guidance integrated
-            invariant_instruction = self._build_invariant_instruction(
-                has_type_invariant
-            )
+            invariant_instruction = self._build_invariant_instruction(has_type_invariant)
             full_base_instruction = self.inference_instruction + invariant_instruction
 
             # Build the complete instruction using the prompt system
@@ -559,9 +572,7 @@ class SpecInferenceModule(BaseModule):
 
             # Load examples showing completed specifications (answer-only format)
             # Dynamic selection based on detected code features
-            raw_examples = get_examples(
-                self.config, "requires", self.logger, max_examples=20
-            )
+            raw_examples = get_examples(self.config, "requires", self.logger, max_examples=20)
 
             # Score and prioritize examples based on code features
             scored_examples = []
@@ -575,10 +586,7 @@ class SpecInferenceModule(BaseModule):
 
                 # Tree/BST structures (node, bst_map, treemap)
                 if any(kw in code for kw in ["left", "right", "Node<", "TreeNode"]):
-                    if any(
-                        kw in answer
-                        for kw in ["left", "right", "TreeNode", "tree", "as_map"]
-                    ):
+                    if any(kw in answer for kw in ["left", "right", "TreeNode", "tree", "as_map"]):
                         score += 45
 
                 # Map operations (bst_map, treemap)
@@ -599,6 +607,36 @@ class SpecInferenceModule(BaseModule):
                 if any(kw in code for kw in ["Atomic", "rwlock", "lock"]):
                     if any(kw in answer for kw in ["Atomic", "lock"]):
                         score += 40
+
+                # Low-level/packed structures - prioritize concrete postcondition examples
+                if low_level_patterns["needs_concrete_specs"]:
+                    filename = ex.get("file", "").lower()
+
+                    # HIGHEST PRIORITY: Educational examples teaching abstraction levels
+                    if "why_concrete" in filename or "abstraction_comparison" in filename:
+                        score += 100  # Explains WHY and shows both ways
+                        self.logger.debug(
+                            f"  ++ Abstraction teaching example (+100): {filename[:50]}"
+                        )
+
+                    if "concrete_packed" in filename:
+                        score += 90  # Shows concrete pattern for packed structures
+                        self.logger.debug(f"  ++ Packed structure example (+90): {filename[:50]}")
+
+                    # Examples with extraction patterns at chunk/unit level
+                    if (
+                        "extract_component" in answer
+                        or "get_element_from_unit" in answer
+                        or "bit_is_set" in answer
+                    ):
+                        score += 70  # Generic concrete patterns
+
+                    if "extract_" in answer or "_from_chunk" in answer:
+                        score += 60  # Other extraction patterns
+
+                    # De-prioritize abstract-only examples when concrete needed
+                    if "abstract_simple" in filename:
+                        score -= 20  # Counter-example showing when NOT to use concrete
 
                 # Bit operations (bitmap)
                 if any(kw in code for kw in ["bit", "BitMap", "u64"]):
@@ -646,6 +684,10 @@ class SpecInferenceModule(BaseModule):
             )
             if has_type_invariant:
                 self.logger.info("  - Prioritized type_invariant examples")
+            if low_level_patterns["needs_concrete_specs"]:
+                self.logger.info(
+                    "  - Prioritized abstraction-level examples (concrete postconditions)"
+                )
             if "Option<Box<" in code:
                 self.logger.info("  - Prioritized Option<Box<>> examples")
             if "Map<" in code:
@@ -709,9 +751,7 @@ class SpecInferenceModule(BaseModule):
                         f"LLM is not making any changes. Check cache or prompt."
                     )
             else:
-                self.logger.warning(
-                    f"LLM returned EMPTY responses on attempt {retry_attempt + 1}"
-                )
+                self.logger.warning(f"LLM returned EMPTY responses on attempt {retry_attempt + 1}")
 
             # Process responses for safety
             new_safe = self._process_responses(responses, original_code)
@@ -750,9 +790,7 @@ class SpecInferenceModule(BaseModule):
         # ALWAYS keep at least one candidate even if safety checks fail
         if safe_responses:
             candidates_for_eval = safe_responses
-            self.logger.info(
-                f"✓ Using {len(safe_responses)} SAFE candidates for evaluation"
-            )
+            self.logger.info(f"✓ Using {len(safe_responses)} SAFE candidates for evaluation")
         elif all_candidates:
             self.logger.warning(
                 f"⚠ No safe responses found; proceeding with best of {len(all_candidates)} UNSAFE candidates"
@@ -768,9 +806,7 @@ class SpecInferenceModule(BaseModule):
             self.logger.info(f"=== RETURNING ORIGINAL CODE UNCHANGED ===")
             return original_code
 
-        self.logger.info(
-            f"✓ Selected {len(candidates_for_eval)} candidates to evaluate"
-        )
+        self.logger.info(f"✓ Selected {len(candidates_for_eval)} candidates to evaluate")
 
         # Save all generated samples
         output_dir = samples_dir()
@@ -803,9 +839,7 @@ class SpecInferenceModule(BaseModule):
             self.logger.info("Detected compilation error, attempting repair...")
             from src.modules.repair_registry import RepairRegistry
 
-            repair_registry = RepairRegistry(
-                self.config, self.logger, self.immutable_funcs
-            )
+            repair_registry = RepairRegistry(self.config, self.logger, self.immutable_funcs)
             repaired_code = repair_registry.repair_compilation_error(context)
             if repaired_code and repaired_code != best_code:
                 self.logger.info("Successfully repaired compilation error")

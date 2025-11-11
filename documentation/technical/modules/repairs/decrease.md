@@ -94,6 +94,7 @@ graph TD
 ### 2. Repair Process
 
 1. Error Detection:
+
 ```python
 end_failures = last_trial.eval.get_failures(
     error_type=VerusErrorType.DecFailEnd
@@ -104,6 +105,7 @@ cont_failures = last_trial.eval.get_failures(
 ```
 
 2. Repair Selection:
+
 ```python
 # Choose repair strategy based on error type
 if error_type == DecFailEnd:
@@ -113,6 +115,7 @@ else:
 ```
 
 3. Fix Application:
+
 ```python
 # Add proof blocks or modify expressions
 proof {
@@ -123,24 +126,28 @@ proof {
 ## Features
 
 ### 1. Loop End Handling
+
 - Expression analysis
 - Proof generation
 - Loop logic fixes
 - Assertion addition
 
 ### 2. Continue Handling
+
 - Continue point analysis
 - Variable updates
 - Loop restructuring
 - Proof insertion
 
 ### 3. Expression Management
+
 - Value tracking
 - Decrease verification
 - Bound checking
 - Termination proof
 
 ### 4. Result Management
+
 - Best result tracking
 - Sample preservation
 - Context updates
@@ -149,6 +156,7 @@ proof {
 ## Common Repairs
 
 ### 1. Loop End Decreases
+
 ```rust
 // Before
 while i < n {
@@ -167,6 +175,7 @@ while i < n
 ```
 
 ### 2. Continue Statement
+
 ```rust
 // Before
 while i < n {
@@ -192,6 +201,7 @@ while i < n
 ```
 
 ### 3. Complex Decreases
+
 ```rust
 // Before
 while !vec.is_empty() {
@@ -238,6 +248,7 @@ while !vec.is_empty()
 ## Extension Points
 
 1. Expression Analysis:
+
 ```python
 def add_expression_analyzer(self, analyzer: Callable):
     """Add new expression analyzer."""
@@ -245,6 +256,7 @@ def add_expression_analyzer(self, analyzer: Callable):
 ```
 
 2. Proof Generation:
+
 ```python
 def add_proof_generator(self, generator: Callable):
     """Add new proof generator."""
@@ -252,6 +264,7 @@ def add_proof_generator(self, generator: Callable):
 ```
 
 3. Loop Analysis:
+
 ```python
 def add_loop_analyzer(self, analyzer: Callable):
     """Add new loop analyzer."""
@@ -261,6 +274,7 @@ def add_loop_analyzer(self, analyzer: Callable):
 ## Common Issues
 
 ### 1. Complex Decreases
+
 ```rust
 // Problem: Complex decreases expression
 while i < n && j < m {
@@ -281,6 +295,7 @@ while i < n && j < m
 ```
 
 ### 2. Continue Without Update
+
 ```rust
 // Problem: Continue without updating decreases
 while i < n {
@@ -303,6 +318,7 @@ while i < n
 ```
 
 ### 3. Nested Loops
+
 ```rust
 // Problem: Nested loop decreases
 while i < n {
@@ -331,12 +347,14 @@ while i < n
 ## Conclusion
 
 The Decrease Repair Module provides:
+
 1. Comprehensive decrease error handling
 2. Multiple repair strategies
 3. Clear proof generation
 4. Context-aware fixes
 
 Key strengths:
+
 1. Loop termination proofs
 2. Continue statement handling
 3. Expression management

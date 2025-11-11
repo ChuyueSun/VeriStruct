@@ -51,15 +51,18 @@ fn modify_structure<T>(data: &mut SomeType<T>, key: u64, value: T)
 Map<K, V> is a mathematical map type used in specifications:
 
 ### Construction
+
 - `Map::empty()` - Create empty map
 - `Map::new(...)` - Create map (if supported)
 
 ### Operations (Return New Map)
+
 - `map.insert(key, value)` - Returns new map with key→value added/updated
 - `map.remove(key)` - Returns new map with key removed (if it existed)
 - `map.union_prefer_right(other)` - Union of two maps, preferring values from right on conflicts
 
 ### Queries
+
 - `map[key]` - Get value for key (requires key exists in domain)
 - `map.dom()` - Returns `Set<K>` of all keys in the map
 - `map.dom().contains(key)` - Check if key exists in map
@@ -67,6 +70,7 @@ Map<K, V> is a mathematical map type used in specifications:
 ### Common Patterns
 
 #### Checking Key Existence
+
 ```rust
 // Check if key exists
 if map.dom().contains(key) {
@@ -79,6 +83,7 @@ ensures result == map[key]
 ```
 
 #### Map Updates in Postconditions
+
 ```rust
 // Insertion
 ensures self@ =~= old(self)@.insert(key, value)
@@ -96,6 +101,7 @@ ensures
 ```
 
 #### Map Equality Assertions
+
 ```rust
 // In proof blocks
 assert(map1 =~= map2);  // ✅ Correct
@@ -107,6 +113,7 @@ ensures
 ```
 
 ### Key-Value Relationships
+
 ```rust
 // Accessing values
 ensures
@@ -140,6 +147,7 @@ ensures
 ### Common Verification Failures
 
 If you see "postcondition not satisfied" with map comparisons:
+
 1. Check if you used `==` instead of `=~=`
 2. Verify the map operations (insert/remove) are correct
 3. Ensure all required keys are in the domain

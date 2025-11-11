@@ -46,18 +46,12 @@ class RepairMissingModule(BaseRepairModule):
         # If a specific failure isn't provided, try to get one from the last trial
         if failure_to_fix is None:
             last_trial = context.trials[-1]
-            import_failures = last_trial.eval.get_failures(
-                error_type=VerusErrorType.MissingImport
-            )
-            impl_failures = last_trial.eval.get_failures(
-                error_type=VerusErrorType.MissImpl
-            )
+            import_failures = last_trial.eval.get_failures(error_type=VerusErrorType.MissingImport)
+            impl_failures = last_trial.eval.get_failures(error_type=VerusErrorType.MissImpl)
             failures = import_failures + impl_failures
 
             if not failures:
-                self.logger.warning(
-                    "No missing element failures found in the last trial."
-                )
+                self.logger.warning("No missing element failures found in the last trial.")
                 return code  # Return original code if no missing element error
 
             failure_to_fix = self.get_one_failure(failures)
@@ -116,9 +110,7 @@ Important rules:
 2. Imports must be OUTSIDE and BEFORE the `verus!` macro block
 3. Add a `main` function inside the `verus!` block if it does not already have one
 4. Respond with the entire Rust code only (no explanations) after fixing the import issue."""
-        instruction += (
-            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
-        )
+        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
 
         # Load examples
         examples = get_examples(self.config, "import", self.logger)
@@ -137,7 +129,6 @@ Important rules:
         # Use tracking wrapper for LLM calls
 
         if context is not None and hasattr(context, "infer_llm_with_tracking"):
-
             result = context.infer_llm_with_tracking(
                 engine=self.config.get("aoai_generation_model", "gpt-4"),
                 instruction=instruction,
@@ -154,7 +145,6 @@ Important rules:
             responses = result[0] if isinstance(result, tuple) else result
 
         else:
-
             responses = self.llm.infer_llm(
                 engine=self.config.get("aoai_generation_model", "gpt-4"),
                 instruction=instruction,
@@ -208,9 +198,7 @@ For each missing method, you need to implement it based on the trait definition 
 5. Includes appropriate ensures/requires clauses if needed
 
 Response with the Rust code only, do not include any explanation."""
-        instruction += (
-            "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
-        )
+        instruction += "\n\n" + self.general_knowledge + "\n\n" + context.gen_knowledge()
 
         # Load examples
         examples = get_examples(self.config, "impl", self.logger)
@@ -229,7 +217,6 @@ Response with the Rust code only, do not include any explanation."""
         # Use tracking wrapper for LLM calls
 
         if context is not None and hasattr(context, "infer_llm_with_tracking"):
-
             result = context.infer_llm_with_tracking(
                 engine=self.config.get("aoai_generation_model", "gpt-4"),
                 instruction=instruction,
@@ -246,7 +233,6 @@ Response with the Rust code only, do not include any explanation."""
             responses = result[0] if isinstance(result, tuple) else result
 
         else:
-
             responses = self.llm.infer_llm(
                 engine=self.config.get("aoai_generation_model", "gpt-4"),
                 instruction=instruction,

@@ -5,6 +5,7 @@
 **Location:** `src/configs/config-azure.json`
 
 **Your Settings:**
+
 - **API Endpoint:** `https://verus1030-resource.cognitiveservices.azure.com/`
 - **Model:** `o1` (for both generation and debug)
 - **API Version:** `2025-01-01-preview`
@@ -34,6 +35,7 @@
 ## 🚀 **How to Use**
 
 ### **Basic Run:**
+
 ```bash
 ./run_agent.py \
   --test-file benchmarks-complete/rb_type_invariant_todo.rs \
@@ -42,6 +44,7 @@
 ```
 
 ### **With Custom Settings:**
+
 ```bash
 ./run_agent.py \
   --test-file benchmarks-complete/YOUR_FILE.rs \
@@ -65,6 +68,7 @@ Your config includes the new timeout protection features:
 | `max_repair_retries` | 1 | Retry once on timeout |
 
 **This gives you:**
+
 - ⏱️ Protection from stuck repairs
 - 🔄 Automatic retry on timeout
 - 📊 Clear diagnostic logs
@@ -75,6 +79,7 @@ Your config includes the new timeout protection features:
 ## 📊 **Model Configuration**
 
 ### **o1 Model Notes:**
+
 - **Strengths:** Better reasoning, higher quality outputs
 - **Considerations:** Slower than GPT-4 (60-90s per call typical)
 - **Timeout settings:** Already configured for o1's slower speed
@@ -131,6 +136,7 @@ ls -la output/rb_type_invariant_todo/azure_*/prompts/
 ## 🎉 **All Features Enabled**
 
 Your setup includes:
+
 - ✅ Azure OpenAI o1 model
 - ✅ Timeout protection (4 layers)
 - ✅ Automatic retry mechanism
@@ -147,17 +153,20 @@ Your setup includes:
 ✅ **Your API key is already protected!**
 
 Your API key in `config-azure.json` is **automatically protected** by `.gitignore`:
+
 - The file will **NEVER** be committed to git
 - Your credentials stay local and secure
 - Already configured - no action needed!
 
 **Additional Security (Optional):**
+
 ```bash
 # Use environment variable instead:
 export AZURE_OPENAI_API_KEY="your-key-here"
 ```
 
 Then update config to use env var:
+
 ```json
 {
   "aoai_api_key": "${AZURE_OPENAI_API_KEY}"
@@ -170,7 +179,8 @@ Then update config to use env var:
 
 ## ✨ **Ready to Run!**
 
-Your VerusAgent is now fully configured with:
+Your VeriStruct is now fully configured with:
+
 - Azure OpenAI o1 model
 - All latest features
 - Optimized timeout settings

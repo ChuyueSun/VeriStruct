@@ -18,9 +18,7 @@ class houdini:
     def merge_invariant(self, code1, code2):
         with tempfile.NamedTemporaryFile(
             mode="w", prefix="merge_inv_orig", suffix=".rs"
-        ) as f1, tempfile.NamedTemporaryFile(
-            mode="w", prefix="merge_new_inv", suffix=".rs"
-        ) as f2:
+        ) as f1, tempfile.NamedTemporaryFile(mode="w", prefix="merge_new_inv", suffix=".rs") as f2:
             f1.write(code1)
             f1.flush()
             f2.write(code2)
@@ -43,10 +41,7 @@ class houdini:
             # if we don't want Houdini to remove assert, we skip assert errors
             if considerassert and f.error == VerusErrorType.AssertFail:
                 ret.append(f.trace[0].lines[0])
-            elif (
-                f.error == VerusErrorType.InvFailEnd
-                or f.error == VerusErrorType.InvFailFront
-            ):
+            elif f.error == VerusErrorType.InvFailEnd or f.error == VerusErrorType.InvFailFront:
                 ret.append(f.trace[0].lines[0])
             elif f.error == VerusErrorType.PostCondFail:
                 st, ed = f.trace[1].lines
@@ -121,9 +116,7 @@ class houdini:
         """Get line ranges of immutable functions that should not be modified."""
         immutable_areas = []
 
-        with tempfile.NamedTemporaryFile(
-            mode="w", prefix="immutable_area", suffix=".rs"
-        ) as f:
+        with tempfile.NamedTemporaryFile(mode="w", prefix="immutable_area", suffix=".rs") as f:
             f.write(code)
             f.flush()
 
@@ -131,9 +124,7 @@ class houdini:
                 try:
                     res = lynette.func_code_extract(f.name, func)
                     if res.returncode != 0:
-                        print(
-                            f"Warning: Failed to extract function {func}: {res.stderr}"
-                        )
+                        print(f"Warning: Failed to extract function {func}: {res.stderr}")
                         continue
 
                     func_code = res.stdout.strip()
@@ -152,9 +143,7 @@ class houdini:
                     # Find start line of function
                     start_line = self._find_function_start(code_lines, func_lines)
                     if start_line is not None:
-                        immutable_areas.append(
-                            (start_line, start_line + len(func_lines) - 1)
-                        )
+                        immutable_areas.append((start_line, start_line + len(func_lines) - 1))
                     else:
                         print(f"Warning: Could not find function {func} in code")
                 except Exception as e:
@@ -169,8 +158,7 @@ class houdini:
             if line.strip() == func_lines[0].strip():
                 # Verify full function match
                 if all(
-                    i + j < len(code_lines)
-                    and code_lines[i + j].strip() == func_lines[j].strip()
+                    i + j < len(code_lines) and code_lines[i + j].strip() == func_lines[j].strip()
                     for j in range(len(func_lines))
                 ):
                     return i + 1  # Convert to 1-based index
