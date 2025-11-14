@@ -1,16 +1,21 @@
-# Assertion Repair Module
+# Assertion Repair Modules
 
 ## Overview
 
-The Assertion Repair Module (`RepairAssertionModule`) specializes in fixing assertion failures in Verus code. It handles both regular assertions and test assertions, with particular support for sequence-related assertions and common data structure patterns.
+VeriStruct has two specialized modules for fixing assertion failures:
+
+1. **`RepairAssertionModule`**: Fixes assertion failures in production code by adding proof blocks, lemmas, and loop invariants.
+2. **`RepairTestAssertionModule`**: Fixes test assertion failures by strengthening postconditions in production functions (test functions are immutable).
+
+This separation ensures clear responsibility and appropriate repair strategies for each context.
 
 ## Architecture
 
 ```mermaid
 graph TD
     A[Assertion Error] --> B{Error Type}
-    B -->|Regular| C[Assert Repair]
-    B -->|Test| D[Test Assert Repair]
+    B -->|AssertFail| C[RepairAssertionModule]
+    B -->|TestAssertFail| D[RepairTestAssertionModule]
 
     C --> E[Special Cases]
     C --> F[General Cases]
@@ -21,35 +26,57 @@ graph TD
     F --> I[Proof Blocks]
     F --> J[Loop Invariants]
 
-    D --> K[Function Analysis]
-    D --> L[Postcondition Addition]
+    D --> K[Identify Tested Function]
+    D --> L[Strengthen Postconditions]
+    L --> M[Add Ensures Clause]
 
-    M[Context] --> N[Error History]
-    N --> B
+    N[Context] --> O[Error History]
+    O --> B
 
-    O[Examples] --> P[Example Store]
-    P --> C
-    P --> D
+    P[Examples] --> Q[Example Store]
+    Q --> C
+    Q --> D
 ```
+
+The **Repair Registry** routes errors to the appropriate module:
+
+- `VerusErrorType.AssertFail` → `RepairAssertionModule`
+- `VerusErrorType.TestAssertFail` → `RepairTestAssertionModule`
 
 ## Core Components
 
-### 1. Error Classification
+### 1. RepairAssertionModule (Production Code)
 
-The module handles different types of assertion failures:
+Handles `VerusErrorType.AssertFail` errors:
 
 ```python
 def exec(self, context, failure_to_fix: VerusError) -> str:
-    # Check error type
-    if failure_to_fix.error == VerusErrorType.AssertFail:
-        return self.repair_assert_fail(context, failure_to_fix)
-    elif failure_to_fix.error == VerusErrorType.TestAssertFail:
-        return self.repair_test_assert_fail(context, failure_to_fix)
+    """Repair production code assertion failures."""
+    # Only handles AssertFail errors
+    if failure_to_fix.error != VerusErrorType.AssertFail:
+        return code
+
+    # Try special case repairs first
+    candidates = self.repair_assert_fail(context, failure_to_fix)
+    return self.evaluate_repair_candidates(code, candidates, output_dir, "repair_assertion")
 ```
 
-### 2. Special Case Handling
+### 2. RepairTestAssertionModule (Test Assertions)
 
-Specialized handling for common patterns:
+Handles `VerusErrorType.TestAssertFail` errors:
+
+```python
+def exec(self, context, failure_to_fix: VerusError) -> str:
+    """Repair test assertion failures by strengthening production code postconditions."""
+    # Test functions are IMMUTABLE - we fix production code instead
+    tested_function = self._identify_tested_function(code, error_trace)
+    # Strengthen postconditions to satisfy test expectations
+    return best_code
+```
+
+### 3. Special Case Handling (Production Assertions)
+
+`RepairAssertionModule` provides specialized handling for common patterns:
 
 ```python
 def repair_special_assertion_error(self, code: str, failure_to_fix: VerusError) -> str:
@@ -68,57 +95,52 @@ def repair_special_assertion_error(self, code: str, failure_to_fix: VerusError) 
         )
 ```
 
-### 3. Test Assertion Repair
-
-Special handling for test assertions:
-
-```python
-def repair_test_assert_fail(self, context, failure_to_fix: VerusError) -> str:
-    instruction = """Fix assertion errors in test functions:
-    1. Analyze how P is derived
-    2. Check if P can be a postcondition
-    3. Add essential postconditions
-    4. Preserve test code"""
-```
-
 ## Workflow
 
-### 1. Error Analysis
+### 1. Error Routing (Repair Registry)
 
 ```mermaid
 graph TD
-    A[Error Detection] --> B{Error Location}
-    B -->|Regular Code| C[Regular Analysis]
-    B -->|Test Code| D[Test Analysis]
+    A[Error Detection] --> B{Error Type}
+    B -->|AssertFail| C[RepairAssertionModule]
+    B -->|TestAssertFail| D[RepairTestAssertionModule]
 
     C --> E[Pattern Check]
     E -->|Special| F[Special Repair]
     E -->|General| G[General Repair]
 
-    D --> H[Function Analysis]
-    H --> I[Specification Update]
+    D --> H[Identify Function]
+    H --> I[Strengthen Postconditions]
 
     J[Lemmas] --> K[Lemma Store]
     K --> F
 ```
 
-### 2. Repair Process
+### 2. Production Assertion Repair Process
 
-1. Error Detection:
+1. Error Detection (in `RepairAssertionModule`):
 
 ```python
+# Only fetches AssertFail errors
 assert_failures = last_trial.eval.get_failures(
     error_type=VerusErrorType.AssertFail
 )
-test_failures = last_trial.eval.get_failures(
-    error_type=VerusErrorType.TestAssertFail
-)
 ```
 
-2. Pattern Recognition:
+### 3. Test Assertion Repair Process
+
+1. Error Detection (in `RepairTestAssertionModule`):
 
 ```python
-# Check for special patterns
+# Receives TestAssertFail from registry
+# Identifies which production function is being tested
+tested_function = self._identify_tested_function(code, error_trace)
+```
+
+2. Pattern Recognition (in `RepairAssertionModule` for production code):
+
+```python
+# Check for special patterns in production code assertions
 if ".filter(" in assertion_info:
     # Handle filter operations
 elif ".subrange(" in assertion_info:
@@ -127,7 +149,7 @@ elif ".take(" in assertion_info:
     # Handle take operations
 ```
 
-3. Lemma Management:
+3. Lemma Management (for production assertions):
 
 ```python
 def insert_lemma_func(code, lemmas, lemma_path):
@@ -139,37 +161,58 @@ def insert_lemma_func(code, lemmas, lemma_path):
 
 ## Features
 
-### 1. Pattern Recognition
+### RepairAssertionModule (Production Code)
+
+#### 1. Pattern Recognition
 
 - Filter operations
 - Subrange operations
 - Take operations
 - Contains operations
 
-### 2. Lemma Management
+#### 2. Lemma Management
 
 - Automatic insertion
 - Pattern matching
 - Dependency handling
 - Context awareness
 
-### 3. Repair Strategies
+#### 3. Repair Strategies
 
 - Special case handling
 - General repairs
-- Test-specific repairs
 - Proof generation
+- Loop invariants
 
-### 4. Result Management
+### RepairTestAssertionModule (Test Assertions)
+
+#### 1. Test Analysis
+
+- Identify tested functions
+- Analyze test expectations
+- Preserve test immutability
+
+#### 2. Postcondition Strengthening
+
+- Add ensures clauses
+- Bidirectional specifications
+- Return value properties
+- State relationships
+
+### Common Features (Both Modules)
+
+#### Result Management
 
 - Best result tracking
-- Sample preservation
+- Sample evaluation
 - Context updates
 - Progress logging
 
 ## Common Repairs
 
-### 1. Filter Operations
+### Production Code Repairs (RepairAssertionModule)
+
+#### 1. Filter Operations
 
 ```rust
 // Before
@@ -182,7 +225,7 @@ proof {
 }
 ```
 
-### 2. Subrange Operations
+#### 2. Subrange Operations
 
 ```rust
 // Before
@@ -195,51 +238,83 @@ proof {
 }
 ```
 
-### 3. Test Assertions
+### Test Assertion Repairs (RepairTestAssertionModule)
+
+#### Strengthen Postconditions
 
 ```rust
-// Before
+// Before - Test fails because postcondition is missing
 #[test]
 fn test_push() {
     let mut v = Vec::new();
     v.push(1);
-    assert(v.len() == 1);
+    assert(v.len() == 1);  // ← Fails
 }
 
-// After
+fn push(&mut self, val: T) {
+    // Implementation (no ensures clause)
+}
+
+// After - Add postcondition to production function
 fn push(&mut self, val: T)
     ensures
-        self.len() == old(self).len() + 1
+        self.len() == old(self).len() + 1  // ← Added
 {
-    // Implementation
+    // Implementation (unchanged)
 }
+
+// Test remains UNCHANGED - it's immutable!
 ```
 
 ## Best Practices
 
+### For Production Code Assertions (RepairAssertionModule)
+
 1. Pattern Analysis:
-   - Check common patterns
-   - Use appropriate lemmas
-   - Add necessary reveals
-   - Maintain context
+   - Check common patterns first (filter, subrange, take)
+   - Use appropriate lemmas for data structures
+   - Add necessary reveals for opaque functions
+   - Maintain proof context
 
 2. Repair Strategy:
-   - Try special cases first
-   - Fall back to general
-   - Handle test cases
-   - Track progress
+   - Try special cases first (fast, deterministic)
+   - Fall back to LLM-based general repairs
+   - Add proof blocks strategically
+   - Consider loop invariants when needed
 
 3. Lemma Usage:
-   - Insert required lemmas
-   - Check dependencies
-   - Maintain minimality
-   - Ensure correctness
+   - Insert required lemmas automatically
+   - Check dependencies between lemmas
+   - Maintain minimality (don't over-lemmatize)
+   - Ensure correctness of lemma applications
+
+### For Test Assertions (RepairTestAssertionModule)
+
+1. Function Analysis:
+   - Identify which production function is being tested
+   - Understand test expectations
+   - Never modify test code (immutable!)
+   - Focus on postcondition strengthening
+
+2. Postcondition Strategy:
+   - Add ensures clauses to tested functions
+   - Make specifications bidirectional when possible
+   - Ensure postconditions are provable
+   - Consider state relationships
+
+3. Safety:
+   - Validate repairs don't break existing code
+   - Check for unintended side effects
+   - Maintain consistency with preconditions
+   - Preserve function semantics
+
+### Common Practices (Both Modules)
 
 4. Result Management:
-   - Save progress
-   - Track improvements
-   - Handle failures
-   - Update context
+   - Evaluate multiple candidate repairs
+   - Track improvements in verification scores
+   - Handle failures gracefully
+   - Update context with best results
 
 ## Extension Points
 
@@ -310,16 +385,33 @@ fn push(&mut self, val: T)
 
 ## Conclusion
 
-The Assertion Repair Module provides:
+VeriStruct's assertion repair system uses **two specialized modules** for optimal repair strategies:
 
-1. Pattern-based repairs
-2. Lemma management
-3. Test assertion handling
-4. Comprehensive repair strategies
+### RepairAssertionModule (Production Code)
 
-Key strengths:
+- Pattern-based special case repairs (filter, subrange, take, contains)
+- Automatic lemma insertion and management
+- Proof block generation
+- Loop invariant assistance
 
-1. Pattern recognition
-2. Lemma integration
-3. Test support
-4. Context awareness
+### RepairTestAssertionModule (Test Assertions)
+
+- Test function immutability enforcement
+- Production code postcondition strengthening
+- Function identification and analysis
+- Test expectation satisfaction
+
+### Key Design Principles
+
+1. **Separation of Concerns**: Different error types get different repair strategies
+2. **Registry Routing**: Repair registry automatically routes errors to correct module
+3. **Test Immutability**: Test functions are never modified - only production code
+4. **Pattern Recognition**: Special cases handled efficiently before general LLM repairs
+5. **Context Awareness**: Both modules integrate with VeriStruct's context system
+
+This two-module architecture ensures:
+
+- ✅ Clear responsibility boundaries
+- ✅ Appropriate repair strategies per context
+- ✅ Maintainable and extensible codebase
+- ✅ Optimal repair success rates
