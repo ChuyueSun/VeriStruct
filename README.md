@@ -4,7 +4,7 @@
 
 VeriStruct is an automated system that helps develop, debug, and refine Rust code with Verus formal specifications. It uses Large Language Models (LLMs) to generate specifications, infer invariants, and repair verification errors.
 
-📄 **Paper**: [VeriStruct: AI-assisted Automated Verification of Data-Structure Modules in Verus](https://arxiv.org/abs/2510.25015) (arXiv:2510.25015)
+📄 **Paper**: [VeriStruct: AI-assisted Automated Verification of Data-Structure Modules in Verus](https://arxiv.org/abs/2510.25015) (Accepted to TACAS 2026)
 
 ---
 
@@ -414,7 +414,7 @@ Register in `src/modules/repair_registry.py`.
 
 ### Research & Results
 
-- **Paper**: [VeriStruct: AI-assisted Automated Verification of Data-Structure Modules in Verus](https://arxiv.org/abs/2510.25015)
+- **Paper**: [VeriStruct: AI-assisted Automated Verification of Data-Structure Modules in Verus](https://arxiv.org/abs/2510.25015) (Accepted to TACAS 2026)
 - [`README_BASELINE.md`](README_BASELINE.md) - Baseline experiments
 - [`output/`](output/) - Experimental results and analysis
 
@@ -425,15 +425,15 @@ Register in `src/modules/repair_registry.py`.
 If you use VeriStruct in your research, please cite our paper:
 
 ```bibtex
-@article{sun2025veristruct,
+@inproceedings{sun2026veristruct,
   title={VeriStruct: AI-assisted Automated Verification of Data-Structure Modules in Verus},
   author={Sun, Chuyue and Sun, Yican and Amrollahi, Daneshvar and Zhang, Ethan and Lahiri, Shuvendu and Lu, Shan and Dill, David and Barrett, Clark},
-  journal={arXiv preprint arXiv:2510.25015},
-  year={2025}
+  booktitle={Proceedings of the 32nd International Conference on Tools and Algorithms for the Construction and Analysis of Systems (TACAS)},
+  year={2026}
 }
 ```
 
-**Paper**: [https://arxiv.org/abs/2510.25015](https://arxiv.org/abs/2510.25015)
+**Paper**: [https://arxiv.org/abs/2510.25015](https://arxiv.org/abs/2510.25015) (Accepted to TACAS 2026)
 
 ---
 
