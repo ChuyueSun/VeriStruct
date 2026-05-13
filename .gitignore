@@ -26,6 +26,9 @@ tmp/
 # Ignore Cursor files
 .cursor/
 
+# Ignore Claude Code worktree/session state
+.claude/
+
 # Ignore environment variable files
 .env
 .env.local
