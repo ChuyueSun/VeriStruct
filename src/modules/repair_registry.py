@@ -132,7 +132,7 @@ class RepairRegistry:
         registry.register_module(
             "repair_remove_inv",
             remove_inv_repair,
-            [VerusErrorType.require_private, VerusErrorType.ensure_private],
+            [VerusErrorType.require_private],
             "13_repair_remove_inv.rs",
         )
 
