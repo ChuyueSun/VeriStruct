@@ -6,6 +6,8 @@ VeriStruct is an automated system that helps develop, debug, and refine Rust cod
 
 📄 **Paper**: [VeriStruct: AI-assisted Automated Verification of Data-Structure Modules in Verus](https://arxiv.org/abs/2510.25015) (Accepted to TACAS 2026)
 
+🎤 **TACAS 2026 slides**: [veristruct_tacas.key](slides/veristruct_tacas.key) (Keynote)
+
 ---
 
 ## 🎯 Overview
@@ -415,6 +417,7 @@ Register in `src/modules/repair_registry.py`.
 ### Research & Results
 
 - **Paper**: [VeriStruct: AI-assisted Automated Verification of Data-Structure Modules in Verus](https://arxiv.org/abs/2510.25015) (Accepted to TACAS 2026)
+- **TACAS 2026 slides**: [`slides/veristruct_tacas.key`](slides/veristruct_tacas.key)
 - [`README_BASELINE.md`](README_BASELINE.md) - Baseline experiments
 - [`output/`](output/) - Experimental results and analysis
 
