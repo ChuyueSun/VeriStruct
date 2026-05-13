@@ -602,8 +602,11 @@ class VEval:
     # but we consider it as a failure.
     def verus_succeed(self) -> bool:
         if not self.verus_result:
-            Exception("No Verus result")
-        return self.compilation_error and self.verus_result["verification-results"]["success"]
+            raise RuntimeError("No Verus result")
+        return (
+            not self.compilation_error
+            and self.verus_result["verification-results"]["success"]
+        )
 
     def score(self) -> tuple[int, int]:
         return (self.get_verified(), self.get_errors())
@@ -611,7 +614,7 @@ class VEval:
     # Returns a list of ErrorTrace for PostCondFail errors
     def get_failed_postconds(self) -> list[ErrorTrace]:
         if not self.verus_result:
-            Exception("No Verus result")
+            raise RuntimeError("No Verus result")
 
         if self.compilation_error:
             return []
@@ -628,7 +631,7 @@ class VEval:
 
     def get_failures(self, error_type: VerusErrorType = None) -> list[VerusError]:
         if not self.verus_result:
-            Exception("No Verus result")
+            raise RuntimeError("No Verus result")
 
         # if self.compilation_error:
         #     return []
@@ -644,7 +647,7 @@ class VEval:
     # Returns a list of VerusError if the error is from vstd
     def get_vstd_errors(self):
         if not self.verus_result:
-            Exception("No Verus result")
+            raise RuntimeError("No Verus result")
 
         if self.compilation_error:
             return []
