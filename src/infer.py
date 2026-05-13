@@ -10,7 +10,10 @@ import warnings
 from pathlib import Path
 from typing import List, Tuple, Union
 
-import requests
+try:
+    import requests
+except ImportError:
+    requests = None
 
 # Import our new cache
 from src.llm_cache import LLMCache
@@ -24,6 +27,7 @@ except ImportError:
 
 # Add a flag to enable/disable LLM inference (for testing without API keys)
 ENABLE_LLM_INFERENCE = os.environ.get("ENABLE_LLM_INFERENCE", "1") == "1"
+DEFAULT_ANTHROPIC_MODEL = "claude-opus-4-6"
 
 
 class LLM:
@@ -126,6 +130,55 @@ class LLM:
             maybe_txt = response_json.get("output_text") or response_json.get("text")
             if isinstance(maybe_txt, str):
                 final_answers.append(maybe_txt)
+
+    def _get_config_scalar(self, key: str, default=None):
+        value = self.config.get(key, default)
+        if isinstance(value, list):
+            return value[0] if value else default
+        return value
+
+    def _get_anthropic_model(self) -> str:
+        return (
+            self._get_config_scalar("anthropic_generation_model")
+            or self._get_config_scalar("anthropic_model")
+            or DEFAULT_ANTHROPIC_MODEL
+        )
+
+    def _get_anthropic_api_key(self) -> str:
+        return self._get_config_scalar(
+            "anthropic_api_key", os.environ.get("ANTHROPIC_API_KEY", "")
+        )
+
+    def _build_anthropic_messages(self, messages: List[dict]) -> Tuple[List[dict], str]:
+        anthropic_messages = []
+        system_parts = []
+
+        for message in messages:
+            role = message.get("role")
+            content = message.get("content", "")
+            if role == "system":
+                if content:
+                    system_parts.append(content)
+                continue
+
+            anthropic_messages.append(
+                {
+                    "role": "assistant" if role == "assistant" else "user",
+                    "content": content,
+                }
+            )
+
+        return anthropic_messages, "\n\n".join(system_parts)
+
+    def _extract_anthropic_answers(self, response_json: dict) -> List[str]:
+        final_answers = []
+        content_blocks = response_json.get("content", [])
+        for block in content_blocks:
+            if isinstance(block, dict) and block.get("type") == "text":
+                text = block.get("text", "")
+                if text:
+                    final_answers.append(text)
+        return final_answers
 
     def infer_llm(
         self,
@@ -383,6 +436,12 @@ class LLM:
             payload = {"messages": messages, "temperature": temp, "n": answer_num}
 
             if platform_type == "azure":
+                if requests is None:
+                    raise RuntimeError(
+                        "The requests package is required for Azure OpenAI API calls. "
+                        "Install dependencies with `pip install -r requirements.txt`."
+                    )
+
                 # Azure OpenAI
                 base = self.config["aoai_api_base"][0]
                 api_version = self.config.get("aoai_api_version", "2024-12-01-preview")
@@ -391,23 +450,38 @@ class LLM:
                 # Use max_completion_tokens for reasoning models, max_tokens for others
                 payload["max_completion_tokens" if is_reasoning else "max_tokens"] = max_tokens
             elif platform_type == "anthropic":
+                if requests is None:
+                    raise RuntimeError(
+                        "The requests package is required for Anthropic API calls. "
+                        "Install dependencies with `pip install -r requirements.txt`."
+                    )
+
                 # Anthropic Claude API
-                anthropic_model = self.config.get("anthropic_generation_model", "claude-sonnet-4-5")
-                anthropic_key = self.config.get("anthropic_api_key", [""])[0]
+                anthropic_model = self._get_anthropic_model()
+                anthropic_key = self._get_anthropic_api_key()
                 headers = {
                     "x-api-key": anthropic_key,
                     "anthropic-version": "2023-06-01",
                     "content-type": "application/json",
                 }
                 url = "https://api.anthropic.com/v1/messages"
+                anthropic_messages, anthropic_system = self._build_anthropic_messages(messages)
                 # Anthropic uses different format
                 payload = {
                     "model": anthropic_model,
                     "max_tokens": max_tokens,
                     "temperature": temp,
-                    "messages": messages,
+                    "messages": anthropic_messages,
                 }
+                if anthropic_system:
+                    payload["system"] = anthropic_system
             else:
+                if requests is None:
+                    raise RuntimeError(
+                        "The requests package is required for LLM API calls. "
+                        "Install dependencies with `pip install -r requirements.txt`."
+                    )
+
                 # Standard OpenAI/XAI
                 key = self.config.get("aoai_api_key", [os.environ.get("OPENAI_API_KEY", "")])[0]
                 if key:
@@ -429,16 +503,45 @@ class LLM:
                     payload["max_tokens"] = max_tokens
 
             # Make request with appropriate timeout
-            resp = requests.post(url, headers=headers, json=payload, timeout=api_timeout)
-            resp.raise_for_status()
-            response_json = resp.json()
+            if platform_type == "anthropic":
+                final_answers = []
+                input_token_total = 0
+                output_token_total = 0
+                saw_input_usage = False
+                saw_output_usage = False
 
-            # Extract token usage
-            usage = response_json.get("usage", {}) if isinstance(response_json, dict) else {}
-            input_tokens = usage.get("input_tokens") or usage.get("prompt_tokens")
-            output_tokens = usage.get("output_tokens") or usage.get("completion_tokens")
+                for _ in range(max(answer_num, 1)):
+                    resp = requests.post(url, headers=headers, json=payload, timeout=api_timeout)
+                    resp.raise_for_status()
+                    response_json = resp.json()
+
+                    usage = response_json.get("usage", {}) if isinstance(response_json, dict) else {}
+                    input_value = usage.get("input_tokens")
+                    output_value = usage.get("output_tokens")
+                    if isinstance(input_value, int):
+                        input_token_total += input_value
+                        saw_input_usage = True
+                    if isinstance(output_value, int):
+                        output_token_total += output_value
+                        saw_output_usage = True
+
+                    answers = self._extract_anthropic_answers(response_json)
+                    final_answers.append(answers[0] if answers else "")
+
+                input_tokens = input_token_total if saw_input_usage else None
+                output_tokens = output_token_total if saw_output_usage else None
+            else:
+                resp = requests.post(url, headers=headers, json=payload, timeout=api_timeout)
+                resp.raise_for_status()
+                response_json = resp.json()
+
+                # Extract token usage
+                usage = response_json.get("usage", {}) if isinstance(response_json, dict) else {}
+                input_tokens = usage.get("input_tokens") or usage.get("prompt_tokens")
+                output_tokens = usage.get("output_tokens") or usage.get("completion_tokens")
 
             # Extract reasoning tokens (for o1/o3 models)
+            usage = response_json.get("usage", {}) if isinstance(response_json, dict) else {}
             reasoning_tokens = usage.get("reasoning_tokens")
             if not reasoning_tokens and isinstance(usage, dict):
                 # Check completion_tokens_details (Azure) or output_tokens_details (OpenAI)
@@ -459,30 +562,18 @@ class LLM:
                 self.logger.debug(log_msg)
 
             # Extract answers from response
-            final_answers: List[str] = []
-            if platform_type == "anthropic":
-                # Anthropic Claude API format
-                content_blocks = response_json.get("content", [])
-                for block in content_blocks:
-                    if isinstance(block, dict) and block.get("type") == "text":
-                        text = block.get("text", "")
-                        if text:
-                            final_answers.append(text)
-                # Anthropic only returns one response, but we requested answer_num
-                # Duplicate the response to match expected count
-                if final_answers and answer_num > 1:
-                    single_answer = final_answers[0]
-                    final_answers = [single_answer] * min(answer_num, 1)
-            elif is_reasoning and platform_type != "azure":
-                # OpenAI Responses API format
-                self._extract_responses_api_answers(response_json, final_answers)
-            else:
-                # Chat Completions API format (includes Azure o1)
-                choices = response_json.get("choices", [])
-                for ch in choices:
-                    content = ch.get("message", {}).get("content")
-                    if isinstance(content, str):
-                        final_answers.append(content)
+            if platform_type != "anthropic":
+                final_answers: List[str] = []
+                if is_reasoning and platform_type != "azure":
+                    # OpenAI Responses API format
+                    self._extract_responses_api_answers(response_json, final_answers)
+                else:
+                    # Chat Completions API format (includes Azure o1)
+                    choices = response_json.get("choices", [])
+                    for ch in choices:
+                        content = ch.get("message", {}).get("content")
+                        if isinstance(content, str):
+                            final_answers.append(content)
 
             # Ensure we have at least one answer
             if not final_answers:

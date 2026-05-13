@@ -1,5 +1,6 @@
 {
   "comment": "This is a template configuration file. Copy to config.json and fill in your actual values.",
+  "platform": "azure",
   "aoai_api_key": "your-api-key-here",
   "aoai_generation_model": "gpt-4",
   "aoai_api_base": "https://your-endpoint.openai.azure.com/",
@@ -7,7 +8,8 @@
   "aoai_deployment_name": "your-deployment-name",
 
   "anthropic_api_key": "your-anthropic-api-key-here",
-  "anthropic_model": "claude-3-sonnet-20240229",
+  "anthropic_generation_model": "claude-opus-4-6",
+  "anthropic_model": "claude-opus-4-6",
 
   "openai_api_key": "your-openai-api-key-here",
   "openai_model": "gpt-4",

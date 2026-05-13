@@ -265,6 +265,7 @@ Configuration files are in `src/configs/`. Key settings:
 
 - `config-azure.json` - Azure OpenAI (currently configured)
 - `config.json.template` - Template for creating custom configurations
+- `config-anthropic-opus-4-6.json.template` - Anthropic Claude Opus 4.6 template
 
 **Note:** You can create additional configurations for OpenAI, Anthropic Claude, or DeepSeek by copying the template and filling in your credentials. See `src/configs/README.md` for details.
 

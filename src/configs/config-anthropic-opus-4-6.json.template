@@ -1,0 +1,22 @@
+{
+  "comment": "Copy to config-anthropic-opus-4-6.json and set your Anthropic API key. Real config*.json files are gitignored. The aoai_* model fields below are compatibility aliases used by existing module logging/cache call sites.",
+  "platform": "anthropic",
+  "anthropic_api_key": "your-anthropic-api-key-here",
+  "anthropic_generation_model": "claude-opus-4-6",
+
+  "aoai_generation_model": "claude-opus-4-6",
+  "aoai_debug_model": "claude-opus-4-6",
+
+  "max_retries": 3,
+  "timeout_seconds": 300,
+  "enable_cache": true,
+  "cache_dir": "llm_cache",
+
+  "verus_path": "/path/to/verus",
+  "benchmark_dir": "benchmarks-complete",
+  "output_dir": "output",
+
+  "max_iterations": 10,
+  "max_repair_attempts": 5,
+  "parallel_executions": 4
+}

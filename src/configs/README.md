@@ -49,10 +49,13 @@ This directory contains configuration files for VeriStruct. The actual configura
 
 ```json
 {
+  "platform": "anthropic",
   "anthropic_api_key": "sk-ant-...",
-  "anthropic_model": "claude-3-sonnet-20240229"
+  "anthropic_generation_model": "claude-opus-4-6"
 }
 ```
+
+`claude-opus-4-6` is a pinned Opus 4.6 model ID. To run the newer Opus release instead, set `anthropic_generation_model` to `claude-opus-4-7`.
 
 #### DeepSeek
 
@@ -91,6 +94,7 @@ This directory contains configuration files for VeriStruct. The actual configura
 
 - **config-azure.json** - Azure OpenAI configuration (currently set up)
 - **config.json.template** - Template for creating new configurations
+- **config-anthropic-opus-4-6.json.template** - Anthropic Claude Opus 4.6 template
 
 ### Creating Additional Configurations
 
@@ -113,6 +117,9 @@ cp config.json.template config-oai.json
 ```bash
 cp config.json.template config-anthropic.json
 # Edit config-anthropic.json with your Anthropic API key
+
+# Or start from the Opus 4.6 template
+cp config-anthropic-opus-4-6.json.template config-anthropic-opus-4-6.json
 ```
 
 #### For DeepSeek
