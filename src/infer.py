@@ -587,7 +587,24 @@ class LLM:
             self.logger.info(f"Infer time: {infer_time:.2f}s")
 
         except Exception as e:
-            self.logger.error(f"Direct LLM call failed: {e}")
+            # When `requests.HTTPError` is raised by raise_for_status(), the
+            # underlying Response object hangs off `e.response`. Surface its
+            # body so Anthropic/OpenAI/Azure error details (e.g. "user messages
+            # must have non-empty content", "max_tokens > 128000", model-not-
+            # found, content-policy violations) reach the log instead of just
+            # the bare "400 Client Error" string. Other exception types simply
+            # won't have `.response` and fall through unchanged.
+            body_suffix = ""
+            error_response = getattr(e, "response", None)
+            if error_response is not None:
+                try:
+                    body_text = error_response.text
+                except Exception:
+                    body_text = ""
+                if body_text:
+                    # Cap to avoid log spam from accidentally long bodies.
+                    body_suffix = f" | body: {body_text[:1000]}"
+            self.logger.error(f"Direct LLM call failed: {e}{body_suffix}")
             if return_msg and return_usage_meta:
                 return [], [], {"input_tokens": None, "output_tokens": None}
             if return_msg:
