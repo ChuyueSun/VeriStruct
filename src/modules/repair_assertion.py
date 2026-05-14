@@ -80,35 +80,79 @@ class RepairAssertionModule(BaseRepairModule):
             )
             return code
 
-        # Repair the assertion failure
-        candidates = self.repair_assert_fail(context, failure_to_fix)
-
-        # Evaluate candidates and return the best one
-        if isinstance(candidates, list):
+        # First try deterministic pattern-based fixes. These don't call the LLM
+        # and either work or return "".
+        special_fix = self.repair_special_assertion_error(code, failure_to_fix)
+        if special_fix and special_fix != code:
             output_dir = samples_dir()
-            return self.evaluate_repair_candidates(code, candidates, output_dir, "repair_assertion")
-        return candidates
+            best_code = self.evaluate_repair_candidates(
+                original_code=code,
+                candidates=[special_fix],
+                output_dir=output_dir,
+                prefix="repair_assertion_special",
+            )
+            if best_code != code:
+                return best_code
+            # Special fix didn't actually improve — fall through to LLM repair.
 
-    def repair_assert_fail(self, context, failure_to_fix: VerusError, num=1, temp=1.0) -> List[str]:
+        # LLM-driven repair with retry-on-no-improvement. retry_attempt > 0
+        # appends "[Retry Attempt: N]" to the instruction (cache bypass via
+        # _get_llm_responses) and bumps temperature for sampling diversity.
+        # Without this loop, repair_assertion was hitting the LLM cache and
+        # serving the same non-improving response across multiple repair
+        # rounds (see backlog #8 / bitmap_todo diagnosis).
+        max_retries = 3
+        for retry_attempt in range(max_retries):
+            self.logger.info(
+                f"Assertion repair attempt {retry_attempt + 1}/{max_retries}"
+            )
+            candidates = self.repair_assert_fail(
+                context, failure_to_fix, retry_attempt=retry_attempt
+            )
+            if not candidates:
+                continue
+
+            output_dir = samples_dir()
+            best_code = self.evaluate_repair_candidates(
+                original_code=code,
+                candidates=candidates,
+                output_dir=output_dir,
+                prefix=f"repair_assertion_attempt_{retry_attempt + 1}",
+            )
+            if best_code != code:
+                self.logger.info(
+                    f"Assertion repair succeeded on attempt {retry_attempt + 1}"
+                )
+                return best_code
+
+        self.logger.warning(
+            f"Assertion repair did not improve the score after {max_retries} attempts"
+        )
+        return code
+
+    def repair_assert_fail(
+        self,
+        context,
+        failure_to_fix: VerusError,
+        retry_attempt: int = 0,
+    ) -> List[str]:
         """
-        Repair a regular assertion failure.
+        Repair a regular assertion failure by querying the LLM.
 
         Args:
-            context: The current execution context
-            failure_to_fix: The specific assertion VerusError to fix
+            context: The current execution context (passed through for
+                infer_llm_with_tracking and knowledge plumbing).
+            failure_to_fix: The specific assertion VerusError to fix.
+            retry_attempt: Which retry this is. Retry > 0 disables cache and
+                bumps temperature inside _get_llm_responses, which is how we
+                escape "same prompt → same cached non-improving response" lock-in.
 
         Returns:
-            The potentially repaired code string.
+            A list of LLM response strings. May be empty on timeout or error.
         """
         self.logger.info("Repairing assertion failure...")
         code = context.trials[-1].code
 
-        # First try special assertion fixes for common patterns
-        newcode = self.repair_special_assertion_error(code, failure_to_fix, num=num, temp=temp)
-        if newcode:
-            return [newcode]
-
-        # Normal route of assertion fixing
         instruction = """Your mission is to fix the assertion error for the following code. Basically, you should either introduce the necessary proof blocks before the location where the assertion fails, or, if the assertion is within a loop or after a loop, you may need to add appropriate loop invariants to ensure the assertion holds true.
 
 Response with the Rust code only, do not include any explanation."""
@@ -125,18 +169,17 @@ Response with the Rust code only, do not include any explanation."""
 
         query = query_template.format(assertion_info, code)
 
-        # Note: Prompt will be saved by LLM.infer_llm to prompts/ directory
-        # No need for separate debug file
-        # When called from exec(), consider refactoring to pass context
-        return self.llm.infer_llm(
-            engine=self.config.get("aoai_debug_model", "gpt-4"),
+        # Route through the base helper so we get [Retry Attempt: N] markers,
+        # cache bypass on retry, infer_llm_with_tracking, and timeout warnings.
+        # Previously this method called self.llm.infer_llm directly and skipped
+        # all of that — see backlog #8.
+        return self._get_llm_responses(
             instruction=instruction,
-            exemplars=examples,
             query=query,
-            system_info=self.default_system,
-            answer_num=num,
-            max_tokens=8192,
-            temp=temp,
+            examples=examples,
+            retry_attempt=retry_attempt,
+            use_cache=True,
+            context=context,
         )
 
     def repair_special_assertion_error(
