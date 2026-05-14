@@ -688,13 +688,19 @@ class RepairRegistry:
                             f"{error_type.name} repair did not improve the score or made it worse."
                         )
                     # If repair made things worse, try fallback
-                    if (
-                        context.trials[-1].eval.compilation_error
-                        and not before_score.compilation_error
-                    ):
-                        self.logger.info(
-                            "Repair introduced compilation errors. Attempting fallback..."
-                        )
+                    if self._should_rollback(before_score, after_score):
+                        if (
+                            after_score.compilation_error
+                            and not before_score.compilation_error
+                        ):
+                            self.logger.info(
+                                "Repair introduced compilation errors. Attempting fallback..."
+                            )
+                        else:
+                            self.logger.info(
+                                f"Repair made the score strictly worse "
+                                f"({before_score} → {after_score}). Attempting fallback..."
+                            )
 
                         # Remove the failed trial
                         context.trials.pop()
@@ -789,6 +795,28 @@ class RepairRegistry:
         # If we made progress on at least some errors, return the results
         # even if we couldn't repair all errors
         return result_map
+
+    def _should_rollback(self, before_score, after_score) -> bool:
+        """Return True if a repair result should be popped from `context.trials`.
+
+        Triggers rollback in two cases:
+        1. A new compilation error was introduced (before compiled cleanly, after does not).
+        2. The result is strictly worse along the EvalScore ordering — this catches
+           the case where both states fail compilation but the new state has more Verus
+           errors (e.g. a repair regression from "compile-fail, 1 verus error" to
+           "compile-fail, 9 verus errors"), which the old condition missed.
+
+        Returns False when `before_score` is None (no prior trial to compare against)
+        or `after_score` is None.
+        """
+        if before_score is None or after_score is None:
+            return False
+        # Case 1: newly introduced compilation error
+        if after_score.compilation_error and not before_score.compilation_error:
+            return True
+        # Case 2: strictly worse along EvalScore ordering. Subsumes case 1 via
+        # EvalScore.__lt__, but kept explicit above for clearer logging in callers.
+        return after_score < before_score
 
     def _check_file_completeness(self, result, original_code: str = None) -> bool:
         """
