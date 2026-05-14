@@ -7,7 +7,7 @@ from typing import Any, Dict, List, Optional
 
 from src.infer import LLM
 from src.modules.base import BaseModule
-from src.modules.utils import code_change_is_safe
+from src.modules.utils import code_change_is_safe, parse_llm_response
 from src.modules.veval import VerusError, VerusErrorType, VEval
 from src.prompts.template import fill_template
 
@@ -131,11 +131,22 @@ You can use forall or exists for properties over sequences."""
         """
         from src.modules.utils import evaluate_samples
 
-        # Filter candidates by safety first
+        # Extract code from LLM responses before any safety check. LLMs frequently
+        # wrap their answer in prose ("Looking at the error, the issue is...") and
+        # markdown fences (```rust). If we don't strip these the raw text lands in
+        # context.trials and gets written as a .rs file, which then fails to
+        # compile and silently regresses the repair (see backlog #10 / rb run
+        # round 3: prose preamble prepended to lines 1-3 of repair_round_3.rs).
         safe_candidates = []
         for candidate in candidates:
-            if self.check_code_safety(original_code, candidate):
-                safe_candidates.append(candidate)
+            extracted = parse_llm_response(candidate, logger=self.logger)
+            if not extracted or not extracted.strip():
+                self.logger.warning(
+                    "Repair candidate produced no extractable code, excluding from evaluation"
+                )
+                continue
+            if self.check_code_safety(original_code, extracted):
+                safe_candidates.append(extracted)
                 self.logger.info("Repair candidate passed safety check")
             else:
                 self.logger.warning(
