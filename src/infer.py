@@ -466,11 +466,23 @@ class LLM:
                 }
                 url = "https://api.anthropic.com/v1/messages"
                 anthropic_messages, anthropic_system = self._build_anthropic_messages(messages)
+                # Anthropic enforces temperature in [0, 1] strictly — any value > 1
+                # returns 400 with body {"error":{"message":"temperature: range: 0..1"}}.
+                # OpenAI's range is [0, 2] and retry paths (see
+                # BaseRepairModule._get_llm_responses) bump temp to 1.2/1.4 on retry.
+                # Clamp here so cross-platform retry logic doesn't 400 every Anthropic
+                # call past the first attempt.
+                anthropic_temperature = min(max(temp, 0.0), 1.0)
+                if anthropic_temperature != temp:
+                    self.logger.debug(
+                        f"Clamping temperature {temp} -> {anthropic_temperature} "
+                        f"for Anthropic (range is [0, 1])"
+                    )
                 # Anthropic uses different format
                 payload = {
                     "model": anthropic_model,
                     "max_tokens": max_tokens,
-                    "temperature": temp,
+                    "temperature": anthropic_temperature,
                     "messages": anthropic_messages,
                 }
                 if anthropic_system:

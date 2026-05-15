@@ -76,6 +76,74 @@ class AnthropicBackendTests(unittest.TestCase):
         )
         self.assertEqual(calls[1]["payload"], captured["payload"])
 
+    def test_temperature_above_1_is_clamped_for_anthropic(self):
+        """Anthropic strictly enforces temperature in [0, 1] and returns
+        400 'temperature: range: 0..1' for any value above 1. The cross-platform
+        retry logic at BaseRepairModule._get_llm_responses bumps temperature to
+        1.2 and 1.4 on retry (originally designed for OpenAI's [0, 2] range).
+        Verified live against api.anthropic.com on 2026-05-15: temp=1.001 -> 400,
+        temp=1.0 -> 200. The Anthropic payload must clamp.
+        """
+        captured = {}
+
+        def fake_post(url, headers, json, timeout):
+            captured.update({"payload": json})
+            return FakeResponse("answer")
+
+        with tempfile.TemporaryDirectory() as cache_dir:
+            config = {
+                "platform": "anthropic",
+                "anthropic_api_key": "sk-ant-test",
+                "anthropic_generation_model": "claude-opus-4-6",
+                "cache_dir": str(Path(cache_dir) / "cache"),
+            }
+            llm = LLM(config, Mock(), use_cache=False)
+            with patch.object(infer, "requests", SimpleNamespace(post=fake_post)):
+                llm.infer_llm(
+                    engine="ignored",
+                    instruction="x",
+                    exemplars=[],
+                    query="y",
+                    system_info=None,
+                    answer_num=1,
+                    max_tokens=32,
+                    temp=1.4,  # would 400 on real API
+                    use_cache=False,
+                )
+
+        self.assertLessEqual(captured["payload"]["temperature"], 1.0)
+        self.assertGreaterEqual(captured["payload"]["temperature"], 0.0)
+
+    def test_temperature_at_or_below_1_is_passed_through_for_anthropic(self):
+        captured = {}
+
+        def fake_post(url, headers, json, timeout):
+            captured.update({"payload": json})
+            return FakeResponse("answer")
+
+        with tempfile.TemporaryDirectory() as cache_dir:
+            config = {
+                "platform": "anthropic",
+                "anthropic_api_key": "sk-ant-test",
+                "anthropic_generation_model": "claude-opus-4-6",
+                "cache_dir": str(Path(cache_dir) / "cache"),
+            }
+            llm = LLM(config, Mock(), use_cache=False)
+            with patch.object(infer, "requests", SimpleNamespace(post=fake_post)):
+                llm.infer_llm(
+                    engine="ignored",
+                    instruction="x",
+                    exemplars=[],
+                    query="y",
+                    system_info=None,
+                    answer_num=1,
+                    max_tokens=32,
+                    temp=0.7,
+                    use_cache=False,
+                )
+
+        self.assertEqual(captured["payload"]["temperature"], 0.7)
+
     def test_legacy_anthropic_model_key_and_list_api_key_are_supported(self):
         llm = LLM(
             {
