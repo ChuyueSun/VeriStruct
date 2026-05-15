@@ -1082,6 +1082,19 @@ def get_examples(
                     logger.error(f"Failed to read input file '{input_file}': {e}")
                     continue  # Skip this example if input fails
 
+                # Skip exemplars where either side is empty/whitespace-only.
+                # Empty content gets serialized as user/assistant messages with
+                # empty strings, which Anthropic rejects with HTTP 400:
+                #   "messages.N: user messages must have non-empty content".
+                # The repo has historically shipped zero-byte placeholder files
+                # in src/examples/input-* and output-* (see commits removing them
+                # on 2026-05-15). Guarding here in case they reappear.
+                if not input_content.strip() or not output_content.strip():
+                    logger.warning(
+                        f"Skipping exemplar '{input_file.name}' — empty input or output"
+                    )
+                    continue
+
                 examples.append({"query": input_content, "answer": output_content})
 
         # Warn if no valid examples were found
